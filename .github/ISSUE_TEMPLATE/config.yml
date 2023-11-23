@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Slack
+    url: https://slack.osfw.dev/
+    about: Please ask and answer questions here.
+  - name: Discussions
+    url: https://github.com/orgs/u-bmc/discussions
+    about: For general discussion and design triage.
