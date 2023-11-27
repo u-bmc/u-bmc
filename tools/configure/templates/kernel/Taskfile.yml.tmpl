@@ -1,0 +1,66 @@
+version: '3'
+
+tasks:
+  build:
+    cmds:
+      - task: fetch
+      - task: initrd
+      - task: compile
+  fetch:
+    dir: kernel
+    cmds:
+      - {{.Kernel.FetchCmd}}
+    status:
+      - test -d src
+  initrd:
+    dir: kernel
+    cmds:
+      # TODO use u-bmc init
+      #- git clone --single-branch --depth=1 https://github.com/u-bmc/init
+      #- mkdir -p initrd
+      #- cd init && go build {{.Kernel.InitrdGoFlags}} -o ../initrd/init
+      #- |
+      #  cd initrd
+      #  mkdir -p dev sys proc sbin run tmp var
+      #  fakeroot mknod dev/console c 5 1
+      #  fakeroot mknod dev/null c 1 3
+      #  fakeroot mknod dev/zero c 1 5
+      #  fakeroot mknod dev/tty c 5 0
+      #  fakeroot mknod dev/tty0 c 4 0
+      #  fakeroot mknod dev/random c 1 8
+      #  fakeroot mknod dev/urandom c 1 9
+      #  find . | cpio -o -H newc -R 0:0 -a > ../initrd.cpio
+      - git clone --single-branch --depth=1 https://github.com/u-root/u-root
+      # TODO add platform specific operator entry
+      - |
+        cd u-root
+        go build
+        GOARCH={{.Arch}} GOARM=5 ./u-root -o ../initrd.cpio 
+    status:
+      - test -d src
+      - test -f initrd.cpio
+  compile:
+    dir: kernel/src
+    cmds:
+      - cp -v ../defconfig .config
+      - make olddefconfig
+{{- range .Kernel.ExtraEnable}}
+      - ./scripts/config -e {{.}}
+{{- end}}
+{{- range .Kernel.ExtraDisable}}
+      - ./scripts/config -e {{.}}
+{{- end}}
+{{- range .Kernel.ExtraModule}}
+      - ./scripts/config -e {{.}}
+{{- end}}
+{{- if .Kernel.CustomDT}}
+      - cp ../u-bmc.dts ./arch/{{.Arch}}/boot/dts/{{.Vendor}}/u-bmc.dts
+      - cp ../dts-makefile ./arch/{{.Arch}}/boot/dts/{{.Vendor}}/Makefile
+{{- end}}
+      - make -j {{.Kernel.Concurrency}}
+    env:
+      ARCH: {{.Arch}}
+      CROSS_COMPILE: {{.Toolchain}}
+{{- if .Kernel.Clang}}
+      LLVM: 1
+{{- end}}

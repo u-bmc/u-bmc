@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     types:
       - opened
@@ -10,7 +10,7 @@ on:
       - synchronize
       - ready_for_review
     branches:
-     - master
+     - main
 permissions:
   contents: read
 jobs:
@@ -25,12 +25,10 @@ jobs:
           go-version: "1.21"
           check-latest: true
       - name: Run Build-Pipeline
-        uses: dagger/dagger-for-github@v5
-        with:
-          verb: run
-          args: go run ci/main.go -cmd "go build -o output/ ./cmd/example/main.go"
-          version: "0.9.3"
+        run: |
+          make configure TARGET=asrock/paul
+          make build
       - uses: actions/upload-artifact@v3
         with:
           name: build-artifact
-          path: output
+          path: output/asrock/paul/flash.img

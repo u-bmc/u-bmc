@@ -1,0 +1,45 @@
+/dts-v1/;
+
+/ {
+	description = "{{.Platform}} kernel and device tree";
+	#address-cells = <1>;
+
+	images {
+		kernel {
+			description = "Linux Kernel";
+			data = /incbin/("zImage");
+			type = "kernel";
+			arch = "{{.Arch}}";
+			os = "linux";
+			compression = "none";
+			load = <0x80001000>;
+			entry = <0x80001000>;
+			hash {
+				algo = "crc32";
+			};
+		};
+		fdt {
+			description = "DTB";
+			data = /incbin/("u-bmc.dtb");
+			type = "flat_dt";
+			arch = "{{.Arch}}";
+			compression = "none";
+			hash {
+				algo = "crc32";
+			};
+		};
+	};
+	configurations {
+		default = "conf";
+		conf {
+			description = "Default boot configuration";
+			kernel = "kernel";
+			fdt = "fdt";
+			signature {
+				algo = "sha256,rsa2048";
+				key-name-hint = "u-bmc";
+				sign-images = "kernel", "fdt";
+			};
+		};
+	};
+};

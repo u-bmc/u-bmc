@@ -1,0 +1,15 @@
+version: '3'
+
+includes:
+  bootloader: ./bootloader
+  kernel: ./kernel
+  rootfs: ./rootfs
+  image: ./image
+
+tasks:
+  build:
+    cmds:
+      - task: bootloader:build
+      - task: kernel:build
+      - task: rootfs:build
+      - task: image:build
