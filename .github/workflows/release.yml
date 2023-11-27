@@ -1,8 +1,8 @@
 name: Release
-on: 
+on:
   push:
-   tags:
-     - "v*"
+    tags:
+      - "v*"
 permissions:
   contents: read
 jobs:
