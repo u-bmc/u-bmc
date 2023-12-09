@@ -2,7 +2,7 @@ module github.com/u-bmc/go-project-template
 
 go 1.21
 
-require dagger.io/dagger v0.9.3
+require dagger.io/dagger v0.9.4
 
 require (
 	github.com/99designs/gqlgen v0.17.31 // indirect
