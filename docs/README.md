@@ -52,11 +52,11 @@ After u-boot has performed its initial setup, control is transferred to the Linu
 
 ### Operator
 
-Following the `switch_root` process, the new root file system takes over with /sbin/operator as the init process (PID 1):
+Following the `switch_root` process, the new root file system takes over with /sbin/operator as the init process (PID 1). The Operator is the central orchestrator that coordinates the BMC's boot process and oversees the operation of all microservices within the u-bmc ecosystem. 
 
-- The operator binary encompasses the entire U-BMC userspace and represents the final step in the BMC's boot process.
+- The operator binary encompasses the entire u-bmc userspace and represents the final step in the BMC's boot process.
 - As PID 1, it orchestrates all subsequent operations within the BMC userspace.
-- The operator handles all business logic within U-BMC, including service routines and external interfaces such as gRPC and Redfish served over HTTPS.
+- The operator handles all business logic within u-bmc, including service routines and external interfaces such as gRPC and Redfish served over HTTPS.
 - It ensures that all management functions are performed, and services are running as expected, marking the end of the bootflow and the beginning of the operational state for the BMC.
 
 ## Getting Started
@@ -71,21 +71,39 @@ Following the `switch_root` process, the new root file system takes over with /s
 
 ### Supervisord
 
+This service employs cgroups and namespaces for the secure launching of services in a confined environment. It also facilitates the initiation of services as goroutines in a lightweight fashion. Supervisord is responsible for restarting services that terminate with an error and recognizing the completion of one-shot services that exit with a 'nil' return value.
+
 ### Registryd
+
+Acts as the central hub for session, user, password, group, and access right management. It maintains configurations and states, with compile-time defaults that can be overridden at runtime. The service leverages boltdb for the persistent storage of the registry on flash memory.
 
 ### Ipcd
 
+Utilizes connectrpc to enable communication between microservices. The service operates with minimal awareness of other services, requiring no in-depth knowledge of IPC internals and adhering to a pub/sub schema. It offers a uniform interface for both isolated and lightweight services, with a broker managing authentication and routing. Ipcd assumes sockets are authenticated as it operates under PID 1, with no other parent process expected.
+
 ### Netd
+
+Manages all network-related functions, including 9p, mctp, ntp, vlan, dhcp, addresses, and links. It sets default configurations at compile time and adjusts settings in response to IPC messages for dynamic reconfiguration.
 
 ### Apid
 
+Provides gRPC endpoints for user interaction, supported by the connectrpc framework. It also utilizes the vanguard transcoding server to offer the same functionalities via HTTP/S RESTful endpoints. Apid aims to deliver both a minimal stateless management interface (u-mgmt) and a full Redfish interface (still in development).
+
 ### Hardwared
+
+Gathers sensor data and maintains it in an internal in-memory cache. It responds to IPC messages to alter hardware states as required, such as toggling a GPIO or sending an I2C message.
 
 ### Telemetryd
 
+Implements OTLP metrics, tracing, and logging. There is an ongoing decision on whether this service should act as a collector, a propagator, or a custom exporter.
+
 ### Kvmd
 
+Manages USB KVM functionality and live media, including the creation of websockets to stream the framebuffer from the BMC.
+
 ### Updated
+
+Oversees firmware updates for the host, BMC, and other hardware components. It is a TUF-based service that monitors an artifact repository for firmware updates and applies them when allowed. In the case of an A/B partition scheme, it can perform updates unattendedly without triggering a reboot.
 
 ## Interfaces
 
