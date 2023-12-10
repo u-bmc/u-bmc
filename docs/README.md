@@ -63,13 +63,45 @@ Following the `switch_root` process, the new root file system takes over with /s
 
 ## Getting Started
 
-### Build
+### Build u-boot
 
-### Boot
+**Clone the U-Boot Repository**
 
-### Communicate
+First, we will clone the U-Boot source code from the OpenBMC GitHub repository.
+
+```
+git clone git@github.com:openbmc/u-boot.git u-boot
+```
+This command clones the U-Boot repository into a directory named u-bmc-build/u-boot in your current working directory.
+
+**Copy the u-boot config**
+
+Copy the configuration file needed for your board to `./u-boot/.config`. In our case, we are using the EVB-AST2500 platform.
+
+```
+cp ./u-boot/configs/evb-ast2500_defconfig ./u-boot/.config
+```
+
+**Configure the Build System**
+
+Next, we update the default configuration to ensure it is in sync with the latest source code. This step also allows you to make any necessary old configuration defaults to be set.
+
+```
+CROSS_COMPILE=arm-none-eabi- ARCH=arm make -C ./u-bmc-build/u-boot/ olddefconfig
+```
+
+**Compile U-Boot**
+
+Now, we can compile U-Boot using the make utility. We use the -j flag to specify the number of jobs to run simultaneously, which is typically set to the number of CPU cores on your machine to speed up the build process.
+
+```
+CROSS_COMPILE=arm-none-eabi- ARCH=arm make -C ./u-bmc-build/u-boot/ -j $(nproc)
+```
+After the build process completes, you will find the U-Boot binary in the u-boot root directory. This binary is what will be used as the bootloader for your BMC firmware.
 
 ## Microservices
+
+The operator spaws multiple microservices that provide different services, either internally or externally.
 
 ### Supervisord
 
