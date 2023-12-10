@@ -58,3 +58,37 @@ Following the `switch_root` process, the new root file system takes over with /s
 - As PID 1, it orchestrates all subsequent operations within the BMC userspace.
 - The operator handles all business logic within U-BMC, including service routines and external interfaces such as gRPC and Redfish served over HTTPS.
 - It ensures that all management functions are performed, and services are running as expected, marking the end of the bootflow and the beginning of the operational state for the BMC.
+
+## Getting Started
+
+### Build
+
+### Boot
+
+### Communicate
+
+## Microservices
+
+### Supervisord
+
+### Registryd
+
+### Ipcd
+
+### Netd
+
+### Apid
+
+### Hardwared
+
+### Telemetryd
+
+### Kvmd
+
+### Updated
+
+## Interfaces
+
+### gRPC
+
+### Redfish
