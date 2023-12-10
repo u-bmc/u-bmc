@@ -28,6 +28,8 @@
 
 The architecture of the u-bmc is structured around four key components: u-boot, the Linux Kernel, Initramfs, and the Operator. Each component plays a crucial role in the boot and operation process of the BMC.
 
+![u-bmc boot flow](images/u-bmc-boot-flow.png)
+
 ### u-boot
 
 The first stage of the boot process is [u-boot](https://docs.u-boot.org/en/latest/index.html). It is the primary bootloader that is executed directly from the reset vector. Its primary responsibilities include:
