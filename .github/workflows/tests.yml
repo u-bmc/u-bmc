@@ -67,6 +67,6 @@ jobs:
           args: go run ci/main.go -cmd "go test -shuffle=on -cover -covermode=atomic -coverpkg=./... -coverprofile=output/coverage.txt ./..."
           version: "0.9.3"
       - name: Upload report to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: output/coverage.txt
