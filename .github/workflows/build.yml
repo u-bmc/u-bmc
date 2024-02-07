@@ -28,7 +28,7 @@ jobs:
         run: |
           make configure TARGET=asrock/paul
           make build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: build-artifact
           path: output/asrock/paul/flash.img
