@@ -1,6 +1,6 @@
 module github.com/u-bmc/u-bmc/configs/asrock/paul
 
-go 1.22.0
+go 1.22.2
 
 require github.com/u-bmc/operator v0.0.0-20240207211159-e890a9acd157
 
