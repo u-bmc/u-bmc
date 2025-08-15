@@ -1,0 +1,174 @@
+// SPDX-License-Identifier: BSD-3-Clause
+
+syntax = "proto3";
+
+package proto.v1alpha1;
+
+option go_package = "protov1alpha1";
+
+import "buf/validate/validate.proto";
+
+// Sensor represents a physical or virtual sensor device
+message Sensor {
+  // Unique identifier for the sensor
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+
+  // Human-readable name of the sensor
+  string name = 2 [(buf.validate.field).string.min_len = 1];
+
+  // Physical context of the sensor (e.g., Temperature, Voltage, Fan)
+  SensorContext context = 3;
+
+  // Current status of the sensor
+  SensorStatus status = 4;
+
+  // Unit of measurement for the sensor readings
+  SensorUnit unit = 5;
+
+  // Sensor reading information - either analog with thresholds or discrete state
+  oneof reading {
+    // Analog sensor reading with thresholds
+    AnalogSensorReading analog_reading = 6;
+
+    // Discrete sensor reading with state
+    DiscreteSensorReading discrete_reading = 7;
+  }
+
+  // Physical location of the sensor
+  string physical_location = 8;
+
+  // Timestamp of the last reading
+  int64 last_reading_timestamp = 9;
+}
+
+// SensorContext defines the physical context of the sensor
+enum SensorContext {
+  SENSOR_CONTEXT_UNSPECIFIED = 0;
+  SENSOR_CONTEXT_TEMPERATURE = 1;
+  SENSOR_CONTEXT_VOLTAGE = 2;
+  SENSOR_CONTEXT_CURRENT = 3;
+  SENSOR_CONTEXT_FAN = 4;
+  SENSOR_CONTEXT_POWER = 5;
+  SENSOR_CONTEXT_ENERGY = 6;
+  SENSOR_CONTEXT_PRESSURE = 7;
+  SENSOR_CONTEXT_HUMIDITY = 8;
+  SENSOR_CONTEXT_ALTITUDE = 9;
+}
+
+// SensorStatus represents the operational status of the sensor
+enum SensorStatus {
+  SENSOR_STATUS_UNSPECIFIED = 0;
+  SENSOR_STATUS_ENABLED = 1;
+  SENSOR_STATUS_DISABLED = 2;
+  SENSOR_STATUS_ERROR = 3;
+  SENSOR_STATUS_NOT_PRESENT = 4;
+  SENSOR_STATUS_UNKNOWN = 5;
+}
+
+// SensorUnit defines the unit of measurement for sensor readings
+enum SensorUnit {
+  SENSOR_UNIT_UNSPECIFIED = 0;
+  SENSOR_UNIT_CELSIUS = 1;
+  SENSOR_UNIT_FAHRENHEIT = 2;
+  SENSOR_UNIT_KELVIN = 3;
+  SENSOR_UNIT_VOLTS = 4;
+  SENSOR_UNIT_AMPS = 5;
+  SENSOR_UNIT_WATTS = 6;
+  SENSOR_UNIT_JOULES = 7;
+  SENSOR_UNIT_PASCALS = 8;
+  SENSOR_UNIT_PERCENT = 9;
+  SENSOR_UNIT_RPM = 10;
+  SENSOR_UNIT_HERTZ = 11;
+}
+
+// AnalogSensorReading represents a sensor with continuous numerical readings and thresholds
+message AnalogSensorReading {
+  // Current measured value
+  double value = 1;
+
+  // Upper threshold values for warning and critical levels
+  Threshold upper_thresholds = 2;
+
+  // Lower threshold values for warning and critical levels
+  Threshold lower_thresholds = 3;
+
+  // Minimum and maximum values recorded
+  MinMaxRecorded min_max_recorded = 4;
+}
+
+// DiscreteSensorReading represents a sensor with discrete states rather than numerical values
+message DiscreteSensorReading {
+  // Current state of the sensor
+  SensorState state = 1;
+
+  // Additional state information or description
+  string state_description = 2;
+}
+
+// Threshold defines warning and critical thresholds for sensor readings
+message Threshold {
+  // Warning level threshold
+  double warning = 1;
+
+  // Critical level threshold
+  double critical = 2;
+}
+
+// MinMaxRecorded tracks the minimum and maximum values recorded by the sensor
+message MinMaxRecorded {
+  // Minimum value recorded
+  double min_value = 1;
+
+  // Maximum value recorded
+  double max_value = 2;
+
+  // Timestamp when minimum value was recorded
+  int64 min_timestamp = 3;
+
+  // Timestamp when maximum value was recorded
+  int64 max_timestamp = 4;
+}
+
+// SensorState represents the discrete states a sensor can be in
+enum SensorState {
+  SENSOR_STATE_UNSPECIFIED = 0;
+  SENSOR_STATE_NORMAL = 1;
+  SENSOR_STATE_FAULT = 2;
+  SENSOR_STATE_WARNING = 3;
+  SENSOR_STATE_CRITICAL = 4;
+  SENSOR_STATE_UNKNOWN = 5;
+  SENSOR_STATE_NOT_AVAILABLE = 6;
+}
+
+// Request message for getting a single sensor by ID
+message GetSensorRequest {
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+// Response message for getting a single sensor
+message GetSensorResponse {
+  Sensor sensor = 1;
+}
+
+// Request message for listing sensors with optional filtering
+message ListSensorsRequest {
+  // Optional filter by sensor context
+  SensorContext context = 1;
+
+  // Optional filter by sensor status
+  SensorStatus status = 2;
+}
+
+// Response message for listing sensors
+message ListSensorsResponse {
+  repeated Sensor sensors = 1;
+}
+
+// Service definition for sensor operations
+service SensorService {
+  // Get a sensor by ID
+  rpc GetSensor(GetSensorRequest) returns (GetSensorResponse) {}
+
+  // List all sensors with optional filtering
+  rpc ListSensors(ListSensorsRequest) returns (ListSensorsResponse) {}
+}

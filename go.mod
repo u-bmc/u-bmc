@@ -1,22 +1,74 @@
-module github.com/u-bmc/u-bmc
+module u-bmc.org/u-bmc
 
-go 1.21
+go 1.24.5
 
 require (
-	dagger.io/dagger v0.9.8
-	github.com/BurntSushi/toml v1.3.2
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.6-20250717185734-6c6e0d3c608e.1
+	cirello.io/oversight/v2 v2.0.0-20250811221607-2b357433924f
+	connectrpc.com/connect v1.18.1
+	connectrpc.com/cors v0.1.0
+	connectrpc.com/grpchealth v1.4.0
+	connectrpc.com/grpcreflect v1.3.0
+	connectrpc.com/otelconnect v0.7.2
+	connectrpc.com/validate v0.3.0
+	connectrpc.com/vanguard v0.3.0
+	github.com/arunsworld/nursery v0.6.0
+	github.com/google/uuid v1.6.0
+	github.com/lorenzosaino/go-sysctl v0.3.1
+	github.com/nats-io/nats-server/v2 v2.11.7
+	github.com/nats-io/nats.go v1.44.0
+	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10
+	github.com/quic-go/quic-go v0.54.0
+	github.com/rs/cors v1.11.1
+	github.com/rs/zerolog v1.34.0
+	github.com/samber/slog-multi v1.4.1
+	github.com/samber/slog-zerolog/v2 v2.7.3
+	go.opentelemetry.io/contrib/bridges/otelslog v0.12.0
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.62.0
+	go.opentelemetry.io/otel v1.37.0
+	go.opentelemetry.io/otel/log v0.13.0
+	golang.org/x/crypto v0.40.0
+	golang.org/x/sys v0.34.0
+	google.golang.org/grpc v1.74.2
+	google.golang.org/protobuf v1.36.6
 )
 
 require (
-	github.com/99designs/gqlgen v0.17.43 // indirect
-	github.com/Khan/genqlient v0.6.0 // indirect
-	github.com/adrg/xdg v0.4.0 // indirect
-	github.com/google/uuid v1.6.0 // indirect
-	github.com/mitchellh/go-homedir v1.1.0 // indirect
-	github.com/sosodev/duration v1.2.0 // indirect
-	github.com/stretchr/testify v1.8.4 // indirect
-	github.com/vektah/gqlparser/v2 v2.5.11 // indirect
-	golang.org/x/exp v0.0.0-20240205201215-2c58cdc269a3 // indirect
-	golang.org/x/sync v0.6.0 // indirect
-	golang.org/x/sys v0.17.0 // indirect
+	buf.build/go/protovalidate v0.14.0 // indirect
+	cel.dev/expr v0.24.0 // indirect
+	github.com/BurntSushi/toml v1.1.0 // indirect
+	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
+	github.com/felixge/httpsnoop v1.0.4 // indirect
+	github.com/francoispqt/gojay v1.2.13 // indirect
+	github.com/go-logr/logr v1.4.3 // indirect
+	github.com/go-logr/stdr v1.2.2 // indirect
+	github.com/google/cel-go v0.26.0 // indirect
+	github.com/google/go-tpm v0.9.5 // indirect
+	github.com/klauspost/compress v1.18.0 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/minio/highwayhash v1.0.3 // indirect
+	github.com/nats-io/jwt/v2 v2.7.4 // indirect
+	github.com/nats-io/nkeys v0.4.11 // indirect
+	github.com/nats-io/nuid v1.0.1 // indirect
+	github.com/quic-go/qpack v0.5.1 // indirect
+	github.com/samber/lo v1.51.0 // indirect
+	github.com/samber/slog-common v0.19.0 // indirect
+	github.com/stoewer/go-strcase v1.3.1 // indirect
+	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
+	go.opentelemetry.io/otel/metric v1.37.0 // indirect
+	go.opentelemetry.io/otel/trace v1.37.0 // indirect
+	go.uber.org/mock v0.5.0 // indirect
+	golang.org/x/exp v0.0.0-20250718183923-645b1fa84792 // indirect
+	golang.org/x/exp/typeparams v0.0.0-20220613132600-b0d781184e0d // indirect
+	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
+	golang.org/x/mod v0.26.0 // indirect
+	golang.org/x/net v0.42.0 // indirect
+	golang.org/x/sync v0.16.0 // indirect
+	golang.org/x/text v0.27.0 // indirect
+	golang.org/x/time v0.12.0 // indirect
+	golang.org/x/tools v0.35.0 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20250804133106-a7a43d27e69b // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250804133106-a7a43d27e69b // indirect
+	honnef.co/go/tools v0.3.2 // indirect
 )

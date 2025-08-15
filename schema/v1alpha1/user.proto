@@ -1,0 +1,412 @@
+// SPDX-License-Identifier: BSD-3-Clause
+
+syntax = "proto3";
+
+package proto.v1alpha1;
+
+option go_package = "protov1alpha1";
+
+import "buf/validate/validate.proto";
+
+// User represents a user account in the system
+message User {
+  // Unique identifier for the user
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+
+  // Username for login
+  string username = 2 [(buf.validate.field).string.min_len = 1];
+
+  // Full name of the user
+  string full_name = 3 [(buf.validate.field).string.min_len = 1];
+
+  // Email address
+  string email = 4 [(buf.validate.field).string.email = true];
+
+  // Whether the user account is enabled
+  bool enabled = 5;
+
+  // Timestamp when the user was created
+  int64 created_at = 6;
+
+  // Timestamp when the user was last updated
+  int64 updated_at = 7;
+
+  // Timestamp of last successful login
+  int64 last_login = 8;
+
+  // Source system where the user is managed
+  UserSource source_system = 9;
+
+  // Authentication data
+  AuthenticationData auth_data = 10;
+
+  // Unix-specific user information (if mapped)
+  UnixUserInfo unix_info = 11;
+
+  // LDAP-specific user information (if mapped)
+  LdapUserInfo ldap_info = 12;
+
+  // Redfish-specific account information
+  RedfishAccountInfo redfish_info = 13;
+
+  // NATS-specific account information
+  NatsAccountInfo nats_info = 14;
+
+  // SELinux-specific user mapping
+  SelinuxUserInfo selinux_info = 15;
+}
+
+// AuthenticationData contains password and authentication-related information
+message AuthenticationData {
+  // Hashed password
+  string password_hash = 1;
+
+  // Salt used for hashing
+  string password_salt = 2;
+
+  // Hashing algorithm used
+  PasswordHashAlgorithm hash_algorithm = 3;
+
+  // Number of iterations for key derivation (if applicable)
+  int32 iterations = 4;
+
+  // Timestamp of last password change
+  int64 password_last_changed = 5;
+
+  // Password expiration timestamp
+  int64 password_expires_at = 6;
+
+  // Account lockout information
+  AccountLockoutInfo lockout_info = 7;
+}
+
+// AccountLockoutInfo contains information about account lockout status
+message AccountLockoutInfo {
+  // Whether the account is currently locked
+  bool locked = 1;
+
+  // Reason for lockout
+  LockoutReason reason = 2;
+
+  // Timestamp when lockout occurred
+  int64 lockout_time = 3;
+
+  // Number of failed login attempts
+  int32 failed_attempts = 4;
+
+  // Timestamp when failed attempts counter was last reset
+  int64 attempts_reset_time = 5;
+}
+
+// UnixUserInfo contains Unix-specific user information
+message UnixUserInfo {
+  // Unix user ID
+  int32 uid = 1 [(buf.validate.field).int32.gte = 0];
+
+  // Unix group ID
+  int32 gid = 2 [(buf.validate.field).int32.gte = 0];
+
+  // Home directory path
+  string home_directory = 3 [(buf.validate.field).string.min_len = 1];
+
+  // Login shell
+  string shell = 4;
+
+  // GECOS field (user information)
+  string gecos = 5;
+}
+
+// LdapUserInfo contains LDAP-specific user information
+message LdapUserInfo {
+  // LDAP Distinguished Name
+  string ldap_dn = 1 [(buf.validate.field).string.min_len = 1];
+
+  // Object GUID
+  string object_guid = 2;
+
+  // SAM Account Name
+  string sam_account_name = 3;
+
+  // User Principal Name
+  string user_principal_name = 4;
+
+  // Groups the user is a member of
+  repeated string member_of = 5;
+
+  // Account expiration timestamp
+  int64 account_expires = 6;
+
+  // Timestamp when password was last set
+  int64 pwd_last_set = 7;
+}
+
+// RedfishAccountInfo contains Redfish-specific account information
+message RedfishAccountInfo {
+  // Redfish account ID
+  string account_id = 1;
+
+  // Redfish role ID
+  string role_id = 2 [(buf.validate.field).string.min_len = 1];
+
+  // Account lockout policy information
+  RedfishLockoutPolicy lockout_policy = 3;
+}
+
+// RedfishLockoutPolicy contains Redfish-specific lockout policy settings
+message RedfishLockoutPolicy {
+  // Number of failed login attempts before lockout
+  int32 threshold = 1 [(buf.validate.field).int32.gte = 0];
+
+  // Duration of lockout
+  string duration = 2;
+
+  // Time after which failed attempts counter is reset
+  string reset_after = 3;
+}
+
+// NatsAccountInfo contains NATS-specific account information
+message NatsAccountInfo {
+  // NATS account identifier
+  string account = 1;
+
+  // NATS permissions
+  NatsPermissions permissions = 2;
+
+  // NATS limits
+  NatsLimits limits = 3;
+
+  // NATS user JWT
+  string user_jwt = 4;
+
+  // NATS user public key
+  string user_key = 5;
+
+  // NATS user credentials
+  string user_cred = 6;
+}
+
+// NatsPermissions contains NATS publish/subscribe permissions
+message NatsPermissions {
+  // Subjects the user can publish to
+  repeated string publish = 1;
+
+  // Subjects the user can subscribe to
+  repeated string subscribe = 2;
+
+  // Subjects for allowing responses
+  repeated string allow_responses = 3;
+}
+
+// NatsLimits contains NATS resource limits for the user
+message NatsLimits {
+  // Maximum data limit in bytes
+  int64 data = 1;
+
+  // Maximum payload size in bytes
+  int64 payload = 2;
+
+  // Maximum number of subscriptions
+  int64 subs = 3;
+}
+
+// SelinuxUserInfo contains SELinux-specific user mapping information
+message SelinuxUserInfo {
+  // SELinux user
+  string user = 1;
+
+  // SELinux role
+  string role = 2;
+
+  // SELinux type
+  string type = 3;
+
+  // SELinux level
+  string level = 4;
+}
+
+// UserSource represents the source system for a user account
+enum UserSource {
+  USER_SOURCE_UNSPECIFIED = 0;
+  USER_SOURCE_LOCAL = 1;
+  USER_SOURCE_LDAP = 2;
+  USER_SOURCE_AD = 3;
+  USER_SOURCE_IPMI = 4;
+  USER_SOURCE_REDFISH = 5;
+  USER_SOURCE_NATS = 6;
+}
+
+// PasswordHashAlgorithm represents the algorithm used for password hashing
+enum PasswordHashAlgorithm {
+  PASSWORD_HASH_ALGORITHM_UNSPECIFIED = 0;
+  PASSWORD_HASH_ALGORITHM_BCRYPT = 1;
+  PASSWORD_HASH_ALGORITHM_ARGON2 = 2;
+  PASSWORD_HASH_ALGORITHM_SHA256 = 3;
+  PASSWORD_HASH_ALGORITHM_SHA512 = 4;
+}
+
+// LockoutReason represents the reason for account lockout
+enum LockoutReason {
+  LOCKOUT_REASON_UNSPECIFIED = 0;
+  LOCKOUT_REASON_FAILED_LOGIN_ATTEMPTS = 1;
+  LOCKOUT_REASON_ADMINISTRATIVE = 2;
+  LOCKOUT_REASON_PASSWORD_EXPIRED = 3;
+}
+
+// Request message for creating a new user
+message CreateUserRequest {
+  // User to create
+  User user = 1 [(buf.validate.field).required = true];
+
+  // Plain text password (will be hashed server-side)
+  string password = 2 [(buf.validate.field).string.min_len = 8];
+}
+
+// Response message for creating a new user
+message CreateUserResponse {
+  // Created user with server-generated fields
+  User user = 1;
+}
+
+// Request message for getting a user by ID
+message GetUserRequest {
+  // User ID
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+// Response message for getting a user
+message GetUserResponse {
+  // Retrieved user
+  User user = 1;
+}
+
+// Request message for updating a user
+message UpdateUserRequest {
+  // Updated user information
+  User user = 1 [(buf.validate.field).required = true];
+}
+
+// Response message for updating a user
+message UpdateUserResponse {
+  // Updated user
+  User user = 1;
+}
+
+// Request message for deleting a user
+message DeleteUserRequest {
+  // User ID to delete
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+// Response message for deleting a user
+message DeleteUserResponse {
+  // Success indicator
+  bool success = 1;
+}
+
+// Request message for listing users with optional filtering
+message ListUsersRequest {
+  // Optional filter by user source
+  UserSource source = 1;
+
+  // Optional filter by enabled status
+  bool enabled = 2;
+
+  // Optional filter by username (prefix match)
+  string username_prefix = 3;
+}
+
+// Response message for listing users
+message ListUsersResponse {
+  // List of users matching the criteria
+  repeated User users = 1;
+}
+
+// Request message for changing a user's password
+message ChangePasswordRequest {
+  // User ID
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+
+  // Current password (for verification)
+  string current_password = 2 [(buf.validate.field).string.min_len = 1];
+
+  // New password
+  string new_password = 3 [(buf.validate.field).string.min_len = 8];
+}
+
+// Response message for changing a user's password
+message ChangePasswordResponse {
+  // Success indicator
+  bool success = 1;
+}
+
+// Request message for resetting a user's password
+message ResetPasswordRequest {
+  // User ID
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+
+  // New password (if not provided, system generates one)
+  string new_password = 2 [(buf.validate.field).string.min_len = 8];
+
+  // Whether to force reset regardless of current state
+  bool force = 3;
+}
+
+// Response message for resetting a user's password
+message ResetPasswordResponse {
+  // The new password (if system-generated)
+  string new_password = 1;
+
+  // Success indicator
+  bool success = 2;
+}
+
+// Request message for authenticating a user
+message AuthenticateUserRequest {
+  // Username
+  string username = 1 [(buf.validate.field).string.min_len = 1];
+
+  // Password
+  string password = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+// Response message for authenticating a user
+message AuthenticateUserResponse {
+  // Authentication success
+  bool success = 1;
+
+  // User ID if authentication successful
+  string user_id = 2;
+
+  // Authentication token (if successful)
+  string token = 3;
+
+  // Reason for authentication failure (if unsuccessful)
+  string failure_reason = 4;
+}
+
+// Service definition for user management operations
+service UserService {
+  // Create a new user
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
+
+  // Get a user by ID
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
+
+  // Update an existing user
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {}
+
+  // Delete a user
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {}
+
+  // List users with optional filtering
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {}
+
+  // Change a user's password
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse) {}
+
+  // Reset a user's password
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse) {}
+
+  // Authenticate a user
+  rpc AuthenticateUser(AuthenticateUserRequest) returns (AuthenticateUserResponse) {}
+}
