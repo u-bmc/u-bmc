@@ -10,7 +10,7 @@ import (
 
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
-	"u-bmc.org/u-bmc/pkg/log"
+	"github.com/u-bmc/u-bmc/pkg/log"
 )
 
 type IPC struct {

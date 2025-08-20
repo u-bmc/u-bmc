@@ -10,9 +10,9 @@ import (
 	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
+	v1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
 	http "net/http"
 	strings "strings"
-	v1alpha1 "u-bmc.org/u-bmc/api/gen/schema/v1alpha1"
 )
 
 // This is a compile-time assertion to ensure that this generated file and the connect package are

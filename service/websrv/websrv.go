@@ -26,9 +26,9 @@ import (
 	"github.com/quic-go/quic-go/qlog"
 	"github.com/rs/cors"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
-	"u-bmc.org/u-bmc/api/gen/schema/v1alpha1/protov1alpha1connect"
-	"u-bmc.org/u-bmc/pkg/cert"
-	"u-bmc.org/u-bmc/pkg/log"
+	"github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1/protov1alpha1connect"
+	"github.com/u-bmc/u-bmc/pkg/cert"
+	"github.com/u-bmc/u-bmc/pkg/log"
 )
 
 type ProtoServer struct {

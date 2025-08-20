@@ -1813,8 +1813,8 @@ const file_schema_v1alpha1_system_proto_rawDesc = "" +
 	"\tListHosts\x12 .proto.v1alpha1.ListHostsRequest\x1a!.proto.v1alpha1.ListHostsResponse\"\x002\xa0\x02\n" +
 	"\x1bManagementControllerService\x12|\n" +
 	"\x17GetManagementController\x12..proto.v1alpha1.GetManagementControllerRequest\x1a/.proto.v1alpha1.GetManagementControllerResponse\"\x00\x12\x82\x01\n" +
-	"\x19ListManagementControllers\x120.proto.v1alpha1.ListManagementControllersRequest\x1a1.proto.v1alpha1.ListManagementControllersResponse\"\x00B\xb1\x01\n" +
-	"\x12com.proto.v1alpha1B\vSystemProtoP\x01Z5u-bmc.org/u-bmc/api/gen/schema/v1alpha1;protov1alpha1\xa2\x02\x03PXX\xaa\x02\x0eProto.V1alpha1\xca\x02\x0eProto\\V1alpha1\xe2\x02\x1aProto\\V1alpha1\\GPBMetadata\xea\x02\x0fProto::V1alpha1b\x06proto3"
+	"\x19ListManagementControllers\x120.proto.v1alpha1.ListManagementControllersRequest\x1a1.proto.v1alpha1.ListManagementControllersResponse\"\x00B\xb8\x01\n" +
+	"\x12com.proto.v1alpha1B\vSystemProtoP\x01Z<github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;protov1alpha1\xa2\x02\x03PXX\xaa\x02\x0eProto.V1alpha1\xca\x02\x0eProto\\V1alpha1\xe2\x02\x1aProto\\V1alpha1\\GPBMetadata\xea\x02\x0fProto::V1alpha1b\x06proto3"
 
 var (
 	file_schema_v1alpha1_system_proto_rawDescOnce sync.Once
