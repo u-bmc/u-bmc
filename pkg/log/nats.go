@@ -9,34 +9,50 @@ import (
 	"github.com/nats-io/nats-server/v2/server"
 )
 
+// NATSLogger is an adapter that implements the NATS server.Logger interface
+// using the standard library's slog.Logger for structured logging.
 type NATSLogger struct {
 	l *slog.Logger
 }
 
+// Fatalf logs a fatal error message with the given format and arguments.
+// This maps to the Error level in slog with additional context indicating it's a fatal error.
 func (l *NATSLogger) Fatalf(format string, v ...interface{}) {
 	l.l.Error(fmt.Sprintf(format, v...), "NATS fatal error")
 }
 
+// Errorf logs an error message with the given format and arguments.
+// This maps to the Error level in slog.
 func (l *NATSLogger) Errorf(format string, v ...interface{}) {
 	l.l.Error(fmt.Sprintf(format, v...), "NATS error")
 }
 
+// Warnf logs a warning message with the given format and arguments.
+// This maps to the Warn level in slog.
 func (l *NATSLogger) Warnf(format string, v ...interface{}) {
 	l.l.Warn(fmt.Sprintf(format, v...), "NATS warning")
 }
 
+// Noticef logs a notice message with the given format and arguments.
+// This maps to the Info level in slog as notices are informational.
 func (l *NATSLogger) Noticef(format string, v ...interface{}) {
 	l.l.Info(fmt.Sprintf(format, v...))
 }
 
+// Debugf logs a debug message with the given format and arguments.
+// This maps to the Debug level in slog.
 func (l *NATSLogger) Debugf(format string, v ...interface{}) {
 	l.l.Debug(fmt.Sprintf(format, v...))
 }
 
+// Tracef logs a trace message with the given format and arguments.
+// This maps to the Debug level in slog with additional context indicating it's a trace message.
 func (l *NATSLogger) Tracef(format string, v ...interface{}) {
 	l.l.Debug(fmt.Sprintf(format, v...), "NATS trace")
 }
 
+// NewNATSLogger creates a new NATSLogger that wraps the provided slog.Logger
+// and implements the NATS server.Logger interface for use with NATS server logging.
 func NewNATSLogger(l *slog.Logger) server.Logger {
 	return &NATSLogger{
 		l: l,

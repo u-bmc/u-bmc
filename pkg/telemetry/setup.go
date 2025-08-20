@@ -9,6 +9,10 @@ import (
 	"go.opentelemetry.io/otel/propagation"
 )
 
+// DefaultSetup initializes OpenTelemetry with default configuration.
+// It sets up a no-op logger provider for logging and configures
+// text map propagation with TraceContext and Baggage propagators
+// for distributed tracing context propagation across service boundaries.
 func DefaultSetup() {
 	provider := noop.NewLoggerProvider()
 	global.SetLoggerProvider(provider)
