@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
+// Package websrv provides a web server implementation that supports both HTTP/2 and HTTP/3
+// protocols with TLS encryption. It serves Connect RPC APIs and optionally a web UI.
 package websrv
 
 import (
@@ -25,12 +27,13 @@ import (
 	"github.com/quic-go/quic-go/logging"
 	"github.com/quic-go/quic-go/qlog"
 	"github.com/rs/cors"
-	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1/protov1alpha1connect"
 	"github.com/u-bmc/u-bmc/pkg/cert"
 	"github.com/u-bmc/u-bmc/pkg/log"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
+// ProtoServer implements all the Connect RPC service handlers for the BMC API.
 type ProtoServer struct {
 	protov1alpha1connect.UnimplementedChassisServiceHandler
 	protov1alpha1connect.UnimplementedCoolingDeviceServiceHandler
@@ -43,15 +46,26 @@ type ProtoServer struct {
 	protov1alpha1connect.UnimplementedUserServiceHandler
 }
 
+// WebSrv is a web server that provides HTTP/2 and HTTP/3 endpoints for BMC operations.
 type WebSrv struct {
 	config
 }
 
+// New creates a new WebSrv instance with the provided options.
 func New(opts ...Option) *WebSrv {
 	cfg := &config{
-		name:  "websrv",
-		addr:  ":443",
-		webui: false,
+		name:         "websrv",
+		addr:         ":443",
+		webui:        false,
+		hostname:     "localhost",
+		certPath:     "/var/cache/selfsigned/cert.pem",
+		keyPath:      "/var/cache/selfsigned/key.pem",
+		webuiPath:    "/usr/share/webui",
+		readTimeout:  5 * time.Second,
+		writeTimeout: 5 * time.Second,
+		idleTimeout:  120 * time.Second,
+		rmemMax:      "7500000",
+		wmemMax:      "7500000",
 	}
 	for _, opt := range opts {
 		opt.apply(cfg)
@@ -61,60 +75,48 @@ func New(opts ...Option) *WebSrv {
 	}
 }
 
+// Name returns the service name.
 func (s *WebSrv) Name() string {
 	return s.name
 }
 
-func (s *WebSrv) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) (err error) {
+// Run starts the web server and blocks until the context is cancelled.
+func (s *WebSrv) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) error {
 	l := log.GetGlobalLogger()
 
 	l.InfoContext(ctx, "Starting web server", "service", s.name)
 
-	// Those are needed for QUIC/HTTP3 but we can proceed without them
-	if err := sysctl.Set("net.core.rmem_max", "7500000"); err != nil {
-		l.ErrorContext(ctx, "Failed to update RMEM for QUIC usage", "error", err)
-	}
-	if err := sysctl.Set("net.core.wmem_max", "7500000"); err != nil {
-		l.ErrorContext(ctx, "Failed to update WMEM for QUIC usage", "error", err)
+	if err := s.configureSysctl(ctx); err != nil {
+		l.WarnContext(ctx, "Failed to configure sysctls for QUIC", "error", err)
 	}
 
-	router, err := setupRouter(s.webui)
+	router, err := s.setupRouter()
 	if err != nil {
-		return err
+		return fmt.Errorf("%w: %w", ErrSetupRouter, err)
 	}
 
-	certPem, keyPem, err := cert.GenerateSelfsigned("localhost")
+	tlsConfig, err := s.setupTLS()
 	if err != nil {
-		return err
-	}
-	tlsCert, err := tls.X509KeyPair(certPem, keyPem)
-	if err != nil {
-		return err
-	}
-	tlsConf := &tls.Config{
-		Certificates: []tls.Certificate{tlsCert},
-		MinVersion:   tls.VersionTLS13,
+		return fmt.Errorf("%w: %w", ErrSetupTLS, err)
 	}
 
-	// Create TCP and UDP listeners
-	tcpListener, err := net.Listen("tcp", "localhost:443")
+	tcpListener, err := net.Listen("tcp", s.addr)
 	if err != nil {
-		return fmt.Errorf("error creating TCP listener: %w", err)
+		return fmt.Errorf("%w: %w", ErrCreateTCPListener, err)
 	}
 	defer tcpListener.Close()
 
-	udpAddr, err := net.ResolveUDPAddr("udp", "localhost:443")
+	udpAddr, err := net.ResolveUDPAddr("udp", s.addr)
 	if err != nil {
-		return fmt.Errorf("error resolving UDP address: %w", err)
+		return fmt.Errorf("%w: %w", ErrResolveUDPAddress, err)
 	}
 	udpListener, err := net.ListenUDP("udp", udpAddr)
 	if err != nil {
-		return fmt.Errorf("error creating UDP listener: %w", err)
+		return fmt.Errorf("%w: %w", ErrCreateUDPListener, err)
 	}
 	defer udpListener.Close()
 
-	// Create a QUIC/HTTP3 server with the mux
-	http3Server := http3.Server{
+	http3Server := &http3.Server{
 		Handler: router,
 		QUICConfig: &quic.Config{
 			Tracer: func(ctx context.Context, perspective logging.Perspective, id quic.ConnectionID) *logging.ConnectionTracer {
@@ -133,18 +135,16 @@ func (s *WebSrv) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) (e
 				)
 			},
 		},
-		TLSConfig: http3.ConfigureTLSConfig(tlsConf),
+		TLSConfig: http3.ConfigureTLSConfig(tlsConfig),
 	}
 
-	// Create an HTTP/2 server for fallback
 	http2Server := &http.Server{
 		Handler:      router,
 		BaseContext:  func(_ net.Listener) context.Context { return ctx },
-		ReadTimeout:  time.Second,
-		WriteTimeout: 10 * time.Second,
-		TLSConfig: &tls.Config{
-			Certificates: []tls.Certificate{tlsCert},
-		},
+		ReadTimeout:  s.readTimeout,
+		WriteTimeout: s.writeTimeout,
+		IdleTimeout:  s.idleTimeout,
+		TLSConfig:    tlsConfig,
 	}
 
 	defer func() {
@@ -164,119 +164,135 @@ func (s *WebSrv) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) (e
 		func(ctx context.Context, c chan error) {
 			l.InfoContext(ctx, "Starting HTTP3 server", "service", s.name, "addr", s.addr)
 			if err := http3Server.Serve(udpListener); err != nil {
-				c <- fmt.Errorf("error serving HTTP3: %w", err)
+				c <- fmt.Errorf("%w: %w", ErrHTTP3Server, err)
 			}
 		},
 		func(ctx context.Context, c chan error) {
 			l.InfoContext(ctx, "Starting HTTP2 fallback server", "service", s.name, "addr", s.addr)
-			if err := http2Server.Serve(tcpListener); err != nil && err != http.ErrServerClosed {
-				c <- fmt.Errorf("error serving HTTP2: %w", err)
+			if err := http2Server.ServeTLS(tcpListener, "", ""); err != nil && err != http.ErrServerClosed {
+				c <- fmt.Errorf("%w: %w", ErrHTTP2Server, err)
 			}
 		})
 }
 
-func setupRouter(webui bool) (http.Handler, error) {
+// configureSysctl sets kernel parameters needed for optimal QUIC performance.
+func (s *WebSrv) configureSysctl(ctx context.Context) error {
+	if err := sysctl.Set("net.core.rmem_max", s.rmemMax); err != nil {
+		return fmt.Errorf("%w: %w", ErrSetRmemMax, err)
+	}
+	if err := sysctl.Set("net.core.wmem_max", s.wmemMax); err != nil {
+		return fmt.Errorf("%w: %w", ErrSetWmemMax, err)
+	}
+	return nil
+}
+
+// setupTLS configures TLS settings and loads or generates certificates.
+func (s *WebSrv) setupTLS() (*tls.Config, error) {
+	certOpts := cert.CertificateOptions{
+		Hostname: s.hostname,
+	}
+
+	certPem, keyPem, err := cert.LoadOrGenerateCertificate(s.certPath, s.keyPath, certOpts)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %w", ErrLoadOrGenerateCertificate, err)
+	}
+
+	tlsCert, err := tls.X509KeyPair(certPem, keyPem)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %w", ErrParseCertificate, err)
+	}
+
+	return &tls.Config{
+		Certificates: []tls.Certificate{tlsCert},
+		MinVersion:   tls.VersionTLS13,
+	}, nil
+}
+
+// setupRouter configures the HTTP router with all endpoints and middleware.
+func (s *WebSrv) setupRouter() (http.Handler, error) {
 	mux := http.NewServeMux()
 
-	if webui {
-		fileServer := http.FileServer(http.Dir("/usr/share/webui"))
+	if s.webui {
+		fileServer := http.FileServer(http.Dir(s.webuiPath))
 		mux.Handle("/", fileServer)
 	}
 
 	validatorInterceptor, err := validate.NewInterceptor()
 	if err != nil {
-		return nil, fmt.Errorf("failed to create validator interceptor: %w", err)
+		return nil, fmt.Errorf("%w: %w", ErrCreateValidatorInterceptor, err)
 	}
 
 	otelInterceptor, err := otelconnect.NewInterceptor()
 	if err != nil {
-		return nil, fmt.Errorf("failed to create OpenTelemetry interceptor: %w", err)
+		return nil, fmt.Errorf("%w: %w", ErrCreateOpenTelemetryInterceptor, err)
 	}
 
 	protoServer := &ProtoServer{}
 
-	chassisService := vanguard.NewService(
-		protov1alpha1connect.NewChassisServiceHandler(
-			protoServer,
-			connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+	services := []*vanguard.Service{
+		vanguard.NewService(
+			protov1alpha1connect.NewChassisServiceHandler(
+				protoServer,
+				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+			),
 		),
-	)
-
-	coolingDeviceService := vanguard.NewService(
-		protov1alpha1connect.NewCoolingDeviceServiceHandler(
-			protoServer,
-			connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+		vanguard.NewService(
+			protov1alpha1connect.NewCoolingDeviceServiceHandler(
+				protoServer,
+				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+			),
 		),
-	)
-
-	hostManagementService := vanguard.NewService(
-		protov1alpha1connect.NewHostManagementServiceHandler(
-			protoServer,
-			connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+		vanguard.NewService(
+			protov1alpha1connect.NewHostManagementServiceHandler(
+				protoServer,
+				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+			),
 		),
-	)
-
-	hostService := vanguard.NewService(
-		protov1alpha1connect.NewHostServiceHandler(
-			protoServer,
-			connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+		vanguard.NewService(
+			protov1alpha1connect.NewHostServiceHandler(
+				protoServer,
+				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+			),
 		),
-	)
-
-	managementControllerService := vanguard.NewService(
-		protov1alpha1connect.NewManagementControllerServiceHandler(
-			protoServer,
-			connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+		vanguard.NewService(
+			protov1alpha1connect.NewManagementControllerServiceHandler(
+				protoServer,
+				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+			),
 		),
-	)
-
-	sensorService := vanguard.NewService(
-		protov1alpha1connect.NewSensorServiceHandler(
-			protoServer,
-			connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+		vanguard.NewService(
+			protov1alpha1connect.NewSensorServiceHandler(
+				protoServer,
+				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+			),
 		),
-	)
-
-	thermalManagementService := vanguard.NewService(
-		protov1alpha1connect.NewThermalManagementServiceHandler(
-			protoServer,
-			connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+		vanguard.NewService(
+			protov1alpha1connect.NewThermalManagementServiceHandler(
+				protoServer,
+				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+			),
 		),
-	)
-
-	thermalZoneService := vanguard.NewService(
-		protov1alpha1connect.NewThermalZoneServiceHandler(
-			protoServer,
-			connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+		vanguard.NewService(
+			protov1alpha1connect.NewThermalZoneServiceHandler(
+				protoServer,
+				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+			),
 		),
-	)
-
-	userService := vanguard.NewService(
-		protov1alpha1connect.NewUserServiceHandler(
-			protoServer,
-			connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+		vanguard.NewService(
+			protov1alpha1connect.NewUserServiceHandler(
+				protoServer,
+				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
+			),
 		),
-	)
-
-	transcoder, err := vanguard.NewTranscoder([]*vanguard.Service{
-		chassisService,
-		coolingDeviceService,
-		hostManagementService,
-		hostService,
-		managementControllerService,
-		sensorService,
-		thermalManagementService,
-		thermalZoneService,
-		userService,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to create transcoder: %w", err)
 	}
 
-	// Serve the Connect API on the /api route
+	transcoder, err := vanguard.NewTranscoder(services)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %w", ErrCreateTranscoder, err)
+	}
+
 	mux.Handle("/api", transcoder)
 
-	// Extra routes helpful
 	healthCheck := grpchealth.NewStaticChecker(
 		protov1alpha1connect.ChassisServiceName,
 		protov1alpha1connect.CoolingDeviceServiceName,
@@ -303,7 +319,6 @@ func setupRouter(webui bool) (http.Handler, error) {
 	mux.Handle(grpcreflect.NewHandlerV1Alpha(reflector))
 	mux.Handle(grpchealth.NewHandler(healthCheck))
 
-	// Connect CORS rules on all routes
 	corsMiddleware := cors.New(cors.Options{
 		AllowedMethods: connectcors.AllowedMethods(),
 		AllowedHeaders: connectcors.AllowedHeaders(),
