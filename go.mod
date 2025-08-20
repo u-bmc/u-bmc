@@ -1,4 +1,4 @@
-module u-bmc.org/u-bmc
+module github.com/u-bmc/u-bmc
 
 go 1.24.5
 

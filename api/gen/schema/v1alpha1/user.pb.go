@@ -2158,8 +2158,8 @@ const file_schema_v1alpha1_user_proto_rawDesc = "" +
 	"\tListUsers\x12 .proto.v1alpha1.ListUsersRequest\x1a!.proto.v1alpha1.ListUsersResponse\"\x00\x12a\n" +
 	"\x0eChangePassword\x12%.proto.v1alpha1.ChangePasswordRequest\x1a&.proto.v1alpha1.ChangePasswordResponse\"\x00\x12^\n" +
 	"\rResetPassword\x12$.proto.v1alpha1.ResetPasswordRequest\x1a%.proto.v1alpha1.ResetPasswordResponse\"\x00\x12g\n" +
-	"\x10AuthenticateUser\x12'.proto.v1alpha1.AuthenticateUserRequest\x1a(.proto.v1alpha1.AuthenticateUserResponse\"\x00B\xaf\x01\n" +
-	"\x12com.proto.v1alpha1B\tUserProtoP\x01Z5u-bmc.org/u-bmc/api/gen/schema/v1alpha1;protov1alpha1\xa2\x02\x03PXX\xaa\x02\x0eProto.V1alpha1\xca\x02\x0eProto\\V1alpha1\xe2\x02\x1aProto\\V1alpha1\\GPBMetadata\xea\x02\x0fProto::V1alpha1b\x06proto3"
+	"\x10AuthenticateUser\x12'.proto.v1alpha1.AuthenticateUserRequest\x1a(.proto.v1alpha1.AuthenticateUserResponse\"\x00B\xb6\x01\n" +
+	"\x12com.proto.v1alpha1B\tUserProtoP\x01Z<github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;protov1alpha1\xa2\x02\x03PXX\xaa\x02\x0eProto.V1alpha1\xca\x02\x0eProto\\V1alpha1\xe2\x02\x1aProto\\V1alpha1\\GPBMetadata\xea\x02\x0fProto::V1alpha1b\x06proto3"
 
 var (
 	file_schema_v1alpha1_user_proto_rawDescOnce sync.Once

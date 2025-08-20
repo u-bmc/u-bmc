@@ -6,7 +6,7 @@ import (
 	"context"
 
 	"github.com/nats-io/nats.go"
-	"u-bmc.org/u-bmc/pkg/log"
+	"github.com/u-bmc/u-bmc/pkg/log"
 )
 
 type ConsoleSrv struct {

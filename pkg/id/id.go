@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/google/uuid"
-	"u-bmc.org/u-bmc/pkg/file"
+	"github.com/u-bmc/u-bmc/pkg/file"
 )
 
 func NewID() string {

@@ -2,9 +2,9 @@
 
 syntax = "proto3";
 
-package proto.v1alpha1;
+package schema.v1alpha1;
 
-option go_package = "protov1alpha1";
+option go_package = "github.com/u-bmc/u-bmc/schema/v1alpha1;schemav1alpha1";
 
 import "buf/validate/validate.proto";
 

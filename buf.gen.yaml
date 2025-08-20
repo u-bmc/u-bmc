@@ -4,7 +4,7 @@ managed:
   enabled: true
   override:
     - file_option: go_package_prefix
-      value: u-bmc.org/u-bmc/api/gen
+      value: github.com/u-bmc/u-bmc/api/gen
   disable:
     - module: buf.build/googleapis/googleapis
       file_option: go_package_prefix

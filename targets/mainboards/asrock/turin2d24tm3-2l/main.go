@@ -5,7 +5,7 @@ package main
 import (
 	"context"
 
-	"u-bmc.org/u-bmc/service/operator"
+	"github.com/u-bmc/u-bmc/service/operator"
 )
 
 func main() {

@@ -8,7 +8,7 @@ import (
 
 	"cirello.io/oversight/v2"
 	"github.com/nats-io/nats.go"
-	"u-bmc.org/u-bmc/service"
+	"github.com/u-bmc/u-bmc/service"
 )
 
 func New(s service.Service, ipcConn nats.InProcessConnProvider) oversight.ChildProcess {

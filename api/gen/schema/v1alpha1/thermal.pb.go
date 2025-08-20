@@ -1355,8 +1355,8 @@ const file_schema_v1alpha1_thermal_proto_rawDesc = "" +
 	"\x10ListThermalZones\x12'.proto.v1alpha1.ListThermalZonesRequest\x1a(.proto.v1alpha1.ListThermalZonesResponse\"\x002\xee\x01\n" +
 	"\x14CoolingDeviceService\x12g\n" +
 	"\x10GetCoolingDevice\x12'.proto.v1alpha1.GetCoolingDeviceRequest\x1a(.proto.v1alpha1.GetCoolingDeviceResponse\"\x00\x12m\n" +
-	"\x12ListCoolingDevices\x12).proto.v1alpha1.ListCoolingDevicesRequest\x1a*.proto.v1alpha1.ListCoolingDevicesResponse\"\x00B\xb2\x01\n" +
-	"\x12com.proto.v1alpha1B\fThermalProtoP\x01Z5u-bmc.org/u-bmc/api/gen/schema/v1alpha1;protov1alpha1\xa2\x02\x03PXX\xaa\x02\x0eProto.V1alpha1\xca\x02\x0eProto\\V1alpha1\xe2\x02\x1aProto\\V1alpha1\\GPBMetadata\xea\x02\x0fProto::V1alpha1b\x06proto3"
+	"\x12ListCoolingDevices\x12).proto.v1alpha1.ListCoolingDevicesRequest\x1a*.proto.v1alpha1.ListCoolingDevicesResponse\"\x00B\xb9\x01\n" +
+	"\x12com.proto.v1alpha1B\fThermalProtoP\x01Z<github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;protov1alpha1\xa2\x02\x03PXX\xaa\x02\x0eProto.V1alpha1\xca\x02\x0eProto\\V1alpha1\xe2\x02\x1aProto\\V1alpha1\\GPBMetadata\xea\x02\x0fProto::V1alpha1b\x06proto3"
 
 var (
 	file_schema_v1alpha1_thermal_proto_rawDescOnce sync.Once
