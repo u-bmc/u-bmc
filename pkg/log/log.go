@@ -12,6 +12,10 @@ import (
 	"go.opentelemetry.io/otel/log/global"
 )
 
+// NewDefaultLogger creates a new structured logger that outputs to both console and OpenTelemetry.
+// The logger uses zerolog for console output with timestamps and debug level logging,
+// and sends telemetry data to the global OpenTelemetry logger provider.
+// This is the recommended way to create a new logger instance for application use.
 func NewDefaultLogger() *slog.Logger {
 	zeroLogger := zerolog.
 		New(zerolog.NewConsoleWriter()).
@@ -28,6 +32,11 @@ func NewDefaultLogger() *slog.Logger {
 	))
 }
 
+// GetGlobalLogger returns a structured logger configured for global application use.
+// Like NewDefaultLogger, it outputs to both console and OpenTelemetry with debug level logging.
+// The logger uses zerolog for human-readable console output with timestamps,
+// while simultaneously sending structured log data to OpenTelemetry for observability.
+// Use this function when you need a logger instance that matches the global logging configuration.
 func GetGlobalLogger() *slog.Logger {
 	zeroLogger := zerolog.
 		New(zerolog.NewConsoleWriter()).
