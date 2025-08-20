@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
+// Package operator provides a service orchestrator that manages and supervises
+// multiple BMC services in a fault-tolerant manner. It handles service lifecycle,
+// inter-process communication setup, and provides a supervision tree for automatic
+// service recovery.
 package operator
 
 import (
@@ -58,10 +62,25 @@ const defaultLogo = `
 ⠀⠀⠉⠛⠋⠀⠀⠀⠀⠀⠛⠉⠛⠋⠀⠀⠛⠀⠀⠛⠀⠀⠛⠀⠀⠙⠛⠋
 `
 
+// Operator manages the lifecycle of BMC services in a supervised environment.
+// It provides service orchestration, fault tolerance, and inter-process communication
+// coordination for all BMC subsystems.
 type Operator struct {
 	config
 }
 
+// New creates a new Operator instance with the provided configuration options.
+// The operator will be initialized with default services including console server,
+// inventory manager, security manager, state manager, update manager, user manager,
+// and web server. Additional services can be configured using the provided options.
+//
+// Example usage:
+//
+//	op := operator.New(
+//		operator.WithName("my-bmc"),
+//		operator.WithTimeout(15*time.Second),
+//		operator.DisableLogo(),
+//	)
 func New(opts ...Option) *Operator {
 	cfg := &config{
 		name:         "operator",
@@ -87,18 +106,28 @@ func New(opts ...Option) *Operator {
 	}
 }
 
+// Name returns the configured name of the operator service.
 func (s *Operator) Name() string {
 	return s.name
 }
 
+// Run starts the operator and all configured services under supervision.
+// It sets up the supervision tree, configures inter-process communication,
+// and manages the lifecycle of all BMC services. The operator will run until
+// the provided context is cancelled or a fatal error occurs.
+//
+// The ipcConn parameter can be nil if an IPC service is configured via options.
+// If both ipcConn and IPC service are provided, the external ipcConn takes precedence.
+//
+// Returns an error if initialization fails or if any critical service cannot be started.
 func (s *Operator) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) (err error) {
 	if s.name == "" {
-		return fmt.Errorf("name cannot be empty")
+		return ErrNameEmpty
 	}
 
 	defer func() {
 		if r := recover(); r != nil {
-			err = fmt.Errorf("%s panicked: %v", s.Name(), r)
+			err = fmt.Errorf("%s %w: %v", s.Name(), ErrPanicked, r)
 		}
 	}()
 
@@ -132,7 +161,7 @@ func (s *Operator) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 	// that isn't there yet (mostly pseudofilesystems)
 	// l.InfoContext(ctx, "Checking filesystem mounts", "service", s.name)
 	if err := mount.SetupMounts(); err != nil {
-		return fmt.Errorf("failed to setup mounts: %w", err)
+		return fmt.Errorf("%w: %w", ErrSetupMounts, err)
 	}
 
 	supervisionTree := oversight.New(
@@ -145,7 +174,7 @@ func (s *Operator) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 	// or let us create an IPC service ourselves from the configuration.
 	// If both are provided we will NOT start another IPC service but re-use the provided ipcConn!
 	if s.ipc == nil && ipcConn == nil {
-		return fmt.Errorf("IPC cannot be nil, provide either ipcConn or WithIPC")
+		return ErrIPCNil
 	}
 
 	if s.ipc != nil && ipcConn == nil {
@@ -194,7 +223,7 @@ func (s *Operator) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 						oversight.Timeout(s.timeout),
 						svc.Name(),
 					); err != nil {
-						c <- fmt.Errorf("failed to add process %s to tree: %w", svc.Name(), err)
+						c <- fmt.Errorf("%w %s to tree: %w", ErrAddProcess, svc.Name(), err)
 						return
 					}
 				}
@@ -208,7 +237,7 @@ func (s *Operator) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 				oversight.Timeout(s.timeout),
 				svc.Name(),
 			); err != nil {
-				c <- fmt.Errorf("failed to add extra service %s to tree: %w", svc.Name(), err)
+				c <- fmt.Errorf("%w %s to tree: %w", ErrAddExtraService, svc.Name(), err)
 				return
 			}
 		}
