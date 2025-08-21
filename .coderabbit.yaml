@@ -82,7 +82,7 @@ reviews:
       level: default
     golangci-lint:
       enabled: true
-      config_file: ""
+      config_file: ".golangci.yml"
     yamllint:
       enabled: true
     gitleaks:

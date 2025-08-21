@@ -10,7 +10,7 @@ on:
       - synchronize
       - ready_for_review
     branches:
-     - main
+      - main
 permissions:
   contents: read
 jobs:
@@ -18,17 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.21"
+          go-version: "1.25"
           check-latest: true
-      - name: Run Build-Pipeline
-        run: |
-          make configure TARGET=asrock/paul
-          make build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: build-artifact
-          path: output/asrock/paul/flash.img
+      - name: Build ASRock Platform
+        working-directory: targets/mainboards/asrock/turin2d24tm3-2l
+        run: GOOS=linux GOARCH=arm GOARM=7,softfloat go build -ldflags="-s -w"
