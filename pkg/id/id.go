@@ -28,7 +28,7 @@ func GetOrCreatePersistentID(name, path string) (string, error) {
 	} else if os.IsNotExist(err) {
 		uuid := uuid.New()
 
-		if err := file.AtomicCreateFile(filepath.Join(path, name), []byte(uuid.String()), os.ModePerm); err != nil && err != os.ErrExist {
+		if err := file.AtomicCreateFile(fullPath, []byte(uuid.String()), os.ModePerm); err != nil && err != os.ErrExist {
 			return "", err
 		}
 
@@ -36,12 +36,12 @@ func GetOrCreatePersistentID(name, path string) (string, error) {
 	} else {
 		b, err := os.ReadFile(fullPath)
 		if err != nil {
-			return "", nil
+			return "", err
 		}
 
 		uuid, err := uuid.ParseBytes(b)
 		if err != nil {
-			return "", nil
+			return "", err
 		}
 
 		id = uuid.String()
