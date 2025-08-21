@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: BSD-3-Clause
+//go:build linux
+// +build linux
 
 // Package mount provides functionality for setting up essential filesystem mounts
 // in a Linux system, including proc, sysfs, and various virtual filesystems.
