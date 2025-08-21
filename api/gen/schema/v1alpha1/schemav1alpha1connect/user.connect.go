@@ -4,7 +4,7 @@
 //
 // Source: schema/v1alpha1/user.proto
 
-package protov1alpha1connect
+package schemav1alpha1connect
 
 import (
 	connect "connectrpc.com/connect"
@@ -24,7 +24,7 @@ const _ = connect.IsAtLeastVersion1_13_0
 
 const (
 	// UserServiceName is the fully-qualified name of the UserService service.
-	UserServiceName = "proto.v1alpha1.UserService"
+	UserServiceName = "schema.v1alpha1.UserService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -36,27 +36,27 @@ const (
 // period.
 const (
 	// UserServiceCreateUserProcedure is the fully-qualified name of the UserService's CreateUser RPC.
-	UserServiceCreateUserProcedure = "/proto.v1alpha1.UserService/CreateUser"
+	UserServiceCreateUserProcedure = "/schema.v1alpha1.UserService/CreateUser"
 	// UserServiceGetUserProcedure is the fully-qualified name of the UserService's GetUser RPC.
-	UserServiceGetUserProcedure = "/proto.v1alpha1.UserService/GetUser"
+	UserServiceGetUserProcedure = "/schema.v1alpha1.UserService/GetUser"
 	// UserServiceUpdateUserProcedure is the fully-qualified name of the UserService's UpdateUser RPC.
-	UserServiceUpdateUserProcedure = "/proto.v1alpha1.UserService/UpdateUser"
+	UserServiceUpdateUserProcedure = "/schema.v1alpha1.UserService/UpdateUser"
 	// UserServiceDeleteUserProcedure is the fully-qualified name of the UserService's DeleteUser RPC.
-	UserServiceDeleteUserProcedure = "/proto.v1alpha1.UserService/DeleteUser"
+	UserServiceDeleteUserProcedure = "/schema.v1alpha1.UserService/DeleteUser"
 	// UserServiceListUsersProcedure is the fully-qualified name of the UserService's ListUsers RPC.
-	UserServiceListUsersProcedure = "/proto.v1alpha1.UserService/ListUsers"
+	UserServiceListUsersProcedure = "/schema.v1alpha1.UserService/ListUsers"
 	// UserServiceChangePasswordProcedure is the fully-qualified name of the UserService's
 	// ChangePassword RPC.
-	UserServiceChangePasswordProcedure = "/proto.v1alpha1.UserService/ChangePassword"
+	UserServiceChangePasswordProcedure = "/schema.v1alpha1.UserService/ChangePassword"
 	// UserServiceResetPasswordProcedure is the fully-qualified name of the UserService's ResetPassword
 	// RPC.
-	UserServiceResetPasswordProcedure = "/proto.v1alpha1.UserService/ResetPassword"
+	UserServiceResetPasswordProcedure = "/schema.v1alpha1.UserService/ResetPassword"
 	// UserServiceAuthenticateUserProcedure is the fully-qualified name of the UserService's
 	// AuthenticateUser RPC.
-	UserServiceAuthenticateUserProcedure = "/proto.v1alpha1.UserService/AuthenticateUser"
+	UserServiceAuthenticateUserProcedure = "/schema.v1alpha1.UserService/AuthenticateUser"
 )
 
-// UserServiceClient is a client for the proto.v1alpha1.UserService service.
+// UserServiceClient is a client for the schema.v1alpha1.UserService service.
 type UserServiceClient interface {
 	// Create a new user
 	CreateUser(context.Context, *connect.Request[v1alpha1.CreateUserRequest]) (*connect.Response[v1alpha1.CreateUserResponse], error)
@@ -76,7 +76,7 @@ type UserServiceClient interface {
 	AuthenticateUser(context.Context, *connect.Request[v1alpha1.AuthenticateUserRequest]) (*connect.Response[v1alpha1.AuthenticateUserResponse], error)
 }
 
-// NewUserServiceClient constructs a client for the proto.v1alpha1.UserService service. By default,
+// NewUserServiceClient constructs a client for the schema.v1alpha1.UserService service. By default,
 // it uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and
 // sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC()
 // or connect.WithGRPCWeb() options.
@@ -150,47 +150,47 @@ type userServiceClient struct {
 	authenticateUser *connect.Client[v1alpha1.AuthenticateUserRequest, v1alpha1.AuthenticateUserResponse]
 }
 
-// CreateUser calls proto.v1alpha1.UserService.CreateUser.
+// CreateUser calls schema.v1alpha1.UserService.CreateUser.
 func (c *userServiceClient) CreateUser(ctx context.Context, req *connect.Request[v1alpha1.CreateUserRequest]) (*connect.Response[v1alpha1.CreateUserResponse], error) {
 	return c.createUser.CallUnary(ctx, req)
 }
 
-// GetUser calls proto.v1alpha1.UserService.GetUser.
+// GetUser calls schema.v1alpha1.UserService.GetUser.
 func (c *userServiceClient) GetUser(ctx context.Context, req *connect.Request[v1alpha1.GetUserRequest]) (*connect.Response[v1alpha1.GetUserResponse], error) {
 	return c.getUser.CallUnary(ctx, req)
 }
 
-// UpdateUser calls proto.v1alpha1.UserService.UpdateUser.
+// UpdateUser calls schema.v1alpha1.UserService.UpdateUser.
 func (c *userServiceClient) UpdateUser(ctx context.Context, req *connect.Request[v1alpha1.UpdateUserRequest]) (*connect.Response[v1alpha1.UpdateUserResponse], error) {
 	return c.updateUser.CallUnary(ctx, req)
 }
 
-// DeleteUser calls proto.v1alpha1.UserService.DeleteUser.
+// DeleteUser calls schema.v1alpha1.UserService.DeleteUser.
 func (c *userServiceClient) DeleteUser(ctx context.Context, req *connect.Request[v1alpha1.DeleteUserRequest]) (*connect.Response[v1alpha1.DeleteUserResponse], error) {
 	return c.deleteUser.CallUnary(ctx, req)
 }
 
-// ListUsers calls proto.v1alpha1.UserService.ListUsers.
+// ListUsers calls schema.v1alpha1.UserService.ListUsers.
 func (c *userServiceClient) ListUsers(ctx context.Context, req *connect.Request[v1alpha1.ListUsersRequest]) (*connect.Response[v1alpha1.ListUsersResponse], error) {
 	return c.listUsers.CallUnary(ctx, req)
 }
 
-// ChangePassword calls proto.v1alpha1.UserService.ChangePassword.
+// ChangePassword calls schema.v1alpha1.UserService.ChangePassword.
 func (c *userServiceClient) ChangePassword(ctx context.Context, req *connect.Request[v1alpha1.ChangePasswordRequest]) (*connect.Response[v1alpha1.ChangePasswordResponse], error) {
 	return c.changePassword.CallUnary(ctx, req)
 }
 
-// ResetPassword calls proto.v1alpha1.UserService.ResetPassword.
+// ResetPassword calls schema.v1alpha1.UserService.ResetPassword.
 func (c *userServiceClient) ResetPassword(ctx context.Context, req *connect.Request[v1alpha1.ResetPasswordRequest]) (*connect.Response[v1alpha1.ResetPasswordResponse], error) {
 	return c.resetPassword.CallUnary(ctx, req)
 }
 
-// AuthenticateUser calls proto.v1alpha1.UserService.AuthenticateUser.
+// AuthenticateUser calls schema.v1alpha1.UserService.AuthenticateUser.
 func (c *userServiceClient) AuthenticateUser(ctx context.Context, req *connect.Request[v1alpha1.AuthenticateUserRequest]) (*connect.Response[v1alpha1.AuthenticateUserResponse], error) {
 	return c.authenticateUser.CallUnary(ctx, req)
 }
 
-// UserServiceHandler is an implementation of the proto.v1alpha1.UserService service.
+// UserServiceHandler is an implementation of the schema.v1alpha1.UserService service.
 type UserServiceHandler interface {
 	// Create a new user
 	CreateUser(context.Context, *connect.Request[v1alpha1.CreateUserRequest]) (*connect.Response[v1alpha1.CreateUserResponse], error)
@@ -265,7 +265,7 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(userServiceMethods.ByName("AuthenticateUser")),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/proto.v1alpha1.UserService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return "/schema.v1alpha1.UserService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case UserServiceCreateUserProcedure:
 			userServiceCreateUserHandler.ServeHTTP(w, r)
@@ -293,33 +293,33 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 type UnimplementedUserServiceHandler struct{}
 
 func (UnimplementedUserServiceHandler) CreateUser(context.Context, *connect.Request[v1alpha1.CreateUserRequest]) (*connect.Response[v1alpha1.CreateUserResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.UserService.CreateUser is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.UserService.CreateUser is not implemented"))
 }
 
 func (UnimplementedUserServiceHandler) GetUser(context.Context, *connect.Request[v1alpha1.GetUserRequest]) (*connect.Response[v1alpha1.GetUserResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.UserService.GetUser is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.UserService.GetUser is not implemented"))
 }
 
 func (UnimplementedUserServiceHandler) UpdateUser(context.Context, *connect.Request[v1alpha1.UpdateUserRequest]) (*connect.Response[v1alpha1.UpdateUserResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.UserService.UpdateUser is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.UserService.UpdateUser is not implemented"))
 }
 
 func (UnimplementedUserServiceHandler) DeleteUser(context.Context, *connect.Request[v1alpha1.DeleteUserRequest]) (*connect.Response[v1alpha1.DeleteUserResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.UserService.DeleteUser is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.UserService.DeleteUser is not implemented"))
 }
 
 func (UnimplementedUserServiceHandler) ListUsers(context.Context, *connect.Request[v1alpha1.ListUsersRequest]) (*connect.Response[v1alpha1.ListUsersResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.UserService.ListUsers is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.UserService.ListUsers is not implemented"))
 }
 
 func (UnimplementedUserServiceHandler) ChangePassword(context.Context, *connect.Request[v1alpha1.ChangePasswordRequest]) (*connect.Response[v1alpha1.ChangePasswordResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.UserService.ChangePassword is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.UserService.ChangePassword is not implemented"))
 }
 
 func (UnimplementedUserServiceHandler) ResetPassword(context.Context, *connect.Request[v1alpha1.ResetPasswordRequest]) (*connect.Response[v1alpha1.ResetPasswordResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.UserService.ResetPassword is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.UserService.ResetPassword is not implemented"))
 }
 
 func (UnimplementedUserServiceHandler) AuthenticateUser(context.Context, *connect.Request[v1alpha1.AuthenticateUserRequest]) (*connect.Response[v1alpha1.AuthenticateUserResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.UserService.AuthenticateUser is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.UserService.AuthenticateUser is not implemented"))
 }

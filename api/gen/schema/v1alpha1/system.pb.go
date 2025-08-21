@@ -6,7 +6,7 @@
 // 	protoc        (unknown)
 // source: schema/v1alpha1/system.proto
 
-package protov1alpha1
+package schemav1alpha1
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -515,9 +515,9 @@ type Chassis struct {
 	// Human-readable name for the chassis
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	// Chassis type (e.g., Rack, Blade, Standalone)
-	Type ChassisType `protobuf:"varint,3,opt,name=type,proto3,enum=proto.v1alpha1.ChassisType" json:"type,omitempty"`
+	Type ChassisType `protobuf:"varint,3,opt,name=type,proto3,enum=schema.v1alpha1.ChassisType" json:"type,omitempty"`
 	// Current power state of the chassis
-	PowerState PowerState `protobuf:"varint,4,opt,name=power_state,json=powerState,proto3,enum=proto.v1alpha1.PowerState" json:"power_state,omitempty"`
+	PowerState PowerState `protobuf:"varint,4,opt,name=power_state,json=powerState,proto3,enum=schema.v1alpha1.PowerState" json:"power_state,omitempty"`
 	// Physical location of the chassis
 	PhysicalLocation string `protobuf:"bytes,5,opt,name=physical_location,json=physicalLocation,proto3" json:"physical_location,omitempty"`
 	// List of host IDs contained in this chassis
@@ -527,7 +527,7 @@ type Chassis struct {
 	// List of thermal zone IDs associated with this chassis
 	ThermalZoneIds []string `protobuf:"bytes,8,rep,name=thermal_zone_ids,json=thermalZoneIds,proto3" json:"thermal_zone_ids,omitempty"`
 	// Status of the chassis
-	Status ChassisStatus `protobuf:"varint,9,opt,name=status,proto3,enum=proto.v1alpha1.ChassisStatus" json:"status,omitempty"`
+	Status ChassisStatus `protobuf:"varint,9,opt,name=status,proto3,enum=schema.v1alpha1.ChassisStatus" json:"status,omitempty"`
 	// Timestamp of the last update
 	LastUpdateTimestamp int64 `protobuf:"varint,10,opt,name=last_update_timestamp,json=lastUpdateTimestamp,proto3" json:"last_update_timestamp,omitempty"`
 	unknownFields       protoimpl.UnknownFields
@@ -642,11 +642,11 @@ type Host struct {
 	// Human-readable name for the host
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	// Host state (on, off, error, etc.)
-	State HostState `protobuf:"varint,3,opt,name=state,proto3,enum=proto.v1alpha1.HostState" json:"state,omitempty"`
+	State HostState `protobuf:"varint,3,opt,name=state,proto3,enum=schema.v1alpha1.HostState" json:"state,omitempty"`
 	// Requested host state (what we want the host to be)
-	RequestedState HostState `protobuf:"varint,4,opt,name=requested_state,json=requestedState,proto3,enum=proto.v1alpha1.HostState" json:"requested_state,omitempty"`
+	RequestedState HostState `protobuf:"varint,4,opt,name=requested_state,json=requestedState,proto3,enum=schema.v1alpha1.HostState" json:"requested_state,omitempty"`
 	// Host health status
-	Health HostHealth `protobuf:"varint,5,opt,name=health,proto3,enum=proto.v1alpha1.HostHealth" json:"health,omitempty"`
+	Health HostHealth `protobuf:"varint,5,opt,name=health,proto3,enum=schema.v1alpha1.HostHealth" json:"health,omitempty"`
 	// Chassis ID this host belongs to
 	ChassisId string `protobuf:"bytes,6,opt,name=chassis_id,json=chassisId,proto3" json:"chassis_id,omitempty"`
 	// Physical location of the host within the chassis
@@ -654,7 +654,7 @@ type Host struct {
 	// BIOS/UEFI version
 	BiosVersion string `protobuf:"bytes,8,opt,name=bios_version,json=biosVersion,proto3" json:"bios_version,omitempty"`
 	// Host power state
-	PowerState PowerState `protobuf:"varint,9,opt,name=power_state,json=powerState,proto3,enum=proto.v1alpha1.PowerState" json:"power_state,omitempty"`
+	PowerState PowerState `protobuf:"varint,9,opt,name=power_state,json=powerState,proto3,enum=schema.v1alpha1.PowerState" json:"power_state,omitempty"`
 	// Timestamp of the last update
 	LastUpdateTimestamp int64 `protobuf:"varint,10,opt,name=last_update_timestamp,json=lastUpdateTimestamp,proto3" json:"last_update_timestamp,omitempty"`
 	unknownFields       protoimpl.UnknownFields
@@ -815,7 +815,7 @@ type ManagementController struct {
 	// Human-readable name for the management controller
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	// Type of management controller
-	Type ManagementControllerType `protobuf:"varint,3,opt,name=type,proto3,enum=proto.v1alpha1.ManagementControllerType" json:"type,omitempty"`
+	Type ManagementControllerType `protobuf:"varint,3,opt,name=type,proto3,enum=schema.v1alpha1.ManagementControllerType" json:"type,omitempty"`
 	// Host IDs managed by this controller
 	ManagedHostIds []string `protobuf:"bytes,4,rep,name=managed_host_ids,json=managedHostIds,proto3" json:"managed_host_ids,omitempty"`
 	// Chassis IDs managed by this controller
@@ -825,7 +825,7 @@ type ManagementController struct {
 	// Physical location of the management controller
 	PhysicalLocation string `protobuf:"bytes,7,opt,name=physical_location,json=physicalLocation,proto3" json:"physical_location,omitempty"`
 	// Status of the management controller
-	Status ManagementControllerStatus `protobuf:"varint,8,opt,name=status,proto3,enum=proto.v1alpha1.ManagementControllerStatus" json:"status,omitempty"`
+	Status ManagementControllerStatus `protobuf:"varint,8,opt,name=status,proto3,enum=schema.v1alpha1.ManagementControllerStatus" json:"status,omitempty"`
 	// Timestamp of the last update
 	LastUpdateTimestamp int64 `protobuf:"varint,9,opt,name=last_update_timestamp,json=lastUpdateTimestamp,proto3" json:"last_update_timestamp,omitempty"`
 	unknownFields       protoimpl.UnknownFields
@@ -1190,8 +1190,8 @@ func (x *GetChassisResponse) GetChassis() *Chassis {
 // Request message for listing chassis with optional filtering
 type ListChassisRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          ChassisType            `protobuf:"varint,1,opt,name=type,proto3,enum=proto.v1alpha1.ChassisType" json:"type,omitempty"`
-	Status        ChassisStatus          `protobuf:"varint,2,opt,name=status,proto3,enum=proto.v1alpha1.ChassisStatus" json:"status,omitempty"`
+	Type          ChassisType            `protobuf:"varint,1,opt,name=type,proto3,enum=schema.v1alpha1.ChassisType" json:"type,omitempty"`
+	Status        ChassisStatus          `protobuf:"varint,2,opt,name=status,proto3,enum=schema.v1alpha1.ChassisStatus" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1378,8 +1378,8 @@ func (x *GetHostResponse) GetHost() *Host {
 // Request message for listing hosts with optional filtering
 type ListHostsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	State         HostState              `protobuf:"varint,1,opt,name=state,proto3,enum=proto.v1alpha1.HostState" json:"state,omitempty"`
-	Health        HostHealth             `protobuf:"varint,2,opt,name=health,proto3,enum=proto.v1alpha1.HostHealth" json:"health,omitempty"`
+	State         HostState              `protobuf:"varint,1,opt,name=state,proto3,enum=schema.v1alpha1.HostState" json:"state,omitempty"`
+	Health        HostHealth             `protobuf:"varint,2,opt,name=health,proto3,enum=schema.v1alpha1.HostHealth" json:"health,omitempty"`
 	ChassisId     string                 `protobuf:"bytes,3,opt,name=chassis_id,json=chassisId,proto3" json:"chassis_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1574,8 +1574,8 @@ func (x *GetManagementControllerResponse) GetManagementController() *ManagementC
 // Request message for listing management controllers with optional filtering
 type ListManagementControllersRequest struct {
 	state         protoimpl.MessageState     `protogen:"open.v1"`
-	Type          ManagementControllerType   `protobuf:"varint,1,opt,name=type,proto3,enum=proto.v1alpha1.ManagementControllerType" json:"type,omitempty"`
-	Status        ManagementControllerStatus `protobuf:"varint,2,opt,name=status,proto3,enum=proto.v1alpha1.ManagementControllerStatus" json:"status,omitempty"`
+	Type          ManagementControllerType   `protobuf:"varint,1,opt,name=type,proto3,enum=schema.v1alpha1.ManagementControllerType" json:"type,omitempty"`
+	Status        ManagementControllerStatus `protobuf:"varint,2,opt,name=status,proto3,enum=schema.v1alpha1.ManagementControllerStatus" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1673,90 +1673,90 @@ var File_schema_v1alpha1_system_proto protoreflect.FileDescriptor
 
 const file_schema_v1alpha1_system_proto_rawDesc = "" +
 	"\n" +
-	"\x1cschema/v1alpha1/system.proto\x12\x0eproto.v1alpha1\x1a\x1bbuf/validate/validate.proto\"\xad\x02\n" +
+	"\x1cschema/v1alpha1/system.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\"\xb0\x02\n" +
 	"\x0eHostManagement\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12;\n" +
-	"\achassis\x18\x03 \x03(\v2\x17.proto.v1alpha1.ChassisB\b\xbaH\x05\x92\x01\x02\b\x01R\achassis\x124\n" +
-	"\x05hosts\x18\x04 \x03(\v2\x14.proto.v1alpha1.HostB\b\xbaH\x05\x92\x01\x02\b\x01R\x05hosts\x12>\n" +
-	"\btopology\x18\x05 \x01(\v2\".proto.v1alpha1.ManagementTopologyR\btopology\x122\n" +
-	"\x15last_update_timestamp\x18\x06 \x01(\x03R\x13lastUpdateTimestamp\"\xc7\x03\n" +
+	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12<\n" +
+	"\achassis\x18\x03 \x03(\v2\x18.schema.v1alpha1.ChassisB\b\xbaH\x05\x92\x01\x02\b\x01R\achassis\x125\n" +
+	"\x05hosts\x18\x04 \x03(\v2\x15.schema.v1alpha1.HostB\b\xbaH\x05\x92\x01\x02\b\x01R\x05hosts\x12?\n" +
+	"\btopology\x18\x05 \x01(\v2#.schema.v1alpha1.ManagementTopologyR\btopology\x122\n" +
+	"\x15last_update_timestamp\x18\x06 \x01(\x03R\x13lastUpdateTimestamp\"\xca\x03\n" +
 	"\aChassis\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12/\n" +
-	"\x04type\x18\x03 \x01(\x0e2\x1b.proto.v1alpha1.ChassisTypeR\x04type\x12;\n" +
-	"\vpower_state\x18\x04 \x01(\x0e2\x1a.proto.v1alpha1.PowerStateR\n" +
+	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x120\n" +
+	"\x04type\x18\x03 \x01(\x0e2\x1c.schema.v1alpha1.ChassisTypeR\x04type\x12<\n" +
+	"\vpower_state\x18\x04 \x01(\x0e2\x1b.schema.v1alpha1.PowerStateR\n" +
 	"powerState\x12+\n" +
 	"\x11physical_location\x18\x05 \x01(\tR\x10physicalLocation\x12#\n" +
 	"\bhost_ids\x18\x06 \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x00R\ahostIds\x12'\n" +
 	"\n" +
 	"sensor_ids\x18\a \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x00R\tsensorIds\x122\n" +
-	"\x10thermal_zone_ids\x18\b \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x00R\x0ethermalZoneIds\x125\n" +
-	"\x06status\x18\t \x01(\x0e2\x1d.proto.v1alpha1.ChassisStatusR\x06status\x122\n" +
+	"\x10thermal_zone_ids\x18\b \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x00R\x0ethermalZoneIds\x126\n" +
+	"\x06status\x18\t \x01(\x0e2\x1e.schema.v1alpha1.ChassisStatusR\x06status\x122\n" +
 	"\x15last_update_timestamp\x18\n" +
-	" \x01(\x03R\x13lastUpdateTimestamp\"\xce\x03\n" +
+	" \x01(\x03R\x13lastUpdateTimestamp\"\xd2\x03\n" +
 	"\x04Host\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12/\n" +
-	"\x05state\x18\x03 \x01(\x0e2\x19.proto.v1alpha1.HostStateR\x05state\x12B\n" +
-	"\x0frequested_state\x18\x04 \x01(\x0e2\x19.proto.v1alpha1.HostStateR\x0erequestedState\x122\n" +
-	"\x06health\x18\x05 \x01(\x0e2\x1a.proto.v1alpha1.HostHealthR\x06health\x12&\n" +
+	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x120\n" +
+	"\x05state\x18\x03 \x01(\x0e2\x1a.schema.v1alpha1.HostStateR\x05state\x12C\n" +
+	"\x0frequested_state\x18\x04 \x01(\x0e2\x1a.schema.v1alpha1.HostStateR\x0erequestedState\x123\n" +
+	"\x06health\x18\x05 \x01(\x0e2\x1b.schema.v1alpha1.HostHealthR\x06health\x12&\n" +
 	"\n" +
 	"chassis_id\x18\x06 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tchassisId\x12+\n" +
 	"\x11physical_location\x18\a \x01(\tR\x10physicalLocation\x12!\n" +
-	"\fbios_version\x18\b \x01(\tR\vbiosVersion\x12;\n" +
-	"\vpower_state\x18\t \x01(\x0e2\x1a.proto.v1alpha1.PowerStateR\n" +
+	"\fbios_version\x18\b \x01(\tR\vbiosVersion\x12<\n" +
+	"\vpower_state\x18\t \x01(\x0e2\x1b.schema.v1alpha1.PowerStateR\n" +
 	"powerState\x122\n" +
 	"\x15last_update_timestamp\x18\n" +
-	" \x01(\x03R\x13lastUpdateTimestamp\"o\n" +
-	"\x12ManagementTopology\x12Y\n" +
-	"\x10root_controllers\x18\x01 \x03(\v2$.proto.v1alpha1.ManagementControllerB\b\xbaH\x05\x92\x01\x02\b\x01R\x0frootControllers\"\xfa\x03\n" +
+	" \x01(\x03R\x13lastUpdateTimestamp\"p\n" +
+	"\x12ManagementTopology\x12Z\n" +
+	"\x10root_controllers\x18\x01 \x03(\v2%.schema.v1alpha1.ManagementControllerB\b\xbaH\x05\x92\x01\x02\b\x01R\x0frootControllers\"\xfd\x03\n" +
 	"\x14ManagementController\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12<\n" +
-	"\x04type\x18\x03 \x01(\x0e2(.proto.v1alpha1.ManagementControllerTypeR\x04type\x122\n" +
+	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12=\n" +
+	"\x04type\x18\x03 \x01(\x0e2).schema.v1alpha1.ManagementControllerTypeR\x04type\x122\n" +
 	"\x10managed_host_ids\x18\x04 \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x00R\x0emanagedHostIds\x128\n" +
-	"\x13managed_chassis_ids\x18\x05 \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x00R\x11managedChassisIds\x12[\n" +
-	"\x11child_controllers\x18\x06 \x03(\v2$.proto.v1alpha1.ManagementControllerB\b\xbaH\x05\x92\x01\x02\b\x00R\x10childControllers\x12+\n" +
-	"\x11physical_location\x18\a \x01(\tR\x10physicalLocation\x12B\n" +
-	"\x06status\x18\b \x01(\x0e2*.proto.v1alpha1.ManagementControllerStatusR\x06status\x122\n" +
+	"\x13managed_chassis_ids\x18\x05 \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x00R\x11managedChassisIds\x12\\\n" +
+	"\x11child_controllers\x18\x06 \x03(\v2%.schema.v1alpha1.ManagementControllerB\b\xbaH\x05\x92\x01\x02\b\x00R\x10childControllers\x12+\n" +
+	"\x11physical_location\x18\a \x01(\tR\x10physicalLocation\x12C\n" +
+	"\x06status\x18\b \x01(\x0e2+.schema.v1alpha1.ManagementControllerStatusR\x06status\x122\n" +
 	"\x15last_update_timestamp\x18\t \x01(\x03R\x13lastUpdateTimestamp\"3\n" +
 	"\x18GetHostManagementRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"d\n" +
-	"\x19GetHostManagementResponse\x12G\n" +
-	"\x0fhost_management\x18\x01 \x01(\v2\x1e.proto.v1alpha1.HostManagementR\x0ehostManagement\"\x1b\n" +
-	"\x19ListHostManagementRequest\"g\n" +
-	"\x1aListHostManagementResponse\x12I\n" +
-	"\x10host_managements\x18\x01 \x03(\v2\x1e.proto.v1alpha1.HostManagementR\x0fhostManagements\",\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"e\n" +
+	"\x19GetHostManagementResponse\x12H\n" +
+	"\x0fhost_management\x18\x01 \x01(\v2\x1f.schema.v1alpha1.HostManagementR\x0ehostManagement\"\x1b\n" +
+	"\x19ListHostManagementRequest\"h\n" +
+	"\x1aListHostManagementResponse\x12J\n" +
+	"\x10host_managements\x18\x01 \x03(\v2\x1f.schema.v1alpha1.HostManagementR\x0fhostManagements\",\n" +
 	"\x11GetChassisRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"G\n" +
-	"\x12GetChassisResponse\x121\n" +
-	"\achassis\x18\x01 \x01(\v2\x17.proto.v1alpha1.ChassisR\achassis\"|\n" +
-	"\x12ListChassisRequest\x12/\n" +
-	"\x04type\x18\x01 \x01(\x0e2\x1b.proto.v1alpha1.ChassisTypeR\x04type\x125\n" +
-	"\x06status\x18\x02 \x01(\x0e2\x1d.proto.v1alpha1.ChassisStatusR\x06status\"H\n" +
-	"\x13ListChassisResponse\x121\n" +
-	"\achassis\x18\x01 \x03(\v2\x17.proto.v1alpha1.ChassisR\achassis\")\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"H\n" +
+	"\x12GetChassisResponse\x122\n" +
+	"\achassis\x18\x01 \x01(\v2\x18.schema.v1alpha1.ChassisR\achassis\"~\n" +
+	"\x12ListChassisRequest\x120\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x1c.schema.v1alpha1.ChassisTypeR\x04type\x126\n" +
+	"\x06status\x18\x02 \x01(\x0e2\x1e.schema.v1alpha1.ChassisStatusR\x06status\"I\n" +
+	"\x13ListChassisResponse\x122\n" +
+	"\achassis\x18\x01 \x03(\v2\x18.schema.v1alpha1.ChassisR\achassis\")\n" +
 	"\x0eGetHostRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\";\n" +
-	"\x0fGetHostResponse\x12(\n" +
-	"\x04host\x18\x01 \x01(\v2\x14.proto.v1alpha1.HostR\x04host\"\x96\x01\n" +
-	"\x10ListHostsRequest\x12/\n" +
-	"\x05state\x18\x01 \x01(\x0e2\x19.proto.v1alpha1.HostStateR\x05state\x122\n" +
-	"\x06health\x18\x02 \x01(\x0e2\x1a.proto.v1alpha1.HostHealthR\x06health\x12\x1d\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"<\n" +
+	"\x0fGetHostResponse\x12)\n" +
+	"\x04host\x18\x01 \x01(\v2\x15.schema.v1alpha1.HostR\x04host\"\x98\x01\n" +
+	"\x10ListHostsRequest\x120\n" +
+	"\x05state\x18\x01 \x01(\x0e2\x1a.schema.v1alpha1.HostStateR\x05state\x123\n" +
+	"\x06health\x18\x02 \x01(\x0e2\x1b.schema.v1alpha1.HostHealthR\x06health\x12\x1d\n" +
 	"\n" +
-	"chassis_id\x18\x03 \x01(\tR\tchassisId\"?\n" +
-	"\x11ListHostsResponse\x12*\n" +
-	"\x05hosts\x18\x01 \x03(\v2\x14.proto.v1alpha1.HostR\x05hosts\"9\n" +
+	"chassis_id\x18\x03 \x01(\tR\tchassisId\"@\n" +
+	"\x11ListHostsResponse\x12+\n" +
+	"\x05hosts\x18\x01 \x03(\v2\x15.schema.v1alpha1.HostR\x05hosts\"9\n" +
 	"\x1eGetManagementControllerRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"|\n" +
-	"\x1fGetManagementControllerResponse\x12Y\n" +
-	"\x15management_controller\x18\x01 \x01(\v2$.proto.v1alpha1.ManagementControllerR\x14managementController\"\xa4\x01\n" +
-	" ListManagementControllersRequest\x12<\n" +
-	"\x04type\x18\x01 \x01(\x0e2(.proto.v1alpha1.ManagementControllerTypeR\x04type\x12B\n" +
-	"\x06status\x18\x02 \x01(\x0e2*.proto.v1alpha1.ManagementControllerStatusR\x06status\"\x80\x01\n" +
-	"!ListManagementControllersResponse\x12[\n" +
-	"\x16management_controllers\x18\x01 \x03(\v2$.proto.v1alpha1.ManagementControllerR\x15managementControllers*\xae\x01\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"}\n" +
+	"\x1fGetManagementControllerResponse\x12Z\n" +
+	"\x15management_controller\x18\x01 \x01(\v2%.schema.v1alpha1.ManagementControllerR\x14managementController\"\xa6\x01\n" +
+	" ListManagementControllersRequest\x12=\n" +
+	"\x04type\x18\x01 \x01(\x0e2).schema.v1alpha1.ManagementControllerTypeR\x04type\x12C\n" +
+	"\x06status\x18\x02 \x01(\x0e2+.schema.v1alpha1.ManagementControllerStatusR\x06status\"\x81\x01\n" +
+	"!ListManagementControllersResponse\x12\\\n" +
+	"\x16management_controllers\x18\x01 \x03(\v2%.schema.v1alpha1.ManagementControllerR\x15managementControllers*\xae\x01\n" +
 	"\tHostState\x12\x1a\n" +
 	"\x16HOST_STATE_UNSPECIFIED\x10\x00\x12\x11\n" +
 	"\rHOST_STATE_ON\x10\x01\x12\x12\n" +
@@ -1800,21 +1800,21 @@ const file_schema_v1alpha1_system_proto_rawDesc = "" +
 	"\x1fMANAGEMENT_CONTROLLER_STATUS_OK\x10\x01\x12(\n" +
 	"$MANAGEMENT_CONTROLLER_STATUS_WARNING\x10\x02\x12&\n" +
 	"\"MANAGEMENT_CONTROLLER_STATUS_ERROR\x10\x03\x12(\n" +
-	"$MANAGEMENT_CONTROLLER_STATUS_UNKNOWN\x10\x042\xf2\x01\n" +
-	"\x15HostManagementService\x12j\n" +
-	"\x11GetHostManagement\x12(.proto.v1alpha1.GetHostManagementRequest\x1a).proto.v1alpha1.GetHostManagementResponse\"\x00\x12m\n" +
-	"\x12ListHostManagement\x12).proto.v1alpha1.ListHostManagementRequest\x1a*.proto.v1alpha1.ListHostManagementResponse\"\x002\xc1\x01\n" +
-	"\x0eChassisService\x12U\n" +
+	"$MANAGEMENT_CONTROLLER_STATUS_UNKNOWN\x10\x042\xf6\x01\n" +
+	"\x15HostManagementService\x12l\n" +
+	"\x11GetHostManagement\x12).schema.v1alpha1.GetHostManagementRequest\x1a*.schema.v1alpha1.GetHostManagementResponse\"\x00\x12o\n" +
+	"\x12ListHostManagement\x12*.schema.v1alpha1.ListHostManagementRequest\x1a+.schema.v1alpha1.ListHostManagementResponse\"\x002\xc5\x01\n" +
+	"\x0eChassisService\x12W\n" +
 	"\n" +
-	"GetChassis\x12!.proto.v1alpha1.GetChassisRequest\x1a\".proto.v1alpha1.GetChassisResponse\"\x00\x12X\n" +
-	"\vListChassis\x12\".proto.v1alpha1.ListChassisRequest\x1a#.proto.v1alpha1.ListChassisResponse\"\x002\xaf\x01\n" +
-	"\vHostService\x12L\n" +
-	"\aGetHost\x12\x1e.proto.v1alpha1.GetHostRequest\x1a\x1f.proto.v1alpha1.GetHostResponse\"\x00\x12R\n" +
-	"\tListHosts\x12 .proto.v1alpha1.ListHostsRequest\x1a!.proto.v1alpha1.ListHostsResponse\"\x002\xa0\x02\n" +
-	"\x1bManagementControllerService\x12|\n" +
-	"\x17GetManagementController\x12..proto.v1alpha1.GetManagementControllerRequest\x1a/.proto.v1alpha1.GetManagementControllerResponse\"\x00\x12\x82\x01\n" +
-	"\x19ListManagementControllers\x120.proto.v1alpha1.ListManagementControllersRequest\x1a1.proto.v1alpha1.ListManagementControllersResponse\"\x00B\xb8\x01\n" +
-	"\x12com.proto.v1alpha1B\vSystemProtoP\x01Z<github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;protov1alpha1\xa2\x02\x03PXX\xaa\x02\x0eProto.V1alpha1\xca\x02\x0eProto\\V1alpha1\xe2\x02\x1aProto\\V1alpha1\\GPBMetadata\xea\x02\x0fProto::V1alpha1b\x06proto3"
+	"GetChassis\x12\".schema.v1alpha1.GetChassisRequest\x1a#.schema.v1alpha1.GetChassisResponse\"\x00\x12Z\n" +
+	"\vListChassis\x12#.schema.v1alpha1.ListChassisRequest\x1a$.schema.v1alpha1.ListChassisResponse\"\x002\xb3\x01\n" +
+	"\vHostService\x12N\n" +
+	"\aGetHost\x12\x1f.schema.v1alpha1.GetHostRequest\x1a .schema.v1alpha1.GetHostResponse\"\x00\x12T\n" +
+	"\tListHosts\x12!.schema.v1alpha1.ListHostsRequest\x1a\".schema.v1alpha1.ListHostsResponse\"\x002\xa4\x02\n" +
+	"\x1bManagementControllerService\x12~\n" +
+	"\x17GetManagementController\x12/.schema.v1alpha1.GetManagementControllerRequest\x1a0.schema.v1alpha1.GetManagementControllerResponse\"\x00\x12\x84\x01\n" +
+	"\x19ListManagementControllers\x121.schema.v1alpha1.ListManagementControllersRequest\x1a2.schema.v1alpha1.ListManagementControllersResponse\"\x00B\xbe\x01\n" +
+	"\x13com.schema.v1alpha1B\vSystemProtoP\x01Z=github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;schemav1alpha1\xa2\x02\x03SXX\xaa\x02\x0fSchema.V1alpha1\xca\x02\x0fSchema\\V1alpha1\xe2\x02\x1bSchema\\V1alpha1\\GPBMetadata\xea\x02\x10Schema::V1alpha1b\x06proto3"
 
 var (
 	file_schema_v1alpha1_system_proto_rawDescOnce sync.Once
@@ -1831,80 +1831,80 @@ func file_schema_v1alpha1_system_proto_rawDescGZIP() []byte {
 var file_schema_v1alpha1_system_proto_enumTypes = make([]protoimpl.EnumInfo, 7)
 var file_schema_v1alpha1_system_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_schema_v1alpha1_system_proto_goTypes = []any{
-	(HostState)(0),                            // 0: proto.v1alpha1.HostState
-	(HostHealth)(0),                           // 1: proto.v1alpha1.HostHealth
-	(PowerState)(0),                           // 2: proto.v1alpha1.PowerState
-	(ChassisType)(0),                          // 3: proto.v1alpha1.ChassisType
-	(ChassisStatus)(0),                        // 4: proto.v1alpha1.ChassisStatus
-	(ManagementControllerType)(0),             // 5: proto.v1alpha1.ManagementControllerType
-	(ManagementControllerStatus)(0),           // 6: proto.v1alpha1.ManagementControllerStatus
-	(*HostManagement)(nil),                    // 7: proto.v1alpha1.HostManagement
-	(*Chassis)(nil),                           // 8: proto.v1alpha1.Chassis
-	(*Host)(nil),                              // 9: proto.v1alpha1.Host
-	(*ManagementTopology)(nil),                // 10: proto.v1alpha1.ManagementTopology
-	(*ManagementController)(nil),              // 11: proto.v1alpha1.ManagementController
-	(*GetHostManagementRequest)(nil),          // 12: proto.v1alpha1.GetHostManagementRequest
-	(*GetHostManagementResponse)(nil),         // 13: proto.v1alpha1.GetHostManagementResponse
-	(*ListHostManagementRequest)(nil),         // 14: proto.v1alpha1.ListHostManagementRequest
-	(*ListHostManagementResponse)(nil),        // 15: proto.v1alpha1.ListHostManagementResponse
-	(*GetChassisRequest)(nil),                 // 16: proto.v1alpha1.GetChassisRequest
-	(*GetChassisResponse)(nil),                // 17: proto.v1alpha1.GetChassisResponse
-	(*ListChassisRequest)(nil),                // 18: proto.v1alpha1.ListChassisRequest
-	(*ListChassisResponse)(nil),               // 19: proto.v1alpha1.ListChassisResponse
-	(*GetHostRequest)(nil),                    // 20: proto.v1alpha1.GetHostRequest
-	(*GetHostResponse)(nil),                   // 21: proto.v1alpha1.GetHostResponse
-	(*ListHostsRequest)(nil),                  // 22: proto.v1alpha1.ListHostsRequest
-	(*ListHostsResponse)(nil),                 // 23: proto.v1alpha1.ListHostsResponse
-	(*GetManagementControllerRequest)(nil),    // 24: proto.v1alpha1.GetManagementControllerRequest
-	(*GetManagementControllerResponse)(nil),   // 25: proto.v1alpha1.GetManagementControllerResponse
-	(*ListManagementControllersRequest)(nil),  // 26: proto.v1alpha1.ListManagementControllersRequest
-	(*ListManagementControllersResponse)(nil), // 27: proto.v1alpha1.ListManagementControllersResponse
+	(HostState)(0),                            // 0: schema.v1alpha1.HostState
+	(HostHealth)(0),                           // 1: schema.v1alpha1.HostHealth
+	(PowerState)(0),                           // 2: schema.v1alpha1.PowerState
+	(ChassisType)(0),                          // 3: schema.v1alpha1.ChassisType
+	(ChassisStatus)(0),                        // 4: schema.v1alpha1.ChassisStatus
+	(ManagementControllerType)(0),             // 5: schema.v1alpha1.ManagementControllerType
+	(ManagementControllerStatus)(0),           // 6: schema.v1alpha1.ManagementControllerStatus
+	(*HostManagement)(nil),                    // 7: schema.v1alpha1.HostManagement
+	(*Chassis)(nil),                           // 8: schema.v1alpha1.Chassis
+	(*Host)(nil),                              // 9: schema.v1alpha1.Host
+	(*ManagementTopology)(nil),                // 10: schema.v1alpha1.ManagementTopology
+	(*ManagementController)(nil),              // 11: schema.v1alpha1.ManagementController
+	(*GetHostManagementRequest)(nil),          // 12: schema.v1alpha1.GetHostManagementRequest
+	(*GetHostManagementResponse)(nil),         // 13: schema.v1alpha1.GetHostManagementResponse
+	(*ListHostManagementRequest)(nil),         // 14: schema.v1alpha1.ListHostManagementRequest
+	(*ListHostManagementResponse)(nil),        // 15: schema.v1alpha1.ListHostManagementResponse
+	(*GetChassisRequest)(nil),                 // 16: schema.v1alpha1.GetChassisRequest
+	(*GetChassisResponse)(nil),                // 17: schema.v1alpha1.GetChassisResponse
+	(*ListChassisRequest)(nil),                // 18: schema.v1alpha1.ListChassisRequest
+	(*ListChassisResponse)(nil),               // 19: schema.v1alpha1.ListChassisResponse
+	(*GetHostRequest)(nil),                    // 20: schema.v1alpha1.GetHostRequest
+	(*GetHostResponse)(nil),                   // 21: schema.v1alpha1.GetHostResponse
+	(*ListHostsRequest)(nil),                  // 22: schema.v1alpha1.ListHostsRequest
+	(*ListHostsResponse)(nil),                 // 23: schema.v1alpha1.ListHostsResponse
+	(*GetManagementControllerRequest)(nil),    // 24: schema.v1alpha1.GetManagementControllerRequest
+	(*GetManagementControllerResponse)(nil),   // 25: schema.v1alpha1.GetManagementControllerResponse
+	(*ListManagementControllersRequest)(nil),  // 26: schema.v1alpha1.ListManagementControllersRequest
+	(*ListManagementControllersResponse)(nil), // 27: schema.v1alpha1.ListManagementControllersResponse
 }
 var file_schema_v1alpha1_system_proto_depIdxs = []int32{
-	8,  // 0: proto.v1alpha1.HostManagement.chassis:type_name -> proto.v1alpha1.Chassis
-	9,  // 1: proto.v1alpha1.HostManagement.hosts:type_name -> proto.v1alpha1.Host
-	10, // 2: proto.v1alpha1.HostManagement.topology:type_name -> proto.v1alpha1.ManagementTopology
-	3,  // 3: proto.v1alpha1.Chassis.type:type_name -> proto.v1alpha1.ChassisType
-	2,  // 4: proto.v1alpha1.Chassis.power_state:type_name -> proto.v1alpha1.PowerState
-	4,  // 5: proto.v1alpha1.Chassis.status:type_name -> proto.v1alpha1.ChassisStatus
-	0,  // 6: proto.v1alpha1.Host.state:type_name -> proto.v1alpha1.HostState
-	0,  // 7: proto.v1alpha1.Host.requested_state:type_name -> proto.v1alpha1.HostState
-	1,  // 8: proto.v1alpha1.Host.health:type_name -> proto.v1alpha1.HostHealth
-	2,  // 9: proto.v1alpha1.Host.power_state:type_name -> proto.v1alpha1.PowerState
-	11, // 10: proto.v1alpha1.ManagementTopology.root_controllers:type_name -> proto.v1alpha1.ManagementController
-	5,  // 11: proto.v1alpha1.ManagementController.type:type_name -> proto.v1alpha1.ManagementControllerType
-	11, // 12: proto.v1alpha1.ManagementController.child_controllers:type_name -> proto.v1alpha1.ManagementController
-	6,  // 13: proto.v1alpha1.ManagementController.status:type_name -> proto.v1alpha1.ManagementControllerStatus
-	7,  // 14: proto.v1alpha1.GetHostManagementResponse.host_management:type_name -> proto.v1alpha1.HostManagement
-	7,  // 15: proto.v1alpha1.ListHostManagementResponse.host_managements:type_name -> proto.v1alpha1.HostManagement
-	8,  // 16: proto.v1alpha1.GetChassisResponse.chassis:type_name -> proto.v1alpha1.Chassis
-	3,  // 17: proto.v1alpha1.ListChassisRequest.type:type_name -> proto.v1alpha1.ChassisType
-	4,  // 18: proto.v1alpha1.ListChassisRequest.status:type_name -> proto.v1alpha1.ChassisStatus
-	8,  // 19: proto.v1alpha1.ListChassisResponse.chassis:type_name -> proto.v1alpha1.Chassis
-	9,  // 20: proto.v1alpha1.GetHostResponse.host:type_name -> proto.v1alpha1.Host
-	0,  // 21: proto.v1alpha1.ListHostsRequest.state:type_name -> proto.v1alpha1.HostState
-	1,  // 22: proto.v1alpha1.ListHostsRequest.health:type_name -> proto.v1alpha1.HostHealth
-	9,  // 23: proto.v1alpha1.ListHostsResponse.hosts:type_name -> proto.v1alpha1.Host
-	11, // 24: proto.v1alpha1.GetManagementControllerResponse.management_controller:type_name -> proto.v1alpha1.ManagementController
-	5,  // 25: proto.v1alpha1.ListManagementControllersRequest.type:type_name -> proto.v1alpha1.ManagementControllerType
-	6,  // 26: proto.v1alpha1.ListManagementControllersRequest.status:type_name -> proto.v1alpha1.ManagementControllerStatus
-	11, // 27: proto.v1alpha1.ListManagementControllersResponse.management_controllers:type_name -> proto.v1alpha1.ManagementController
-	12, // 28: proto.v1alpha1.HostManagementService.GetHostManagement:input_type -> proto.v1alpha1.GetHostManagementRequest
-	14, // 29: proto.v1alpha1.HostManagementService.ListHostManagement:input_type -> proto.v1alpha1.ListHostManagementRequest
-	16, // 30: proto.v1alpha1.ChassisService.GetChassis:input_type -> proto.v1alpha1.GetChassisRequest
-	18, // 31: proto.v1alpha1.ChassisService.ListChassis:input_type -> proto.v1alpha1.ListChassisRequest
-	20, // 32: proto.v1alpha1.HostService.GetHost:input_type -> proto.v1alpha1.GetHostRequest
-	22, // 33: proto.v1alpha1.HostService.ListHosts:input_type -> proto.v1alpha1.ListHostsRequest
-	24, // 34: proto.v1alpha1.ManagementControllerService.GetManagementController:input_type -> proto.v1alpha1.GetManagementControllerRequest
-	26, // 35: proto.v1alpha1.ManagementControllerService.ListManagementControllers:input_type -> proto.v1alpha1.ListManagementControllersRequest
-	13, // 36: proto.v1alpha1.HostManagementService.GetHostManagement:output_type -> proto.v1alpha1.GetHostManagementResponse
-	15, // 37: proto.v1alpha1.HostManagementService.ListHostManagement:output_type -> proto.v1alpha1.ListHostManagementResponse
-	17, // 38: proto.v1alpha1.ChassisService.GetChassis:output_type -> proto.v1alpha1.GetChassisResponse
-	19, // 39: proto.v1alpha1.ChassisService.ListChassis:output_type -> proto.v1alpha1.ListChassisResponse
-	21, // 40: proto.v1alpha1.HostService.GetHost:output_type -> proto.v1alpha1.GetHostResponse
-	23, // 41: proto.v1alpha1.HostService.ListHosts:output_type -> proto.v1alpha1.ListHostsResponse
-	25, // 42: proto.v1alpha1.ManagementControllerService.GetManagementController:output_type -> proto.v1alpha1.GetManagementControllerResponse
-	27, // 43: proto.v1alpha1.ManagementControllerService.ListManagementControllers:output_type -> proto.v1alpha1.ListManagementControllersResponse
+	8,  // 0: schema.v1alpha1.HostManagement.chassis:type_name -> schema.v1alpha1.Chassis
+	9,  // 1: schema.v1alpha1.HostManagement.hosts:type_name -> schema.v1alpha1.Host
+	10, // 2: schema.v1alpha1.HostManagement.topology:type_name -> schema.v1alpha1.ManagementTopology
+	3,  // 3: schema.v1alpha1.Chassis.type:type_name -> schema.v1alpha1.ChassisType
+	2,  // 4: schema.v1alpha1.Chassis.power_state:type_name -> schema.v1alpha1.PowerState
+	4,  // 5: schema.v1alpha1.Chassis.status:type_name -> schema.v1alpha1.ChassisStatus
+	0,  // 6: schema.v1alpha1.Host.state:type_name -> schema.v1alpha1.HostState
+	0,  // 7: schema.v1alpha1.Host.requested_state:type_name -> schema.v1alpha1.HostState
+	1,  // 8: schema.v1alpha1.Host.health:type_name -> schema.v1alpha1.HostHealth
+	2,  // 9: schema.v1alpha1.Host.power_state:type_name -> schema.v1alpha1.PowerState
+	11, // 10: schema.v1alpha1.ManagementTopology.root_controllers:type_name -> schema.v1alpha1.ManagementController
+	5,  // 11: schema.v1alpha1.ManagementController.type:type_name -> schema.v1alpha1.ManagementControllerType
+	11, // 12: schema.v1alpha1.ManagementController.child_controllers:type_name -> schema.v1alpha1.ManagementController
+	6,  // 13: schema.v1alpha1.ManagementController.status:type_name -> schema.v1alpha1.ManagementControllerStatus
+	7,  // 14: schema.v1alpha1.GetHostManagementResponse.host_management:type_name -> schema.v1alpha1.HostManagement
+	7,  // 15: schema.v1alpha1.ListHostManagementResponse.host_managements:type_name -> schema.v1alpha1.HostManagement
+	8,  // 16: schema.v1alpha1.GetChassisResponse.chassis:type_name -> schema.v1alpha1.Chassis
+	3,  // 17: schema.v1alpha1.ListChassisRequest.type:type_name -> schema.v1alpha1.ChassisType
+	4,  // 18: schema.v1alpha1.ListChassisRequest.status:type_name -> schema.v1alpha1.ChassisStatus
+	8,  // 19: schema.v1alpha1.ListChassisResponse.chassis:type_name -> schema.v1alpha1.Chassis
+	9,  // 20: schema.v1alpha1.GetHostResponse.host:type_name -> schema.v1alpha1.Host
+	0,  // 21: schema.v1alpha1.ListHostsRequest.state:type_name -> schema.v1alpha1.HostState
+	1,  // 22: schema.v1alpha1.ListHostsRequest.health:type_name -> schema.v1alpha1.HostHealth
+	9,  // 23: schema.v1alpha1.ListHostsResponse.hosts:type_name -> schema.v1alpha1.Host
+	11, // 24: schema.v1alpha1.GetManagementControllerResponse.management_controller:type_name -> schema.v1alpha1.ManagementController
+	5,  // 25: schema.v1alpha1.ListManagementControllersRequest.type:type_name -> schema.v1alpha1.ManagementControllerType
+	6,  // 26: schema.v1alpha1.ListManagementControllersRequest.status:type_name -> schema.v1alpha1.ManagementControllerStatus
+	11, // 27: schema.v1alpha1.ListManagementControllersResponse.management_controllers:type_name -> schema.v1alpha1.ManagementController
+	12, // 28: schema.v1alpha1.HostManagementService.GetHostManagement:input_type -> schema.v1alpha1.GetHostManagementRequest
+	14, // 29: schema.v1alpha1.HostManagementService.ListHostManagement:input_type -> schema.v1alpha1.ListHostManagementRequest
+	16, // 30: schema.v1alpha1.ChassisService.GetChassis:input_type -> schema.v1alpha1.GetChassisRequest
+	18, // 31: schema.v1alpha1.ChassisService.ListChassis:input_type -> schema.v1alpha1.ListChassisRequest
+	20, // 32: schema.v1alpha1.HostService.GetHost:input_type -> schema.v1alpha1.GetHostRequest
+	22, // 33: schema.v1alpha1.HostService.ListHosts:input_type -> schema.v1alpha1.ListHostsRequest
+	24, // 34: schema.v1alpha1.ManagementControllerService.GetManagementController:input_type -> schema.v1alpha1.GetManagementControllerRequest
+	26, // 35: schema.v1alpha1.ManagementControllerService.ListManagementControllers:input_type -> schema.v1alpha1.ListManagementControllersRequest
+	13, // 36: schema.v1alpha1.HostManagementService.GetHostManagement:output_type -> schema.v1alpha1.GetHostManagementResponse
+	15, // 37: schema.v1alpha1.HostManagementService.ListHostManagement:output_type -> schema.v1alpha1.ListHostManagementResponse
+	17, // 38: schema.v1alpha1.ChassisService.GetChassis:output_type -> schema.v1alpha1.GetChassisResponse
+	19, // 39: schema.v1alpha1.ChassisService.ListChassis:output_type -> schema.v1alpha1.ListChassisResponse
+	21, // 40: schema.v1alpha1.HostService.GetHost:output_type -> schema.v1alpha1.GetHostResponse
+	23, // 41: schema.v1alpha1.HostService.ListHosts:output_type -> schema.v1alpha1.ListHostsResponse
+	25, // 42: schema.v1alpha1.ManagementControllerService.GetManagementController:output_type -> schema.v1alpha1.GetManagementControllerResponse
+	27, // 43: schema.v1alpha1.ManagementControllerService.ListManagementControllers:output_type -> schema.v1alpha1.ListManagementControllersResponse
 	36, // [36:44] is the sub-list for method output_type
 	28, // [28:36] is the sub-list for method input_type
 	28, // [28:28] is the sub-list for extension type_name

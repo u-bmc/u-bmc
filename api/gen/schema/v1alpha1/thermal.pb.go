@@ -6,7 +6,7 @@
 // 	protoc        (unknown)
 // source: schema/v1alpha1/thermal.proto
 
-package protov1alpha1
+package schemav1alpha1
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -342,7 +342,7 @@ type ThermalZone struct {
 	// PID controller settings for this zone
 	PidSettings *PIDSettings `protobuf:"bytes,7,opt,name=pid_settings,json=pidSettings,proto3" json:"pid_settings,omitempty"`
 	// Status of the thermal zone
-	Status ThermalZoneStatus `protobuf:"varint,8,opt,name=status,proto3,enum=proto.v1alpha1.ThermalZoneStatus" json:"status,omitempty"`
+	Status ThermalZoneStatus `protobuf:"varint,8,opt,name=status,proto3,enum=schema.v1alpha1.ThermalZoneStatus" json:"status,omitempty"`
 	// Timestamp of the last update
 	LastUpdateTimestamp int64 `protobuf:"varint,9,opt,name=last_update_timestamp,json=lastUpdateTimestamp,proto3" json:"last_update_timestamp,omitempty"`
 	unknownFields       protoimpl.UnknownFields
@@ -450,7 +450,7 @@ type CoolingDevice struct {
 	// Human-readable name for the cooling device
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	// Type of cooling device
-	Type CoolingDeviceType `protobuf:"varint,3,opt,name=type,proto3,enum=proto.v1alpha1.CoolingDeviceType" json:"type,omitempty"`
+	Type CoolingDeviceType `protobuf:"varint,3,opt,name=type,proto3,enum=schema.v1alpha1.CoolingDeviceType" json:"type,omitempty"`
 	// Current speed or power level (0-100%)
 	SpeedPercent float64 `protobuf:"fixed64,4,opt,name=speed_percent,json=speedPercent,proto3" json:"speed_percent,omitempty"`
 	// Minimum allowed speed
@@ -458,7 +458,7 @@ type CoolingDevice struct {
 	// Maximum allowed speed
 	MaxSpeedPercent float64 `protobuf:"fixed64,6,opt,name=max_speed_percent,json=maxSpeedPercent,proto3" json:"max_speed_percent,omitempty"`
 	// Status of the cooling device
-	Status CoolingDeviceStatus `protobuf:"varint,7,opt,name=status,proto3,enum=proto.v1alpha1.CoolingDeviceStatus" json:"status,omitempty"`
+	Status CoolingDeviceStatus `protobuf:"varint,7,opt,name=status,proto3,enum=schema.v1alpha1.CoolingDeviceStatus" json:"status,omitempty"`
 	// Physical location of the device
 	PhysicalLocation string `protobuf:"bytes,8,opt,name=physical_location,json=physicalLocation,proto3" json:"physical_location,omitempty"`
 	// Timestamp of the last update
@@ -654,7 +654,7 @@ func (x *PIDSettings) GetOutputMax() float64 {
 type ThermalProfile struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Profile type
-	Type ThermalProfileType `protobuf:"varint,1,opt,name=type,proto3,enum=proto.v1alpha1.ThermalProfileType" json:"type,omitempty"`
+	Type ThermalProfileType `protobuf:"varint,1,opt,name=type,proto3,enum=schema.v1alpha1.ThermalProfileType" json:"type,omitempty"`
 	// Custom PID settings (only used when type is CUSTOM)
 	CustomSettings *PIDSettings `protobuf:"bytes,2,opt,name=custom_settings,json=customSettings,proto3" json:"custom_settings,omitempty"`
 	// Description of the profile
@@ -979,7 +979,7 @@ func (x *GetThermalZoneResponse) GetThermalZone() *ThermalZone {
 // Request message for listing thermal zones with optional filtering
 type ListThermalZonesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        ThermalZoneStatus      `protobuf:"varint,1,opt,name=status,proto3,enum=proto.v1alpha1.ThermalZoneStatus" json:"status,omitempty"`
+	Status        ThermalZoneStatus      `protobuf:"varint,1,opt,name=status,proto3,enum=schema.v1alpha1.ThermalZoneStatus" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1159,8 +1159,8 @@ func (x *GetCoolingDeviceResponse) GetCoolingDevice() *CoolingDevice {
 // Request message for listing cooling devices with optional filtering
 type ListCoolingDevicesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          CoolingDeviceType      `protobuf:"varint,1,opt,name=type,proto3,enum=proto.v1alpha1.CoolingDeviceType" json:"type,omitempty"`
-	Status        CoolingDeviceStatus    `protobuf:"varint,2,opt,name=status,proto3,enum=proto.v1alpha1.CoolingDeviceStatus" json:"status,omitempty"`
+	Type          CoolingDeviceType      `protobuf:"varint,1,opt,name=type,proto3,enum=schema.v1alpha1.CoolingDeviceType" json:"type,omitempty"`
+	Status        CoolingDeviceStatus    `protobuf:"varint,2,opt,name=status,proto3,enum=schema.v1alpha1.CoolingDeviceStatus" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1258,13 +1258,13 @@ var File_schema_v1alpha1_thermal_proto protoreflect.FileDescriptor
 
 const file_schema_v1alpha1_thermal_proto_rawDesc = "" +
 	"\n" +
-	"\x1dschema/v1alpha1/thermal.proto\x12\x0eproto.v1alpha1\x1a\x1bbuf/validate/validate.proto\"\xf4\x01\n" +
+	"\x1dschema/v1alpha1/thermal.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\"\xf6\x01\n" +
 	"\x11ThermalManagement\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12;\n" +
-	"\x05zones\x18\x03 \x03(\v2\x1b.proto.v1alpha1.ThermalZoneB\b\xbaH\x05\x92\x01\x02\b\x01R\x05zones\x128\n" +
-	"\aprofile\x18\x04 \x01(\v2\x1e.proto.v1alpha1.ThermalProfileR\aprofile\x122\n" +
-	"\x15last_update_timestamp\x18\x05 \x01(\x03R\x13lastUpdateTimestamp\"\xc3\x03\n" +
+	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12<\n" +
+	"\x05zones\x18\x03 \x03(\v2\x1c.schema.v1alpha1.ThermalZoneB\b\xbaH\x05\x92\x01\x02\b\x01R\x05zones\x129\n" +
+	"\aprofile\x18\x04 \x01(\v2\x1f.schema.v1alpha1.ThermalProfileR\aprofile\x122\n" +
+	"\x15last_update_timestamp\x18\x05 \x01(\x03R\x13lastUpdateTimestamp\"\xc5\x03\n" +
 	"\vThermalZone\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
 	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12'\n" +
@@ -1272,18 +1272,18 @@ const file_schema_v1alpha1_thermal_proto_rawDesc = "" +
 	"sensor_ids\x18\x03 \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x01R\tsensorIds\x126\n" +
 	"\x12cooling_device_ids\x18\x04 \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x01R\x10coolingDeviceIds\x12/\n" +
 	"\x13current_temperature\x18\x05 \x01(\x01R\x12currentTemperature\x12=\n" +
-	"\x12target_temperature\x18\x06 \x01(\x01B\x0e\xbaH\v\x12\t!\x00\x00\x00\x00\x00\x00\x00\x00R\x11targetTemperature\x12>\n" +
-	"\fpid_settings\x18\a \x01(\v2\x1b.proto.v1alpha1.PIDSettingsR\vpidSettings\x129\n" +
-	"\x06status\x18\b \x01(\x0e2!.proto.v1alpha1.ThermalZoneStatusR\x06status\x122\n" +
-	"\x15last_update_timestamp\x18\t \x01(\x03R\x13lastUpdateTimestamp\"\xe2\x03\n" +
+	"\x12target_temperature\x18\x06 \x01(\x01B\x0e\xbaH\v\x12\t!\x00\x00\x00\x00\x00\x00\x00\x00R\x11targetTemperature\x12?\n" +
+	"\fpid_settings\x18\a \x01(\v2\x1c.schema.v1alpha1.PIDSettingsR\vpidSettings\x12:\n" +
+	"\x06status\x18\b \x01(\x0e2\".schema.v1alpha1.ThermalZoneStatusR\x06status\x122\n" +
+	"\x15last_update_timestamp\x18\t \x01(\x03R\x13lastUpdateTimestamp\"\xe4\x03\n" +
 	"\rCoolingDevice\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x125\n" +
-	"\x04type\x18\x03 \x01(\x0e2!.proto.v1alpha1.CoolingDeviceTypeR\x04type\x12<\n" +
+	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x126\n" +
+	"\x04type\x18\x03 \x01(\x0e2\".schema.v1alpha1.CoolingDeviceTypeR\x04type\x12<\n" +
 	"\rspeed_percent\x18\x04 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00R\fspeedPercent\x12C\n" +
 	"\x11min_speed_percent\x18\x05 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00R\x0fminSpeedPercent\x12C\n" +
-	"\x11max_speed_percent\x18\x06 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00R\x0fmaxSpeedPercent\x12;\n" +
-	"\x06status\x18\a \x01(\x0e2#.proto.v1alpha1.CoolingDeviceStatusR\x06status\x12+\n" +
+	"\x11max_speed_percent\x18\x06 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00R\x0fmaxSpeedPercent\x12<\n" +
+	"\x06status\x18\a \x01(\x0e2$.schema.v1alpha1.CoolingDeviceStatusR\x06status\x12+\n" +
 	"\x11physical_location\x18\b \x01(\tR\x10physicalLocation\x122\n" +
 	"\x15last_update_timestamp\x18\t \x01(\x03R\x13lastUpdateTimestamp\"\x8e\x02\n" +
 	"\vPIDSettings\x12\x1e\n" +
@@ -1295,35 +1295,35 @@ const file_schema_v1alpha1_thermal_proto_rawDesc = "" +
 	"\n" +
 	"output_min\x18\x05 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00R\toutputMin\x126\n" +
 	"\n" +
-	"output_max\x18\x06 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00R\toutputMax\"\xb0\x01\n" +
-	"\x0eThermalProfile\x126\n" +
-	"\x04type\x18\x01 \x01(\x0e2\".proto.v1alpha1.ThermalProfileTypeR\x04type\x12D\n" +
-	"\x0fcustom_settings\x18\x02 \x01(\v2\x1b.proto.v1alpha1.PIDSettingsR\x0ecustomSettings\x12 \n" +
+	"output_max\x18\x06 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00R\toutputMax\"\xb2\x01\n" +
+	"\x0eThermalProfile\x127\n" +
+	"\x04type\x18\x01 \x01(\x0e2#.schema.v1alpha1.ThermalProfileTypeR\x04type\x12E\n" +
+	"\x0fcustom_settings\x18\x02 \x01(\v2\x1c.schema.v1alpha1.PIDSettingsR\x0ecustomSettings\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\"6\n" +
 	"\x1bGetThermalManagementRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"p\n" +
-	"\x1cGetThermalManagementResponse\x12P\n" +
-	"\x12thermal_management\x18\x01 \x01(\v2!.proto.v1alpha1.ThermalManagementR\x11thermalManagement\"\x1e\n" +
-	"\x1cListThermalManagementRequest\"s\n" +
-	"\x1dListThermalManagementResponse\x12R\n" +
-	"\x13thermal_managements\x18\x01 \x03(\v2!.proto.v1alpha1.ThermalManagementR\x12thermalManagements\"0\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"q\n" +
+	"\x1cGetThermalManagementResponse\x12Q\n" +
+	"\x12thermal_management\x18\x01 \x01(\v2\".schema.v1alpha1.ThermalManagementR\x11thermalManagement\"\x1e\n" +
+	"\x1cListThermalManagementRequest\"t\n" +
+	"\x1dListThermalManagementResponse\x12S\n" +
+	"\x13thermal_managements\x18\x01 \x03(\v2\".schema.v1alpha1.ThermalManagementR\x12thermalManagements\"0\n" +
 	"\x15GetThermalZoneRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"X\n" +
-	"\x16GetThermalZoneResponse\x12>\n" +
-	"\fthermal_zone\x18\x01 \x01(\v2\x1b.proto.v1alpha1.ThermalZoneR\vthermalZone\"T\n" +
-	"\x17ListThermalZonesRequest\x129\n" +
-	"\x06status\x18\x01 \x01(\x0e2!.proto.v1alpha1.ThermalZoneStatusR\x06status\"\\\n" +
-	"\x18ListThermalZonesResponse\x12@\n" +
-	"\rthermal_zones\x18\x01 \x03(\v2\x1b.proto.v1alpha1.ThermalZoneR\fthermalZones\"2\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"Y\n" +
+	"\x16GetThermalZoneResponse\x12?\n" +
+	"\fthermal_zone\x18\x01 \x01(\v2\x1c.schema.v1alpha1.ThermalZoneR\vthermalZone\"U\n" +
+	"\x17ListThermalZonesRequest\x12:\n" +
+	"\x06status\x18\x01 \x01(\x0e2\".schema.v1alpha1.ThermalZoneStatusR\x06status\"]\n" +
+	"\x18ListThermalZonesResponse\x12A\n" +
+	"\rthermal_zones\x18\x01 \x03(\v2\x1c.schema.v1alpha1.ThermalZoneR\fthermalZones\"2\n" +
 	"\x17GetCoolingDeviceRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"`\n" +
-	"\x18GetCoolingDeviceResponse\x12D\n" +
-	"\x0ecooling_device\x18\x01 \x01(\v2\x1d.proto.v1alpha1.CoolingDeviceR\rcoolingDevice\"\x8f\x01\n" +
-	"\x19ListCoolingDevicesRequest\x125\n" +
-	"\x04type\x18\x01 \x01(\x0e2!.proto.v1alpha1.CoolingDeviceTypeR\x04type\x12;\n" +
-	"\x06status\x18\x02 \x01(\x0e2#.proto.v1alpha1.CoolingDeviceStatusR\x06status\"d\n" +
-	"\x1aListCoolingDevicesResponse\x12F\n" +
-	"\x0fcooling_devices\x18\x01 \x03(\v2\x1d.proto.v1alpha1.CoolingDeviceR\x0ecoolingDevices*\xba\x01\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"a\n" +
+	"\x18GetCoolingDeviceResponse\x12E\n" +
+	"\x0ecooling_device\x18\x01 \x01(\v2\x1e.schema.v1alpha1.CoolingDeviceR\rcoolingDevice\"\x91\x01\n" +
+	"\x19ListCoolingDevicesRequest\x126\n" +
+	"\x04type\x18\x01 \x01(\x0e2\".schema.v1alpha1.CoolingDeviceTypeR\x04type\x12<\n" +
+	"\x06status\x18\x02 \x01(\x0e2$.schema.v1alpha1.CoolingDeviceStatusR\x06status\"e\n" +
+	"\x1aListCoolingDevicesResponse\x12G\n" +
+	"\x0fcooling_devices\x18\x01 \x03(\v2\x1e.schema.v1alpha1.CoolingDeviceR\x0ecoolingDevices*\xba\x01\n" +
 	"\x11ThermalZoneStatus\x12#\n" +
 	"\x1fTHERMAL_ZONE_STATUS_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aTHERMAL_ZONE_STATUS_NORMAL\x10\x01\x12\x1f\n" +
@@ -1346,17 +1346,17 @@ const file_schema_v1alpha1_thermal_proto_rawDesc = "" +
 	"\x1aTHERMAL_PROFILE_TYPE_QUIET\x10\x01\x12!\n" +
 	"\x1dTHERMAL_PROFILE_TYPE_BALANCED\x10\x02\x12#\n" +
 	"\x1fTHERMAL_PROFILE_TYPE_AGGRESSIVE\x10\x03\x12\x1f\n" +
-	"\x1bTHERMAL_PROFILE_TYPE_CUSTOM\x10\x042\x87\x02\n" +
-	"\x18ThermalManagementService\x12s\n" +
-	"\x14GetThermalManagement\x12+.proto.v1alpha1.GetThermalManagementRequest\x1a,.proto.v1alpha1.GetThermalManagementResponse\"\x00\x12v\n" +
-	"\x15ListThermalManagement\x12,.proto.v1alpha1.ListThermalManagementRequest\x1a-.proto.v1alpha1.ListThermalManagementResponse\"\x002\xe0\x01\n" +
-	"\x12ThermalZoneService\x12a\n" +
-	"\x0eGetThermalZone\x12%.proto.v1alpha1.GetThermalZoneRequest\x1a&.proto.v1alpha1.GetThermalZoneResponse\"\x00\x12g\n" +
-	"\x10ListThermalZones\x12'.proto.v1alpha1.ListThermalZonesRequest\x1a(.proto.v1alpha1.ListThermalZonesResponse\"\x002\xee\x01\n" +
-	"\x14CoolingDeviceService\x12g\n" +
-	"\x10GetCoolingDevice\x12'.proto.v1alpha1.GetCoolingDeviceRequest\x1a(.proto.v1alpha1.GetCoolingDeviceResponse\"\x00\x12m\n" +
-	"\x12ListCoolingDevices\x12).proto.v1alpha1.ListCoolingDevicesRequest\x1a*.proto.v1alpha1.ListCoolingDevicesResponse\"\x00B\xb9\x01\n" +
-	"\x12com.proto.v1alpha1B\fThermalProtoP\x01Z<github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;protov1alpha1\xa2\x02\x03PXX\xaa\x02\x0eProto.V1alpha1\xca\x02\x0eProto\\V1alpha1\xe2\x02\x1aProto\\V1alpha1\\GPBMetadata\xea\x02\x0fProto::V1alpha1b\x06proto3"
+	"\x1bTHERMAL_PROFILE_TYPE_CUSTOM\x10\x042\x8b\x02\n" +
+	"\x18ThermalManagementService\x12u\n" +
+	"\x14GetThermalManagement\x12,.schema.v1alpha1.GetThermalManagementRequest\x1a-.schema.v1alpha1.GetThermalManagementResponse\"\x00\x12x\n" +
+	"\x15ListThermalManagement\x12-.schema.v1alpha1.ListThermalManagementRequest\x1a..schema.v1alpha1.ListThermalManagementResponse\"\x002\xe4\x01\n" +
+	"\x12ThermalZoneService\x12c\n" +
+	"\x0eGetThermalZone\x12&.schema.v1alpha1.GetThermalZoneRequest\x1a'.schema.v1alpha1.GetThermalZoneResponse\"\x00\x12i\n" +
+	"\x10ListThermalZones\x12(.schema.v1alpha1.ListThermalZonesRequest\x1a).schema.v1alpha1.ListThermalZonesResponse\"\x002\xf2\x01\n" +
+	"\x14CoolingDeviceService\x12i\n" +
+	"\x10GetCoolingDevice\x12(.schema.v1alpha1.GetCoolingDeviceRequest\x1a).schema.v1alpha1.GetCoolingDeviceResponse\"\x00\x12o\n" +
+	"\x12ListCoolingDevices\x12*.schema.v1alpha1.ListCoolingDevicesRequest\x1a+.schema.v1alpha1.ListCoolingDevicesResponse\"\x00B\xbf\x01\n" +
+	"\x13com.schema.v1alpha1B\fThermalProtoP\x01Z=github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;schemav1alpha1\xa2\x02\x03SXX\xaa\x02\x0fSchema.V1alpha1\xca\x02\x0fSchema\\V1alpha1\xe2\x02\x1bSchema\\V1alpha1\\GPBMetadata\xea\x02\x10Schema::V1alpha1b\x06proto3"
 
 var (
 	file_schema_v1alpha1_thermal_proto_rawDescOnce sync.Once
@@ -1373,58 +1373,58 @@ func file_schema_v1alpha1_thermal_proto_rawDescGZIP() []byte {
 var file_schema_v1alpha1_thermal_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_schema_v1alpha1_thermal_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_schema_v1alpha1_thermal_proto_goTypes = []any{
-	(ThermalZoneStatus)(0),                // 0: proto.v1alpha1.ThermalZoneStatus
-	(CoolingDeviceType)(0),                // 1: proto.v1alpha1.CoolingDeviceType
-	(CoolingDeviceStatus)(0),              // 2: proto.v1alpha1.CoolingDeviceStatus
-	(ThermalProfileType)(0),               // 3: proto.v1alpha1.ThermalProfileType
-	(*ThermalManagement)(nil),             // 4: proto.v1alpha1.ThermalManagement
-	(*ThermalZone)(nil),                   // 5: proto.v1alpha1.ThermalZone
-	(*CoolingDevice)(nil),                 // 6: proto.v1alpha1.CoolingDevice
-	(*PIDSettings)(nil),                   // 7: proto.v1alpha1.PIDSettings
-	(*ThermalProfile)(nil),                // 8: proto.v1alpha1.ThermalProfile
-	(*GetThermalManagementRequest)(nil),   // 9: proto.v1alpha1.GetThermalManagementRequest
-	(*GetThermalManagementResponse)(nil),  // 10: proto.v1alpha1.GetThermalManagementResponse
-	(*ListThermalManagementRequest)(nil),  // 11: proto.v1alpha1.ListThermalManagementRequest
-	(*ListThermalManagementResponse)(nil), // 12: proto.v1alpha1.ListThermalManagementResponse
-	(*GetThermalZoneRequest)(nil),         // 13: proto.v1alpha1.GetThermalZoneRequest
-	(*GetThermalZoneResponse)(nil),        // 14: proto.v1alpha1.GetThermalZoneResponse
-	(*ListThermalZonesRequest)(nil),       // 15: proto.v1alpha1.ListThermalZonesRequest
-	(*ListThermalZonesResponse)(nil),      // 16: proto.v1alpha1.ListThermalZonesResponse
-	(*GetCoolingDeviceRequest)(nil),       // 17: proto.v1alpha1.GetCoolingDeviceRequest
-	(*GetCoolingDeviceResponse)(nil),      // 18: proto.v1alpha1.GetCoolingDeviceResponse
-	(*ListCoolingDevicesRequest)(nil),     // 19: proto.v1alpha1.ListCoolingDevicesRequest
-	(*ListCoolingDevicesResponse)(nil),    // 20: proto.v1alpha1.ListCoolingDevicesResponse
+	(ThermalZoneStatus)(0),                // 0: schema.v1alpha1.ThermalZoneStatus
+	(CoolingDeviceType)(0),                // 1: schema.v1alpha1.CoolingDeviceType
+	(CoolingDeviceStatus)(0),              // 2: schema.v1alpha1.CoolingDeviceStatus
+	(ThermalProfileType)(0),               // 3: schema.v1alpha1.ThermalProfileType
+	(*ThermalManagement)(nil),             // 4: schema.v1alpha1.ThermalManagement
+	(*ThermalZone)(nil),                   // 5: schema.v1alpha1.ThermalZone
+	(*CoolingDevice)(nil),                 // 6: schema.v1alpha1.CoolingDevice
+	(*PIDSettings)(nil),                   // 7: schema.v1alpha1.PIDSettings
+	(*ThermalProfile)(nil),                // 8: schema.v1alpha1.ThermalProfile
+	(*GetThermalManagementRequest)(nil),   // 9: schema.v1alpha1.GetThermalManagementRequest
+	(*GetThermalManagementResponse)(nil),  // 10: schema.v1alpha1.GetThermalManagementResponse
+	(*ListThermalManagementRequest)(nil),  // 11: schema.v1alpha1.ListThermalManagementRequest
+	(*ListThermalManagementResponse)(nil), // 12: schema.v1alpha1.ListThermalManagementResponse
+	(*GetThermalZoneRequest)(nil),         // 13: schema.v1alpha1.GetThermalZoneRequest
+	(*GetThermalZoneResponse)(nil),        // 14: schema.v1alpha1.GetThermalZoneResponse
+	(*ListThermalZonesRequest)(nil),       // 15: schema.v1alpha1.ListThermalZonesRequest
+	(*ListThermalZonesResponse)(nil),      // 16: schema.v1alpha1.ListThermalZonesResponse
+	(*GetCoolingDeviceRequest)(nil),       // 17: schema.v1alpha1.GetCoolingDeviceRequest
+	(*GetCoolingDeviceResponse)(nil),      // 18: schema.v1alpha1.GetCoolingDeviceResponse
+	(*ListCoolingDevicesRequest)(nil),     // 19: schema.v1alpha1.ListCoolingDevicesRequest
+	(*ListCoolingDevicesResponse)(nil),    // 20: schema.v1alpha1.ListCoolingDevicesResponse
 }
 var file_schema_v1alpha1_thermal_proto_depIdxs = []int32{
-	5,  // 0: proto.v1alpha1.ThermalManagement.zones:type_name -> proto.v1alpha1.ThermalZone
-	8,  // 1: proto.v1alpha1.ThermalManagement.profile:type_name -> proto.v1alpha1.ThermalProfile
-	7,  // 2: proto.v1alpha1.ThermalZone.pid_settings:type_name -> proto.v1alpha1.PIDSettings
-	0,  // 3: proto.v1alpha1.ThermalZone.status:type_name -> proto.v1alpha1.ThermalZoneStatus
-	1,  // 4: proto.v1alpha1.CoolingDevice.type:type_name -> proto.v1alpha1.CoolingDeviceType
-	2,  // 5: proto.v1alpha1.CoolingDevice.status:type_name -> proto.v1alpha1.CoolingDeviceStatus
-	3,  // 6: proto.v1alpha1.ThermalProfile.type:type_name -> proto.v1alpha1.ThermalProfileType
-	7,  // 7: proto.v1alpha1.ThermalProfile.custom_settings:type_name -> proto.v1alpha1.PIDSettings
-	4,  // 8: proto.v1alpha1.GetThermalManagementResponse.thermal_management:type_name -> proto.v1alpha1.ThermalManagement
-	4,  // 9: proto.v1alpha1.ListThermalManagementResponse.thermal_managements:type_name -> proto.v1alpha1.ThermalManagement
-	5,  // 10: proto.v1alpha1.GetThermalZoneResponse.thermal_zone:type_name -> proto.v1alpha1.ThermalZone
-	0,  // 11: proto.v1alpha1.ListThermalZonesRequest.status:type_name -> proto.v1alpha1.ThermalZoneStatus
-	5,  // 12: proto.v1alpha1.ListThermalZonesResponse.thermal_zones:type_name -> proto.v1alpha1.ThermalZone
-	6,  // 13: proto.v1alpha1.GetCoolingDeviceResponse.cooling_device:type_name -> proto.v1alpha1.CoolingDevice
-	1,  // 14: proto.v1alpha1.ListCoolingDevicesRequest.type:type_name -> proto.v1alpha1.CoolingDeviceType
-	2,  // 15: proto.v1alpha1.ListCoolingDevicesRequest.status:type_name -> proto.v1alpha1.CoolingDeviceStatus
-	6,  // 16: proto.v1alpha1.ListCoolingDevicesResponse.cooling_devices:type_name -> proto.v1alpha1.CoolingDevice
-	9,  // 17: proto.v1alpha1.ThermalManagementService.GetThermalManagement:input_type -> proto.v1alpha1.GetThermalManagementRequest
-	11, // 18: proto.v1alpha1.ThermalManagementService.ListThermalManagement:input_type -> proto.v1alpha1.ListThermalManagementRequest
-	13, // 19: proto.v1alpha1.ThermalZoneService.GetThermalZone:input_type -> proto.v1alpha1.GetThermalZoneRequest
-	15, // 20: proto.v1alpha1.ThermalZoneService.ListThermalZones:input_type -> proto.v1alpha1.ListThermalZonesRequest
-	17, // 21: proto.v1alpha1.CoolingDeviceService.GetCoolingDevice:input_type -> proto.v1alpha1.GetCoolingDeviceRequest
-	19, // 22: proto.v1alpha1.CoolingDeviceService.ListCoolingDevices:input_type -> proto.v1alpha1.ListCoolingDevicesRequest
-	10, // 23: proto.v1alpha1.ThermalManagementService.GetThermalManagement:output_type -> proto.v1alpha1.GetThermalManagementResponse
-	12, // 24: proto.v1alpha1.ThermalManagementService.ListThermalManagement:output_type -> proto.v1alpha1.ListThermalManagementResponse
-	14, // 25: proto.v1alpha1.ThermalZoneService.GetThermalZone:output_type -> proto.v1alpha1.GetThermalZoneResponse
-	16, // 26: proto.v1alpha1.ThermalZoneService.ListThermalZones:output_type -> proto.v1alpha1.ListThermalZonesResponse
-	18, // 27: proto.v1alpha1.CoolingDeviceService.GetCoolingDevice:output_type -> proto.v1alpha1.GetCoolingDeviceResponse
-	20, // 28: proto.v1alpha1.CoolingDeviceService.ListCoolingDevices:output_type -> proto.v1alpha1.ListCoolingDevicesResponse
+	5,  // 0: schema.v1alpha1.ThermalManagement.zones:type_name -> schema.v1alpha1.ThermalZone
+	8,  // 1: schema.v1alpha1.ThermalManagement.profile:type_name -> schema.v1alpha1.ThermalProfile
+	7,  // 2: schema.v1alpha1.ThermalZone.pid_settings:type_name -> schema.v1alpha1.PIDSettings
+	0,  // 3: schema.v1alpha1.ThermalZone.status:type_name -> schema.v1alpha1.ThermalZoneStatus
+	1,  // 4: schema.v1alpha1.CoolingDevice.type:type_name -> schema.v1alpha1.CoolingDeviceType
+	2,  // 5: schema.v1alpha1.CoolingDevice.status:type_name -> schema.v1alpha1.CoolingDeviceStatus
+	3,  // 6: schema.v1alpha1.ThermalProfile.type:type_name -> schema.v1alpha1.ThermalProfileType
+	7,  // 7: schema.v1alpha1.ThermalProfile.custom_settings:type_name -> schema.v1alpha1.PIDSettings
+	4,  // 8: schema.v1alpha1.GetThermalManagementResponse.thermal_management:type_name -> schema.v1alpha1.ThermalManagement
+	4,  // 9: schema.v1alpha1.ListThermalManagementResponse.thermal_managements:type_name -> schema.v1alpha1.ThermalManagement
+	5,  // 10: schema.v1alpha1.GetThermalZoneResponse.thermal_zone:type_name -> schema.v1alpha1.ThermalZone
+	0,  // 11: schema.v1alpha1.ListThermalZonesRequest.status:type_name -> schema.v1alpha1.ThermalZoneStatus
+	5,  // 12: schema.v1alpha1.ListThermalZonesResponse.thermal_zones:type_name -> schema.v1alpha1.ThermalZone
+	6,  // 13: schema.v1alpha1.GetCoolingDeviceResponse.cooling_device:type_name -> schema.v1alpha1.CoolingDevice
+	1,  // 14: schema.v1alpha1.ListCoolingDevicesRequest.type:type_name -> schema.v1alpha1.CoolingDeviceType
+	2,  // 15: schema.v1alpha1.ListCoolingDevicesRequest.status:type_name -> schema.v1alpha1.CoolingDeviceStatus
+	6,  // 16: schema.v1alpha1.ListCoolingDevicesResponse.cooling_devices:type_name -> schema.v1alpha1.CoolingDevice
+	9,  // 17: schema.v1alpha1.ThermalManagementService.GetThermalManagement:input_type -> schema.v1alpha1.GetThermalManagementRequest
+	11, // 18: schema.v1alpha1.ThermalManagementService.ListThermalManagement:input_type -> schema.v1alpha1.ListThermalManagementRequest
+	13, // 19: schema.v1alpha1.ThermalZoneService.GetThermalZone:input_type -> schema.v1alpha1.GetThermalZoneRequest
+	15, // 20: schema.v1alpha1.ThermalZoneService.ListThermalZones:input_type -> schema.v1alpha1.ListThermalZonesRequest
+	17, // 21: schema.v1alpha1.CoolingDeviceService.GetCoolingDevice:input_type -> schema.v1alpha1.GetCoolingDeviceRequest
+	19, // 22: schema.v1alpha1.CoolingDeviceService.ListCoolingDevices:input_type -> schema.v1alpha1.ListCoolingDevicesRequest
+	10, // 23: schema.v1alpha1.ThermalManagementService.GetThermalManagement:output_type -> schema.v1alpha1.GetThermalManagementResponse
+	12, // 24: schema.v1alpha1.ThermalManagementService.ListThermalManagement:output_type -> schema.v1alpha1.ListThermalManagementResponse
+	14, // 25: schema.v1alpha1.ThermalZoneService.GetThermalZone:output_type -> schema.v1alpha1.GetThermalZoneResponse
+	16, // 26: schema.v1alpha1.ThermalZoneService.ListThermalZones:output_type -> schema.v1alpha1.ListThermalZonesResponse
+	18, // 27: schema.v1alpha1.CoolingDeviceService.GetCoolingDevice:output_type -> schema.v1alpha1.GetCoolingDeviceResponse
+	20, // 28: schema.v1alpha1.CoolingDeviceService.ListCoolingDevices:output_type -> schema.v1alpha1.ListCoolingDevicesResponse
 	23, // [23:29] is the sub-list for method output_type
 	17, // [17:23] is the sub-list for method input_type
 	17, // [17:17] is the sub-list for extension type_name

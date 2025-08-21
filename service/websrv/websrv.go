@@ -27,7 +27,7 @@ import (
 	"github.com/quic-go/quic-go/logging"
 	"github.com/quic-go/quic-go/qlog"
 	"github.com/rs/cors"
-	"github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1/protov1alpha1connect"
+	"github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1/schemav1alpha1connect"
 	"github.com/u-bmc/u-bmc/pkg/cert"
 	"github.com/u-bmc/u-bmc/pkg/log"
 	"github.com/u-bmc/u-bmc/service"
@@ -36,15 +36,15 @@ import (
 
 // ProtoServer implements all the Connect RPC service handlers for the BMC API.
 type ProtoServer struct {
-	protov1alpha1connect.UnimplementedChassisServiceHandler
-	protov1alpha1connect.UnimplementedCoolingDeviceServiceHandler
-	protov1alpha1connect.UnimplementedHostManagementServiceHandler
-	protov1alpha1connect.UnimplementedHostServiceHandler
-	protov1alpha1connect.UnimplementedManagementControllerServiceHandler
-	protov1alpha1connect.UnimplementedSensorServiceHandler
-	protov1alpha1connect.UnimplementedThermalManagementServiceHandler
-	protov1alpha1connect.UnimplementedThermalZoneServiceHandler
-	protov1alpha1connect.UnimplementedUserServiceHandler
+	schemav1alpha1connect.UnimplementedChassisServiceHandler
+	schemav1alpha1connect.UnimplementedCoolingDeviceServiceHandler
+	schemav1alpha1connect.UnimplementedHostManagementServiceHandler
+	schemav1alpha1connect.UnimplementedHostServiceHandler
+	schemav1alpha1connect.UnimplementedManagementControllerServiceHandler
+	schemav1alpha1connect.UnimplementedSensorServiceHandler
+	schemav1alpha1connect.UnimplementedThermalManagementServiceHandler
+	schemav1alpha1connect.UnimplementedThermalZoneServiceHandler
+	schemav1alpha1connect.UnimplementedUserServiceHandler
 }
 
 // Compile-time assertion that WebSrv implements service.Service.
@@ -235,55 +235,55 @@ func (s *WebSrv) setupRouter() (http.Handler, error) {
 
 	services := []*vanguard.Service{
 		vanguard.NewService(
-			protov1alpha1connect.NewChassisServiceHandler(
+			schemav1alpha1connect.NewChassisServiceHandler(
 				protoServer,
 				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
 			),
 		),
 		vanguard.NewService(
-			protov1alpha1connect.NewCoolingDeviceServiceHandler(
+			schemav1alpha1connect.NewCoolingDeviceServiceHandler(
 				protoServer,
 				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
 			),
 		),
 		vanguard.NewService(
-			protov1alpha1connect.NewHostManagementServiceHandler(
+			schemav1alpha1connect.NewHostManagementServiceHandler(
 				protoServer,
 				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
 			),
 		),
 		vanguard.NewService(
-			protov1alpha1connect.NewHostServiceHandler(
+			schemav1alpha1connect.NewHostServiceHandler(
 				protoServer,
 				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
 			),
 		),
 		vanguard.NewService(
-			protov1alpha1connect.NewManagementControllerServiceHandler(
+			schemav1alpha1connect.NewManagementControllerServiceHandler(
 				protoServer,
 				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
 			),
 		),
 		vanguard.NewService(
-			protov1alpha1connect.NewSensorServiceHandler(
+			schemav1alpha1connect.NewSensorServiceHandler(
 				protoServer,
 				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
 			),
 		),
 		vanguard.NewService(
-			protov1alpha1connect.NewThermalManagementServiceHandler(
+			schemav1alpha1connect.NewThermalManagementServiceHandler(
 				protoServer,
 				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
 			),
 		),
 		vanguard.NewService(
-			protov1alpha1connect.NewThermalZoneServiceHandler(
+			schemav1alpha1connect.NewThermalZoneServiceHandler(
 				protoServer,
 				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
 			),
 		),
 		vanguard.NewService(
-			protov1alpha1connect.NewUserServiceHandler(
+			schemav1alpha1connect.NewUserServiceHandler(
 				protoServer,
 				connect.WithInterceptors(validatorInterceptor, otelInterceptor),
 			),
@@ -295,29 +295,29 @@ func (s *WebSrv) setupRouter() (http.Handler, error) {
 		return nil, fmt.Errorf("%w: %w", ErrCreateTranscoder, err)
 	}
 
-	mux.Handle("/api", transcoder)
+	mux.Handle("/api/", http.StripPrefix("/api", transcoder))
 
 	healthCheck := grpchealth.NewStaticChecker(
-		protov1alpha1connect.ChassisServiceName,
-		protov1alpha1connect.CoolingDeviceServiceName,
-		protov1alpha1connect.HostManagementServiceName,
-		protov1alpha1connect.HostServiceName,
-		protov1alpha1connect.ManagementControllerServiceName,
-		protov1alpha1connect.SensorServiceName,
-		protov1alpha1connect.ThermalManagementServiceName,
-		protov1alpha1connect.ThermalZoneServiceName,
-		protov1alpha1connect.UserServiceName,
+		schemav1alpha1connect.ChassisServiceName,
+		schemav1alpha1connect.CoolingDeviceServiceName,
+		schemav1alpha1connect.HostManagementServiceName,
+		schemav1alpha1connect.HostServiceName,
+		schemav1alpha1connect.ManagementControllerServiceName,
+		schemav1alpha1connect.SensorServiceName,
+		schemav1alpha1connect.ThermalManagementServiceName,
+		schemav1alpha1connect.ThermalZoneServiceName,
+		schemav1alpha1connect.UserServiceName,
 	)
 	reflector := grpcreflect.NewStaticReflector(
-		protov1alpha1connect.ChassisServiceName,
-		protov1alpha1connect.CoolingDeviceServiceName,
-		protov1alpha1connect.HostManagementServiceName,
-		protov1alpha1connect.HostServiceName,
-		protov1alpha1connect.ManagementControllerServiceName,
-		protov1alpha1connect.SensorServiceName,
-		protov1alpha1connect.ThermalManagementServiceName,
-		protov1alpha1connect.ThermalZoneServiceName,
-		protov1alpha1connect.UserServiceName,
+		schemav1alpha1connect.ChassisServiceName,
+		schemav1alpha1connect.CoolingDeviceServiceName,
+		schemav1alpha1connect.HostManagementServiceName,
+		schemav1alpha1connect.HostServiceName,
+		schemav1alpha1connect.ManagementControllerServiceName,
+		schemav1alpha1connect.SensorServiceName,
+		schemav1alpha1connect.ThermalManagementServiceName,
+		schemav1alpha1connect.ThermalZoneServiceName,
+		schemav1alpha1connect.UserServiceName,
 	)
 	mux.Handle(grpcreflect.NewHandlerV1(reflector))
 	mux.Handle(grpcreflect.NewHandlerV1Alpha(reflector))

@@ -2,7 +2,7 @@
 // protoc-gen-go-vtproto version: v0.6.0
 // source: schema/v1alpha1/sensor.proto
 
-package protov1alpha1
+package schemav1alpha1
 
 import (
 	context "context"
@@ -537,7 +537,7 @@ func NewSensorServiceClient(cc grpc.ClientConnInterface) SensorServiceClient {
 
 func (c *sensorServiceClient) GetSensor(ctx context.Context, in *GetSensorRequest, opts ...grpc.CallOption) (*GetSensorResponse, error) {
 	out := new(GetSensorResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.SensorService/GetSensor", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.SensorService/GetSensor", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -546,7 +546,7 @@ func (c *sensorServiceClient) GetSensor(ctx context.Context, in *GetSensorReques
 
 func (c *sensorServiceClient) ListSensors(ctx context.Context, in *ListSensorsRequest, opts ...grpc.CallOption) (*ListSensorsResponse, error) {
 	out := new(ListSensorsResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.SensorService/ListSensors", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.SensorService/ListSensors", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -597,7 +597,7 @@ func _SensorService_GetSensor_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.SensorService/GetSensor",
+		FullMethod: "/schema.v1alpha1.SensorService/GetSensor",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SensorServiceServer).GetSensor(ctx, req.(*GetSensorRequest))
@@ -615,7 +615,7 @@ func _SensorService_ListSensors_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.SensorService/ListSensors",
+		FullMethod: "/schema.v1alpha1.SensorService/ListSensors",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SensorServiceServer).ListSensors(ctx, req.(*ListSensorsRequest))
@@ -627,7 +627,7 @@ func _SensorService_ListSensors_Handler(srv interface{}, ctx context.Context, de
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var SensorService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.v1alpha1.SensorService",
+	ServiceName: "schema.v1alpha1.SensorService",
 	HandlerType: (*SensorServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

@@ -2,7 +2,7 @@
 // protoc-gen-go-vtproto version: v0.6.0
 // source: schema/v1alpha1/system.proto
 
-package protov1alpha1
+package schemav1alpha1
 
 import (
 	context "context"
@@ -1152,7 +1152,7 @@ func NewHostManagementServiceClient(cc grpc.ClientConnInterface) HostManagementS
 
 func (c *hostManagementServiceClient) GetHostManagement(ctx context.Context, in *GetHostManagementRequest, opts ...grpc.CallOption) (*GetHostManagementResponse, error) {
 	out := new(GetHostManagementResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.HostManagementService/GetHostManagement", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.HostManagementService/GetHostManagement", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1161,7 +1161,7 @@ func (c *hostManagementServiceClient) GetHostManagement(ctx context.Context, in 
 
 func (c *hostManagementServiceClient) ListHostManagement(ctx context.Context, in *ListHostManagementRequest, opts ...grpc.CallOption) (*ListHostManagementResponse, error) {
 	out := new(ListHostManagementResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.HostManagementService/ListHostManagement", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.HostManagementService/ListHostManagement", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1212,7 +1212,7 @@ func _HostManagementService_GetHostManagement_Handler(srv interface{}, ctx conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.HostManagementService/GetHostManagement",
+		FullMethod: "/schema.v1alpha1.HostManagementService/GetHostManagement",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(HostManagementServiceServer).GetHostManagement(ctx, req.(*GetHostManagementRequest))
@@ -1230,7 +1230,7 @@ func _HostManagementService_ListHostManagement_Handler(srv interface{}, ctx cont
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.HostManagementService/ListHostManagement",
+		FullMethod: "/schema.v1alpha1.HostManagementService/ListHostManagement",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(HostManagementServiceServer).ListHostManagement(ctx, req.(*ListHostManagementRequest))
@@ -1242,7 +1242,7 @@ func _HostManagementService_ListHostManagement_Handler(srv interface{}, ctx cont
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var HostManagementService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.v1alpha1.HostManagementService",
+	ServiceName: "schema.v1alpha1.HostManagementService",
 	HandlerType: (*HostManagementServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -1278,7 +1278,7 @@ func NewChassisServiceClient(cc grpc.ClientConnInterface) ChassisServiceClient {
 
 func (c *chassisServiceClient) GetChassis(ctx context.Context, in *GetChassisRequest, opts ...grpc.CallOption) (*GetChassisResponse, error) {
 	out := new(GetChassisResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.ChassisService/GetChassis", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.ChassisService/GetChassis", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1287,7 +1287,7 @@ func (c *chassisServiceClient) GetChassis(ctx context.Context, in *GetChassisReq
 
 func (c *chassisServiceClient) ListChassis(ctx context.Context, in *ListChassisRequest, opts ...grpc.CallOption) (*ListChassisResponse, error) {
 	out := new(ListChassisResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.ChassisService/ListChassis", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.ChassisService/ListChassis", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1338,7 +1338,7 @@ func _ChassisService_GetChassis_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.ChassisService/GetChassis",
+		FullMethod: "/schema.v1alpha1.ChassisService/GetChassis",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ChassisServiceServer).GetChassis(ctx, req.(*GetChassisRequest))
@@ -1356,7 +1356,7 @@ func _ChassisService_ListChassis_Handler(srv interface{}, ctx context.Context, d
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.ChassisService/ListChassis",
+		FullMethod: "/schema.v1alpha1.ChassisService/ListChassis",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ChassisServiceServer).ListChassis(ctx, req.(*ListChassisRequest))
@@ -1368,7 +1368,7 @@ func _ChassisService_ListChassis_Handler(srv interface{}, ctx context.Context, d
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ChassisService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.v1alpha1.ChassisService",
+	ServiceName: "schema.v1alpha1.ChassisService",
 	HandlerType: (*ChassisServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -1404,7 +1404,7 @@ func NewHostServiceClient(cc grpc.ClientConnInterface) HostServiceClient {
 
 func (c *hostServiceClient) GetHost(ctx context.Context, in *GetHostRequest, opts ...grpc.CallOption) (*GetHostResponse, error) {
 	out := new(GetHostResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.HostService/GetHost", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.HostService/GetHost", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1413,7 +1413,7 @@ func (c *hostServiceClient) GetHost(ctx context.Context, in *GetHostRequest, opt
 
 func (c *hostServiceClient) ListHosts(ctx context.Context, in *ListHostsRequest, opts ...grpc.CallOption) (*ListHostsResponse, error) {
 	out := new(ListHostsResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.HostService/ListHosts", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.HostService/ListHosts", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1464,7 +1464,7 @@ func _HostService_GetHost_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.HostService/GetHost",
+		FullMethod: "/schema.v1alpha1.HostService/GetHost",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(HostServiceServer).GetHost(ctx, req.(*GetHostRequest))
@@ -1482,7 +1482,7 @@ func _HostService_ListHosts_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.HostService/ListHosts",
+		FullMethod: "/schema.v1alpha1.HostService/ListHosts",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(HostServiceServer).ListHosts(ctx, req.(*ListHostsRequest))
@@ -1494,7 +1494,7 @@ func _HostService_ListHosts_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var HostService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.v1alpha1.HostService",
+	ServiceName: "schema.v1alpha1.HostService",
 	HandlerType: (*HostServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -1530,7 +1530,7 @@ func NewManagementControllerServiceClient(cc grpc.ClientConnInterface) Managemen
 
 func (c *managementControllerServiceClient) GetManagementController(ctx context.Context, in *GetManagementControllerRequest, opts ...grpc.CallOption) (*GetManagementControllerResponse, error) {
 	out := new(GetManagementControllerResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.ManagementControllerService/GetManagementController", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.ManagementControllerService/GetManagementController", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1539,7 +1539,7 @@ func (c *managementControllerServiceClient) GetManagementController(ctx context.
 
 func (c *managementControllerServiceClient) ListManagementControllers(ctx context.Context, in *ListManagementControllersRequest, opts ...grpc.CallOption) (*ListManagementControllersResponse, error) {
 	out := new(ListManagementControllersResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.ManagementControllerService/ListManagementControllers", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.ManagementControllerService/ListManagementControllers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1591,7 +1591,7 @@ func _ManagementControllerService_GetManagementController_Handler(srv interface{
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.ManagementControllerService/GetManagementController",
+		FullMethod: "/schema.v1alpha1.ManagementControllerService/GetManagementController",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementControllerServiceServer).GetManagementController(ctx, req.(*GetManagementControllerRequest))
@@ -1609,7 +1609,7 @@ func _ManagementControllerService_ListManagementControllers_Handler(srv interfac
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.ManagementControllerService/ListManagementControllers",
+		FullMethod: "/schema.v1alpha1.ManagementControllerService/ListManagementControllers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementControllerServiceServer).ListManagementControllers(ctx, req.(*ListManagementControllersRequest))
@@ -1621,7 +1621,7 @@ func _ManagementControllerService_ListManagementControllers_Handler(srv interfac
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ManagementControllerService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.v1alpha1.ManagementControllerService",
+	ServiceName: "schema.v1alpha1.ManagementControllerService",
 	HandlerType: (*ManagementControllerServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
