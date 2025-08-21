@@ -18,37 +18,37 @@ type NATSLogger struct {
 // Fatalf logs a fatal error message with the given format and arguments.
 // This maps to the Error level in slog with additional context indicating it's a fatal error.
 func (l *NATSLogger) Fatalf(format string, v ...interface{}) {
-	l.l.Error(fmt.Sprintf(format, v...), "NATS fatal error")
+	l.l.With("subsystem", "nats", "nats_level", "fatal").Error(fmt.Sprintf(format, v...))
 }
 
 // Errorf logs an error message with the given format and arguments.
 // This maps to the Error level in slog.
 func (l *NATSLogger) Errorf(format string, v ...interface{}) {
-	l.l.Error(fmt.Sprintf(format, v...), "NATS error")
+	l.l.With("subsystem", "nats", "nats_level", "error").Error(fmt.Sprintf(format, v...))
 }
 
 // Warnf logs a warning message with the given format and arguments.
 // This maps to the Warn level in slog.
 func (l *NATSLogger) Warnf(format string, v ...interface{}) {
-	l.l.Warn(fmt.Sprintf(format, v...), "NATS warning")
+	l.l.With("subsystem", "nats", "nats_level", "warn").Warn(fmt.Sprintf(format, v...))
 }
 
 // Noticef logs a notice message with the given format and arguments.
 // This maps to the Info level in slog as notices are informational.
 func (l *NATSLogger) Noticef(format string, v ...interface{}) {
-	l.l.Info(fmt.Sprintf(format, v...))
+	l.l.With("subsystem", "nats", "nats_level", "info").Info(fmt.Sprintf(format, v...))
 }
 
 // Debugf logs a debug message with the given format and arguments.
 // This maps to the Debug level in slog.
 func (l *NATSLogger) Debugf(format string, v ...interface{}) {
-	l.l.Debug(fmt.Sprintf(format, v...))
+	l.l.With("subsystem", "nats", "nats_level", "debug").Debug(fmt.Sprintf(format, v...))
 }
 
 // Tracef logs a trace message with the given format and arguments.
 // This maps to the Debug level in slog with additional context indicating it's a trace message.
 func (l *NATSLogger) Tracef(format string, v ...interface{}) {
-	l.l.Debug(fmt.Sprintf(format, v...), "NATS trace")
+	l.l.With("subsystem", "nats", "nats_level", "trace").Debug(fmt.Sprintf(format, v...))
 }
 
 // NewNATSLogger creates a new NATSLogger that wraps the provided slog.Logger

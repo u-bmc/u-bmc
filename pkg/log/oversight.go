@@ -3,6 +3,7 @@
 package log
 
 import (
+	"fmt"
 	"log/slog"
 
 	"cirello.io/oversight/v2"
@@ -13,6 +14,6 @@ import (
 // This is useful for integrating oversight supervision tree logging with structured logging.
 func NewOversightLogger(l *slog.Logger) oversight.Logger {
 	return func(args ...any) {
-		l.Debug("oversight", args...)
+		l.Debug("oversight", "msg", fmt.Sprint(args...))
 	}
 }
