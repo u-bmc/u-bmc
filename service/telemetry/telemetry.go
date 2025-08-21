@@ -7,7 +7,11 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/u-bmc/u-bmc/pkg/log"
+	"github.com/u-bmc/u-bmc/service"
 )
+
+// Compile-time assertion that Telemetry implements service.Service.
+var _ service.Service = (*Telemetry)(nil)
 
 type Telemetry struct {
 	config
@@ -34,5 +38,8 @@ func (s *Telemetry) Run(ctx context.Context, ipcConn nats.InProcessConnProvider)
 
 	l.InfoContext(ctx, "Starting telemetry service", "service", s.name)
 
-	return nil
+	<-ctx.Done()
+	l.InfoContext(ctx, "Stopping telemetry service", "service", s.name, "reason", ctx.Err())
+
+	return ctx.Err()
 }

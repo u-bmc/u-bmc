@@ -7,7 +7,11 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/u-bmc/u-bmc/pkg/log"
+	"github.com/u-bmc/u-bmc/service"
 )
+
+// Compile-time assertion that LEDMgr implements service.Service.
+var _ service.Service = (*LEDMgr)(nil)
 
 type LEDMgr struct {
 	config
@@ -34,5 +38,8 @@ func (s *LEDMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) er
 
 	l.InfoContext(ctx, "Starting LED manager", "service", s.name)
 
-	return nil
+	<-ctx.Done()
+	l.InfoContext(ctx, "Stopping LED manager", "service", s.name, "reason", ctx.Err())
+
+	return ctx.Err()
 }

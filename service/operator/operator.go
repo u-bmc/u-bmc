@@ -62,6 +62,9 @@ const defaultLogo = `
 ⠀⠀⠉⠛⠋⠀⠀⠀⠀⠀⠛⠉⠛⠋⠀⠀⠛⠀⠀⠛⠀⠀⠛⠀⠀⠙⠛⠋
 `
 
+// Compile-time assertion that Operator implements service.Service.
+var _ service.Service = (*Operator)(nil)
+
 // Operator manages the lifecycle of BMC services in a supervised environment.
 // It provides service orchestration, fault tolerance, and inter-process communication
 // coordination for all BMC subsystems.

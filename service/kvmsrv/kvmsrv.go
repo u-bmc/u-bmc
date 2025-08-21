@@ -7,7 +7,11 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/u-bmc/u-bmc/pkg/log"
+	"github.com/u-bmc/u-bmc/service"
 )
+
+// Compile-time assertion that KVMSrv implements service.Service.
+var _ service.Service = (*KVMSrv)(nil)
 
 type KVMSrv struct {
 	config
@@ -34,5 +38,8 @@ func (s *KVMSrv) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) er
 
 	l.InfoContext(ctx, "Starting KVM server", "service", s.name)
 
-	return nil
+	<-ctx.Done()
+	l.InfoContext(ctx, "Stopping KVM server", "service", s.name, "reason", ctx.Err())
+
+	return ctx.Err()
 }
