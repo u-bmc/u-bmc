@@ -134,15 +134,6 @@ func (s *Operator) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 		}
 	}()
 
-	if s.id == "" {
-		idStr, err := id.GetOrCreatePersistentID(s.Name(), "/var/operator/id")
-		if err != nil {
-			s.id = id.NewID()
-		} else {
-			s.id = idStr
-		}
-	}
-
 	// Several services rely on the telemetry setup to be done because of our custom logger.
 	// We do the setup here while any non-noop telemetry configuration handling is done
 	// in the telemetry service that is optionally started.
@@ -150,6 +141,16 @@ func (s *Operator) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 
 	// This needs to be called after s.otelSetup to make sure any OTEL Log implementation is registered first
 	l := log.GetGlobalLogger()
+
+	if s.id == "" {
+		idStr, err := id.GetOrCreatePersistentID(s.Name(), "/var/operator/id")
+		if err != nil {
+			l.ErrorContext(ctx, "Failed to get/create persistent ID, using ephemeral ID", "error", err)
+			s.id = id.NewID()
+		} else {
+			s.id = idStr
+		}
+	}
 
 	if !s.disableLogo {
 		if s.customLogo != "" {
