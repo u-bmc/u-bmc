@@ -117,7 +117,7 @@ func (s *Operator) Name() string {
 // Run starts the operator and all configured services under supervision.
 // It sets up the supervision tree, configures inter-process communication,
 // and manages the lifecycle of all BMC services. The operator will run until
-// the provided context is cancelled or a fatal error occurs.
+// the provided context is canceled or a fatal error occurs.
 //
 // The ipcConn parameter can be nil if an IPC service is configured via options.
 // If both ipcConn and IPC service are provided, the external ipcConn takes precedence.
@@ -182,19 +182,23 @@ func (s *Operator) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 	}
 
 	if s.ipc != nil && ipcConn == nil {
-		supervisionTree.Add(
+		if err := supervisionTree.Add(
 			process.New(s.ipc, nil),
 			oversight.Transient(),
 			oversight.Timeout(s.timeout),
 			s.ipc.Name(),
-		)
+		); err != nil {
+			return fmt.Errorf("%w %s to tree: %w", ErrAddProcess, s.ipc.Name(), err)
+		}
 	} else {
-		supervisionTree.Add(
+		if err := supervisionTree.Add(
 			process.New(ipcPkg.NewStub(), nil),
 			oversight.Transient(),
 			oversight.Timeout(s.timeout),
 			"ipc-stub",
-		)
+		); err != nil {
+			return fmt.Errorf("%w %s to tree: %w", ErrAddProcess, s.ipc.Name(), err)
+		}
 	}
 
 	supervise := func(ctx context.Context, c chan error) {

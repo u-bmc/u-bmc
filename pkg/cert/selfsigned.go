@@ -122,11 +122,11 @@ func LoadOrGenerateCertificate(certPath, keyPath string, opts CertificateOptions
 		return nil, nil, err
 	}
 
-	if err := os.WriteFile(certPath, certData, 0644); err != nil {
+	if err := os.WriteFile(certPath, certData, 0o600); err != nil {
 		return nil, nil, err
 	}
 
-	if err := os.WriteFile(keyPath, keyData, 0600); err != nil {
+	if err := os.WriteFile(keyPath, keyData, 0o600); err != nil {
 		return nil, nil, err
 	}
 

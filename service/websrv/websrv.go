@@ -84,7 +84,7 @@ func (s *WebSrv) Name() string {
 	return s.name
 }
 
-// Run starts the web server and blocks until the context is cancelled.
+// Run starts the web server and blocks until the context is canceled.
 func (s *WebSrv) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) error {
 	l := log.GetGlobalLogger()
 
@@ -104,7 +104,8 @@ func (s *WebSrv) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) er
 		return fmt.Errorf("%w: %w", ErrSetupTLS, err)
 	}
 
-	tcpListener, err := net.Listen("tcp", s.addr)
+	lc := &net.ListenConfig{}
+	tcpListener, err := lc.Listen(ctx, "tcp", s.addr)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrCreateTCPListener, err)
 	}

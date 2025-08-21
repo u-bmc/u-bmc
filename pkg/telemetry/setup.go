@@ -11,7 +11,7 @@ import (
 	"go.opentelemetry.io/otel/propagation"
 )
 
-var defaultSetupOnce sync.Once
+var defaultSetupOnce sync.Once //nolint: gochecknoglobals
 
 // DefaultSetup initializes OpenTelemetry with default configuration.
 // It sets up a no-op logger provider for logging and configures

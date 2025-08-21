@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
+
 //go:build linux
 // +build linux
 
@@ -17,16 +18,13 @@ import (
 )
 
 var (
-	// ErrMountPointCreation indicates failure to create a mount point directory
+	// ErrMountPointCreation indicates failure to create a mount point directory.
 	ErrMountPointCreation = errors.New("failed to create mount point")
-
-	// ErrMountFailed indicates the mount operation failed
+	// ErrMountFailed indicates the mount operation failed.
 	ErrMountFailed = errors.New("mount operation failed")
-
-	// ErrMountVerification indicates the mounted filesystem doesn't match expected specification
+	// ErrMountVerification indicates the mounted filesystem doesn't match expected specification.
 	ErrMountVerification = errors.New("mount verification failed")
-
-	// ErrProcMountsRead indicates failure to read /proc/mounts
+	// ErrProcMountsRead indicates failure to read /proc/mounts.
 	ErrProcMountsRead = errors.New("failed to read /proc/mounts")
 )
 
@@ -90,8 +88,8 @@ func SetupMounts() error {
 // It returns true if the mount was already present (EBUSY), false if a new mount was created.
 func ensureMount(m mountSpec) (bool, error) {
 	if _, err := os.Stat(m.target); os.IsNotExist(err) {
-		if err := os.MkdirAll(m.target, 0755); err != nil {
-			return false, fmt.Errorf("%w %s: %v", ErrMountPointCreation, m.target, err)
+		if err := os.MkdirAll(m.target, 0o755); err != nil {
+			return false, fmt.Errorf("%w %s: %w", ErrMountPointCreation, m.target, err)
 		}
 	}
 
@@ -99,7 +97,7 @@ func ensureMount(m mountSpec) (bool, error) {
 		if err == unix.EBUSY {
 			return true, nil // Mount already exists
 		}
-		return false, fmt.Errorf("%w: %v", ErrMountFailed, err)
+		return false, fmt.Errorf("%w: %w", ErrMountFailed, err)
 	}
 
 	return false, nil
@@ -110,7 +108,7 @@ func ensureMount(m mountSpec) (bool, error) {
 func verifyMounts(specs []mountSpec) error {
 	file, err := os.Open("/proc/mounts")
 	if err != nil {
-		return fmt.Errorf("%w: %v", ErrProcMountsRead, err)
+		return fmt.Errorf("%w: %w", ErrProcMountsRead, err)
 	}
 	defer file.Close()
 
@@ -139,7 +137,7 @@ func verifyMounts(specs []mountSpec) error {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return fmt.Errorf("%w: %v", ErrProcMountsRead, err)
+		return fmt.Errorf("%w: %w", ErrProcMountsRead, err)
 	}
 
 	return nil
