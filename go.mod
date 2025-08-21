@@ -1,6 +1,6 @@
 module github.com/u-bmc/u-bmc
 
-go 1.24.5
+go 1.24
 
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.6-20250717185734-6c6e0d3c608e.1
