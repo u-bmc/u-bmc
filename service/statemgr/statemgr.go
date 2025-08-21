@@ -7,7 +7,11 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/u-bmc/u-bmc/pkg/log"
+	"github.com/u-bmc/u-bmc/service"
 )
+
+// Compile-time assertion that StateMgr implements service.Service.
+var _ service.Service = (*StateMgr)(nil)
 
 type StateMgr struct {
 	config
@@ -34,5 +38,8 @@ func (s *StateMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 
 	l.InfoContext(ctx, "Starting state manager", "service", s.name)
 
-	return nil
+	<-ctx.Done()
+	l.InfoContext(ctx, "Stopping state manager", "service", s.name, "reason", ctx.Err())
+
+	return ctx.Err()
 }

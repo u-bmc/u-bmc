@@ -11,7 +11,11 @@ import (
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
 	"github.com/u-bmc/u-bmc/pkg/log"
+	"github.com/u-bmc/u-bmc/service"
 )
+
+// Compile-time assertion that IPC implements service.Service.
+var _ service.Service = (*IPC)(nil)
 
 type IPC struct {
 	config
@@ -24,6 +28,12 @@ type ConnProvider struct {
 }
 
 func (p *ConnProvider) InProcessConn() (net.Conn, error) {
+	// Non-blocking check
+	if p.server == nil {
+		return nil, server.ErrServerNotRunning
+	}
+
+	// Blocking check
 	if !p.server.ReadyForConnections(time.Minute) {
 		return nil, server.ErrServerNotRunning
 	}

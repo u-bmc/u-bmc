@@ -7,7 +7,11 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/u-bmc/u-bmc/pkg/log"
+	"github.com/u-bmc/u-bmc/service"
 )
+
+// Compile-time assertion that InventoryMgr implements service.Service.
+var _ service.Service = (*InventoryMgr)(nil)
 
 type InventoryMgr struct {
 	config
@@ -34,5 +38,8 @@ func (s *InventoryMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvid
 
 	l.InfoContext(ctx, "Starting inventory manager", "service", s.name)
 
-	return nil
+	<-ctx.Done()
+	l.InfoContext(ctx, "Stopping inventory manager", "service", s.name, "reason", ctx.Err())
+
+	return ctx.Err()
 }

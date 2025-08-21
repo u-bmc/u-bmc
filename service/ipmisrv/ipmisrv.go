@@ -7,7 +7,11 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/u-bmc/u-bmc/pkg/log"
+	"github.com/u-bmc/u-bmc/service"
 )
+
+// Compile-time assertion that IPMISrv implements service.Service.
+var _ service.Service = (*IPMISrv)(nil)
 
 type IPMISrv struct {
 	config
@@ -32,7 +36,10 @@ func (s *IPMISrv) Name() string {
 func (s *IPMISrv) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) error {
 	l := log.GetGlobalLogger()
 
-	l.InfoContext(ctx, "Starting inventory manager", "service", s.name)
+	l.InfoContext(ctx, "Starting IPMI server", "service", s.name)
 
-	return nil
+	<-ctx.Done()
+	l.InfoContext(ctx, "Stopping IPMI server", "service", s.name, "reason", ctx.Err())
+
+	return ctx.Err()
 }

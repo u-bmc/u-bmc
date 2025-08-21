@@ -30,6 +30,7 @@ import (
 	"github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1/protov1alpha1connect"
 	"github.com/u-bmc/u-bmc/pkg/cert"
 	"github.com/u-bmc/u-bmc/pkg/log"
+	"github.com/u-bmc/u-bmc/service"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
@@ -45,6 +46,9 @@ type ProtoServer struct {
 	protov1alpha1connect.UnimplementedThermalZoneServiceHandler
 	protov1alpha1connect.UnimplementedUserServiceHandler
 }
+
+// Compile-time assertion that WebSrv implements service.Service.
+var _ service.Service = (*WebSrv)(nil)
 
 // WebSrv is a web server that provides HTTP/2 and HTTP/3 endpoints for BMC operations.
 type WebSrv struct {
