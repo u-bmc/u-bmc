@@ -4,7 +4,7 @@
 //
 // Source: schema/v1alpha1/thermal.proto
 
-package protov1alpha1connect
+package schemav1alpha1connect
 
 import (
 	connect "connectrpc.com/connect"
@@ -24,11 +24,11 @@ const _ = connect.IsAtLeastVersion1_13_0
 
 const (
 	// ThermalManagementServiceName is the fully-qualified name of the ThermalManagementService service.
-	ThermalManagementServiceName = "proto.v1alpha1.ThermalManagementService"
+	ThermalManagementServiceName = "schema.v1alpha1.ThermalManagementService"
 	// ThermalZoneServiceName is the fully-qualified name of the ThermalZoneService service.
-	ThermalZoneServiceName = "proto.v1alpha1.ThermalZoneService"
+	ThermalZoneServiceName = "schema.v1alpha1.ThermalZoneService"
 	// CoolingDeviceServiceName is the fully-qualified name of the CoolingDeviceService service.
-	CoolingDeviceServiceName = "proto.v1alpha1.CoolingDeviceService"
+	CoolingDeviceServiceName = "schema.v1alpha1.CoolingDeviceService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -41,25 +41,25 @@ const (
 const (
 	// ThermalManagementServiceGetThermalManagementProcedure is the fully-qualified name of the
 	// ThermalManagementService's GetThermalManagement RPC.
-	ThermalManagementServiceGetThermalManagementProcedure = "/proto.v1alpha1.ThermalManagementService/GetThermalManagement"
+	ThermalManagementServiceGetThermalManagementProcedure = "/schema.v1alpha1.ThermalManagementService/GetThermalManagement"
 	// ThermalManagementServiceListThermalManagementProcedure is the fully-qualified name of the
 	// ThermalManagementService's ListThermalManagement RPC.
-	ThermalManagementServiceListThermalManagementProcedure = "/proto.v1alpha1.ThermalManagementService/ListThermalManagement"
+	ThermalManagementServiceListThermalManagementProcedure = "/schema.v1alpha1.ThermalManagementService/ListThermalManagement"
 	// ThermalZoneServiceGetThermalZoneProcedure is the fully-qualified name of the ThermalZoneService's
 	// GetThermalZone RPC.
-	ThermalZoneServiceGetThermalZoneProcedure = "/proto.v1alpha1.ThermalZoneService/GetThermalZone"
+	ThermalZoneServiceGetThermalZoneProcedure = "/schema.v1alpha1.ThermalZoneService/GetThermalZone"
 	// ThermalZoneServiceListThermalZonesProcedure is the fully-qualified name of the
 	// ThermalZoneService's ListThermalZones RPC.
-	ThermalZoneServiceListThermalZonesProcedure = "/proto.v1alpha1.ThermalZoneService/ListThermalZones"
+	ThermalZoneServiceListThermalZonesProcedure = "/schema.v1alpha1.ThermalZoneService/ListThermalZones"
 	// CoolingDeviceServiceGetCoolingDeviceProcedure is the fully-qualified name of the
 	// CoolingDeviceService's GetCoolingDevice RPC.
-	CoolingDeviceServiceGetCoolingDeviceProcedure = "/proto.v1alpha1.CoolingDeviceService/GetCoolingDevice"
+	CoolingDeviceServiceGetCoolingDeviceProcedure = "/schema.v1alpha1.CoolingDeviceService/GetCoolingDevice"
 	// CoolingDeviceServiceListCoolingDevicesProcedure is the fully-qualified name of the
 	// CoolingDeviceService's ListCoolingDevices RPC.
-	CoolingDeviceServiceListCoolingDevicesProcedure = "/proto.v1alpha1.CoolingDeviceService/ListCoolingDevices"
+	CoolingDeviceServiceListCoolingDevicesProcedure = "/schema.v1alpha1.CoolingDeviceService/ListCoolingDevices"
 )
 
-// ThermalManagementServiceClient is a client for the proto.v1alpha1.ThermalManagementService
+// ThermalManagementServiceClient is a client for the schema.v1alpha1.ThermalManagementService
 // service.
 type ThermalManagementServiceClient interface {
 	// Get a thermal management configuration by ID
@@ -69,7 +69,7 @@ type ThermalManagementServiceClient interface {
 }
 
 // NewThermalManagementServiceClient constructs a client for the
-// proto.v1alpha1.ThermalManagementService service. By default, it uses the Connect protocol with
+// schema.v1alpha1.ThermalManagementService service. By default, it uses the Connect protocol with
 // the binary Protobuf Codec, asks for gzipped responses, and sends uncompressed requests. To use
 // the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or connect.WithGRPCWeb() options.
 //
@@ -100,18 +100,18 @@ type thermalManagementServiceClient struct {
 	listThermalManagement *connect.Client[v1alpha1.ListThermalManagementRequest, v1alpha1.ListThermalManagementResponse]
 }
 
-// GetThermalManagement calls proto.v1alpha1.ThermalManagementService.GetThermalManagement.
+// GetThermalManagement calls schema.v1alpha1.ThermalManagementService.GetThermalManagement.
 func (c *thermalManagementServiceClient) GetThermalManagement(ctx context.Context, req *connect.Request[v1alpha1.GetThermalManagementRequest]) (*connect.Response[v1alpha1.GetThermalManagementResponse], error) {
 	return c.getThermalManagement.CallUnary(ctx, req)
 }
 
-// ListThermalManagement calls proto.v1alpha1.ThermalManagementService.ListThermalManagement.
+// ListThermalManagement calls schema.v1alpha1.ThermalManagementService.ListThermalManagement.
 func (c *thermalManagementServiceClient) ListThermalManagement(ctx context.Context, req *connect.Request[v1alpha1.ListThermalManagementRequest]) (*connect.Response[v1alpha1.ListThermalManagementResponse], error) {
 	return c.listThermalManagement.CallUnary(ctx, req)
 }
 
 // ThermalManagementServiceHandler is an implementation of the
-// proto.v1alpha1.ThermalManagementService service.
+// schema.v1alpha1.ThermalManagementService service.
 type ThermalManagementServiceHandler interface {
 	// Get a thermal management configuration by ID
 	GetThermalManagement(context.Context, *connect.Request[v1alpha1.GetThermalManagementRequest]) (*connect.Response[v1alpha1.GetThermalManagementResponse], error)
@@ -138,7 +138,7 @@ func NewThermalManagementServiceHandler(svc ThermalManagementServiceHandler, opt
 		connect.WithSchema(thermalManagementServiceMethods.ByName("ListThermalManagement")),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/proto.v1alpha1.ThermalManagementService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return "/schema.v1alpha1.ThermalManagementService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case ThermalManagementServiceGetThermalManagementProcedure:
 			thermalManagementServiceGetThermalManagementHandler.ServeHTTP(w, r)
@@ -154,14 +154,14 @@ func NewThermalManagementServiceHandler(svc ThermalManagementServiceHandler, opt
 type UnimplementedThermalManagementServiceHandler struct{}
 
 func (UnimplementedThermalManagementServiceHandler) GetThermalManagement(context.Context, *connect.Request[v1alpha1.GetThermalManagementRequest]) (*connect.Response[v1alpha1.GetThermalManagementResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.ThermalManagementService.GetThermalManagement is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.ThermalManagementService.GetThermalManagement is not implemented"))
 }
 
 func (UnimplementedThermalManagementServiceHandler) ListThermalManagement(context.Context, *connect.Request[v1alpha1.ListThermalManagementRequest]) (*connect.Response[v1alpha1.ListThermalManagementResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.ThermalManagementService.ListThermalManagement is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.ThermalManagementService.ListThermalManagement is not implemented"))
 }
 
-// ThermalZoneServiceClient is a client for the proto.v1alpha1.ThermalZoneService service.
+// ThermalZoneServiceClient is a client for the schema.v1alpha1.ThermalZoneService service.
 type ThermalZoneServiceClient interface {
 	// Get a thermal zone by ID
 	GetThermalZone(context.Context, *connect.Request[v1alpha1.GetThermalZoneRequest]) (*connect.Response[v1alpha1.GetThermalZoneResponse], error)
@@ -169,7 +169,7 @@ type ThermalZoneServiceClient interface {
 	ListThermalZones(context.Context, *connect.Request[v1alpha1.ListThermalZonesRequest]) (*connect.Response[v1alpha1.ListThermalZonesResponse], error)
 }
 
-// NewThermalZoneServiceClient constructs a client for the proto.v1alpha1.ThermalZoneService
+// NewThermalZoneServiceClient constructs a client for the schema.v1alpha1.ThermalZoneService
 // service. By default, it uses the Connect protocol with the binary Protobuf Codec, asks for
 // gzipped responses, and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply
 // the connect.WithGRPC() or connect.WithGRPCWeb() options.
@@ -201,17 +201,17 @@ type thermalZoneServiceClient struct {
 	listThermalZones *connect.Client[v1alpha1.ListThermalZonesRequest, v1alpha1.ListThermalZonesResponse]
 }
 
-// GetThermalZone calls proto.v1alpha1.ThermalZoneService.GetThermalZone.
+// GetThermalZone calls schema.v1alpha1.ThermalZoneService.GetThermalZone.
 func (c *thermalZoneServiceClient) GetThermalZone(ctx context.Context, req *connect.Request[v1alpha1.GetThermalZoneRequest]) (*connect.Response[v1alpha1.GetThermalZoneResponse], error) {
 	return c.getThermalZone.CallUnary(ctx, req)
 }
 
-// ListThermalZones calls proto.v1alpha1.ThermalZoneService.ListThermalZones.
+// ListThermalZones calls schema.v1alpha1.ThermalZoneService.ListThermalZones.
 func (c *thermalZoneServiceClient) ListThermalZones(ctx context.Context, req *connect.Request[v1alpha1.ListThermalZonesRequest]) (*connect.Response[v1alpha1.ListThermalZonesResponse], error) {
 	return c.listThermalZones.CallUnary(ctx, req)
 }
 
-// ThermalZoneServiceHandler is an implementation of the proto.v1alpha1.ThermalZoneService service.
+// ThermalZoneServiceHandler is an implementation of the schema.v1alpha1.ThermalZoneService service.
 type ThermalZoneServiceHandler interface {
 	// Get a thermal zone by ID
 	GetThermalZone(context.Context, *connect.Request[v1alpha1.GetThermalZoneRequest]) (*connect.Response[v1alpha1.GetThermalZoneResponse], error)
@@ -238,7 +238,7 @@ func NewThermalZoneServiceHandler(svc ThermalZoneServiceHandler, opts ...connect
 		connect.WithSchema(thermalZoneServiceMethods.ByName("ListThermalZones")),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/proto.v1alpha1.ThermalZoneService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return "/schema.v1alpha1.ThermalZoneService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case ThermalZoneServiceGetThermalZoneProcedure:
 			thermalZoneServiceGetThermalZoneHandler.ServeHTTP(w, r)
@@ -254,14 +254,14 @@ func NewThermalZoneServiceHandler(svc ThermalZoneServiceHandler, opts ...connect
 type UnimplementedThermalZoneServiceHandler struct{}
 
 func (UnimplementedThermalZoneServiceHandler) GetThermalZone(context.Context, *connect.Request[v1alpha1.GetThermalZoneRequest]) (*connect.Response[v1alpha1.GetThermalZoneResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.ThermalZoneService.GetThermalZone is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.ThermalZoneService.GetThermalZone is not implemented"))
 }
 
 func (UnimplementedThermalZoneServiceHandler) ListThermalZones(context.Context, *connect.Request[v1alpha1.ListThermalZonesRequest]) (*connect.Response[v1alpha1.ListThermalZonesResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.ThermalZoneService.ListThermalZones is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.ThermalZoneService.ListThermalZones is not implemented"))
 }
 
-// CoolingDeviceServiceClient is a client for the proto.v1alpha1.CoolingDeviceService service.
+// CoolingDeviceServiceClient is a client for the schema.v1alpha1.CoolingDeviceService service.
 type CoolingDeviceServiceClient interface {
 	// Get a cooling device by ID
 	GetCoolingDevice(context.Context, *connect.Request[v1alpha1.GetCoolingDeviceRequest]) (*connect.Response[v1alpha1.GetCoolingDeviceResponse], error)
@@ -269,7 +269,7 @@ type CoolingDeviceServiceClient interface {
 	ListCoolingDevices(context.Context, *connect.Request[v1alpha1.ListCoolingDevicesRequest]) (*connect.Response[v1alpha1.ListCoolingDevicesResponse], error)
 }
 
-// NewCoolingDeviceServiceClient constructs a client for the proto.v1alpha1.CoolingDeviceService
+// NewCoolingDeviceServiceClient constructs a client for the schema.v1alpha1.CoolingDeviceService
 // service. By default, it uses the Connect protocol with the binary Protobuf Codec, asks for
 // gzipped responses, and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply
 // the connect.WithGRPC() or connect.WithGRPCWeb() options.
@@ -301,17 +301,17 @@ type coolingDeviceServiceClient struct {
 	listCoolingDevices *connect.Client[v1alpha1.ListCoolingDevicesRequest, v1alpha1.ListCoolingDevicesResponse]
 }
 
-// GetCoolingDevice calls proto.v1alpha1.CoolingDeviceService.GetCoolingDevice.
+// GetCoolingDevice calls schema.v1alpha1.CoolingDeviceService.GetCoolingDevice.
 func (c *coolingDeviceServiceClient) GetCoolingDevice(ctx context.Context, req *connect.Request[v1alpha1.GetCoolingDeviceRequest]) (*connect.Response[v1alpha1.GetCoolingDeviceResponse], error) {
 	return c.getCoolingDevice.CallUnary(ctx, req)
 }
 
-// ListCoolingDevices calls proto.v1alpha1.CoolingDeviceService.ListCoolingDevices.
+// ListCoolingDevices calls schema.v1alpha1.CoolingDeviceService.ListCoolingDevices.
 func (c *coolingDeviceServiceClient) ListCoolingDevices(ctx context.Context, req *connect.Request[v1alpha1.ListCoolingDevicesRequest]) (*connect.Response[v1alpha1.ListCoolingDevicesResponse], error) {
 	return c.listCoolingDevices.CallUnary(ctx, req)
 }
 
-// CoolingDeviceServiceHandler is an implementation of the proto.v1alpha1.CoolingDeviceService
+// CoolingDeviceServiceHandler is an implementation of the schema.v1alpha1.CoolingDeviceService
 // service.
 type CoolingDeviceServiceHandler interface {
 	// Get a cooling device by ID
@@ -339,7 +339,7 @@ func NewCoolingDeviceServiceHandler(svc CoolingDeviceServiceHandler, opts ...con
 		connect.WithSchema(coolingDeviceServiceMethods.ByName("ListCoolingDevices")),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/proto.v1alpha1.CoolingDeviceService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return "/schema.v1alpha1.CoolingDeviceService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case CoolingDeviceServiceGetCoolingDeviceProcedure:
 			coolingDeviceServiceGetCoolingDeviceHandler.ServeHTTP(w, r)
@@ -355,9 +355,9 @@ func NewCoolingDeviceServiceHandler(svc CoolingDeviceServiceHandler, opts ...con
 type UnimplementedCoolingDeviceServiceHandler struct{}
 
 func (UnimplementedCoolingDeviceServiceHandler) GetCoolingDevice(context.Context, *connect.Request[v1alpha1.GetCoolingDeviceRequest]) (*connect.Response[v1alpha1.GetCoolingDeviceResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.CoolingDeviceService.GetCoolingDevice is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.CoolingDeviceService.GetCoolingDevice is not implemented"))
 }
 
 func (UnimplementedCoolingDeviceServiceHandler) ListCoolingDevices(context.Context, *connect.Request[v1alpha1.ListCoolingDevicesRequest]) (*connect.Response[v1alpha1.ListCoolingDevicesResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.CoolingDeviceService.ListCoolingDevices is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.CoolingDeviceService.ListCoolingDevices is not implemented"))
 }

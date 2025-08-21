@@ -6,7 +6,7 @@
 // 	protoc        (unknown)
 // source: schema/v1alpha1/sensor.proto
 
-package protov1alpha1
+package schemav1alpha1
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -301,11 +301,11 @@ type Sensor struct {
 	// Human-readable name of the sensor
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	// Physical context of the sensor (e.g., Temperature, Voltage, Fan)
-	Context SensorContext `protobuf:"varint,3,opt,name=context,proto3,enum=proto.v1alpha1.SensorContext" json:"context,omitempty"`
+	Context SensorContext `protobuf:"varint,3,opt,name=context,proto3,enum=schema.v1alpha1.SensorContext" json:"context,omitempty"`
 	// Current status of the sensor
-	Status SensorStatus `protobuf:"varint,4,opt,name=status,proto3,enum=proto.v1alpha1.SensorStatus" json:"status,omitempty"`
+	Status SensorStatus `protobuf:"varint,4,opt,name=status,proto3,enum=schema.v1alpha1.SensorStatus" json:"status,omitempty"`
 	// Unit of measurement for the sensor readings
-	Unit SensorUnit `protobuf:"varint,5,opt,name=unit,proto3,enum=proto.v1alpha1.SensorUnit" json:"unit,omitempty"`
+	Unit SensorUnit `protobuf:"varint,5,opt,name=unit,proto3,enum=schema.v1alpha1.SensorUnit" json:"unit,omitempty"`
 	// Sensor reading information - either analog with thresholds or discrete state
 	//
 	// Types that are valid to be assigned to Reading:
@@ -520,7 +520,7 @@ func (x *AnalogSensorReading) GetMinMaxRecorded() *MinMaxRecorded {
 type DiscreteSensorReading struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Current state of the sensor
-	State SensorState `protobuf:"varint,1,opt,name=state,proto3,enum=proto.v1alpha1.SensorState" json:"state,omitempty"`
+	State SensorState `protobuf:"varint,1,opt,name=state,proto3,enum=schema.v1alpha1.SensorState" json:"state,omitempty"`
 	// Additional state information or description
 	StateDescription string `protobuf:"bytes,2,opt,name=state_description,json=stateDescription,proto3" json:"state_description,omitempty"`
 	unknownFields    protoimpl.UnknownFields
@@ -793,9 +793,9 @@ func (x *GetSensorResponse) GetSensor() *Sensor {
 type ListSensorsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Optional filter by sensor context
-	Context SensorContext `protobuf:"varint,1,opt,name=context,proto3,enum=proto.v1alpha1.SensorContext" json:"context,omitempty"`
+	Context SensorContext `protobuf:"varint,1,opt,name=context,proto3,enum=schema.v1alpha1.SensorContext" json:"context,omitempty"`
 	// Optional filter by sensor status
-	Status        SensorStatus `protobuf:"varint,2,opt,name=status,proto3,enum=proto.v1alpha1.SensorStatus" json:"status,omitempty"`
+	Status        SensorStatus `protobuf:"varint,2,opt,name=status,proto3,enum=schema.v1alpha1.SensorStatus" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -893,25 +893,25 @@ var File_schema_v1alpha1_sensor_proto protoreflect.FileDescriptor
 
 const file_schema_v1alpha1_sensor_proto_rawDesc = "" +
 	"\n" +
-	"\x1cschema/v1alpha1/sensor.proto\x12\x0eproto.v1alpha1\x1a\x1bbuf/validate/validate.proto\"\xed\x03\n" +
+	"\x1cschema/v1alpha1/sensor.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\"\xf2\x03\n" +
 	"\x06Sensor\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x127\n" +
-	"\acontext\x18\x03 \x01(\x0e2\x1d.proto.v1alpha1.SensorContextR\acontext\x124\n" +
-	"\x06status\x18\x04 \x01(\x0e2\x1c.proto.v1alpha1.SensorStatusR\x06status\x12.\n" +
-	"\x04unit\x18\x05 \x01(\x0e2\x1a.proto.v1alpha1.SensorUnitR\x04unit\x12L\n" +
-	"\x0eanalog_reading\x18\x06 \x01(\v2#.proto.v1alpha1.AnalogSensorReadingH\x00R\ranalogReading\x12R\n" +
-	"\x10discrete_reading\x18\a \x01(\v2%.proto.v1alpha1.DiscreteSensorReadingH\x00R\x0fdiscreteReading\x12+\n" +
+	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x128\n" +
+	"\acontext\x18\x03 \x01(\x0e2\x1e.schema.v1alpha1.SensorContextR\acontext\x125\n" +
+	"\x06status\x18\x04 \x01(\x0e2\x1d.schema.v1alpha1.SensorStatusR\x06status\x12/\n" +
+	"\x04unit\x18\x05 \x01(\x0e2\x1b.schema.v1alpha1.SensorUnitR\x04unit\x12M\n" +
+	"\x0eanalog_reading\x18\x06 \x01(\v2$.schema.v1alpha1.AnalogSensorReadingH\x00R\ranalogReading\x12S\n" +
+	"\x10discrete_reading\x18\a \x01(\v2&.schema.v1alpha1.DiscreteSensorReadingH\x00R\x0fdiscreteReading\x12+\n" +
 	"\x11physical_location\x18\b \x01(\tR\x10physicalLocation\x124\n" +
 	"\x16last_reading_timestamp\x18\t \x01(\x03R\x14lastReadingTimestampB\t\n" +
-	"\areading\"\x81\x02\n" +
+	"\areading\"\x84\x02\n" +
 	"\x13AnalogSensorReading\x12\x14\n" +
-	"\x05value\x18\x01 \x01(\x01R\x05value\x12D\n" +
-	"\x10upper_thresholds\x18\x02 \x01(\v2\x19.proto.v1alpha1.ThresholdR\x0fupperThresholds\x12D\n" +
-	"\x10lower_thresholds\x18\x03 \x01(\v2\x19.proto.v1alpha1.ThresholdR\x0flowerThresholds\x12H\n" +
-	"\x10min_max_recorded\x18\x04 \x01(\v2\x1e.proto.v1alpha1.MinMaxRecordedR\x0eminMaxRecorded\"w\n" +
-	"\x15DiscreteSensorReading\x121\n" +
-	"\x05state\x18\x01 \x01(\x0e2\x1b.proto.v1alpha1.SensorStateR\x05state\x12+\n" +
+	"\x05value\x18\x01 \x01(\x01R\x05value\x12E\n" +
+	"\x10upper_thresholds\x18\x02 \x01(\v2\x1a.schema.v1alpha1.ThresholdR\x0fupperThresholds\x12E\n" +
+	"\x10lower_thresholds\x18\x03 \x01(\v2\x1a.schema.v1alpha1.ThresholdR\x0flowerThresholds\x12I\n" +
+	"\x10min_max_recorded\x18\x04 \x01(\v2\x1f.schema.v1alpha1.MinMaxRecordedR\x0eminMaxRecorded\"x\n" +
+	"\x15DiscreteSensorReading\x122\n" +
+	"\x05state\x18\x01 \x01(\x0e2\x1c.schema.v1alpha1.SensorStateR\x05state\x12+\n" +
 	"\x11state_description\x18\x02 \x01(\tR\x10stateDescription\"A\n" +
 	"\tThreshold\x12\x18\n" +
 	"\awarning\x18\x01 \x01(\x01R\awarning\x12\x1a\n" +
@@ -922,14 +922,14 @@ const file_schema_v1alpha1_sensor_proto_rawDesc = "" +
 	"\rmin_timestamp\x18\x03 \x01(\x03R\fminTimestamp\x12#\n" +
 	"\rmax_timestamp\x18\x04 \x01(\x03R\fmaxTimestamp\"+\n" +
 	"\x10GetSensorRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"C\n" +
-	"\x11GetSensorResponse\x12.\n" +
-	"\x06sensor\x18\x01 \x01(\v2\x16.proto.v1alpha1.SensorR\x06sensor\"\x83\x01\n" +
-	"\x12ListSensorsRequest\x127\n" +
-	"\acontext\x18\x01 \x01(\x0e2\x1d.proto.v1alpha1.SensorContextR\acontext\x124\n" +
-	"\x06status\x18\x02 \x01(\x0e2\x1c.proto.v1alpha1.SensorStatusR\x06status\"G\n" +
-	"\x13ListSensorsResponse\x120\n" +
-	"\asensors\x18\x01 \x03(\v2\x16.proto.v1alpha1.SensorR\asensors*\xab\x02\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"D\n" +
+	"\x11GetSensorResponse\x12/\n" +
+	"\x06sensor\x18\x01 \x01(\v2\x17.schema.v1alpha1.SensorR\x06sensor\"\x85\x01\n" +
+	"\x12ListSensorsRequest\x128\n" +
+	"\acontext\x18\x01 \x01(\x0e2\x1e.schema.v1alpha1.SensorContextR\acontext\x125\n" +
+	"\x06status\x18\x02 \x01(\x0e2\x1d.schema.v1alpha1.SensorStatusR\x06status\"H\n" +
+	"\x13ListSensorsResponse\x121\n" +
+	"\asensors\x18\x01 \x03(\v2\x17.schema.v1alpha1.SensorR\asensors*\xab\x02\n" +
 	"\rSensorContext\x12\x1e\n" +
 	"\x1aSENSOR_CONTEXT_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aSENSOR_CONTEXT_TEMPERATURE\x10\x01\x12\x1a\n" +
@@ -970,11 +970,11 @@ const file_schema_v1alpha1_sensor_proto_rawDesc = "" +
 	"\x14SENSOR_STATE_WARNING\x10\x03\x12\x19\n" +
 	"\x15SENSOR_STATE_CRITICAL\x10\x04\x12\x18\n" +
 	"\x14SENSOR_STATE_UNKNOWN\x10\x05\x12\x1e\n" +
-	"\x1aSENSOR_STATE_NOT_AVAILABLE\x10\x062\xbd\x01\n" +
-	"\rSensorService\x12R\n" +
-	"\tGetSensor\x12 .proto.v1alpha1.GetSensorRequest\x1a!.proto.v1alpha1.GetSensorResponse\"\x00\x12X\n" +
-	"\vListSensors\x12\".proto.v1alpha1.ListSensorsRequest\x1a#.proto.v1alpha1.ListSensorsResponse\"\x00B\xb8\x01\n" +
-	"\x12com.proto.v1alpha1B\vSensorProtoP\x01Z<github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;protov1alpha1\xa2\x02\x03PXX\xaa\x02\x0eProto.V1alpha1\xca\x02\x0eProto\\V1alpha1\xe2\x02\x1aProto\\V1alpha1\\GPBMetadata\xea\x02\x0fProto::V1alpha1b\x06proto3"
+	"\x1aSENSOR_STATE_NOT_AVAILABLE\x10\x062\xc1\x01\n" +
+	"\rSensorService\x12T\n" +
+	"\tGetSensor\x12!.schema.v1alpha1.GetSensorRequest\x1a\".schema.v1alpha1.GetSensorResponse\"\x00\x12Z\n" +
+	"\vListSensors\x12#.schema.v1alpha1.ListSensorsRequest\x1a$.schema.v1alpha1.ListSensorsResponse\"\x00B\xbe\x01\n" +
+	"\x13com.schema.v1alpha1B\vSensorProtoP\x01Z=github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;schemav1alpha1\xa2\x02\x03SXX\xaa\x02\x0fSchema.V1alpha1\xca\x02\x0fSchema\\V1alpha1\xe2\x02\x1bSchema\\V1alpha1\\GPBMetadata\xea\x02\x10Schema::V1alpha1b\x06proto3"
 
 var (
 	file_schema_v1alpha1_sensor_proto_rawDescOnce sync.Once
@@ -991,38 +991,38 @@ func file_schema_v1alpha1_sensor_proto_rawDescGZIP() []byte {
 var file_schema_v1alpha1_sensor_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_schema_v1alpha1_sensor_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_schema_v1alpha1_sensor_proto_goTypes = []any{
-	(SensorContext)(0),            // 0: proto.v1alpha1.SensorContext
-	(SensorStatus)(0),             // 1: proto.v1alpha1.SensorStatus
-	(SensorUnit)(0),               // 2: proto.v1alpha1.SensorUnit
-	(SensorState)(0),              // 3: proto.v1alpha1.SensorState
-	(*Sensor)(nil),                // 4: proto.v1alpha1.Sensor
-	(*AnalogSensorReading)(nil),   // 5: proto.v1alpha1.AnalogSensorReading
-	(*DiscreteSensorReading)(nil), // 6: proto.v1alpha1.DiscreteSensorReading
-	(*Threshold)(nil),             // 7: proto.v1alpha1.Threshold
-	(*MinMaxRecorded)(nil),        // 8: proto.v1alpha1.MinMaxRecorded
-	(*GetSensorRequest)(nil),      // 9: proto.v1alpha1.GetSensorRequest
-	(*GetSensorResponse)(nil),     // 10: proto.v1alpha1.GetSensorResponse
-	(*ListSensorsRequest)(nil),    // 11: proto.v1alpha1.ListSensorsRequest
-	(*ListSensorsResponse)(nil),   // 12: proto.v1alpha1.ListSensorsResponse
+	(SensorContext)(0),            // 0: schema.v1alpha1.SensorContext
+	(SensorStatus)(0),             // 1: schema.v1alpha1.SensorStatus
+	(SensorUnit)(0),               // 2: schema.v1alpha1.SensorUnit
+	(SensorState)(0),              // 3: schema.v1alpha1.SensorState
+	(*Sensor)(nil),                // 4: schema.v1alpha1.Sensor
+	(*AnalogSensorReading)(nil),   // 5: schema.v1alpha1.AnalogSensorReading
+	(*DiscreteSensorReading)(nil), // 6: schema.v1alpha1.DiscreteSensorReading
+	(*Threshold)(nil),             // 7: schema.v1alpha1.Threshold
+	(*MinMaxRecorded)(nil),        // 8: schema.v1alpha1.MinMaxRecorded
+	(*GetSensorRequest)(nil),      // 9: schema.v1alpha1.GetSensorRequest
+	(*GetSensorResponse)(nil),     // 10: schema.v1alpha1.GetSensorResponse
+	(*ListSensorsRequest)(nil),    // 11: schema.v1alpha1.ListSensorsRequest
+	(*ListSensorsResponse)(nil),   // 12: schema.v1alpha1.ListSensorsResponse
 }
 var file_schema_v1alpha1_sensor_proto_depIdxs = []int32{
-	0,  // 0: proto.v1alpha1.Sensor.context:type_name -> proto.v1alpha1.SensorContext
-	1,  // 1: proto.v1alpha1.Sensor.status:type_name -> proto.v1alpha1.SensorStatus
-	2,  // 2: proto.v1alpha1.Sensor.unit:type_name -> proto.v1alpha1.SensorUnit
-	5,  // 3: proto.v1alpha1.Sensor.analog_reading:type_name -> proto.v1alpha1.AnalogSensorReading
-	6,  // 4: proto.v1alpha1.Sensor.discrete_reading:type_name -> proto.v1alpha1.DiscreteSensorReading
-	7,  // 5: proto.v1alpha1.AnalogSensorReading.upper_thresholds:type_name -> proto.v1alpha1.Threshold
-	7,  // 6: proto.v1alpha1.AnalogSensorReading.lower_thresholds:type_name -> proto.v1alpha1.Threshold
-	8,  // 7: proto.v1alpha1.AnalogSensorReading.min_max_recorded:type_name -> proto.v1alpha1.MinMaxRecorded
-	3,  // 8: proto.v1alpha1.DiscreteSensorReading.state:type_name -> proto.v1alpha1.SensorState
-	4,  // 9: proto.v1alpha1.GetSensorResponse.sensor:type_name -> proto.v1alpha1.Sensor
-	0,  // 10: proto.v1alpha1.ListSensorsRequest.context:type_name -> proto.v1alpha1.SensorContext
-	1,  // 11: proto.v1alpha1.ListSensorsRequest.status:type_name -> proto.v1alpha1.SensorStatus
-	4,  // 12: proto.v1alpha1.ListSensorsResponse.sensors:type_name -> proto.v1alpha1.Sensor
-	9,  // 13: proto.v1alpha1.SensorService.GetSensor:input_type -> proto.v1alpha1.GetSensorRequest
-	11, // 14: proto.v1alpha1.SensorService.ListSensors:input_type -> proto.v1alpha1.ListSensorsRequest
-	10, // 15: proto.v1alpha1.SensorService.GetSensor:output_type -> proto.v1alpha1.GetSensorResponse
-	12, // 16: proto.v1alpha1.SensorService.ListSensors:output_type -> proto.v1alpha1.ListSensorsResponse
+	0,  // 0: schema.v1alpha1.Sensor.context:type_name -> schema.v1alpha1.SensorContext
+	1,  // 1: schema.v1alpha1.Sensor.status:type_name -> schema.v1alpha1.SensorStatus
+	2,  // 2: schema.v1alpha1.Sensor.unit:type_name -> schema.v1alpha1.SensorUnit
+	5,  // 3: schema.v1alpha1.Sensor.analog_reading:type_name -> schema.v1alpha1.AnalogSensorReading
+	6,  // 4: schema.v1alpha1.Sensor.discrete_reading:type_name -> schema.v1alpha1.DiscreteSensorReading
+	7,  // 5: schema.v1alpha1.AnalogSensorReading.upper_thresholds:type_name -> schema.v1alpha1.Threshold
+	7,  // 6: schema.v1alpha1.AnalogSensorReading.lower_thresholds:type_name -> schema.v1alpha1.Threshold
+	8,  // 7: schema.v1alpha1.AnalogSensorReading.min_max_recorded:type_name -> schema.v1alpha1.MinMaxRecorded
+	3,  // 8: schema.v1alpha1.DiscreteSensorReading.state:type_name -> schema.v1alpha1.SensorState
+	4,  // 9: schema.v1alpha1.GetSensorResponse.sensor:type_name -> schema.v1alpha1.Sensor
+	0,  // 10: schema.v1alpha1.ListSensorsRequest.context:type_name -> schema.v1alpha1.SensorContext
+	1,  // 11: schema.v1alpha1.ListSensorsRequest.status:type_name -> schema.v1alpha1.SensorStatus
+	4,  // 12: schema.v1alpha1.ListSensorsResponse.sensors:type_name -> schema.v1alpha1.Sensor
+	9,  // 13: schema.v1alpha1.SensorService.GetSensor:input_type -> schema.v1alpha1.GetSensorRequest
+	11, // 14: schema.v1alpha1.SensorService.ListSensors:input_type -> schema.v1alpha1.ListSensorsRequest
+	10, // 15: schema.v1alpha1.SensorService.GetSensor:output_type -> schema.v1alpha1.GetSensorResponse
+	12, // 16: schema.v1alpha1.SensorService.ListSensors:output_type -> schema.v1alpha1.ListSensorsResponse
 	15, // [15:17] is the sub-list for method output_type
 	13, // [13:15] is the sub-list for method input_type
 	13, // [13:13] is the sub-list for extension type_name

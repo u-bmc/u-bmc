@@ -4,7 +4,7 @@
 //
 // Source: schema/v1alpha1/sensor.proto
 
-package protov1alpha1connect
+package schemav1alpha1connect
 
 import (
 	connect "connectrpc.com/connect"
@@ -24,7 +24,7 @@ const _ = connect.IsAtLeastVersion1_13_0
 
 const (
 	// SensorServiceName is the fully-qualified name of the SensorService service.
-	SensorServiceName = "proto.v1alpha1.SensorService"
+	SensorServiceName = "schema.v1alpha1.SensorService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -36,13 +36,13 @@ const (
 // period.
 const (
 	// SensorServiceGetSensorProcedure is the fully-qualified name of the SensorService's GetSensor RPC.
-	SensorServiceGetSensorProcedure = "/proto.v1alpha1.SensorService/GetSensor"
+	SensorServiceGetSensorProcedure = "/schema.v1alpha1.SensorService/GetSensor"
 	// SensorServiceListSensorsProcedure is the fully-qualified name of the SensorService's ListSensors
 	// RPC.
-	SensorServiceListSensorsProcedure = "/proto.v1alpha1.SensorService/ListSensors"
+	SensorServiceListSensorsProcedure = "/schema.v1alpha1.SensorService/ListSensors"
 )
 
-// SensorServiceClient is a client for the proto.v1alpha1.SensorService service.
+// SensorServiceClient is a client for the schema.v1alpha1.SensorService service.
 type SensorServiceClient interface {
 	// Get a sensor by ID
 	GetSensor(context.Context, *connect.Request[v1alpha1.GetSensorRequest]) (*connect.Response[v1alpha1.GetSensorResponse], error)
@@ -50,7 +50,7 @@ type SensorServiceClient interface {
 	ListSensors(context.Context, *connect.Request[v1alpha1.ListSensorsRequest]) (*connect.Response[v1alpha1.ListSensorsResponse], error)
 }
 
-// NewSensorServiceClient constructs a client for the proto.v1alpha1.SensorService service. By
+// NewSensorServiceClient constructs a client for the schema.v1alpha1.SensorService service. By
 // default, it uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses,
 // and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the
 // connect.WithGRPC() or connect.WithGRPCWeb() options.
@@ -82,17 +82,17 @@ type sensorServiceClient struct {
 	listSensors *connect.Client[v1alpha1.ListSensorsRequest, v1alpha1.ListSensorsResponse]
 }
 
-// GetSensor calls proto.v1alpha1.SensorService.GetSensor.
+// GetSensor calls schema.v1alpha1.SensorService.GetSensor.
 func (c *sensorServiceClient) GetSensor(ctx context.Context, req *connect.Request[v1alpha1.GetSensorRequest]) (*connect.Response[v1alpha1.GetSensorResponse], error) {
 	return c.getSensor.CallUnary(ctx, req)
 }
 
-// ListSensors calls proto.v1alpha1.SensorService.ListSensors.
+// ListSensors calls schema.v1alpha1.SensorService.ListSensors.
 func (c *sensorServiceClient) ListSensors(ctx context.Context, req *connect.Request[v1alpha1.ListSensorsRequest]) (*connect.Response[v1alpha1.ListSensorsResponse], error) {
 	return c.listSensors.CallUnary(ctx, req)
 }
 
-// SensorServiceHandler is an implementation of the proto.v1alpha1.SensorService service.
+// SensorServiceHandler is an implementation of the schema.v1alpha1.SensorService service.
 type SensorServiceHandler interface {
 	// Get a sensor by ID
 	GetSensor(context.Context, *connect.Request[v1alpha1.GetSensorRequest]) (*connect.Response[v1alpha1.GetSensorResponse], error)
@@ -119,7 +119,7 @@ func NewSensorServiceHandler(svc SensorServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(sensorServiceMethods.ByName("ListSensors")),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/proto.v1alpha1.SensorService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return "/schema.v1alpha1.SensorService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case SensorServiceGetSensorProcedure:
 			sensorServiceGetSensorHandler.ServeHTTP(w, r)
@@ -135,9 +135,9 @@ func NewSensorServiceHandler(svc SensorServiceHandler, opts ...connect.HandlerOp
 type UnimplementedSensorServiceHandler struct{}
 
 func (UnimplementedSensorServiceHandler) GetSensor(context.Context, *connect.Request[v1alpha1.GetSensorRequest]) (*connect.Response[v1alpha1.GetSensorResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.SensorService.GetSensor is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.SensorService.GetSensor is not implemented"))
 }
 
 func (UnimplementedSensorServiceHandler) ListSensors(context.Context, *connect.Request[v1alpha1.ListSensorsRequest]) (*connect.Response[v1alpha1.ListSensorsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.SensorService.ListSensors is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.SensorService.ListSensors is not implemented"))
 }

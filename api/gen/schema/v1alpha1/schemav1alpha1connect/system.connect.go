@@ -4,7 +4,7 @@
 //
 // Source: schema/v1alpha1/system.proto
 
-package protov1alpha1connect
+package schemav1alpha1connect
 
 import (
 	connect "connectrpc.com/connect"
@@ -24,14 +24,14 @@ const _ = connect.IsAtLeastVersion1_13_0
 
 const (
 	// HostManagementServiceName is the fully-qualified name of the HostManagementService service.
-	HostManagementServiceName = "proto.v1alpha1.HostManagementService"
+	HostManagementServiceName = "schema.v1alpha1.HostManagementService"
 	// ChassisServiceName is the fully-qualified name of the ChassisService service.
-	ChassisServiceName = "proto.v1alpha1.ChassisService"
+	ChassisServiceName = "schema.v1alpha1.ChassisService"
 	// HostServiceName is the fully-qualified name of the HostService service.
-	HostServiceName = "proto.v1alpha1.HostService"
+	HostServiceName = "schema.v1alpha1.HostService"
 	// ManagementControllerServiceName is the fully-qualified name of the ManagementControllerService
 	// service.
-	ManagementControllerServiceName = "proto.v1alpha1.ManagementControllerService"
+	ManagementControllerServiceName = "schema.v1alpha1.ManagementControllerService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -44,29 +44,29 @@ const (
 const (
 	// HostManagementServiceGetHostManagementProcedure is the fully-qualified name of the
 	// HostManagementService's GetHostManagement RPC.
-	HostManagementServiceGetHostManagementProcedure = "/proto.v1alpha1.HostManagementService/GetHostManagement"
+	HostManagementServiceGetHostManagementProcedure = "/schema.v1alpha1.HostManagementService/GetHostManagement"
 	// HostManagementServiceListHostManagementProcedure is the fully-qualified name of the
 	// HostManagementService's ListHostManagement RPC.
-	HostManagementServiceListHostManagementProcedure = "/proto.v1alpha1.HostManagementService/ListHostManagement"
+	HostManagementServiceListHostManagementProcedure = "/schema.v1alpha1.HostManagementService/ListHostManagement"
 	// ChassisServiceGetChassisProcedure is the fully-qualified name of the ChassisService's GetChassis
 	// RPC.
-	ChassisServiceGetChassisProcedure = "/proto.v1alpha1.ChassisService/GetChassis"
+	ChassisServiceGetChassisProcedure = "/schema.v1alpha1.ChassisService/GetChassis"
 	// ChassisServiceListChassisProcedure is the fully-qualified name of the ChassisService's
 	// ListChassis RPC.
-	ChassisServiceListChassisProcedure = "/proto.v1alpha1.ChassisService/ListChassis"
+	ChassisServiceListChassisProcedure = "/schema.v1alpha1.ChassisService/ListChassis"
 	// HostServiceGetHostProcedure is the fully-qualified name of the HostService's GetHost RPC.
-	HostServiceGetHostProcedure = "/proto.v1alpha1.HostService/GetHost"
+	HostServiceGetHostProcedure = "/schema.v1alpha1.HostService/GetHost"
 	// HostServiceListHostsProcedure is the fully-qualified name of the HostService's ListHosts RPC.
-	HostServiceListHostsProcedure = "/proto.v1alpha1.HostService/ListHosts"
+	HostServiceListHostsProcedure = "/schema.v1alpha1.HostService/ListHosts"
 	// ManagementControllerServiceGetManagementControllerProcedure is the fully-qualified name of the
 	// ManagementControllerService's GetManagementController RPC.
-	ManagementControllerServiceGetManagementControllerProcedure = "/proto.v1alpha1.ManagementControllerService/GetManagementController"
+	ManagementControllerServiceGetManagementControllerProcedure = "/schema.v1alpha1.ManagementControllerService/GetManagementController"
 	// ManagementControllerServiceListManagementControllersProcedure is the fully-qualified name of the
 	// ManagementControllerService's ListManagementControllers RPC.
-	ManagementControllerServiceListManagementControllersProcedure = "/proto.v1alpha1.ManagementControllerService/ListManagementControllers"
+	ManagementControllerServiceListManagementControllersProcedure = "/schema.v1alpha1.ManagementControllerService/ListManagementControllers"
 )
 
-// HostManagementServiceClient is a client for the proto.v1alpha1.HostManagementService service.
+// HostManagementServiceClient is a client for the schema.v1alpha1.HostManagementService service.
 type HostManagementServiceClient interface {
 	// Get a host management configuration by ID
 	GetHostManagement(context.Context, *connect.Request[v1alpha1.GetHostManagementRequest]) (*connect.Response[v1alpha1.GetHostManagementResponse], error)
@@ -74,7 +74,7 @@ type HostManagementServiceClient interface {
 	ListHostManagement(context.Context, *connect.Request[v1alpha1.ListHostManagementRequest]) (*connect.Response[v1alpha1.ListHostManagementResponse], error)
 }
 
-// NewHostManagementServiceClient constructs a client for the proto.v1alpha1.HostManagementService
+// NewHostManagementServiceClient constructs a client for the schema.v1alpha1.HostManagementService
 // service. By default, it uses the Connect protocol with the binary Protobuf Codec, asks for
 // gzipped responses, and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply
 // the connect.WithGRPC() or connect.WithGRPCWeb() options.
@@ -106,17 +106,17 @@ type hostManagementServiceClient struct {
 	listHostManagement *connect.Client[v1alpha1.ListHostManagementRequest, v1alpha1.ListHostManagementResponse]
 }
 
-// GetHostManagement calls proto.v1alpha1.HostManagementService.GetHostManagement.
+// GetHostManagement calls schema.v1alpha1.HostManagementService.GetHostManagement.
 func (c *hostManagementServiceClient) GetHostManagement(ctx context.Context, req *connect.Request[v1alpha1.GetHostManagementRequest]) (*connect.Response[v1alpha1.GetHostManagementResponse], error) {
 	return c.getHostManagement.CallUnary(ctx, req)
 }
 
-// ListHostManagement calls proto.v1alpha1.HostManagementService.ListHostManagement.
+// ListHostManagement calls schema.v1alpha1.HostManagementService.ListHostManagement.
 func (c *hostManagementServiceClient) ListHostManagement(ctx context.Context, req *connect.Request[v1alpha1.ListHostManagementRequest]) (*connect.Response[v1alpha1.ListHostManagementResponse], error) {
 	return c.listHostManagement.CallUnary(ctx, req)
 }
 
-// HostManagementServiceHandler is an implementation of the proto.v1alpha1.HostManagementService
+// HostManagementServiceHandler is an implementation of the schema.v1alpha1.HostManagementService
 // service.
 type HostManagementServiceHandler interface {
 	// Get a host management configuration by ID
@@ -144,7 +144,7 @@ func NewHostManagementServiceHandler(svc HostManagementServiceHandler, opts ...c
 		connect.WithSchema(hostManagementServiceMethods.ByName("ListHostManagement")),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/proto.v1alpha1.HostManagementService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return "/schema.v1alpha1.HostManagementService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case HostManagementServiceGetHostManagementProcedure:
 			hostManagementServiceGetHostManagementHandler.ServeHTTP(w, r)
@@ -160,14 +160,14 @@ func NewHostManagementServiceHandler(svc HostManagementServiceHandler, opts ...c
 type UnimplementedHostManagementServiceHandler struct{}
 
 func (UnimplementedHostManagementServiceHandler) GetHostManagement(context.Context, *connect.Request[v1alpha1.GetHostManagementRequest]) (*connect.Response[v1alpha1.GetHostManagementResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.HostManagementService.GetHostManagement is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.HostManagementService.GetHostManagement is not implemented"))
 }
 
 func (UnimplementedHostManagementServiceHandler) ListHostManagement(context.Context, *connect.Request[v1alpha1.ListHostManagementRequest]) (*connect.Response[v1alpha1.ListHostManagementResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.HostManagementService.ListHostManagement is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.HostManagementService.ListHostManagement is not implemented"))
 }
 
-// ChassisServiceClient is a client for the proto.v1alpha1.ChassisService service.
+// ChassisServiceClient is a client for the schema.v1alpha1.ChassisService service.
 type ChassisServiceClient interface {
 	// Get a chassis by ID
 	GetChassis(context.Context, *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error)
@@ -175,7 +175,7 @@ type ChassisServiceClient interface {
 	ListChassis(context.Context, *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error)
 }
 
-// NewChassisServiceClient constructs a client for the proto.v1alpha1.ChassisService service. By
+// NewChassisServiceClient constructs a client for the schema.v1alpha1.ChassisService service. By
 // default, it uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses,
 // and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the
 // connect.WithGRPC() or connect.WithGRPCWeb() options.
@@ -207,17 +207,17 @@ type chassisServiceClient struct {
 	listChassis *connect.Client[v1alpha1.ListChassisRequest, v1alpha1.ListChassisResponse]
 }
 
-// GetChassis calls proto.v1alpha1.ChassisService.GetChassis.
+// GetChassis calls schema.v1alpha1.ChassisService.GetChassis.
 func (c *chassisServiceClient) GetChassis(ctx context.Context, req *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error) {
 	return c.getChassis.CallUnary(ctx, req)
 }
 
-// ListChassis calls proto.v1alpha1.ChassisService.ListChassis.
+// ListChassis calls schema.v1alpha1.ChassisService.ListChassis.
 func (c *chassisServiceClient) ListChassis(ctx context.Context, req *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error) {
 	return c.listChassis.CallUnary(ctx, req)
 }
 
-// ChassisServiceHandler is an implementation of the proto.v1alpha1.ChassisService service.
+// ChassisServiceHandler is an implementation of the schema.v1alpha1.ChassisService service.
 type ChassisServiceHandler interface {
 	// Get a chassis by ID
 	GetChassis(context.Context, *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error)
@@ -244,7 +244,7 @@ func NewChassisServiceHandler(svc ChassisServiceHandler, opts ...connect.Handler
 		connect.WithSchema(chassisServiceMethods.ByName("ListChassis")),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/proto.v1alpha1.ChassisService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return "/schema.v1alpha1.ChassisService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case ChassisServiceGetChassisProcedure:
 			chassisServiceGetChassisHandler.ServeHTTP(w, r)
@@ -260,14 +260,14 @@ func NewChassisServiceHandler(svc ChassisServiceHandler, opts ...connect.Handler
 type UnimplementedChassisServiceHandler struct{}
 
 func (UnimplementedChassisServiceHandler) GetChassis(context.Context, *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.ChassisService.GetChassis is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.ChassisService.GetChassis is not implemented"))
 }
 
 func (UnimplementedChassisServiceHandler) ListChassis(context.Context, *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.ChassisService.ListChassis is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.ChassisService.ListChassis is not implemented"))
 }
 
-// HostServiceClient is a client for the proto.v1alpha1.HostService service.
+// HostServiceClient is a client for the schema.v1alpha1.HostService service.
 type HostServiceClient interface {
 	// Get a host by ID
 	GetHost(context.Context, *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error)
@@ -275,7 +275,7 @@ type HostServiceClient interface {
 	ListHosts(context.Context, *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error)
 }
 
-// NewHostServiceClient constructs a client for the proto.v1alpha1.HostService service. By default,
+// NewHostServiceClient constructs a client for the schema.v1alpha1.HostService service. By default,
 // it uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and
 // sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC()
 // or connect.WithGRPCWeb() options.
@@ -307,17 +307,17 @@ type hostServiceClient struct {
 	listHosts *connect.Client[v1alpha1.ListHostsRequest, v1alpha1.ListHostsResponse]
 }
 
-// GetHost calls proto.v1alpha1.HostService.GetHost.
+// GetHost calls schema.v1alpha1.HostService.GetHost.
 func (c *hostServiceClient) GetHost(ctx context.Context, req *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error) {
 	return c.getHost.CallUnary(ctx, req)
 }
 
-// ListHosts calls proto.v1alpha1.HostService.ListHosts.
+// ListHosts calls schema.v1alpha1.HostService.ListHosts.
 func (c *hostServiceClient) ListHosts(ctx context.Context, req *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error) {
 	return c.listHosts.CallUnary(ctx, req)
 }
 
-// HostServiceHandler is an implementation of the proto.v1alpha1.HostService service.
+// HostServiceHandler is an implementation of the schema.v1alpha1.HostService service.
 type HostServiceHandler interface {
 	// Get a host by ID
 	GetHost(context.Context, *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error)
@@ -344,7 +344,7 @@ func NewHostServiceHandler(svc HostServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(hostServiceMethods.ByName("ListHosts")),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/proto.v1alpha1.HostService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return "/schema.v1alpha1.HostService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case HostServiceGetHostProcedure:
 			hostServiceGetHostHandler.ServeHTTP(w, r)
@@ -360,14 +360,14 @@ func NewHostServiceHandler(svc HostServiceHandler, opts ...connect.HandlerOption
 type UnimplementedHostServiceHandler struct{}
 
 func (UnimplementedHostServiceHandler) GetHost(context.Context, *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.HostService.GetHost is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.HostService.GetHost is not implemented"))
 }
 
 func (UnimplementedHostServiceHandler) ListHosts(context.Context, *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.HostService.ListHosts is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.HostService.ListHosts is not implemented"))
 }
 
-// ManagementControllerServiceClient is a client for the proto.v1alpha1.ManagementControllerService
+// ManagementControllerServiceClient is a client for the schema.v1alpha1.ManagementControllerService
 // service.
 type ManagementControllerServiceClient interface {
 	// Get a management controller by ID
@@ -377,9 +377,10 @@ type ManagementControllerServiceClient interface {
 }
 
 // NewManagementControllerServiceClient constructs a client for the
-// proto.v1alpha1.ManagementControllerService service. By default, it uses the Connect protocol with
-// the binary Protobuf Codec, asks for gzipped responses, and sends uncompressed requests. To use
-// the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or connect.WithGRPCWeb() options.
+// schema.v1alpha1.ManagementControllerService service. By default, it uses the Connect protocol
+// with the binary Protobuf Codec, asks for gzipped responses, and sends uncompressed requests. To
+// use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or connect.WithGRPCWeb()
+// options.
 //
 // The URL supplied here should be the base URL for the Connect or gRPC server (for example,
 // http://api.acme.com or https://acme.com/grpc).
@@ -408,19 +409,20 @@ type managementControllerServiceClient struct {
 	listManagementControllers *connect.Client[v1alpha1.ListManagementControllersRequest, v1alpha1.ListManagementControllersResponse]
 }
 
-// GetManagementController calls proto.v1alpha1.ManagementControllerService.GetManagementController.
+// GetManagementController calls
+// schema.v1alpha1.ManagementControllerService.GetManagementController.
 func (c *managementControllerServiceClient) GetManagementController(ctx context.Context, req *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error) {
 	return c.getManagementController.CallUnary(ctx, req)
 }
 
 // ListManagementControllers calls
-// proto.v1alpha1.ManagementControllerService.ListManagementControllers.
+// schema.v1alpha1.ManagementControllerService.ListManagementControllers.
 func (c *managementControllerServiceClient) ListManagementControllers(ctx context.Context, req *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error) {
 	return c.listManagementControllers.CallUnary(ctx, req)
 }
 
 // ManagementControllerServiceHandler is an implementation of the
-// proto.v1alpha1.ManagementControllerService service.
+// schema.v1alpha1.ManagementControllerService service.
 type ManagementControllerServiceHandler interface {
 	// Get a management controller by ID
 	GetManagementController(context.Context, *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error)
@@ -447,7 +449,7 @@ func NewManagementControllerServiceHandler(svc ManagementControllerServiceHandle
 		connect.WithSchema(managementControllerServiceMethods.ByName("ListManagementControllers")),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/proto.v1alpha1.ManagementControllerService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return "/schema.v1alpha1.ManagementControllerService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case ManagementControllerServiceGetManagementControllerProcedure:
 			managementControllerServiceGetManagementControllerHandler.ServeHTTP(w, r)
@@ -463,9 +465,9 @@ func NewManagementControllerServiceHandler(svc ManagementControllerServiceHandle
 type UnimplementedManagementControllerServiceHandler struct{}
 
 func (UnimplementedManagementControllerServiceHandler) GetManagementController(context.Context, *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.ManagementControllerService.GetManagementController is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.ManagementControllerService.GetManagementController is not implemented"))
 }
 
 func (UnimplementedManagementControllerServiceHandler) ListManagementControllers(context.Context, *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("proto.v1alpha1.ManagementControllerService.ListManagementControllers is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.ManagementControllerService.ListManagementControllers is not implemented"))
 }

@@ -2,7 +2,7 @@
 // protoc-gen-go-vtproto version: v0.6.0
 // source: schema/v1alpha1/thermal.proto
 
-package protov1alpha1
+package schemav1alpha1
 
 import (
 	context "context"
@@ -872,7 +872,7 @@ func NewThermalManagementServiceClient(cc grpc.ClientConnInterface) ThermalManag
 
 func (c *thermalManagementServiceClient) GetThermalManagement(ctx context.Context, in *GetThermalManagementRequest, opts ...grpc.CallOption) (*GetThermalManagementResponse, error) {
 	out := new(GetThermalManagementResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.ThermalManagementService/GetThermalManagement", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.ThermalManagementService/GetThermalManagement", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -881,7 +881,7 @@ func (c *thermalManagementServiceClient) GetThermalManagement(ctx context.Contex
 
 func (c *thermalManagementServiceClient) ListThermalManagement(ctx context.Context, in *ListThermalManagementRequest, opts ...grpc.CallOption) (*ListThermalManagementResponse, error) {
 	out := new(ListThermalManagementResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.ThermalManagementService/ListThermalManagement", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.ThermalManagementService/ListThermalManagement", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -933,7 +933,7 @@ func _ThermalManagementService_GetThermalManagement_Handler(srv interface{}, ctx
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.ThermalManagementService/GetThermalManagement",
+		FullMethod: "/schema.v1alpha1.ThermalManagementService/GetThermalManagement",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ThermalManagementServiceServer).GetThermalManagement(ctx, req.(*GetThermalManagementRequest))
@@ -951,7 +951,7 @@ func _ThermalManagementService_ListThermalManagement_Handler(srv interface{}, ct
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.ThermalManagementService/ListThermalManagement",
+		FullMethod: "/schema.v1alpha1.ThermalManagementService/ListThermalManagement",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ThermalManagementServiceServer).ListThermalManagement(ctx, req.(*ListThermalManagementRequest))
@@ -963,7 +963,7 @@ func _ThermalManagementService_ListThermalManagement_Handler(srv interface{}, ct
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ThermalManagementService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.v1alpha1.ThermalManagementService",
+	ServiceName: "schema.v1alpha1.ThermalManagementService",
 	HandlerType: (*ThermalManagementServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -999,7 +999,7 @@ func NewThermalZoneServiceClient(cc grpc.ClientConnInterface) ThermalZoneService
 
 func (c *thermalZoneServiceClient) GetThermalZone(ctx context.Context, in *GetThermalZoneRequest, opts ...grpc.CallOption) (*GetThermalZoneResponse, error) {
 	out := new(GetThermalZoneResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.ThermalZoneService/GetThermalZone", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.ThermalZoneService/GetThermalZone", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1008,7 +1008,7 @@ func (c *thermalZoneServiceClient) GetThermalZone(ctx context.Context, in *GetTh
 
 func (c *thermalZoneServiceClient) ListThermalZones(ctx context.Context, in *ListThermalZonesRequest, opts ...grpc.CallOption) (*ListThermalZonesResponse, error) {
 	out := new(ListThermalZonesResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.ThermalZoneService/ListThermalZones", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.ThermalZoneService/ListThermalZones", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1059,7 +1059,7 @@ func _ThermalZoneService_GetThermalZone_Handler(srv interface{}, ctx context.Con
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.ThermalZoneService/GetThermalZone",
+		FullMethod: "/schema.v1alpha1.ThermalZoneService/GetThermalZone",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ThermalZoneServiceServer).GetThermalZone(ctx, req.(*GetThermalZoneRequest))
@@ -1077,7 +1077,7 @@ func _ThermalZoneService_ListThermalZones_Handler(srv interface{}, ctx context.C
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.ThermalZoneService/ListThermalZones",
+		FullMethod: "/schema.v1alpha1.ThermalZoneService/ListThermalZones",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ThermalZoneServiceServer).ListThermalZones(ctx, req.(*ListThermalZonesRequest))
@@ -1089,7 +1089,7 @@ func _ThermalZoneService_ListThermalZones_Handler(srv interface{}, ctx context.C
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ThermalZoneService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.v1alpha1.ThermalZoneService",
+	ServiceName: "schema.v1alpha1.ThermalZoneService",
 	HandlerType: (*ThermalZoneServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -1125,7 +1125,7 @@ func NewCoolingDeviceServiceClient(cc grpc.ClientConnInterface) CoolingDeviceSer
 
 func (c *coolingDeviceServiceClient) GetCoolingDevice(ctx context.Context, in *GetCoolingDeviceRequest, opts ...grpc.CallOption) (*GetCoolingDeviceResponse, error) {
 	out := new(GetCoolingDeviceResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.CoolingDeviceService/GetCoolingDevice", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.CoolingDeviceService/GetCoolingDevice", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1134,7 +1134,7 @@ func (c *coolingDeviceServiceClient) GetCoolingDevice(ctx context.Context, in *G
 
 func (c *coolingDeviceServiceClient) ListCoolingDevices(ctx context.Context, in *ListCoolingDevicesRequest, opts ...grpc.CallOption) (*ListCoolingDevicesResponse, error) {
 	out := new(ListCoolingDevicesResponse)
-	err := c.cc.Invoke(ctx, "/proto.v1alpha1.CoolingDeviceService/ListCoolingDevices", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.CoolingDeviceService/ListCoolingDevices", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1185,7 +1185,7 @@ func _CoolingDeviceService_GetCoolingDevice_Handler(srv interface{}, ctx context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.CoolingDeviceService/GetCoolingDevice",
+		FullMethod: "/schema.v1alpha1.CoolingDeviceService/GetCoolingDevice",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CoolingDeviceServiceServer).GetCoolingDevice(ctx, req.(*GetCoolingDeviceRequest))
@@ -1203,7 +1203,7 @@ func _CoolingDeviceService_ListCoolingDevices_Handler(srv interface{}, ctx conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1alpha1.CoolingDeviceService/ListCoolingDevices",
+		FullMethod: "/schema.v1alpha1.CoolingDeviceService/ListCoolingDevices",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CoolingDeviceServiceServer).ListCoolingDevices(ctx, req.(*ListCoolingDevicesRequest))
@@ -1215,7 +1215,7 @@ func _CoolingDeviceService_ListCoolingDevices_Handler(srv interface{}, ctx conte
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var CoolingDeviceService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.v1alpha1.CoolingDeviceService",
+	ServiceName: "schema.v1alpha1.CoolingDeviceService",
 	HandlerType: (*CoolingDeviceServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

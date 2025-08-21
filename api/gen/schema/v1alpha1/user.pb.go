@@ -6,7 +6,7 @@
 // 	protoc        (unknown)
 // source: schema/v1alpha1/user.proto
 
-package protov1alpha1
+package schemav1alpha1
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -215,7 +215,7 @@ type User struct {
 	// Timestamp of last successful login
 	LastLogin int64 `protobuf:"varint,8,opt,name=last_login,json=lastLogin,proto3" json:"last_login,omitempty"`
 	// Source system where the user is managed
-	SourceSystem UserSource `protobuf:"varint,9,opt,name=source_system,json=sourceSystem,proto3,enum=proto.v1alpha1.UserSource" json:"source_system,omitempty"`
+	SourceSystem UserSource `protobuf:"varint,9,opt,name=source_system,json=sourceSystem,proto3,enum=schema.v1alpha1.UserSource" json:"source_system,omitempty"`
 	// Authentication data
 	AuthData *AuthenticationData `protobuf:"bytes,10,opt,name=auth_data,json=authData,proto3" json:"auth_data,omitempty"`
 	// Unix-specific user information (if mapped)
@@ -375,7 +375,7 @@ type AuthenticationData struct {
 	// Salt used for hashing
 	PasswordSalt string `protobuf:"bytes,2,opt,name=password_salt,json=passwordSalt,proto3" json:"password_salt,omitempty"`
 	// Hashing algorithm used
-	HashAlgorithm PasswordHashAlgorithm `protobuf:"varint,3,opt,name=hash_algorithm,json=hashAlgorithm,proto3,enum=proto.v1alpha1.PasswordHashAlgorithm" json:"hash_algorithm,omitempty"`
+	HashAlgorithm PasswordHashAlgorithm `protobuf:"varint,3,opt,name=hash_algorithm,json=hashAlgorithm,proto3,enum=schema.v1alpha1.PasswordHashAlgorithm" json:"hash_algorithm,omitempty"`
 	// Number of iterations for key derivation (if applicable)
 	Iterations int32 `protobuf:"varint,4,opt,name=iterations,proto3" json:"iterations,omitempty"`
 	// Timestamp of last password change
@@ -473,7 +473,7 @@ type AccountLockoutInfo struct {
 	// Whether the account is currently locked
 	Locked bool `protobuf:"varint,1,opt,name=locked,proto3" json:"locked,omitempty"`
 	// Reason for lockout
-	Reason LockoutReason `protobuf:"varint,2,opt,name=reason,proto3,enum=proto.v1alpha1.LockoutReason" json:"reason,omitempty"`
+	Reason LockoutReason `protobuf:"varint,2,opt,name=reason,proto3,enum=schema.v1alpha1.LockoutReason" json:"reason,omitempty"`
 	// Timestamp when lockout occurred
 	LockoutTime int64 `protobuf:"varint,3,opt,name=lockout_time,json=lockoutTime,proto3" json:"lockout_time,omitempty"`
 	// Number of failed login attempts
@@ -1532,7 +1532,7 @@ func (x *DeleteUserResponse) GetSuccess() bool {
 type ListUsersRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Optional filter by user source
-	Source UserSource `protobuf:"varint,1,opt,name=source,proto3,enum=proto.v1alpha1.UserSource" json:"source,omitempty"`
+	Source UserSource `protobuf:"varint,1,opt,name=source,proto3,enum=schema.v1alpha1.UserSource" json:"source,omitempty"`
 	// Optional filter by enabled status
 	Enabled bool `protobuf:"varint,2,opt,name=enabled,proto3" json:"enabled,omitempty"`
 	// Optional filter by username (prefix match)
@@ -1999,7 +1999,7 @@ var File_schema_v1alpha1_user_proto protoreflect.FileDescriptor
 
 const file_schema_v1alpha1_user_proto_rawDesc = "" +
 	"\n" +
-	"\x1aschema/v1alpha1/user.proto\x12\x0eproto.v1alpha1\x1a\x1bbuf/validate/validate.proto\"\xc1\x05\n" +
+	"\x1aschema/v1alpha1/user.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\"\xc8\x05\n" +
 	"\x04User\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12#\n" +
 	"\busername\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\busername\x12$\n" +
@@ -2011,28 +2011,28 @@ const file_schema_v1alpha1_user_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\a \x01(\x03R\tupdatedAt\x12\x1d\n" +
 	"\n" +
-	"last_login\x18\b \x01(\x03R\tlastLogin\x12?\n" +
-	"\rsource_system\x18\t \x01(\x0e2\x1a.proto.v1alpha1.UserSourceR\fsourceSystem\x12?\n" +
+	"last_login\x18\b \x01(\x03R\tlastLogin\x12@\n" +
+	"\rsource_system\x18\t \x01(\x0e2\x1b.schema.v1alpha1.UserSourceR\fsourceSystem\x12@\n" +
 	"\tauth_data\x18\n" +
-	" \x01(\v2\".proto.v1alpha1.AuthenticationDataR\bauthData\x129\n" +
-	"\tunix_info\x18\v \x01(\v2\x1c.proto.v1alpha1.UnixUserInfoR\bunixInfo\x129\n" +
-	"\tldap_info\x18\f \x01(\v2\x1c.proto.v1alpha1.LdapUserInfoR\bldapInfo\x12E\n" +
-	"\fredfish_info\x18\r \x01(\v2\".proto.v1alpha1.RedfishAccountInfoR\vredfishInfo\x12<\n" +
-	"\tnats_info\x18\x0e \x01(\v2\x1f.proto.v1alpha1.NatsAccountInfoR\bnatsInfo\x12B\n" +
-	"\fselinux_info\x18\x0f \x01(\v2\x1f.proto.v1alpha1.SelinuxUserInfoR\vselinuxInfo\"\xf7\x02\n" +
+	" \x01(\v2#.schema.v1alpha1.AuthenticationDataR\bauthData\x12:\n" +
+	"\tunix_info\x18\v \x01(\v2\x1d.schema.v1alpha1.UnixUserInfoR\bunixInfo\x12:\n" +
+	"\tldap_info\x18\f \x01(\v2\x1d.schema.v1alpha1.LdapUserInfoR\bldapInfo\x12F\n" +
+	"\fredfish_info\x18\r \x01(\v2#.schema.v1alpha1.RedfishAccountInfoR\vredfishInfo\x12=\n" +
+	"\tnats_info\x18\x0e \x01(\v2 .schema.v1alpha1.NatsAccountInfoR\bnatsInfo\x12C\n" +
+	"\fselinux_info\x18\x0f \x01(\v2 .schema.v1alpha1.SelinuxUserInfoR\vselinuxInfo\"\xf9\x02\n" +
 	"\x12AuthenticationData\x12#\n" +
 	"\rpassword_hash\x18\x01 \x01(\tR\fpasswordHash\x12#\n" +
-	"\rpassword_salt\x18\x02 \x01(\tR\fpasswordSalt\x12L\n" +
-	"\x0ehash_algorithm\x18\x03 \x01(\x0e2%.proto.v1alpha1.PasswordHashAlgorithmR\rhashAlgorithm\x12\x1e\n" +
+	"\rpassword_salt\x18\x02 \x01(\tR\fpasswordSalt\x12M\n" +
+	"\x0ehash_algorithm\x18\x03 \x01(\x0e2&.schema.v1alpha1.PasswordHashAlgorithmR\rhashAlgorithm\x12\x1e\n" +
 	"\n" +
 	"iterations\x18\x04 \x01(\x05R\n" +
 	"iterations\x122\n" +
 	"\x15password_last_changed\x18\x05 \x01(\x03R\x13passwordLastChanged\x12.\n" +
-	"\x13password_expires_at\x18\x06 \x01(\x03R\x11passwordExpiresAt\x12E\n" +
-	"\flockout_info\x18\a \x01(\v2\".proto.v1alpha1.AccountLockoutInfoR\vlockoutInfo\"\xdf\x01\n" +
+	"\x13password_expires_at\x18\x06 \x01(\x03R\x11passwordExpiresAt\x12F\n" +
+	"\flockout_info\x18\a \x01(\v2#.schema.v1alpha1.AccountLockoutInfoR\vlockoutInfo\"\xe0\x01\n" +
 	"\x12AccountLockoutInfo\x12\x16\n" +
-	"\x06locked\x18\x01 \x01(\bR\x06locked\x125\n" +
-	"\x06reason\x18\x02 \x01(\x0e2\x1d.proto.v1alpha1.LockoutReasonR\x06reason\x12!\n" +
+	"\x06locked\x18\x01 \x01(\bR\x06locked\x126\n" +
+	"\x06reason\x18\x02 \x01(\x0e2\x1e.schema.v1alpha1.LockoutReasonR\x06reason\x12!\n" +
 	"\flockout_time\x18\x03 \x01(\x03R\vlockoutTime\x12'\n" +
 	"\x0ffailed_attempts\x18\x04 \x01(\x05R\x0efailedAttempts\x12.\n" +
 	"\x13attempts_reset_time\x18\x05 \x01(\x03R\x11attemptsResetTime\"\xa0\x01\n" +
@@ -2051,21 +2051,21 @@ const file_schema_v1alpha1_user_proto_rawDesc = "" +
 	"\tmember_of\x18\x05 \x03(\tR\bmemberOf\x12'\n" +
 	"\x0faccount_expires\x18\x06 \x01(\x03R\x0eaccountExpires\x12 \n" +
 	"\fpwd_last_set\x18\a \x01(\x03R\n" +
-	"pwdLastSet\"\xa2\x01\n" +
+	"pwdLastSet\"\xa3\x01\n" +
 	"\x12RedfishAccountInfo\x12\x1d\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\tR\taccountId\x12 \n" +
-	"\arole_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06roleId\x12K\n" +
-	"\x0elockout_policy\x18\x03 \x01(\v2$.proto.v1alpha1.RedfishLockoutPolicyR\rlockoutPolicy\"z\n" +
+	"\arole_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06roleId\x12L\n" +
+	"\x0elockout_policy\x18\x03 \x01(\v2%.schema.v1alpha1.RedfishLockoutPolicyR\rlockoutPolicy\"z\n" +
 	"\x14RedfishLockoutPolicy\x12%\n" +
 	"\tthreshold\x18\x01 \x01(\x05B\a\xbaH\x04\x1a\x02(\x00R\tthreshold\x12\x1a\n" +
 	"\bduration\x18\x02 \x01(\tR\bduration\x12\x1f\n" +
 	"\vreset_after\x18\x03 \x01(\tR\n" +
-	"resetAfter\"\xf5\x01\n" +
+	"resetAfter\"\xf7\x01\n" +
 	"\x0fNatsAccountInfo\x12\x18\n" +
-	"\aaccount\x18\x01 \x01(\tR\aaccount\x12A\n" +
-	"\vpermissions\x18\x02 \x01(\v2\x1f.proto.v1alpha1.NatsPermissionsR\vpermissions\x122\n" +
-	"\x06limits\x18\x03 \x01(\v2\x1a.proto.v1alpha1.NatsLimitsR\x06limits\x12\x19\n" +
+	"\aaccount\x18\x01 \x01(\tR\aaccount\x12B\n" +
+	"\vpermissions\x18\x02 \x01(\v2 .schema.v1alpha1.NatsPermissionsR\vpermissions\x123\n" +
+	"\x06limits\x18\x03 \x01(\v2\x1b.schema.v1alpha1.NatsLimitsR\x06limits\x12\x19\n" +
 	"\buser_jwt\x18\x04 \x01(\tR\auserJwt\x12\x19\n" +
 	"\buser_key\x18\x05 \x01(\tR\auserKey\x12\x1b\n" +
 	"\tuser_cred\x18\x06 \x01(\tR\buserCred\"r\n" +
@@ -2082,30 +2082,30 @@ const file_schema_v1alpha1_user_proto_rawDesc = "" +
 	"\x04user\x18\x01 \x01(\tR\x04user\x12\x12\n" +
 	"\x04role\x18\x02 \x01(\tR\x04role\x12\x12\n" +
 	"\x04type\x18\x03 \x01(\tR\x04type\x12\x14\n" +
-	"\x05level\x18\x04 \x01(\tR\x05level\"j\n" +
-	"\x11CreateUserRequest\x120\n" +
-	"\x04user\x18\x01 \x01(\v2\x14.proto.v1alpha1.UserB\x06\xbaH\x03\xc8\x01\x01R\x04user\x12#\n" +
-	"\bpassword\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\bR\bpassword\">\n" +
-	"\x12CreateUserResponse\x12(\n" +
-	"\x04user\x18\x01 \x01(\v2\x14.proto.v1alpha1.UserR\x04user\")\n" +
+	"\x05level\x18\x04 \x01(\tR\x05level\"k\n" +
+	"\x11CreateUserRequest\x121\n" +
+	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserB\x06\xbaH\x03\xc8\x01\x01R\x04user\x12#\n" +
+	"\bpassword\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\bR\bpassword\"?\n" +
+	"\x12CreateUserResponse\x12)\n" +
+	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserR\x04user\")\n" +
 	"\x0eGetUserRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\";\n" +
-	"\x0fGetUserResponse\x12(\n" +
-	"\x04user\x18\x01 \x01(\v2\x14.proto.v1alpha1.UserR\x04user\"E\n" +
-	"\x11UpdateUserRequest\x120\n" +
-	"\x04user\x18\x01 \x01(\v2\x14.proto.v1alpha1.UserB\x06\xbaH\x03\xc8\x01\x01R\x04user\">\n" +
-	"\x12UpdateUserResponse\x12(\n" +
-	"\x04user\x18\x01 \x01(\v2\x14.proto.v1alpha1.UserR\x04user\",\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"<\n" +
+	"\x0fGetUserResponse\x12)\n" +
+	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserR\x04user\"F\n" +
+	"\x11UpdateUserRequest\x121\n" +
+	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserB\x06\xbaH\x03\xc8\x01\x01R\x04user\"?\n" +
+	"\x12UpdateUserResponse\x12)\n" +
+	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserR\x04user\",\n" +
 	"\x11DeleteUserRequest\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\".\n" +
 	"\x12DeleteUserResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"\x89\x01\n" +
-	"\x10ListUsersRequest\x122\n" +
-	"\x06source\x18\x01 \x01(\x0e2\x1a.proto.v1alpha1.UserSourceR\x06source\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\"\x8a\x01\n" +
+	"\x10ListUsersRequest\x123\n" +
+	"\x06source\x18\x01 \x01(\x0e2\x1b.schema.v1alpha1.UserSourceR\x06source\x12\x18\n" +
 	"\aenabled\x18\x02 \x01(\bR\aenabled\x12'\n" +
-	"\x0fusername_prefix\x18\x03 \x01(\tR\x0eusernamePrefix\"?\n" +
-	"\x11ListUsersResponse\x12*\n" +
-	"\x05users\x18\x01 \x03(\v2\x14.proto.v1alpha1.UserR\x05users\"\x90\x01\n" +
+	"\x0fusername_prefix\x18\x03 \x01(\tR\x0eusernamePrefix\"@\n" +
+	"\x11ListUsersResponse\x12+\n" +
+	"\x05users\x18\x01 \x03(\v2\x15.schema.v1alpha1.UserR\x05users\"\x90\x01\n" +
 	"\x15ChangePasswordRequest\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x122\n" +
 	"\x10current_password\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0fcurrentPassword\x12*\n" +
@@ -2146,20 +2146,20 @@ const file_schema_v1alpha1_user_proto_rawDesc = "" +
 	"\x1aLOCKOUT_REASON_UNSPECIFIED\x10\x00\x12(\n" +
 	"$LOCKOUT_REASON_FAILED_LOGIN_ATTEMPTS\x10\x01\x12!\n" +
 	"\x1dLOCKOUT_REASON_ADMINISTRATIVE\x10\x02\x12#\n" +
-	"\x1fLOCKOUT_REASON_PASSWORD_EXPIRED\x10\x032\xe0\x05\n" +
-	"\vUserService\x12U\n" +
+	"\x1fLOCKOUT_REASON_PASSWORD_EXPIRED\x10\x032\xf0\x05\n" +
+	"\vUserService\x12W\n" +
 	"\n" +
-	"CreateUser\x12!.proto.v1alpha1.CreateUserRequest\x1a\".proto.v1alpha1.CreateUserResponse\"\x00\x12L\n" +
-	"\aGetUser\x12\x1e.proto.v1alpha1.GetUserRequest\x1a\x1f.proto.v1alpha1.GetUserResponse\"\x00\x12U\n" +
+	"CreateUser\x12\".schema.v1alpha1.CreateUserRequest\x1a#.schema.v1alpha1.CreateUserResponse\"\x00\x12N\n" +
+	"\aGetUser\x12\x1f.schema.v1alpha1.GetUserRequest\x1a .schema.v1alpha1.GetUserResponse\"\x00\x12W\n" +
 	"\n" +
-	"UpdateUser\x12!.proto.v1alpha1.UpdateUserRequest\x1a\".proto.v1alpha1.UpdateUserResponse\"\x00\x12U\n" +
+	"UpdateUser\x12\".schema.v1alpha1.UpdateUserRequest\x1a#.schema.v1alpha1.UpdateUserResponse\"\x00\x12W\n" +
 	"\n" +
-	"DeleteUser\x12!.proto.v1alpha1.DeleteUserRequest\x1a\".proto.v1alpha1.DeleteUserResponse\"\x00\x12R\n" +
-	"\tListUsers\x12 .proto.v1alpha1.ListUsersRequest\x1a!.proto.v1alpha1.ListUsersResponse\"\x00\x12a\n" +
-	"\x0eChangePassword\x12%.proto.v1alpha1.ChangePasswordRequest\x1a&.proto.v1alpha1.ChangePasswordResponse\"\x00\x12^\n" +
-	"\rResetPassword\x12$.proto.v1alpha1.ResetPasswordRequest\x1a%.proto.v1alpha1.ResetPasswordResponse\"\x00\x12g\n" +
-	"\x10AuthenticateUser\x12'.proto.v1alpha1.AuthenticateUserRequest\x1a(.proto.v1alpha1.AuthenticateUserResponse\"\x00B\xb6\x01\n" +
-	"\x12com.proto.v1alpha1B\tUserProtoP\x01Z<github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;protov1alpha1\xa2\x02\x03PXX\xaa\x02\x0eProto.V1alpha1\xca\x02\x0eProto\\V1alpha1\xe2\x02\x1aProto\\V1alpha1\\GPBMetadata\xea\x02\x0fProto::V1alpha1b\x06proto3"
+	"DeleteUser\x12\".schema.v1alpha1.DeleteUserRequest\x1a#.schema.v1alpha1.DeleteUserResponse\"\x00\x12T\n" +
+	"\tListUsers\x12!.schema.v1alpha1.ListUsersRequest\x1a\".schema.v1alpha1.ListUsersResponse\"\x00\x12c\n" +
+	"\x0eChangePassword\x12&.schema.v1alpha1.ChangePasswordRequest\x1a'.schema.v1alpha1.ChangePasswordResponse\"\x00\x12`\n" +
+	"\rResetPassword\x12%.schema.v1alpha1.ResetPasswordRequest\x1a&.schema.v1alpha1.ResetPasswordResponse\"\x00\x12i\n" +
+	"\x10AuthenticateUser\x12(.schema.v1alpha1.AuthenticateUserRequest\x1a).schema.v1alpha1.AuthenticateUserResponse\"\x00B\xbc\x01\n" +
+	"\x13com.schema.v1alpha1B\tUserProtoP\x01Z=github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;schemav1alpha1\xa2\x02\x03SXX\xaa\x02\x0fSchema.V1alpha1\xca\x02\x0fSchema\\V1alpha1\xe2\x02\x1bSchema\\V1alpha1\\GPBMetadata\xea\x02\x10Schema::V1alpha1b\x06proto3"
 
 var (
 	file_schema_v1alpha1_user_proto_rawDescOnce sync.Once
@@ -2176,74 +2176,74 @@ func file_schema_v1alpha1_user_proto_rawDescGZIP() []byte {
 var file_schema_v1alpha1_user_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_schema_v1alpha1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
 var file_schema_v1alpha1_user_proto_goTypes = []any{
-	(UserSource)(0),                  // 0: proto.v1alpha1.UserSource
-	(PasswordHashAlgorithm)(0),       // 1: proto.v1alpha1.PasswordHashAlgorithm
-	(LockoutReason)(0),               // 2: proto.v1alpha1.LockoutReason
-	(*User)(nil),                     // 3: proto.v1alpha1.User
-	(*AuthenticationData)(nil),       // 4: proto.v1alpha1.AuthenticationData
-	(*AccountLockoutInfo)(nil),       // 5: proto.v1alpha1.AccountLockoutInfo
-	(*UnixUserInfo)(nil),             // 6: proto.v1alpha1.UnixUserInfo
-	(*LdapUserInfo)(nil),             // 7: proto.v1alpha1.LdapUserInfo
-	(*RedfishAccountInfo)(nil),       // 8: proto.v1alpha1.RedfishAccountInfo
-	(*RedfishLockoutPolicy)(nil),     // 9: proto.v1alpha1.RedfishLockoutPolicy
-	(*NatsAccountInfo)(nil),          // 10: proto.v1alpha1.NatsAccountInfo
-	(*NatsPermissions)(nil),          // 11: proto.v1alpha1.NatsPermissions
-	(*NatsLimits)(nil),               // 12: proto.v1alpha1.NatsLimits
-	(*SelinuxUserInfo)(nil),          // 13: proto.v1alpha1.SelinuxUserInfo
-	(*CreateUserRequest)(nil),        // 14: proto.v1alpha1.CreateUserRequest
-	(*CreateUserResponse)(nil),       // 15: proto.v1alpha1.CreateUserResponse
-	(*GetUserRequest)(nil),           // 16: proto.v1alpha1.GetUserRequest
-	(*GetUserResponse)(nil),          // 17: proto.v1alpha1.GetUserResponse
-	(*UpdateUserRequest)(nil),        // 18: proto.v1alpha1.UpdateUserRequest
-	(*UpdateUserResponse)(nil),       // 19: proto.v1alpha1.UpdateUserResponse
-	(*DeleteUserRequest)(nil),        // 20: proto.v1alpha1.DeleteUserRequest
-	(*DeleteUserResponse)(nil),       // 21: proto.v1alpha1.DeleteUserResponse
-	(*ListUsersRequest)(nil),         // 22: proto.v1alpha1.ListUsersRequest
-	(*ListUsersResponse)(nil),        // 23: proto.v1alpha1.ListUsersResponse
-	(*ChangePasswordRequest)(nil),    // 24: proto.v1alpha1.ChangePasswordRequest
-	(*ChangePasswordResponse)(nil),   // 25: proto.v1alpha1.ChangePasswordResponse
-	(*ResetPasswordRequest)(nil),     // 26: proto.v1alpha1.ResetPasswordRequest
-	(*ResetPasswordResponse)(nil),    // 27: proto.v1alpha1.ResetPasswordResponse
-	(*AuthenticateUserRequest)(nil),  // 28: proto.v1alpha1.AuthenticateUserRequest
-	(*AuthenticateUserResponse)(nil), // 29: proto.v1alpha1.AuthenticateUserResponse
+	(UserSource)(0),                  // 0: schema.v1alpha1.UserSource
+	(PasswordHashAlgorithm)(0),       // 1: schema.v1alpha1.PasswordHashAlgorithm
+	(LockoutReason)(0),               // 2: schema.v1alpha1.LockoutReason
+	(*User)(nil),                     // 3: schema.v1alpha1.User
+	(*AuthenticationData)(nil),       // 4: schema.v1alpha1.AuthenticationData
+	(*AccountLockoutInfo)(nil),       // 5: schema.v1alpha1.AccountLockoutInfo
+	(*UnixUserInfo)(nil),             // 6: schema.v1alpha1.UnixUserInfo
+	(*LdapUserInfo)(nil),             // 7: schema.v1alpha1.LdapUserInfo
+	(*RedfishAccountInfo)(nil),       // 8: schema.v1alpha1.RedfishAccountInfo
+	(*RedfishLockoutPolicy)(nil),     // 9: schema.v1alpha1.RedfishLockoutPolicy
+	(*NatsAccountInfo)(nil),          // 10: schema.v1alpha1.NatsAccountInfo
+	(*NatsPermissions)(nil),          // 11: schema.v1alpha1.NatsPermissions
+	(*NatsLimits)(nil),               // 12: schema.v1alpha1.NatsLimits
+	(*SelinuxUserInfo)(nil),          // 13: schema.v1alpha1.SelinuxUserInfo
+	(*CreateUserRequest)(nil),        // 14: schema.v1alpha1.CreateUserRequest
+	(*CreateUserResponse)(nil),       // 15: schema.v1alpha1.CreateUserResponse
+	(*GetUserRequest)(nil),           // 16: schema.v1alpha1.GetUserRequest
+	(*GetUserResponse)(nil),          // 17: schema.v1alpha1.GetUserResponse
+	(*UpdateUserRequest)(nil),        // 18: schema.v1alpha1.UpdateUserRequest
+	(*UpdateUserResponse)(nil),       // 19: schema.v1alpha1.UpdateUserResponse
+	(*DeleteUserRequest)(nil),        // 20: schema.v1alpha1.DeleteUserRequest
+	(*DeleteUserResponse)(nil),       // 21: schema.v1alpha1.DeleteUserResponse
+	(*ListUsersRequest)(nil),         // 22: schema.v1alpha1.ListUsersRequest
+	(*ListUsersResponse)(nil),        // 23: schema.v1alpha1.ListUsersResponse
+	(*ChangePasswordRequest)(nil),    // 24: schema.v1alpha1.ChangePasswordRequest
+	(*ChangePasswordResponse)(nil),   // 25: schema.v1alpha1.ChangePasswordResponse
+	(*ResetPasswordRequest)(nil),     // 26: schema.v1alpha1.ResetPasswordRequest
+	(*ResetPasswordResponse)(nil),    // 27: schema.v1alpha1.ResetPasswordResponse
+	(*AuthenticateUserRequest)(nil),  // 28: schema.v1alpha1.AuthenticateUserRequest
+	(*AuthenticateUserResponse)(nil), // 29: schema.v1alpha1.AuthenticateUserResponse
 }
 var file_schema_v1alpha1_user_proto_depIdxs = []int32{
-	0,  // 0: proto.v1alpha1.User.source_system:type_name -> proto.v1alpha1.UserSource
-	4,  // 1: proto.v1alpha1.User.auth_data:type_name -> proto.v1alpha1.AuthenticationData
-	6,  // 2: proto.v1alpha1.User.unix_info:type_name -> proto.v1alpha1.UnixUserInfo
-	7,  // 3: proto.v1alpha1.User.ldap_info:type_name -> proto.v1alpha1.LdapUserInfo
-	8,  // 4: proto.v1alpha1.User.redfish_info:type_name -> proto.v1alpha1.RedfishAccountInfo
-	10, // 5: proto.v1alpha1.User.nats_info:type_name -> proto.v1alpha1.NatsAccountInfo
-	13, // 6: proto.v1alpha1.User.selinux_info:type_name -> proto.v1alpha1.SelinuxUserInfo
-	1,  // 7: proto.v1alpha1.AuthenticationData.hash_algorithm:type_name -> proto.v1alpha1.PasswordHashAlgorithm
-	5,  // 8: proto.v1alpha1.AuthenticationData.lockout_info:type_name -> proto.v1alpha1.AccountLockoutInfo
-	2,  // 9: proto.v1alpha1.AccountLockoutInfo.reason:type_name -> proto.v1alpha1.LockoutReason
-	9,  // 10: proto.v1alpha1.RedfishAccountInfo.lockout_policy:type_name -> proto.v1alpha1.RedfishLockoutPolicy
-	11, // 11: proto.v1alpha1.NatsAccountInfo.permissions:type_name -> proto.v1alpha1.NatsPermissions
-	12, // 12: proto.v1alpha1.NatsAccountInfo.limits:type_name -> proto.v1alpha1.NatsLimits
-	3,  // 13: proto.v1alpha1.CreateUserRequest.user:type_name -> proto.v1alpha1.User
-	3,  // 14: proto.v1alpha1.CreateUserResponse.user:type_name -> proto.v1alpha1.User
-	3,  // 15: proto.v1alpha1.GetUserResponse.user:type_name -> proto.v1alpha1.User
-	3,  // 16: proto.v1alpha1.UpdateUserRequest.user:type_name -> proto.v1alpha1.User
-	3,  // 17: proto.v1alpha1.UpdateUserResponse.user:type_name -> proto.v1alpha1.User
-	0,  // 18: proto.v1alpha1.ListUsersRequest.source:type_name -> proto.v1alpha1.UserSource
-	3,  // 19: proto.v1alpha1.ListUsersResponse.users:type_name -> proto.v1alpha1.User
-	14, // 20: proto.v1alpha1.UserService.CreateUser:input_type -> proto.v1alpha1.CreateUserRequest
-	16, // 21: proto.v1alpha1.UserService.GetUser:input_type -> proto.v1alpha1.GetUserRequest
-	18, // 22: proto.v1alpha1.UserService.UpdateUser:input_type -> proto.v1alpha1.UpdateUserRequest
-	20, // 23: proto.v1alpha1.UserService.DeleteUser:input_type -> proto.v1alpha1.DeleteUserRequest
-	22, // 24: proto.v1alpha1.UserService.ListUsers:input_type -> proto.v1alpha1.ListUsersRequest
-	24, // 25: proto.v1alpha1.UserService.ChangePassword:input_type -> proto.v1alpha1.ChangePasswordRequest
-	26, // 26: proto.v1alpha1.UserService.ResetPassword:input_type -> proto.v1alpha1.ResetPasswordRequest
-	28, // 27: proto.v1alpha1.UserService.AuthenticateUser:input_type -> proto.v1alpha1.AuthenticateUserRequest
-	15, // 28: proto.v1alpha1.UserService.CreateUser:output_type -> proto.v1alpha1.CreateUserResponse
-	17, // 29: proto.v1alpha1.UserService.GetUser:output_type -> proto.v1alpha1.GetUserResponse
-	19, // 30: proto.v1alpha1.UserService.UpdateUser:output_type -> proto.v1alpha1.UpdateUserResponse
-	21, // 31: proto.v1alpha1.UserService.DeleteUser:output_type -> proto.v1alpha1.DeleteUserResponse
-	23, // 32: proto.v1alpha1.UserService.ListUsers:output_type -> proto.v1alpha1.ListUsersResponse
-	25, // 33: proto.v1alpha1.UserService.ChangePassword:output_type -> proto.v1alpha1.ChangePasswordResponse
-	27, // 34: proto.v1alpha1.UserService.ResetPassword:output_type -> proto.v1alpha1.ResetPasswordResponse
-	29, // 35: proto.v1alpha1.UserService.AuthenticateUser:output_type -> proto.v1alpha1.AuthenticateUserResponse
+	0,  // 0: schema.v1alpha1.User.source_system:type_name -> schema.v1alpha1.UserSource
+	4,  // 1: schema.v1alpha1.User.auth_data:type_name -> schema.v1alpha1.AuthenticationData
+	6,  // 2: schema.v1alpha1.User.unix_info:type_name -> schema.v1alpha1.UnixUserInfo
+	7,  // 3: schema.v1alpha1.User.ldap_info:type_name -> schema.v1alpha1.LdapUserInfo
+	8,  // 4: schema.v1alpha1.User.redfish_info:type_name -> schema.v1alpha1.RedfishAccountInfo
+	10, // 5: schema.v1alpha1.User.nats_info:type_name -> schema.v1alpha1.NatsAccountInfo
+	13, // 6: schema.v1alpha1.User.selinux_info:type_name -> schema.v1alpha1.SelinuxUserInfo
+	1,  // 7: schema.v1alpha1.AuthenticationData.hash_algorithm:type_name -> schema.v1alpha1.PasswordHashAlgorithm
+	5,  // 8: schema.v1alpha1.AuthenticationData.lockout_info:type_name -> schema.v1alpha1.AccountLockoutInfo
+	2,  // 9: schema.v1alpha1.AccountLockoutInfo.reason:type_name -> schema.v1alpha1.LockoutReason
+	9,  // 10: schema.v1alpha1.RedfishAccountInfo.lockout_policy:type_name -> schema.v1alpha1.RedfishLockoutPolicy
+	11, // 11: schema.v1alpha1.NatsAccountInfo.permissions:type_name -> schema.v1alpha1.NatsPermissions
+	12, // 12: schema.v1alpha1.NatsAccountInfo.limits:type_name -> schema.v1alpha1.NatsLimits
+	3,  // 13: schema.v1alpha1.CreateUserRequest.user:type_name -> schema.v1alpha1.User
+	3,  // 14: schema.v1alpha1.CreateUserResponse.user:type_name -> schema.v1alpha1.User
+	3,  // 15: schema.v1alpha1.GetUserResponse.user:type_name -> schema.v1alpha1.User
+	3,  // 16: schema.v1alpha1.UpdateUserRequest.user:type_name -> schema.v1alpha1.User
+	3,  // 17: schema.v1alpha1.UpdateUserResponse.user:type_name -> schema.v1alpha1.User
+	0,  // 18: schema.v1alpha1.ListUsersRequest.source:type_name -> schema.v1alpha1.UserSource
+	3,  // 19: schema.v1alpha1.ListUsersResponse.users:type_name -> schema.v1alpha1.User
+	14, // 20: schema.v1alpha1.UserService.CreateUser:input_type -> schema.v1alpha1.CreateUserRequest
+	16, // 21: schema.v1alpha1.UserService.GetUser:input_type -> schema.v1alpha1.GetUserRequest
+	18, // 22: schema.v1alpha1.UserService.UpdateUser:input_type -> schema.v1alpha1.UpdateUserRequest
+	20, // 23: schema.v1alpha1.UserService.DeleteUser:input_type -> schema.v1alpha1.DeleteUserRequest
+	22, // 24: schema.v1alpha1.UserService.ListUsers:input_type -> schema.v1alpha1.ListUsersRequest
+	24, // 25: schema.v1alpha1.UserService.ChangePassword:input_type -> schema.v1alpha1.ChangePasswordRequest
+	26, // 26: schema.v1alpha1.UserService.ResetPassword:input_type -> schema.v1alpha1.ResetPasswordRequest
+	28, // 27: schema.v1alpha1.UserService.AuthenticateUser:input_type -> schema.v1alpha1.AuthenticateUserRequest
+	15, // 28: schema.v1alpha1.UserService.CreateUser:output_type -> schema.v1alpha1.CreateUserResponse
+	17, // 29: schema.v1alpha1.UserService.GetUser:output_type -> schema.v1alpha1.GetUserResponse
+	19, // 30: schema.v1alpha1.UserService.UpdateUser:output_type -> schema.v1alpha1.UpdateUserResponse
+	21, // 31: schema.v1alpha1.UserService.DeleteUser:output_type -> schema.v1alpha1.DeleteUserResponse
+	23, // 32: schema.v1alpha1.UserService.ListUsers:output_type -> schema.v1alpha1.ListUsersResponse
+	25, // 33: schema.v1alpha1.UserService.ChangePassword:output_type -> schema.v1alpha1.ChangePasswordResponse
+	27, // 34: schema.v1alpha1.UserService.ResetPassword:output_type -> schema.v1alpha1.ResetPasswordResponse
+	29, // 35: schema.v1alpha1.UserService.AuthenticateUser:output_type -> schema.v1alpha1.AuthenticateUserResponse
 	28, // [28:36] is the sub-list for method output_type
 	20, // [20:28] is the sub-list for method input_type
 	20, // [20:20] is the sub-list for extension type_name
