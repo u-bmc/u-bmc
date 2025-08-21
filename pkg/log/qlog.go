@@ -13,7 +13,7 @@ type QLogger struct {
 // Write implements io.Writer by logging the provided bytes as an Info level message.
 // It converts the byte slice to a string and logs it using the underlying slog.Logger.
 // Always returns the length of the input and a nil error.
-func (l *QLogger) Write(b []byte) (n int, err error) {
+func (l *QLogger) Write(b []byte) (int, error) {
 	l.l.Info(string(b))
 
 	return len(b), nil

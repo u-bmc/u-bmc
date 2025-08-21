@@ -25,24 +25,22 @@ func AtomicCreateFile(filename string, data []byte, perm os.FileMode) error {
 
 	defer func() {
 		if err != nil {
-			os.Remove(tmpname)
+			_ = os.Remove(tmpname)
 		}
 	}()
 
 	if _, err = tmpfile.Write(data); err != nil {
-		tmpfile.Close()
+		_ = tmpfile.Close()
 		return fmt.Errorf("failed to write to temporary file: %w", err)
 	}
 
-	if err = tmpfile.Close(); err != nil {
-		return fmt.Errorf("failed to close temporary file: %w", err)
-	}
+	_ = tmpfile.Close()
 
-	if err = os.Chmod(tmpname, perm); err != nil {
+	if err := os.Chmod(tmpname, perm); err != nil {
 		return fmt.Errorf("failed to chmod temporary file: %w", err)
 	}
 
-	if err = os.Rename(tmpname, filename); err != nil {
+	if err := os.Rename(tmpname, filename); err != nil {
 		return fmt.Errorf("failed to rename temporary file: %w", err)
 	}
 
@@ -61,31 +59,29 @@ func AtomicUpdateFile(filename string, data []byte, perm os.FileMode) error {
 
 	defer func() {
 		if err != nil {
-			os.Remove(tmpname)
+			_ = os.Remove(tmpname)
 		}
 	}()
 
 	src, err := os.Open(filename)
 	if err == nil {
 		_, err = io.Copy(tmpfile, src)
-		src.Close()
+		_ = src.Close()
 		if err != nil {
-			tmpfile.Close()
+			_ = tmpfile.Close()
 			return fmt.Errorf("failed to copy original file: %w", err)
 		}
 	} else if !os.IsNotExist(err) {
-		tmpfile.Close()
+		_ = tmpfile.Close()
 		return fmt.Errorf("failed to open original file: %w", err)
 	}
 
 	if _, err = tmpfile.Write(data); err != nil {
-		tmpfile.Close()
+		_ = tmpfile.Close()
 		return fmt.Errorf("failed to write to temporary file: %w", err)
 	}
 
-	if err = tmpfile.Close(); err != nil {
-		return fmt.Errorf("failed to close temporary file: %w", err)
-	}
+	_ = tmpfile.Close()
 
 	if err = os.Chmod(tmpname, perm); err != nil {
 		return fmt.Errorf("failed to chmod temporary file: %w", err)

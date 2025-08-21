@@ -22,32 +22,32 @@ func NewID() string {
 func GetOrCreatePersistentID(name, path string) (string, error) {
 	fullPath := filepath.Join(path, name)
 
-	var id string
+	var idstr string
 	if _, err := os.Stat(fullPath); err != nil && !os.IsNotExist(err) {
 		return "", err
 	} else if os.IsNotExist(err) {
-		uuid := uuid.New()
+		id := uuid.New()
 
-		if err := file.AtomicCreateFile(fullPath, []byte(uuid.String()), os.ModePerm); err != nil && err != os.ErrExist {
+		if err := file.AtomicCreateFile(fullPath, []byte(id.String()), os.ModePerm); err != nil && !os.IsExist(err) {
 			return "", err
 		}
 
-		id = uuid.String()
+		idstr = id.String()
 	} else {
 		b, err := os.ReadFile(fullPath)
 		if err != nil {
 			return "", err
 		}
 
-		uuid, err := uuid.ParseBytes(b)
+		id, err := uuid.ParseBytes(b)
 		if err != nil {
 			return "", err
 		}
 
-		id = uuid.String()
+		idstr = id.String()
 	}
 
-	return id, nil
+	return idstr, nil
 }
 
 // UpdatePersistentID generates a new UUID and atomically updates the specified file with the new value.

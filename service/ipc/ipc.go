@@ -71,7 +71,7 @@ func (s *IPC) GetConnProvider() *ConnProvider {
 	}
 }
 
-func (s *IPC) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) (err error) {
+func (s *IPC) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) error {
 	// We might be able to handle this in the future, for now bail out
 	if ipcConn != nil {
 		return fmt.Errorf("existing IPC found, bailing out")
