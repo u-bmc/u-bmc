@@ -3,7 +3,7 @@ module github.com/u-bmc/u-bmc
 go 1.24
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.6-20250717185734-6c6e0d3c608e.1
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.8-20250717185734-6c6e0d3c608e.1
 	cirello.io/oversight/v2 v2.0.0-20250811221607-2b357433924f
 	connectrpc.com/connect v1.18.1
 	connectrpc.com/cors v0.1.0
