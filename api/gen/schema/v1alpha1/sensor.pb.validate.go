@@ -60,15 +60,7 @@ func (m *Sensor) validate(all bool) error {
 
 	// no validation rules for Name
 
-	// no validation rules for Context
-
-	// no validation rules for Status
-
-	// no validation rules for Unit
-
-	// no validation rules for PhysicalLocation
-
-	// no validation rules for LastReadingTimestamp
+	// no validation rules for CustomAttributes
 
 	switch v := m.Reading.(type) {
 	case *Sensor_AnalogReading:
@@ -155,6 +147,84 @@ func (m *Sensor) validate(all bool) error {
 
 	default:
 		_ = v // ensures v is used
+	}
+
+	if m.Context != nil {
+		// no validation rules for Context
+	}
+
+	if m.Status != nil {
+		// no validation rules for Status
+	}
+
+	if m.Unit != nil {
+		// no validation rules for Unit
+	}
+
+	if m.Location != nil {
+
+		if all {
+			switch v := interface{}(m.GetLocation()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, SensorValidationError{
+						field:  "Location",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, SensorValidationError{
+						field:  "Location",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetLocation()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return SensorValidationError{
+					field:  "Location",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.LastReadingTimestamp != nil {
+
+		if all {
+			switch v := interface{}(m.GetLastReadingTimestamp()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, SensorValidationError{
+						field:  "LastReadingTimestamp",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, SensorValidationError{
+						field:  "LastReadingTimestamp",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetLastReadingTimestamp()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return SensorValidationError{
+					field:  "LastReadingTimestamp",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
 	}
 
 	if len(errors) > 0 {
@@ -258,91 +328,103 @@ func (m *AnalogSensorReading) validate(all bool) error {
 
 	// no validation rules for Value
 
-	if all {
-		switch v := interface{}(m.GetUpperThresholds()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AnalogSensorReadingValidationError{
+	if m.UpperThresholds != nil {
+
+		if all {
+			switch v := interface{}(m.GetUpperThresholds()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, AnalogSensorReadingValidationError{
+						field:  "UpperThresholds",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, AnalogSensorReadingValidationError{
+						field:  "UpperThresholds",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetUpperThresholds()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return AnalogSensorReadingValidationError{
 					field:  "UpperThresholds",
 					reason: "embedded message failed validation",
 					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, AnalogSensorReadingValidationError{
-					field:  "UpperThresholds",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
+				}
 			}
 		}
-	} else if v, ok := interface{}(m.GetUpperThresholds()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return AnalogSensorReadingValidationError{
-				field:  "UpperThresholds",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
+
 	}
 
-	if all {
-		switch v := interface{}(m.GetLowerThresholds()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AnalogSensorReadingValidationError{
+	if m.LowerThresholds != nil {
+
+		if all {
+			switch v := interface{}(m.GetLowerThresholds()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, AnalogSensorReadingValidationError{
+						field:  "LowerThresholds",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, AnalogSensorReadingValidationError{
+						field:  "LowerThresholds",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetLowerThresholds()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return AnalogSensorReadingValidationError{
 					field:  "LowerThresholds",
 					reason: "embedded message failed validation",
 					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, AnalogSensorReadingValidationError{
-					field:  "LowerThresholds",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
+				}
 			}
 		}
-	} else if v, ok := interface{}(m.GetLowerThresholds()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return AnalogSensorReadingValidationError{
-				field:  "LowerThresholds",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
+
 	}
 
-	if all {
-		switch v := interface{}(m.GetMinMaxRecorded()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AnalogSensorReadingValidationError{
-					field:  "MinMaxRecorded",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
+	if m.MinMaxRecorded != nil {
+
+		if all {
+			switch v := interface{}(m.GetMinMaxRecorded()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, AnalogSensorReadingValidationError{
+						field:  "MinMaxRecorded",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, AnalogSensorReadingValidationError{
+						field:  "MinMaxRecorded",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
 			}
-		case interface{ Validate() error }:
+		} else if v, ok := interface{}(m.GetMinMaxRecorded()).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AnalogSensorReadingValidationError{
+				return AnalogSensorReadingValidationError{
 					field:  "MinMaxRecorded",
 					reason: "embedded message failed validation",
 					cause:  err,
-				})
+				}
 			}
 		}
-	} else if v, ok := interface{}(m.GetMinMaxRecorded()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return AnalogSensorReadingValidationError{
-				field:  "MinMaxRecorded",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
+
 	}
 
 	if len(errors) > 0 {
@@ -449,7 +531,9 @@ func (m *DiscreteSensorReading) validate(all bool) error {
 
 	// no validation rules for State
 
-	// no validation rules for StateDescription
+	if m.StateDescription != nil {
+		// no validation rules for StateDescription
+	}
 
 	if len(errors) > 0 {
 		return DiscreteSensorReadingMultiError(errors)
@@ -553,9 +637,13 @@ func (m *Threshold) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Warning
+	if m.Warning != nil {
+		// no validation rules for Warning
+	}
 
-	// no validation rules for Critical
+	if m.Critical != nil {
+		// no validation rules for Critical
+	}
 
 	if len(errors) > 0 {
 		return ThresholdMultiError(errors)
@@ -660,9 +748,71 @@ func (m *MinMaxRecorded) validate(all bool) error {
 
 	// no validation rules for MaxValue
 
-	// no validation rules for MinTimestamp
+	if m.MinTimestamp != nil {
 
-	// no validation rules for MaxTimestamp
+		if all {
+			switch v := interface{}(m.GetMinTimestamp()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, MinMaxRecordedValidationError{
+						field:  "MinTimestamp",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, MinMaxRecordedValidationError{
+						field:  "MinTimestamp",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetMinTimestamp()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return MinMaxRecordedValidationError{
+					field:  "MinTimestamp",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.MaxTimestamp != nil {
+
+		if all {
+			switch v := interface{}(m.GetMaxTimestamp()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, MinMaxRecordedValidationError{
+						field:  "MaxTimestamp",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, MinMaxRecordedValidationError{
+						field:  "MaxTimestamp",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetMaxTimestamp()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return MinMaxRecordedValidationError{
+					field:  "MaxTimestamp",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return MinMaxRecordedMultiError(errors)
@@ -742,239 +892,6 @@ var _ interface {
 	ErrorName() string
 } = MinMaxRecordedValidationError{}
 
-// Validate checks the field values on GetSensorRequest with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *GetSensorRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetSensorRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetSensorRequestMultiError, or nil if none found.
-func (m *GetSensorRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetSensorRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	if len(errors) > 0 {
-		return GetSensorRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetSensorRequestMultiError is an error wrapping multiple validation errors
-// returned by GetSensorRequest.ValidateAll() if the designated constraints
-// aren't met.
-type GetSensorRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetSensorRequestMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetSensorRequestMultiError) AllErrors() []error { return m }
-
-// GetSensorRequestValidationError is the validation error returned by
-// GetSensorRequest.Validate if the designated constraints aren't met.
-type GetSensorRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetSensorRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetSensorRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetSensorRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetSensorRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetSensorRequestValidationError) ErrorName() string { return "GetSensorRequestValidationError" }
-
-// Error satisfies the builtin error interface
-func (e GetSensorRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetSensorRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetSensorRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetSensorRequestValidationError{}
-
-// Validate checks the field values on GetSensorResponse with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *GetSensorResponse) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetSensorResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetSensorResponseMultiError, or nil if none found.
-func (m *GetSensorResponse) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetSensorResponse) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if all {
-		switch v := interface{}(m.GetSensor()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, GetSensorResponseValidationError{
-					field:  "Sensor",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, GetSensorResponseValidationError{
-					field:  "Sensor",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetSensor()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return GetSensorResponseValidationError{
-				field:  "Sensor",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return GetSensorResponseMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetSensorResponseMultiError is an error wrapping multiple validation errors
-// returned by GetSensorResponse.ValidateAll() if the designated constraints
-// aren't met.
-type GetSensorResponseMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetSensorResponseMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetSensorResponseMultiError) AllErrors() []error { return m }
-
-// GetSensorResponseValidationError is the validation error returned by
-// GetSensorResponse.Validate if the designated constraints aren't met.
-type GetSensorResponseValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetSensorResponseValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetSensorResponseValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetSensorResponseValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetSensorResponseValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetSensorResponseValidationError) ErrorName() string {
-	return "GetSensorResponseValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e GetSensorResponseValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetSensorResponse.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetSensorResponseValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetSensorResponseValidationError{}
-
 // Validate checks the field values on ListSensorsRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -997,9 +914,34 @@ func (m *ListSensorsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Context
-
-	// no validation rules for Status
+	if all {
+		switch v := interface{}(m.GetFieldMask()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ListSensorsRequestValidationError{
+					field:  "FieldMask",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ListSensorsRequestValidationError{
+					field:  "FieldMask",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetFieldMask()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ListSensorsRequestValidationError{
+				field:  "FieldMask",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return ListSensorsRequestMultiError(errors)
@@ -1103,7 +1045,7 @@ func (m *ListSensorsResponse) validate(all bool) error {
 
 	var errors []error
 
-	for idx, item := range m.GetSensors() {
+	for idx, item := range m.GetSensor() {
 		_, _ = idx, item
 
 		if all {
@@ -1111,7 +1053,7 @@ func (m *ListSensorsResponse) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, ListSensorsResponseValidationError{
-						field:  fmt.Sprintf("Sensors[%v]", idx),
+						field:  fmt.Sprintf("Sensor[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -1119,7 +1061,7 @@ func (m *ListSensorsResponse) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, ListSensorsResponseValidationError{
-						field:  fmt.Sprintf("Sensors[%v]", idx),
+						field:  fmt.Sprintf("Sensor[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -1128,7 +1070,7 @@ func (m *ListSensorsResponse) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return ListSensorsResponseValidationError{
-					field:  fmt.Sprintf("Sensors[%v]", idx),
+					field:  fmt.Sprintf("Sensor[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -1216,3 +1158,362 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListSensorsResponseValidationError{}
+
+// Validate checks the field values on GetSensorRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetSensorRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetSensorRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetSensorRequestMultiError, or nil if none found.
+func (m *GetSensorRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetSensorRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetFieldMask()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetSensorRequestValidationError{
+					field:  "FieldMask",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetSensorRequestValidationError{
+					field:  "FieldMask",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetFieldMask()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetSensorRequestValidationError{
+				field:  "FieldMask",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	switch v := m.Identifier.(type) {
+	case *GetSensorRequest_Id:
+		if v == nil {
+			err := GetSensorRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Id
+	case *GetSensorRequest_Name:
+		if v == nil {
+			err := GetSensorRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Name
+	case *GetSensorRequest_Context:
+		if v == nil {
+			err := GetSensorRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Context
+	case *GetSensorRequest_Status:
+		if v == nil {
+			err := GetSensorRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Status
+	case *GetSensorRequest_Location:
+		if v == nil {
+			err := GetSensorRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if all {
+			switch v := interface{}(m.GetLocation()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetSensorRequestValidationError{
+						field:  "Location",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetSensorRequestValidationError{
+						field:  "Location",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetLocation()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetSensorRequestValidationError{
+					field:  "Location",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	default:
+		_ = v // ensures v is used
+	}
+
+	if len(errors) > 0 {
+		return GetSensorRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetSensorRequestMultiError is an error wrapping multiple validation errors
+// returned by GetSensorRequest.ValidateAll() if the designated constraints
+// aren't met.
+type GetSensorRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetSensorRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetSensorRequestMultiError) AllErrors() []error { return m }
+
+// GetSensorRequestValidationError is the validation error returned by
+// GetSensorRequest.Validate if the designated constraints aren't met.
+type GetSensorRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetSensorRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetSensorRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetSensorRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetSensorRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetSensorRequestValidationError) ErrorName() string { return "GetSensorRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GetSensorRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetSensorRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetSensorRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetSensorRequestValidationError{}
+
+// Validate checks the field values on GetSensorResponse with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetSensorResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetSensorResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetSensorResponseMultiError, or nil if none found.
+func (m *GetSensorResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetSensorResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetSensors() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetSensorResponseValidationError{
+						field:  fmt.Sprintf("Sensors[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetSensorResponseValidationError{
+						field:  fmt.Sprintf("Sensors[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetSensorResponseValidationError{
+					field:  fmt.Sprintf("Sensors[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return GetSensorResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetSensorResponseMultiError is an error wrapping multiple validation errors
+// returned by GetSensorResponse.ValidateAll() if the designated constraints
+// aren't met.
+type GetSensorResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetSensorResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetSensorResponseMultiError) AllErrors() []error { return m }
+
+// GetSensorResponseValidationError is the validation error returned by
+// GetSensorResponse.Validate if the designated constraints aren't met.
+type GetSensorResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetSensorResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetSensorResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetSensorResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetSensorResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetSensorResponseValidationError) ErrorName() string {
+	return "GetSensorResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetSensorResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetSensorResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetSensorResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetSensorResponseValidationError{}

@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: BSD-3-Clause
+
+syntax = "proto3";
+
+package schema.v1alpha1;
+
+import "buf/validate/validate.proto";
+import "google/type/postal_address.proto";
+
+message ContactInfo {
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string email = 2 [ (buf.validate.field).string.email = true ];
+  optional string phone = 3;
+  optional google.type.PostalAddress address = 4;
+}

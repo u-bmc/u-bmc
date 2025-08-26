@@ -1,0 +1,58 @@
+// SPDX-License-Identifier: BSD-3-Clause
+
+syntax = "proto3";
+
+package schema.v1alpha1;
+
+import "buf/validate/validate.proto";
+
+message PhysicalDimensions {
+  double width_mm = 1 [ (buf.validate.field).double.gte = 0 ];
+  double height_mm = 2 [ (buf.validate.field).double.gte = 0 ];
+  double depth_mm = 3 [ (buf.validate.field).double.gte = 0 ];
+  double weight_grams = 4 [ (buf.validate.field).double.gte = 0 ];
+}
+
+message EnvironmentalSpecs {
+  option (buf.validate.message).oneof = {
+    fields : [
+      "operating_temperature",
+      "storage_temperature",
+      "operating_humidity",
+      "storage_humidity",
+      "max_altitude_meters"
+    ],
+    required : true
+  };
+  optional TemperatureRange operating_temperature = 1;
+  optional TemperatureRange storage_temperature = 2;
+  optional HumidityRange operating_humidity = 3;
+  optional HumidityRange storage_humidity = 4;
+  optional double max_altitude_meters = 5;
+}
+
+message TemperatureRange {
+  option (buf.validate.message).cel = {
+    id : "temperature_min_max",
+    message : "min_celsius must be <= max_celsius",
+    expression : "this.min_celsius <= this.max_celsius"
+  };
+  double min_celsius = 1;
+  double max_celsius = 2;
+}
+
+message HumidityRange {
+  option (buf.validate.message).cel = {
+    id : "humidity_min_max",
+    message : "min_percent must be <= max_percent",
+    expression : "this.min_percent <= this.max_percent"
+  };
+  double min_percent = 1 [
+    (buf.validate.field).double.gte = 0,
+    (buf.validate.field).double.lte = 100
+  ];
+  double max_percent = 2 [
+    (buf.validate.field).double.gte = 0,
+    (buf.validate.field).double.lte = 100
+  ];
+}

@@ -1,0 +1,107 @@
+// SPDX-License-Identifier: BSD-3-Clause
+
+syntax = "proto3";
+
+package schema.v1alpha1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "schema/v1alpha1/contact.proto";
+
+message AssetInfo {
+  option (buf.validate.message).cel = {
+    id : "purchase_before_installation"
+    message : "Purchase date must be before installation date"
+    expression : "!has(this.purchase_date) || !has(this.installation_date) || "
+                 "this.purchase_date <= this.installation_date"
+  };
+  option (buf.validate.message).cel = {
+    id : "installation_before_decommission"
+    message : "Installation date must be before decommission date"
+    expression : "!has(this.installation_date) || !has(this.decommission_date) "
+                 "|| this.installation_date <= this.decommission_date"
+  };
+  option (buf.validate.message).cel = {
+    id : "manufacturing_before_installation"
+    message : "Manufacturing date must be before installation date"
+    expression : "!has(this.manufacturing_date) || "
+                 "!has(this.installation_date) || this.manufacturing_date <= "
+                 "this.installation_date"
+  };
+  option (buf.validate.message).cel = {
+    id : "manufacturing_before_decommission"
+    message : "Manufacturing date must be before decommission date"
+    expression : "!has(this.manufacturing_date) || "
+                 "!has(this.decommission_date) || this.manufacturing_date <= "
+                 "this.decommission_date"
+  };
+  option (buf.validate.message).cel = {
+    id : "purchase_before_decommission"
+    message : "Purchase date must be before decommission date"
+    expression : "!has(this.purchase_date) || !has(this.decommission_date) || "
+                 "this.purchase_date <= this.decommission_date"
+  };
+  string product_name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string asset_tag = 2;
+  optional string part_number = 3;
+  optional string serial_number = 4;
+  optional string manufacturer = 5;
+  optional string revision = 6;
+  optional string uuid = 7 [ (buf.validate.field).string.uuid = true ];
+  optional string sku = 8;
+  optional google.protobuf.Timestamp manufacturing_date = 9;
+  optional google.protobuf.Timestamp purchase_date = 10;
+  optional google.protobuf.Timestamp warranty_expires = 11;
+  optional google.protobuf.Timestamp installation_date = 12;
+  optional google.protobuf.Timestamp decommission_date = 13;
+  optional ContactInfo contact = 14;
+  map<string, string> custom_attributes = 15;
+}
+
+message GetAssetInfoRequest {
+  oneof identifier {
+    option (buf.validate.oneof).required = true;
+    string product_name = 1;
+    string asset_tag = 2;
+    string part_number = 3;
+    string serial_number = 4;
+    string manufacturer = 5;
+    string revision = 6;
+    string uuid = 7;
+    string sku = 8;
+    google.protobuf.Timestamp manufacturing_date = 9;
+    google.protobuf.Timestamp purchase_date = 10;
+    google.protobuf.Timestamp warranty_expires = 11;
+    google.protobuf.Timestamp installation_date = 12;
+    google.protobuf.Timestamp decommission_date = 13;
+    ContactInfo contact = 14;
+  }
+  google.protobuf.FieldMask field_mask = 15;
+}
+
+message GetAssetInfoResponse { repeated AssetInfo asset_info = 1; }
+
+message SetAssetInfoRequest {
+  oneof identifier {
+    option (buf.validate.oneof).required = true;
+    string product_name = 1;
+    string asset_tag = 2;
+    string part_number = 3;
+    string serial_number = 4;
+    string manufacturer = 5;
+    string revision = 6;
+    string uuid = 7;
+    string sku = 8;
+    google.protobuf.Timestamp manufacturing_date = 9;
+    google.protobuf.Timestamp purchase_date = 10;
+    google.protobuf.Timestamp warranty_expires = 11;
+    google.protobuf.Timestamp installation_date = 12;
+    google.protobuf.Timestamp decommission_date = 13;
+    ContactInfo contact = 14;
+  }
+  AssetInfo asset_info = 15;
+  google.protobuf.FieldMask field_mask = 16;
+}
+
+message SetAssetInfoResponse { repeated AssetInfo asset_info = 1; }

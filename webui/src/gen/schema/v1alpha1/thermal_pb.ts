@@ -4,134 +4,76 @@
 // @generated from file schema/v1alpha1/thermal.proto (package schema.v1alpha1, syntax proto3)
 /* eslint-disable */
 
-import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
-import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import { enumDesc, fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
 import { file_buf_validate_validate } from "../../buf/validate/validate_pb";
+import type { FieldMask, Timestamp } from "@bufbuild/protobuf/wkt";
+import { file_google_protobuf_field_mask, file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
+import type { Location } from "./location_pb";
+import { file_schema_v1alpha1_location } from "./location_pb";
+import type { Sensor } from "./sensor_pb";
+import { file_schema_v1alpha1_sensor } from "./sensor_pb";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file schema/v1alpha1/thermal.proto.
  */
 export const file_schema_v1alpha1_thermal: GenFile = /*@__PURE__*/
-  fileDesc("Ch1zY2hlbWEvdjFhbHBoYTEvdGhlcm1hbC5wcm90bxIPc2NoZW1hLnYxYWxwaGExIscBChFUaGVybWFsTWFuYWdlbWVudBITCgJpZBgBIAEoCUIHukgEcgIQARIVCgRuYW1lGAIgASgJQge6SARyAhABEjUKBXpvbmVzGAMgAygLMhwuc2NoZW1hLnYxYWxwaGExLlRoZXJtYWxab25lQgi6SAWSAQIIARIwCgdwcm9maWxlGAQgASgLMh8uc2NoZW1hLnYxYWxwaGExLlRoZXJtYWxQcm9maWxlEh0KFWxhc3RfdXBkYXRlX3RpbWVzdGFtcBgFIAEoAyLNAgoLVGhlcm1hbFpvbmUSEwoCaWQYASABKAlCB7pIBHICEAESFQoEbmFtZRgCIAEoCUIHukgEcgIQARIcCgpzZW5zb3JfaWRzGAMgAygJQgi6SAWSAQIIARIkChJjb29saW5nX2RldmljZV9pZHMYBCADKAlCCLpIBZIBAggBEhsKE2N1cnJlbnRfdGVtcGVyYXR1cmUYBSABKAESKgoSdGFyZ2V0X3RlbXBlcmF0dXJlGAYgASgBQg66SAsSCSEAAAAAAAAAABIyCgxwaWRfc2V0dGluZ3MYByABKAsyHC5zY2hlbWEudjFhbHBoYTEuUElEU2V0dGluZ3MSMgoGc3RhdHVzGAggASgOMiIuc2NoZW1hLnYxYWxwaGExLlRoZXJtYWxab25lU3RhdHVzEh0KFWxhc3RfdXBkYXRlX3RpbWVzdGFtcBgJIAEoAyL1AgoNQ29vbGluZ0RldmljZRITCgJpZBgBIAEoCUIHukgEcgIQARIVCgRuYW1lGAIgASgJQge6SARyAhABEjAKBHR5cGUYAyABKA4yIi5zY2hlbWEudjFhbHBoYTEuQ29vbGluZ0RldmljZVR5cGUSLgoNc3BlZWRfcGVyY2VudBgEIAEoAUIXukgUEhIZAAAAAAAAWUApAAAAAAAAAAASMgoRbWluX3NwZWVkX3BlcmNlbnQYBSABKAFCF7pIFBISGQAAAAAAAFlAKQAAAAAAAAAAEjIKEW1heF9zcGVlZF9wZXJjZW50GAYgASgBQhe6SBQSEhkAAAAAAABZQCkAAAAAAAAAABI0CgZzdGF0dXMYByABKA4yJC5zY2hlbWEudjFhbHBoYTEuQ29vbGluZ0RldmljZVN0YXR1cxIZChFwaHlzaWNhbF9sb2NhdGlvbhgIIAEoCRIdChVsYXN0X3VwZGF0ZV90aW1lc3RhbXAYCSABKAMi4AEKC1BJRFNldHRpbmdzEhoKAmtwGAEgASgBQg66SAsSCSkAAAAAAAAAABIaCgJraRgCIAEoAUIOukgLEgkpAAAAAAAAAAASGgoCa2QYAyABKAFCDrpICxIJKQAAAAAAAAAAEiMKC3NhbXBsZV90aW1lGAQgASgBQg66SAsSCSEAAAAAAAAAABIrCgpvdXRwdXRfbWluGAUgASgBQhe6SBQSEhkAAAAAAABZQCkAAAAAAAAAABIrCgpvdXRwdXRfbWF4GAYgASgBQhe6SBQSEhkAAAAAAABZQCkAAAAAAAAAACKPAQoOVGhlcm1hbFByb2ZpbGUSMQoEdHlwZRgBIAEoDjIjLnNjaGVtYS52MWFscGhhMS5UaGVybWFsUHJvZmlsZVR5cGUSNQoPY3VzdG9tX3NldHRpbmdzGAIgASgLMhwuc2NoZW1hLnYxYWxwaGExLlBJRFNldHRpbmdzEhMKC2Rlc2NyaXB0aW9uGAMgASgJIjIKG0dldFRoZXJtYWxNYW5hZ2VtZW50UmVxdWVzdBITCgJpZBgBIAEoCUIHukgEcgIQASJeChxHZXRUaGVybWFsTWFuYWdlbWVudFJlc3BvbnNlEj4KEnRoZXJtYWxfbWFuYWdlbWVudBgBIAEoCzIiLnNjaGVtYS52MWFscGhhMS5UaGVybWFsTWFuYWdlbWVudCIeChxMaXN0VGhlcm1hbE1hbmFnZW1lbnRSZXF1ZXN0ImAKHUxpc3RUaGVybWFsTWFuYWdlbWVudFJlc3BvbnNlEj8KE3RoZXJtYWxfbWFuYWdlbWVudHMYASADKAsyIi5zY2hlbWEudjFhbHBoYTEuVGhlcm1hbE1hbmFnZW1lbnQiLAoVR2V0VGhlcm1hbFpvbmVSZXF1ZXN0EhMKAmlkGAEgASgJQge6SARyAhABIkwKFkdldFRoZXJtYWxab25lUmVzcG9uc2USMgoMdGhlcm1hbF96b25lGAEgASgLMhwuc2NoZW1hLnYxYWxwaGExLlRoZXJtYWxab25lIk0KF0xpc3RUaGVybWFsWm9uZXNSZXF1ZXN0EjIKBnN0YXR1cxgBIAEoDjIiLnNjaGVtYS52MWFscGhhMS5UaGVybWFsWm9uZVN0YXR1cyJPChhMaXN0VGhlcm1hbFpvbmVzUmVzcG9uc2USMwoNdGhlcm1hbF96b25lcxgBIAMoCzIcLnNjaGVtYS52MWFscGhhMS5UaGVybWFsWm9uZSIuChdHZXRDb29saW5nRGV2aWNlUmVxdWVzdBITCgJpZBgBIAEoCUIHukgEcgIQASJSChhHZXRDb29saW5nRGV2aWNlUmVzcG9uc2USNgoOY29vbGluZ19kZXZpY2UYASABKAsyHi5zY2hlbWEudjFhbHBoYTEuQ29vbGluZ0RldmljZSKDAQoZTGlzdENvb2xpbmdEZXZpY2VzUmVxdWVzdBIwCgR0eXBlGAEgASgOMiIuc2NoZW1hLnYxYWxwaGExLkNvb2xpbmdEZXZpY2VUeXBlEjQKBnN0YXR1cxgCIAEoDjIkLnNjaGVtYS52MWFscGhhMS5Db29saW5nRGV2aWNlU3RhdHVzIlUKGkxpc3RDb29saW5nRGV2aWNlc1Jlc3BvbnNlEjcKD2Nvb2xpbmdfZGV2aWNlcxgBIAMoCzIeLnNjaGVtYS52MWFscGhhMS5Db29saW5nRGV2aWNlKroBChFUaGVybWFsWm9uZVN0YXR1cxIjCh9USEVSTUFMX1pPTkVfU1RBVFVTX1VOU1BFQ0lGSUVEEAASHgoaVEhFUk1BTF9aT05FX1NUQVRVU19OT1JNQUwQARIfChtUSEVSTUFMX1pPTkVfU1RBVFVTX1dBUk5JTkcQAhIgChxUSEVSTUFMX1pPTkVfU1RBVFVTX0NSSVRJQ0FMEAMSHQoZVEhFUk1BTF9aT05FX1NUQVRVU19FUlJPUhAEKqEBChFDb29saW5nRGV2aWNlVHlwZRIjCh9DT09MSU5HX0RFVklDRV9UWVBFX1VOU1BFQ0lGSUVEEAASGwoXQ09PTElOR19ERVZJQ0VfVFlQRV9GQU4QARIiCh5DT09MSU5HX0RFVklDRV9UWVBFX1dBVEVSX1BVTVAQAhImCiJDT09MSU5HX0RFVklDRV9UWVBFX0hFQVRfRVhDSEFOR0VSEAMqywEKE0Nvb2xpbmdEZXZpY2VTdGF0dXMSJQohQ09PTElOR19ERVZJQ0VfU1RBVFVTX1VOU1BFQ0lGSUVEEAASIQodQ09PTElOR19ERVZJQ0VfU1RBVFVTX0VOQUJMRUQQARIiCh5DT09MSU5HX0RFVklDRV9TVEFUVVNfRElTQUJMRUQQAhIfChtDT09MSU5HX0RFVklDRV9TVEFUVVNfRVJST1IQAxIlCiFDT09MSU5HX0RFVklDRV9TVEFUVVNfTk9UX1BSRVNFTlQQBCrDAQoSVGhlcm1hbFByb2ZpbGVUeXBlEiQKIFRIRVJNQUxfUFJPRklMRV9UWVBFX1VOU1BFQ0lGSUVEEAASHgoaVEhFUk1BTF9QUk9GSUxFX1RZUEVfUVVJRVQQARIhCh1USEVSTUFMX1BST0ZJTEVfVFlQRV9CQUxBTkNFRBACEiMKH1RIRVJNQUxfUFJPRklMRV9UWVBFX0FHR1JFU1NJVkUQAxIfChtUSEVSTUFMX1BST0ZJTEVfVFlQRV9DVVNUT00QBDKLAgoYVGhlcm1hbE1hbmFnZW1lbnRTZXJ2aWNlEnUKFEdldFRoZXJtYWxNYW5hZ2VtZW50Eiwuc2NoZW1hLnYxYWxwaGExLkdldFRoZXJtYWxNYW5hZ2VtZW50UmVxdWVzdBotLnNjaGVtYS52MWFscGhhMS5HZXRUaGVybWFsTWFuYWdlbWVudFJlc3BvbnNlIgASeAoVTGlzdFRoZXJtYWxNYW5hZ2VtZW50Ei0uc2NoZW1hLnYxYWxwaGExLkxpc3RUaGVybWFsTWFuYWdlbWVudFJlcXVlc3QaLi5zY2hlbWEudjFhbHBoYTEuTGlzdFRoZXJtYWxNYW5hZ2VtZW50UmVzcG9uc2UiADLkAQoSVGhlcm1hbFpvbmVTZXJ2aWNlEmMKDkdldFRoZXJtYWxab25lEiYuc2NoZW1hLnYxYWxwaGExLkdldFRoZXJtYWxab25lUmVxdWVzdBonLnNjaGVtYS52MWFscGhhMS5HZXRUaGVybWFsWm9uZVJlc3BvbnNlIgASaQoQTGlzdFRoZXJtYWxab25lcxIoLnNjaGVtYS52MWFscGhhMS5MaXN0VGhlcm1hbFpvbmVzUmVxdWVzdBopLnNjaGVtYS52MWFscGhhMS5MaXN0VGhlcm1hbFpvbmVzUmVzcG9uc2UiADLyAQoUQ29vbGluZ0RldmljZVNlcnZpY2USaQoQR2V0Q29vbGluZ0RldmljZRIoLnNjaGVtYS52MWFscGhhMS5HZXRDb29saW5nRGV2aWNlUmVxdWVzdBopLnNjaGVtYS52MWFscGhhMS5HZXRDb29saW5nRGV2aWNlUmVzcG9uc2UiABJvChJMaXN0Q29vbGluZ0RldmljZXMSKi5zY2hlbWEudjFhbHBoYTEuTGlzdENvb2xpbmdEZXZpY2VzUmVxdWVzdBorLnNjaGVtYS52MWFscGhhMS5MaXN0Q29vbGluZ0RldmljZXNSZXNwb25zZSIAQr8BChNjb20uc2NoZW1hLnYxYWxwaGExQgxUaGVybWFsUHJvdG9QAVo9Z2l0aHViLmNvbS91LWJtYy91LWJtYy9hcGkvZ2VuL3NjaGVtYS92MWFscGhhMTtzY2hlbWF2MWFscGhhMaICA1NYWKoCD1NjaGVtYS5WMWFscGhhMcoCD1NjaGVtYVxWMWFscGhhMeICG1NjaGVtYVxWMWFscGhhMVxHUEJNZXRhZGF0YeoCEFNjaGVtYTo6VjFhbHBoYTFiBnByb3RvMw", [file_buf_validate_validate]);
+  fileDesc("Ch1zY2hlbWEvdjFhbHBoYTEvdGhlcm1hbC5wcm90bxIPc2NoZW1hLnYxYWxwaGExIs4ECgtUaGVybWFsWm9uZRIVCgRuYW1lGAEgASgJQge6SARyAhABEh4KDHNlbnNvcl9uYW1lcxgCIAMoCUIIukgFkgECCAESHAoUY29vbGluZ19kZXZpY2VfbmFtZXMYAyADKAkSGwoTY3VycmVudF90ZW1wZXJhdHVyZRgEIAEoARIfChJ0YXJnZXRfdGVtcGVyYXR1cmUYBSABKAFIAIgBARI3CgxwaWRfc2V0dGluZ3MYBiABKAsyHC5zY2hlbWEudjFhbHBoYTEuUElEU2V0dGluZ3NIAYgBARI8CgZzdGF0dXMYByABKA4yIi5zY2hlbWEudjFhbHBoYTEuVGhlcm1hbFpvbmVTdGF0dXNCCLpIBYIBAhABEjAKCGxvY2F0aW9uGAggASgLMhkuc2NoZW1hLnYxYWxwaGExLkxvY2F0aW9uSAKIAQESNQoMbGFzdF91cGRhdGVkGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgDiAEBEk0KEWN1c3RvbV9hdHRyaWJ1dGVzGAogAygLMjIuc2NoZW1hLnYxYWxwaGExLlRoZXJtYWxab25lLkN1c3RvbUF0dHJpYnV0ZXNFbnRyeRo3ChVDdXN0b21BdHRyaWJ1dGVzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIVChNfdGFyZ2V0X3RlbXBlcmF0dXJlQg8KDV9waWRfc2V0dGluZ3NCCwoJX2xvY2F0aW9uQg8KDV9sYXN0X3VwZGF0ZWQi3gsKDUNvb2xpbmdEZXZpY2USFQoEbmFtZRgBIAEoCUIHukgEcgIQARI/CgR0eXBlGAIgASgOMiIuc2NoZW1hLnYxYWxwaGExLkNvb2xpbmdEZXZpY2VUeXBlQgi6SAWCAQIQAUgAiAEBEjsKFWNvb2xpbmdfcG93ZXJfcGVyY2VudBgDIAEoAUIXukgUEhIZAAAAAAAAWUApAAAAAAAAAABIAYgBARI/ChltaW5fY29vbGluZ19wb3dlcl9wZXJjZW50GAQgASgBQhe6SBQSEhkAAAAAAABZQCkAAAAAAAAAAEgCiAEBEj8KGW1heF9jb29saW5nX3Bvd2VyX3BlcmNlbnQYBSABKAFCF7pIFBISGQAAAAAAAFlAKQAAAAAAAAAASAOIAQESKAoHc2Vuc29ycxgGIAMoCzIXLnNjaGVtYS52MWFscGhhMS5TZW5zb3ISQwoGc3RhdHVzGAcgASgOMiQuc2NoZW1hLnYxYWxwaGExLkNvb2xpbmdEZXZpY2VTdGF0dXNCCLpIBYIBAhABSASIAQESTgoMY29udHJvbF9tb2RlGAggASgOMikuc2NoZW1hLnYxYWxwaGExLkNvb2xpbmdEZXZpY2VDb250cm9sTW9kZUIIukgFggECEAFIBYgBARIwCghsb2NhdGlvbhgJIAEoCzIZLnNjaGVtYS52MWFscGhhMS5Mb2NhdGlvbkgGiAEBEjUKDGxhc3RfdXBkYXRlZBgKIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIB4gBARJPChFjdXN0b21fYXR0cmlidXRlcxgLIAMoCzI0LnNjaGVtYS52MWFscGhhMS5Db29saW5nRGV2aWNlLkN1c3RvbUF0dHJpYnV0ZXNFbnRyeRo3ChVDdXN0b21BdHRyaWJ1dGVzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ATrqBLpI5gQa6gEKFWNvb2xpbmdfZGV2aWNlX2JvdW5kcxI+bWF4X2Nvb2xpbmdfcG93ZXJfcGVyY2VudCBtdXN0IGJlID49IG1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQakAEhaGFzKHRoaXMubWF4X2Nvb2xpbmdfcG93ZXJfcGVyY2VudCkgfHwgIWhhcyh0aGlzLm1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQpIHx8IHRoaXMubWF4X2Nvb2xpbmdfcG93ZXJfcGVyY2VudCA+PSB0aGlzLm1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQa9gIKIWNvb2xpbmdfZGV2aWNlX3Bvd2VyX3dpdGhpbl9yYW5nZRJcY29vbGluZ19wb3dlcl9wZXJjZW50IG11c3QgYmUgd2l0aGluIG1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQgYW5kIG1heF9jb29saW5nX3Bvd2VyX3BlcmNlbnQa8gEhaGFzKHRoaXMuY29vbGluZ19wb3dlcl9wZXJjZW50KSB8fCAhaGFzKHRoaXMubWluX2Nvb2xpbmdfcG93ZXJfcGVyY2VudCkgfHwgIWhhcyh0aGlzLm1heF9jb29saW5nX3Bvd2VyX3BlcmNlbnQpIHx8ICh0aGlzLmNvb2xpbmdfcG93ZXJfcGVyY2VudCA+PSB0aGlzLm1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQgJiYgdGhpcy5jb29saW5nX3Bvd2VyX3BlcmNlbnQgPD0gdGhpcy5tYXhfY29vbGluZ19wb3dlcl9wZXJjZW50KUIHCgVfdHlwZUIYChZfY29vbGluZ19wb3dlcl9wZXJjZW50QhwKGl9taW5fY29vbGluZ19wb3dlcl9wZXJjZW50QhwKGl9tYXhfY29vbGluZ19wb3dlcl9wZXJjZW50QgkKB19zdGF0dXNCDwoNX2NvbnRyb2xfbW9kZUILCglfbG9jYXRpb25CDwoNX2xhc3RfdXBkYXRlZCLbAgoOVGhlcm1hbFByb2ZpbGUSQQoEdHlwZRgBIAEoDjIpLnNjaGVtYS52MWFscGhhMS5Db29saW5nRGV2aWNlUHJvZmlsZVR5cGVCCLpIBYIBAhABEjoKD2N1c3RvbV9zZXR0aW5ncxgCIAEoCzIcLnNjaGVtYS52MWFscGhhMS5QSURTZXR0aW5nc0gAiAEBEhgKC2Rlc2NyaXB0aW9uGAMgASgJSAGIAQE6iwG6SIcBGoQBCh90aGVybWFsX3Byb2ZpbGVfY3VzdG9tX3NldHRpbmdzEjRjdXN0b21fc2V0dGluZ3MgbXVzdCBiZSBwcm92aWRlZCB3aGVuIHR5cGUgaXMgQ1VTVE9NGit0aGlzLnR5cGUgIT0gNCB8fCBoYXModGhpcy5jdXN0b21fc2V0dGluZ3MpQhIKEF9jdXN0b21fc2V0dGluZ3NCDgoMX2Rlc2NyaXB0aW9uIusCCgtQSURTZXR0aW5ncxIaCgJrcBgBIAEoAUIOukgLEgkpAAAAAAAAAAASGgoCa2kYAiABKAFCDrpICxIJKQAAAAAAAAAAEhoKAmtkGAMgASgBQg66SAsSCSkAAAAAAAAAABIjCgtzYW1wbGVfdGltZRgEIAEoAUIOukgLEgkhAAAAAAAAAAASFwoKb3V0cHV0X21pbhgFIAEoAUgAiAEBEhcKCm91dHB1dF9tYXgYBiABKAFIAYgBATqSAbpIjgEaiwEKEXBpZF9vdXRwdXRfYm91bmRzEiBvdXRwdXRfbWluIG11c3QgYmUgPD0gb3V0cHV0X21heBpUIWhhcyh0aGlzLm91dHB1dF9taW4pIHx8ICFoYXModGhpcy5vdXRwdXRfbWF4KSB8fCB0aGlzLm91dHB1dF9taW4gPD0gdGhpcy5vdXRwdXRfbWF4Qg0KC19vdXRwdXRfbWluQg0KC19vdXRwdXRfbWF4ItEBChVHZXRUaGVybWFsWm9uZVJlcXVlc3QSDgoEbmFtZRgBIAEoCUgAEjQKBnN0YXR1cxgCIAEoDjIiLnNjaGVtYS52MWFscGhhMS5UaGVybWFsWm9uZVN0YXR1c0gAEi0KCGxvY2F0aW9uGAMgASgLMhkuc2NoZW1hLnYxYWxwaGExLkxvY2F0aW9uSAASLgoKZmllbGRfbWFzaxgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2tCEwoKaWRlbnRpZmllchIFukgCCAEiTQoWR2V0VGhlcm1hbFpvbmVSZXNwb25zZRIzCg10aGVybWFsX3pvbmVzGAEgAygLMhwuc2NoZW1hLnYxYWxwaGExLlRoZXJtYWxab25lIq4CChVTZXRUaGVybWFsWm9uZVJlcXVlc3QSFQoEbmFtZRgBIAEoCUIHukgEcgIQARIfChJ0YXJnZXRfdGVtcGVyYXR1cmUYAiABKAFIAIgBARI3CgxwaWRfc2V0dGluZ3MYAyABKAsyHC5zY2hlbWEudjFhbHBoYTEuUElEU2V0dGluZ3NIAYgBARJBCgZzdGF0dXMYBCABKA4yIi5zY2hlbWEudjFhbHBoYTEuVGhlcm1hbFpvbmVTdGF0dXNCCLpIBYIBAhABSAKIAQESLgoKZmllbGRfbWFzaxgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2tCFQoTX3RhcmdldF90ZW1wZXJhdHVyZUIPCg1fcGlkX3NldHRpbmdzQgkKB19zdGF0dXMiTAoWU2V0VGhlcm1hbFpvbmVSZXNwb25zZRIyCgx0aGVybWFsX3pvbmUYASABKAsyHC5zY2hlbWEudjFhbHBoYTEuVGhlcm1hbFpvbmUiSQoXTGlzdFRoZXJtYWxab25lc1JlcXVlc3QSLgoKZmllbGRfbWFzaxgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2siTwoYTGlzdFRoZXJtYWxab25lc1Jlc3BvbnNlEjMKDXRoZXJtYWxfem9uZXMYASADKAsyHC5zY2hlbWEudjFhbHBoYTEuVGhlcm1hbFpvbmUqugEKEVRoZXJtYWxab25lU3RhdHVzEiMKH1RIRVJNQUxfWk9ORV9TVEFUVVNfVU5TUEVDSUZJRUQQABIeChpUSEVSTUFMX1pPTkVfU1RBVFVTX05PUk1BTBABEh8KG1RIRVJNQUxfWk9ORV9TVEFUVVNfV0FSTklORxACEiAKHFRIRVJNQUxfWk9ORV9TVEFUVVNfQ1JJVElDQUwQAxIdChlUSEVSTUFMX1pPTkVfU1RBVFVTX0VSUk9SEAQq6AEKEUNvb2xpbmdEZXZpY2VUeXBlEiMKH0NPT0xJTkdfREVWSUNFX1RZUEVfVU5TUEVDSUZJRUQQABIbChdDT09MSU5HX0RFVklDRV9UWVBFX0ZBThABEiIKHkNPT0xJTkdfREVWSUNFX1RZUEVfV0FURVJfUFVNUBACEiYKIkNPT0xJTkdfREVWSUNFX1RZUEVfSEVBVF9FWENIQU5HRVIQAxIlCiFDT09MSU5HX0RFVklDRV9UWVBFX0xJUVVJRF9DT09MRVIQBBIeChpDT09MSU5HX0RFVklDRV9UWVBFX0JMT1dFUhAFKu4BChNDb29saW5nRGV2aWNlU3RhdHVzEiUKIUNPT0xJTkdfREVWSUNFX1NUQVRVU19VTlNQRUNJRklFRBAAEiEKHUNPT0xJTkdfREVWSUNFX1NUQVRVU19FTkFCTEVEEAESIgoeQ09PTElOR19ERVZJQ0VfU1RBVFVTX0RJU0FCTEVEEAISJQohQ09PTElOR19ERVZJQ0VfU1RBVFVTX05PVF9QUkVTRU5UEAMSHwobQ09PTElOR19ERVZJQ0VfU1RBVFVTX0VSUk9SEAQSIQodQ09PTElOR19ERVZJQ0VfU1RBVFVTX1VOS05PV04QBSq/AQoYQ29vbGluZ0RldmljZUNvbnRyb2xNb2RlEisKJ0NPT0xJTkdfREVWSUNFX0NPTlRST0xfTU9ERV9VTlNQRUNJRklFRBAAEikKJUNPT0xJTkdfREVWSUNFX0NPTlRST0xfTU9ERV9BVVRPTUFUSUMQARImCiJDT09MSU5HX0RFVklDRV9DT05UUk9MX01PREVfTUFOVUFMEAISIwofQ09PTElOR19ERVZJQ0VfQ09OVFJPTF9NT0RFX1BJRBADKuwBChhDb29saW5nRGV2aWNlUHJvZmlsZVR5cGUSKwonQ09PTElOR19ERVZJQ0VfUFJPRklMRV9UWVBFX1VOU1BFQ0lGSUVEEAASJQohQ09PTElOR19ERVZJQ0VfUFJPRklMRV9UWVBFX1FVSUVUEAESKAokQ09PTElOR19ERVZJQ0VfUFJPRklMRV9UWVBFX0JBTEFOQ0VEEAISKgomQ09PTElOR19ERVZJQ0VfUFJPRklMRV9UWVBFX0FHR1JFU1NJVkUQAxImCiJDT09MSU5HX0RFVklDRV9QUk9GSUxFX1RZUEVfQ1VTVE9NEARCvwEKE2NvbS5zY2hlbWEudjFhbHBoYTFCDFRoZXJtYWxQcm90b1ABWj1naXRodWIuY29tL3UtYm1jL3UtYm1jL2FwaS9nZW4vc2NoZW1hL3YxYWxwaGExO3NjaGVtYXYxYWxwaGExogIDU1hYqgIPU2NoZW1hLlYxYWxwaGExygIPU2NoZW1hXFYxYWxwaGEx4gIbU2NoZW1hXFYxYWxwaGExXEdQQk1ldGFkYXRh6gIQU2NoZW1hOjpWMWFscGhhMWIGcHJvdG8z", [file_buf_validate_validate, file_google_protobuf_field_mask, file_google_protobuf_timestamp, file_schema_v1alpha1_location, file_schema_v1alpha1_sensor]);
 
 /**
- * ThermalManagement represents the overall thermal management configuration for a server chassis
- *
- * @generated from message schema.v1alpha1.ThermalManagement
- */
-export type ThermalManagement = Message<"schema.v1alpha1.ThermalManagement"> & {
-  /**
-   * Unique identifier for the thermal management instance
-   *
-   * @generated from field: string id = 1;
-   */
-  id: string;
-
-  /**
-   * Human-readable name for the thermal management instance
-   *
-   * @generated from field: string name = 2;
-   */
-  name: string;
-
-  /**
-   * List of thermal zones within the chassis
-   *
-   * @generated from field: repeated schema.v1alpha1.ThermalZone zones = 3;
-   */
-  zones: ThermalZone[];
-
-  /**
-   * Global thermal profile settings
-   *
-   * @generated from field: schema.v1alpha1.ThermalProfile profile = 4;
-   */
-  profile?: ThermalProfile;
-
-  /**
-   * Timestamp of the last update
-   *
-   * @generated from field: int64 last_update_timestamp = 5;
-   */
-  lastUpdateTimestamp: bigint;
-};
-
-/**
- * Describes the message schema.v1alpha1.ThermalManagement.
- * Use `create(ThermalManagementSchema)` to create a new message.
- */
-export const ThermalManagementSchema: GenMessage<ThermalManagement> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 0);
-
-/**
- * ThermalZone represents a specific zone within the chassis that has its own thermal control
- *
  * @generated from message schema.v1alpha1.ThermalZone
  */
 export type ThermalZone = Message<"schema.v1alpha1.ThermalZone"> & {
   /**
-   * Unique identifier for the thermal zone
-   *
-   * @generated from field: string id = 1;
-   */
-  id: string;
-
-  /**
-   * Human-readable name for the thermal zone
-   *
-   * @generated from field: string name = 2;
+   * @generated from field: string name = 1;
    */
   name: string;
 
   /**
-   * List of sensors associated with this zone
-   *
-   * @generated from field: repeated string sensor_ids = 3;
+   * @generated from field: repeated string sensor_names = 2;
    */
-  sensorIds: string[];
+  sensorNames: string[];
 
   /**
-   * List of cooling devices (fans, pumps) associated with this zone
-   *
-   * @generated from field: repeated string cooling_device_ids = 4;
+   * @generated from field: repeated string cooling_device_names = 3;
    */
-  coolingDeviceIds: string[];
+  coolingDeviceNames: string[];
 
   /**
-   * Current temperature in the zone (aggregated from sensors)
-   *
-   * @generated from field: double current_temperature = 5;
+   * @generated from field: double current_temperature = 4;
    */
   currentTemperature: number;
 
   /**
-   * Target temperature for the zone
-   *
-   * @generated from field: double target_temperature = 6;
+   * @generated from field: optional double target_temperature = 5;
    */
-  targetTemperature: number;
+  targetTemperature?: number;
 
   /**
-   * PID controller settings for this zone
-   *
-   * @generated from field: schema.v1alpha1.PIDSettings pid_settings = 7;
+   * @generated from field: optional schema.v1alpha1.PIDSettings pid_settings = 6;
    */
   pidSettings?: PIDSettings;
 
   /**
-   * Status of the thermal zone
-   *
-   * @generated from field: schema.v1alpha1.ThermalZoneStatus status = 8;
+   * @generated from field: schema.v1alpha1.ThermalZoneStatus status = 7;
    */
   status: ThermalZoneStatus;
 
   /**
-   * Timestamp of the last update
-   *
-   * @generated from field: int64 last_update_timestamp = 9;
+   * @generated from field: optional schema.v1alpha1.Location location = 8;
    */
-  lastUpdateTimestamp: bigint;
+  location?: Location;
+
+  /**
+   * @generated from field: optional google.protobuf.Timestamp last_updated = 9;
+   */
+  lastUpdated?: Timestamp;
+
+  /**
+   * @generated from field: map<string, string> custom_attributes = 10;
+   */
+  customAttributes: { [key: string]: string };
 };
 
 /**
@@ -139,76 +81,66 @@ export type ThermalZone = Message<"schema.v1alpha1.ThermalZone"> & {
  * Use `create(ThermalZoneSchema)` to create a new message.
  */
 export const ThermalZoneSchema: GenMessage<ThermalZone> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 1);
+  messageDesc(file_schema_v1alpha1_thermal, 0);
 
 /**
- * CoolingDevice represents a physical device used for thermal management
- *
  * @generated from message schema.v1alpha1.CoolingDevice
  */
 export type CoolingDevice = Message<"schema.v1alpha1.CoolingDevice"> & {
   /**
-   * Unique identifier for the cooling device
-   *
-   * @generated from field: string id = 1;
-   */
-  id: string;
-
-  /**
-   * Human-readable name for the cooling device
-   *
-   * @generated from field: string name = 2;
+   * @generated from field: string name = 1;
    */
   name: string;
 
   /**
-   * Type of cooling device
-   *
-   * @generated from field: schema.v1alpha1.CoolingDeviceType type = 3;
+   * @generated from field: optional schema.v1alpha1.CoolingDeviceType type = 2;
    */
-  type: CoolingDeviceType;
+  type?: CoolingDeviceType;
 
   /**
-   * Current speed or power level (0-100%)
-   *
-   * @generated from field: double speed_percent = 4;
+   * @generated from field: optional double cooling_power_percent = 3;
    */
-  speedPercent: number;
+  coolingPowerPercent?: number;
 
   /**
-   * Minimum allowed speed
-   *
-   * @generated from field: double min_speed_percent = 5;
+   * @generated from field: optional double min_cooling_power_percent = 4;
    */
-  minSpeedPercent: number;
+  minCoolingPowerPercent?: number;
 
   /**
-   * Maximum allowed speed
-   *
-   * @generated from field: double max_speed_percent = 6;
+   * @generated from field: optional double max_cooling_power_percent = 5;
    */
-  maxSpeedPercent: number;
+  maxCoolingPowerPercent?: number;
 
   /**
-   * Status of the cooling device
-   *
-   * @generated from field: schema.v1alpha1.CoolingDeviceStatus status = 7;
+   * @generated from field: repeated schema.v1alpha1.Sensor sensors = 6;
    */
-  status: CoolingDeviceStatus;
+  sensors: Sensor[];
 
   /**
-   * Physical location of the device
-   *
-   * @generated from field: string physical_location = 8;
+   * @generated from field: optional schema.v1alpha1.CoolingDeviceStatus status = 7;
    */
-  physicalLocation: string;
+  status?: CoolingDeviceStatus;
 
   /**
-   * Timestamp of the last update
-   *
-   * @generated from field: int64 last_update_timestamp = 9;
+   * @generated from field: optional schema.v1alpha1.CoolingDeviceControlMode control_mode = 8;
    */
-  lastUpdateTimestamp: bigint;
+  controlMode?: CoolingDeviceControlMode;
+
+  /**
+   * @generated from field: optional schema.v1alpha1.Location location = 9;
+   */
+  location?: Location;
+
+  /**
+   * @generated from field: optional google.protobuf.Timestamp last_updated = 10;
+   */
+  lastUpdated?: Timestamp;
+
+  /**
+   * @generated from field: map<string, string> custom_attributes = 11;
+   */
+  customAttributes: { [key: string]: string };
 };
 
 /**
@@ -216,53 +148,68 @@ export type CoolingDevice = Message<"schema.v1alpha1.CoolingDevice"> & {
  * Use `create(CoolingDeviceSchema)` to create a new message.
  */
 export const CoolingDeviceSchema: GenMessage<CoolingDevice> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_thermal, 1);
+
+/**
+ * @generated from message schema.v1alpha1.ThermalProfile
+ */
+export type ThermalProfile = Message<"schema.v1alpha1.ThermalProfile"> & {
+  /**
+   * @generated from field: schema.v1alpha1.CoolingDeviceProfileType type = 1;
+   */
+  type: CoolingDeviceProfileType;
+
+  /**
+   * @generated from field: optional schema.v1alpha1.PIDSettings custom_settings = 2;
+   */
+  customSettings?: PIDSettings;
+
+  /**
+   * @generated from field: optional string description = 3;
+   */
+  description?: string;
+};
+
+/**
+ * Describes the message schema.v1alpha1.ThermalProfile.
+ * Use `create(ThermalProfileSchema)` to create a new message.
+ */
+export const ThermalProfileSchema: GenMessage<ThermalProfile> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_thermal, 2);
 
 /**
- * PIDSettings represents the parameters for PID control
- *
  * @generated from message schema.v1alpha1.PIDSettings
  */
 export type PIDSettings = Message<"schema.v1alpha1.PIDSettings"> & {
   /**
-   * Proportional gain
-   *
    * @generated from field: double kp = 1;
    */
   kp: number;
 
   /**
-   * Integral gain
-   *
    * @generated from field: double ki = 2;
    */
   ki: number;
 
   /**
-   * Derivative gain
-   *
    * @generated from field: double kd = 3;
    */
   kd: number;
 
   /**
-   * Sample time in seconds
-   *
    * @generated from field: double sample_time = 4;
    */
   sampleTime: number;
 
   /**
-   * Output limits (0-100% for fan speeds)
-   *
-   * @generated from field: double output_min = 5;
+   * @generated from field: optional double output_min = 5;
    */
-  outputMin: number;
+  outputMin?: number;
 
   /**
-   * @generated from field: double output_max = 6;
+   * @generated from field: optional double output_max = 6;
    */
-  outputMax: number;
+  outputMax?: number;
 };
 
 /**
@@ -273,122 +220,36 @@ export const PIDSettingsSchema: GenMessage<PIDSettings> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_thermal, 3);
 
 /**
- * ThermalProfile represents predefined thermal management profiles
- *
- * @generated from message schema.v1alpha1.ThermalProfile
- */
-export type ThermalProfile = Message<"schema.v1alpha1.ThermalProfile"> & {
-  /**
-   * Profile type
-   *
-   * @generated from field: schema.v1alpha1.ThermalProfileType type = 1;
-   */
-  type: ThermalProfileType;
-
-  /**
-   * Custom PID settings (only used when type is CUSTOM)
-   *
-   * @generated from field: schema.v1alpha1.PIDSettings custom_settings = 2;
-   */
-  customSettings?: PIDSettings;
-
-  /**
-   * Description of the profile
-   *
-   * @generated from field: string description = 3;
-   */
-  description: string;
-};
-
-/**
- * Describes the message schema.v1alpha1.ThermalProfile.
- * Use `create(ThermalProfileSchema)` to create a new message.
- */
-export const ThermalProfileSchema: GenMessage<ThermalProfile> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 4);
-
-/**
- * Request message for getting a thermal management configuration by ID
- *
- * @generated from message schema.v1alpha1.GetThermalManagementRequest
- */
-export type GetThermalManagementRequest = Message<"schema.v1alpha1.GetThermalManagementRequest"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-};
-
-/**
- * Describes the message schema.v1alpha1.GetThermalManagementRequest.
- * Use `create(GetThermalManagementRequestSchema)` to create a new message.
- */
-export const GetThermalManagementRequestSchema: GenMessage<GetThermalManagementRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 5);
-
-/**
- * Response message for getting a thermal management configuration
- *
- * @generated from message schema.v1alpha1.GetThermalManagementResponse
- */
-export type GetThermalManagementResponse = Message<"schema.v1alpha1.GetThermalManagementResponse"> & {
-  /**
-   * @generated from field: schema.v1alpha1.ThermalManagement thermal_management = 1;
-   */
-  thermalManagement?: ThermalManagement;
-};
-
-/**
- * Describes the message schema.v1alpha1.GetThermalManagementResponse.
- * Use `create(GetThermalManagementResponseSchema)` to create a new message.
- */
-export const GetThermalManagementResponseSchema: GenMessage<GetThermalManagementResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 6);
-
-/**
- * Request message for listing thermal management configurations
- *
- * @generated from message schema.v1alpha1.ListThermalManagementRequest
- */
-export type ListThermalManagementRequest = Message<"schema.v1alpha1.ListThermalManagementRequest"> & {
-};
-
-/**
- * Describes the message schema.v1alpha1.ListThermalManagementRequest.
- * Use `create(ListThermalManagementRequestSchema)` to create a new message.
- */
-export const ListThermalManagementRequestSchema: GenMessage<ListThermalManagementRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 7);
-
-/**
- * Response message for listing thermal management configurations
- *
- * @generated from message schema.v1alpha1.ListThermalManagementResponse
- */
-export type ListThermalManagementResponse = Message<"schema.v1alpha1.ListThermalManagementResponse"> & {
-  /**
-   * @generated from field: repeated schema.v1alpha1.ThermalManagement thermal_managements = 1;
-   */
-  thermalManagements: ThermalManagement[];
-};
-
-/**
- * Describes the message schema.v1alpha1.ListThermalManagementResponse.
- * Use `create(ListThermalManagementResponseSchema)` to create a new message.
- */
-export const ListThermalManagementResponseSchema: GenMessage<ListThermalManagementResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 8);
-
-/**
- * Request message for getting a thermal zone by ID
- *
  * @generated from message schema.v1alpha1.GetThermalZoneRequest
  */
 export type GetThermalZoneRequest = Message<"schema.v1alpha1.GetThermalZoneRequest"> & {
   /**
-   * @generated from field: string id = 1;
+   * @generated from oneof schema.v1alpha1.GetThermalZoneRequest.identifier
    */
-  id: string;
+  identifier: {
+    /**
+     * @generated from field: string name = 1;
+     */
+    value: string;
+    case: "name";
+  } | {
+    /**
+     * @generated from field: schema.v1alpha1.ThermalZoneStatus status = 2;
+     */
+    value: ThermalZoneStatus;
+    case: "status";
+  } | {
+    /**
+     * @generated from field: schema.v1alpha1.Location location = 3;
+     */
+    value: Location;
+    case: "location";
+  } | { case: undefined; value?: undefined };
+
+  /**
+   * @generated from field: google.protobuf.FieldMask field_mask = 4;
+   */
+  fieldMask?: FieldMask;
 };
 
 /**
@@ -396,18 +257,16 @@ export type GetThermalZoneRequest = Message<"schema.v1alpha1.GetThermalZoneReque
  * Use `create(GetThermalZoneRequestSchema)` to create a new message.
  */
 export const GetThermalZoneRequestSchema: GenMessage<GetThermalZoneRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 9);
+  messageDesc(file_schema_v1alpha1_thermal, 4);
 
 /**
- * Response message for getting a thermal zone
- *
  * @generated from message schema.v1alpha1.GetThermalZoneResponse
  */
 export type GetThermalZoneResponse = Message<"schema.v1alpha1.GetThermalZoneResponse"> & {
   /**
-   * @generated from field: schema.v1alpha1.ThermalZone thermal_zone = 1;
+   * @generated from field: repeated schema.v1alpha1.ThermalZone thermal_zones = 1;
    */
-  thermalZone?: ThermalZone;
+  thermalZones: ThermalZone[];
 };
 
 /**
@@ -415,18 +274,70 @@ export type GetThermalZoneResponse = Message<"schema.v1alpha1.GetThermalZoneResp
  * Use `create(GetThermalZoneResponseSchema)` to create a new message.
  */
 export const GetThermalZoneResponseSchema: GenMessage<GetThermalZoneResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 10);
+  messageDesc(file_schema_v1alpha1_thermal, 5);
 
 /**
- * Request message for listing thermal zones with optional filtering
- *
+ * @generated from message schema.v1alpha1.SetThermalZoneRequest
+ */
+export type SetThermalZoneRequest = Message<"schema.v1alpha1.SetThermalZoneRequest"> & {
+  /**
+   * @generated from field: string name = 1;
+   */
+  name: string;
+
+  /**
+   * @generated from field: optional double target_temperature = 2;
+   */
+  targetTemperature?: number;
+
+  /**
+   * @generated from field: optional schema.v1alpha1.PIDSettings pid_settings = 3;
+   */
+  pidSettings?: PIDSettings;
+
+  /**
+   * @generated from field: optional schema.v1alpha1.ThermalZoneStatus status = 4;
+   */
+  status?: ThermalZoneStatus;
+
+  /**
+   * @generated from field: google.protobuf.FieldMask field_mask = 5;
+   */
+  fieldMask?: FieldMask;
+};
+
+/**
+ * Describes the message schema.v1alpha1.SetThermalZoneRequest.
+ * Use `create(SetThermalZoneRequestSchema)` to create a new message.
+ */
+export const SetThermalZoneRequestSchema: GenMessage<SetThermalZoneRequest> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_thermal, 6);
+
+/**
+ * @generated from message schema.v1alpha1.SetThermalZoneResponse
+ */
+export type SetThermalZoneResponse = Message<"schema.v1alpha1.SetThermalZoneResponse"> & {
+  /**
+   * @generated from field: schema.v1alpha1.ThermalZone thermal_zone = 1;
+   */
+  thermalZone?: ThermalZone;
+};
+
+/**
+ * Describes the message schema.v1alpha1.SetThermalZoneResponse.
+ * Use `create(SetThermalZoneResponseSchema)` to create a new message.
+ */
+export const SetThermalZoneResponseSchema: GenMessage<SetThermalZoneResponse> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_thermal, 7);
+
+/**
  * @generated from message schema.v1alpha1.ListThermalZonesRequest
  */
 export type ListThermalZonesRequest = Message<"schema.v1alpha1.ListThermalZonesRequest"> & {
   /**
-   * @generated from field: schema.v1alpha1.ThermalZoneStatus status = 1;
+   * @generated from field: google.protobuf.FieldMask field_mask = 1;
    */
-  status: ThermalZoneStatus;
+  fieldMask?: FieldMask;
 };
 
 /**
@@ -434,11 +345,9 @@ export type ListThermalZonesRequest = Message<"schema.v1alpha1.ListThermalZonesR
  * Use `create(ListThermalZonesRequestSchema)` to create a new message.
  */
 export const ListThermalZonesRequestSchema: GenMessage<ListThermalZonesRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 11);
+  messageDesc(file_schema_v1alpha1_thermal, 8);
 
 /**
- * Response message for listing thermal zones
- *
  * @generated from message schema.v1alpha1.ListThermalZonesResponse
  */
 export type ListThermalZonesResponse = Message<"schema.v1alpha1.ListThermalZonesResponse"> & {
@@ -453,92 +362,9 @@ export type ListThermalZonesResponse = Message<"schema.v1alpha1.ListThermalZones
  * Use `create(ListThermalZonesResponseSchema)` to create a new message.
  */
 export const ListThermalZonesResponseSchema: GenMessage<ListThermalZonesResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 12);
+  messageDesc(file_schema_v1alpha1_thermal, 9);
 
 /**
- * Request message for getting a cooling device by ID
- *
- * @generated from message schema.v1alpha1.GetCoolingDeviceRequest
- */
-export type GetCoolingDeviceRequest = Message<"schema.v1alpha1.GetCoolingDeviceRequest"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-};
-
-/**
- * Describes the message schema.v1alpha1.GetCoolingDeviceRequest.
- * Use `create(GetCoolingDeviceRequestSchema)` to create a new message.
- */
-export const GetCoolingDeviceRequestSchema: GenMessage<GetCoolingDeviceRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 13);
-
-/**
- * Response message for getting a cooling device
- *
- * @generated from message schema.v1alpha1.GetCoolingDeviceResponse
- */
-export type GetCoolingDeviceResponse = Message<"schema.v1alpha1.GetCoolingDeviceResponse"> & {
-  /**
-   * @generated from field: schema.v1alpha1.CoolingDevice cooling_device = 1;
-   */
-  coolingDevice?: CoolingDevice;
-};
-
-/**
- * Describes the message schema.v1alpha1.GetCoolingDeviceResponse.
- * Use `create(GetCoolingDeviceResponseSchema)` to create a new message.
- */
-export const GetCoolingDeviceResponseSchema: GenMessage<GetCoolingDeviceResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 14);
-
-/**
- * Request message for listing cooling devices with optional filtering
- *
- * @generated from message schema.v1alpha1.ListCoolingDevicesRequest
- */
-export type ListCoolingDevicesRequest = Message<"schema.v1alpha1.ListCoolingDevicesRequest"> & {
-  /**
-   * @generated from field: schema.v1alpha1.CoolingDeviceType type = 1;
-   */
-  type: CoolingDeviceType;
-
-  /**
-   * @generated from field: schema.v1alpha1.CoolingDeviceStatus status = 2;
-   */
-  status: CoolingDeviceStatus;
-};
-
-/**
- * Describes the message schema.v1alpha1.ListCoolingDevicesRequest.
- * Use `create(ListCoolingDevicesRequestSchema)` to create a new message.
- */
-export const ListCoolingDevicesRequestSchema: GenMessage<ListCoolingDevicesRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 15);
-
-/**
- * Response message for listing cooling devices
- *
- * @generated from message schema.v1alpha1.ListCoolingDevicesResponse
- */
-export type ListCoolingDevicesResponse = Message<"schema.v1alpha1.ListCoolingDevicesResponse"> & {
-  /**
-   * @generated from field: repeated schema.v1alpha1.CoolingDevice cooling_devices = 1;
-   */
-  coolingDevices: CoolingDevice[];
-};
-
-/**
- * Describes the message schema.v1alpha1.ListCoolingDevicesResponse.
- * Use `create(ListCoolingDevicesResponseSchema)` to create a new message.
- */
-export const ListCoolingDevicesResponseSchema: GenMessage<ListCoolingDevicesResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_thermal, 16);
-
-/**
- * Enumerations
- *
  * @generated from enum schema.v1alpha1.ThermalZoneStatus
  */
 export enum ThermalZoneStatus {
@@ -597,6 +423,16 @@ export enum CoolingDeviceType {
    * @generated from enum value: COOLING_DEVICE_TYPE_HEAT_EXCHANGER = 3;
    */
   HEAT_EXCHANGER = 3,
+
+  /**
+   * @generated from enum value: COOLING_DEVICE_TYPE_LIQUID_COOLER = 4;
+   */
+  LIQUID_COOLER = 4,
+
+  /**
+   * @generated from enum value: COOLING_DEVICE_TYPE_BLOWER = 5;
+   */
+  BLOWER = 5,
 }
 
 /**
@@ -625,14 +461,19 @@ export enum CoolingDeviceStatus {
   DISABLED = 2,
 
   /**
-   * @generated from enum value: COOLING_DEVICE_STATUS_ERROR = 3;
+   * @generated from enum value: COOLING_DEVICE_STATUS_NOT_PRESENT = 3;
    */
-  ERROR = 3,
+  NOT_PRESENT = 3,
 
   /**
-   * @generated from enum value: COOLING_DEVICE_STATUS_NOT_PRESENT = 4;
+   * @generated from enum value: COOLING_DEVICE_STATUS_ERROR = 4;
    */
-  NOT_PRESENT = 4,
+  ERROR = 4,
+
+  /**
+   * @generated from enum value: COOLING_DEVICE_STATUS_UNKNOWN = 5;
+   */
+  UNKNOWN = 5,
 }
 
 /**
@@ -642,125 +483,69 @@ export const CoolingDeviceStatusSchema: GenEnum<CoolingDeviceStatus> = /*@__PURE
   enumDesc(file_schema_v1alpha1_thermal, 2);
 
 /**
- * @generated from enum schema.v1alpha1.ThermalProfileType
+ * @generated from enum schema.v1alpha1.CoolingDeviceControlMode
  */
-export enum ThermalProfileType {
+export enum CoolingDeviceControlMode {
   /**
-   * @generated from enum value: THERMAL_PROFILE_TYPE_UNSPECIFIED = 0;
+   * @generated from enum value: COOLING_DEVICE_CONTROL_MODE_UNSPECIFIED = 0;
    */
   UNSPECIFIED = 0,
 
   /**
-   * @generated from enum value: THERMAL_PROFILE_TYPE_QUIET = 1;
+   * @generated from enum value: COOLING_DEVICE_CONTROL_MODE_AUTOMATIC = 1;
+   */
+  AUTOMATIC = 1,
+
+  /**
+   * @generated from enum value: COOLING_DEVICE_CONTROL_MODE_MANUAL = 2;
+   */
+  MANUAL = 2,
+
+  /**
+   * @generated from enum value: COOLING_DEVICE_CONTROL_MODE_PID = 3;
+   */
+  PID = 3,
+}
+
+/**
+ * Describes the enum schema.v1alpha1.CoolingDeviceControlMode.
+ */
+export const CoolingDeviceControlModeSchema: GenEnum<CoolingDeviceControlMode> = /*@__PURE__*/
+  enumDesc(file_schema_v1alpha1_thermal, 3);
+
+/**
+ * @generated from enum schema.v1alpha1.CoolingDeviceProfileType
+ */
+export enum CoolingDeviceProfileType {
+  /**
+   * @generated from enum value: COOLING_DEVICE_PROFILE_TYPE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: COOLING_DEVICE_PROFILE_TYPE_QUIET = 1;
    */
   QUIET = 1,
 
   /**
-   * @generated from enum value: THERMAL_PROFILE_TYPE_BALANCED = 2;
+   * @generated from enum value: COOLING_DEVICE_PROFILE_TYPE_BALANCED = 2;
    */
   BALANCED = 2,
 
   /**
-   * @generated from enum value: THERMAL_PROFILE_TYPE_AGGRESSIVE = 3;
+   * @generated from enum value: COOLING_DEVICE_PROFILE_TYPE_AGGRESSIVE = 3;
    */
   AGGRESSIVE = 3,
 
   /**
-   * @generated from enum value: THERMAL_PROFILE_TYPE_CUSTOM = 4;
+   * @generated from enum value: COOLING_DEVICE_PROFILE_TYPE_CUSTOM = 4;
    */
   CUSTOM = 4,
 }
 
 /**
- * Describes the enum schema.v1alpha1.ThermalProfileType.
+ * Describes the enum schema.v1alpha1.CoolingDeviceProfileType.
  */
-export const ThermalProfileTypeSchema: GenEnum<ThermalProfileType> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_thermal, 3);
-
-/**
- * Service definition for thermal management operations
- *
- * @generated from service schema.v1alpha1.ThermalManagementService
- */
-export const ThermalManagementService: GenService<{
-  /**
-   * Get a thermal management configuration by ID
-   *
-   * @generated from rpc schema.v1alpha1.ThermalManagementService.GetThermalManagement
-   */
-  getThermalManagement: {
-    methodKind: "unary";
-    input: typeof GetThermalManagementRequestSchema;
-    output: typeof GetThermalManagementResponseSchema;
-  },
-  /**
-   * List all thermal management configurations
-   *
-   * @generated from rpc schema.v1alpha1.ThermalManagementService.ListThermalManagement
-   */
-  listThermalManagement: {
-    methodKind: "unary";
-    input: typeof ListThermalManagementRequestSchema;
-    output: typeof ListThermalManagementResponseSchema;
-  },
-}> = /*@__PURE__*/
-  serviceDesc(file_schema_v1alpha1_thermal, 0);
-
-/**
- * Service definition for thermal zone operations
- *
- * @generated from service schema.v1alpha1.ThermalZoneService
- */
-export const ThermalZoneService: GenService<{
-  /**
-   * Get a thermal zone by ID
-   *
-   * @generated from rpc schema.v1alpha1.ThermalZoneService.GetThermalZone
-   */
-  getThermalZone: {
-    methodKind: "unary";
-    input: typeof GetThermalZoneRequestSchema;
-    output: typeof GetThermalZoneResponseSchema;
-  },
-  /**
-   * List all thermal zones with optional filtering
-   *
-   * @generated from rpc schema.v1alpha1.ThermalZoneService.ListThermalZones
-   */
-  listThermalZones: {
-    methodKind: "unary";
-    input: typeof ListThermalZonesRequestSchema;
-    output: typeof ListThermalZonesResponseSchema;
-  },
-}> = /*@__PURE__*/
-  serviceDesc(file_schema_v1alpha1_thermal, 1);
-
-/**
- * Service definition for cooling device operations
- *
- * @generated from service schema.v1alpha1.CoolingDeviceService
- */
-export const CoolingDeviceService: GenService<{
-  /**
-   * Get a cooling device by ID
-   *
-   * @generated from rpc schema.v1alpha1.CoolingDeviceService.GetCoolingDevice
-   */
-  getCoolingDevice: {
-    methodKind: "unary";
-    input: typeof GetCoolingDeviceRequestSchema;
-    output: typeof GetCoolingDeviceResponseSchema;
-  },
-  /**
-   * List all cooling devices with optional filtering
-   *
-   * @generated from rpc schema.v1alpha1.CoolingDeviceService.ListCoolingDevices
-   */
-  listCoolingDevices: {
-    methodKind: "unary";
-    input: typeof ListCoolingDevicesRequestSchema;
-    output: typeof ListCoolingDevicesResponseSchema;
-  },
-}> = /*@__PURE__*/
-  serviceDesc(file_schema_v1alpha1_thermal, 2);
+export const CoolingDeviceProfileTypeSchema: GenEnum<CoolingDeviceProfileType> = /*@__PURE__*/
+  enumDesc(file_schema_v1alpha1_thermal, 4);
 
