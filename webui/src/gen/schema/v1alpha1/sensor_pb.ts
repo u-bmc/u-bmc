@@ -4,75 +4,61 @@
 // @generated from file schema/v1alpha1/sensor.proto (package schema.v1alpha1, syntax proto3)
 /* eslint-disable */
 
-import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
-import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import { enumDesc, fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
 import { file_buf_validate_validate } from "../../buf/validate/validate_pb";
+import type { FieldMask, Timestamp } from "@bufbuild/protobuf/wkt";
+import { file_google_protobuf_field_mask, file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
+import type { Location } from "./location_pb";
+import { file_schema_v1alpha1_location } from "./location_pb";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file schema/v1alpha1/sensor.proto.
  */
 export const file_schema_v1alpha1_sensor: GenFile = /*@__PURE__*/
-  fileDesc("ChxzY2hlbWEvdjFhbHBoYTEvc2Vuc29yLnByb3RvEg9zY2hlbWEudjFhbHBoYTEiiQMKBlNlbnNvchITCgJpZBgBIAEoCUIHukgEcgIQARIVCgRuYW1lGAIgASgJQge6SARyAhABEi8KB2NvbnRleHQYAyABKA4yHi5zY2hlbWEudjFhbHBoYTEuU2Vuc29yQ29udGV4dBItCgZzdGF0dXMYBCABKA4yHS5zY2hlbWEudjFhbHBoYTEuU2Vuc29yU3RhdHVzEikKBHVuaXQYBSABKA4yGy5zY2hlbWEudjFhbHBoYTEuU2Vuc29yVW5pdBI+Cg5hbmFsb2dfcmVhZGluZxgGIAEoCzIkLnNjaGVtYS52MWFscGhhMS5BbmFsb2dTZW5zb3JSZWFkaW5nSAASQgoQZGlzY3JldGVfcmVhZGluZxgHIAEoCzImLnNjaGVtYS52MWFscGhhMS5EaXNjcmV0ZVNlbnNvclJlYWRpbmdIABIZChFwaHlzaWNhbF9sb2NhdGlvbhgIIAEoCRIeChZsYXN0X3JlYWRpbmdfdGltZXN0YW1wGAkgASgDQgkKB3JlYWRpbmciywEKE0FuYWxvZ1NlbnNvclJlYWRpbmcSDQoFdmFsdWUYASABKAESNAoQdXBwZXJfdGhyZXNob2xkcxgCIAEoCzIaLnNjaGVtYS52MWFscGhhMS5UaHJlc2hvbGQSNAoQbG93ZXJfdGhyZXNob2xkcxgDIAEoCzIaLnNjaGVtYS52MWFscGhhMS5UaHJlc2hvbGQSOQoQbWluX21heF9yZWNvcmRlZBgEIAEoCzIfLnNjaGVtYS52MWFscGhhMS5NaW5NYXhSZWNvcmRlZCJfChVEaXNjcmV0ZVNlbnNvclJlYWRpbmcSKwoFc3RhdGUYASABKA4yHC5zY2hlbWEudjFhbHBoYTEuU2Vuc29yU3RhdGUSGQoRc3RhdGVfZGVzY3JpcHRpb24YAiABKAkiLgoJVGhyZXNob2xkEg8KB3dhcm5pbmcYASABKAESEAoIY3JpdGljYWwYAiABKAEiZAoOTWluTWF4UmVjb3JkZWQSEQoJbWluX3ZhbHVlGAEgASgBEhEKCW1heF92YWx1ZRgCIAEoARIVCg1taW5fdGltZXN0YW1wGAMgASgDEhUKDW1heF90aW1lc3RhbXAYBCABKAMiJwoQR2V0U2Vuc29yUmVxdWVzdBITCgJpZBgBIAEoCUIHukgEcgIQASI8ChFHZXRTZW5zb3JSZXNwb25zZRInCgZzZW5zb3IYASABKAsyFy5zY2hlbWEudjFhbHBoYTEuU2Vuc29yInQKEkxpc3RTZW5zb3JzUmVxdWVzdBIvCgdjb250ZXh0GAEgASgOMh4uc2NoZW1hLnYxYWxwaGExLlNlbnNvckNvbnRleHQSLQoGc3RhdHVzGAIgASgOMh0uc2NoZW1hLnYxYWxwaGExLlNlbnNvclN0YXR1cyI/ChNMaXN0U2Vuc29yc1Jlc3BvbnNlEigKB3NlbnNvcnMYASADKAsyFy5zY2hlbWEudjFhbHBoYTEuU2Vuc29yKqsCCg1TZW5zb3JDb250ZXh0Eh4KGlNFTlNPUl9DT05URVhUX1VOU1BFQ0lGSUVEEAASHgoaU0VOU09SX0NPTlRFWFRfVEVNUEVSQVRVUkUQARIaChZTRU5TT1JfQ09OVEVYVF9WT0xUQUdFEAISGgoWU0VOU09SX0NPTlRFWFRfQ1VSUkVOVBADEhYKElNFTlNPUl9DT05URVhUX0ZBThAEEhgKFFNFTlNPUl9DT05URVhUX1BPV0VSEAUSGQoVU0VOU09SX0NPTlRFWFRfRU5FUkdZEAYSGwoXU0VOU09SX0NPTlRFWFRfUFJFU1NVUkUQBxIbChdTRU5TT1JfQ09OVEVYVF9IVU1JRElUWRAIEhsKF1NFTlNPUl9DT05URVhUX0FMVElUVURFEAkqtwEKDFNlbnNvclN0YXR1cxIdChlTRU5TT1JfU1RBVFVTX1VOU1BFQ0lGSUVEEAASGQoVU0VOU09SX1NUQVRVU19FTkFCTEVEEAESGgoWU0VOU09SX1NUQVRVU19ESVNBQkxFRBACEhcKE1NFTlNPUl9TVEFUVVNfRVJST1IQAxIdChlTRU5TT1JfU1RBVFVTX05PVF9QUkVTRU5UEAQSGQoVU0VOU09SX1NUQVRVU19VTktOT1dOEAUqsAIKClNlbnNvclVuaXQSGwoXU0VOU09SX1VOSVRfVU5TUEVDSUZJRUQQABIXChNTRU5TT1JfVU5JVF9DRUxTSVVTEAESGgoWU0VOU09SX1VOSVRfRkFIUkVOSEVJVBACEhYKElNFTlNPUl9VTklUX0tFTFZJThADEhUKEVNFTlNPUl9VTklUX1ZPTFRTEAQSFAoQU0VOU09SX1VOSVRfQU1QUxAFEhUKEVNFTlNPUl9VTklUX1dBVFRTEAYSFgoSU0VOU09SX1VOSVRfSk9VTEVTEAcSFwoTU0VOU09SX1VOSVRfUEFTQ0FMUxAIEhcKE1NFTlNPUl9VTklUX1BFUkNFTlQQCRITCg9TRU5TT1JfVU5JVF9SUE0QChIVChFTRU5TT1JfVU5JVF9IRVJUWhALKssBCgtTZW5zb3JTdGF0ZRIcChhTRU5TT1JfU1RBVEVfVU5TUEVDSUZJRUQQABIXChNTRU5TT1JfU1RBVEVfTk9STUFMEAESFgoSU0VOU09SX1NUQVRFX0ZBVUxUEAISGAoUU0VOU09SX1NUQVRFX1dBUk5JTkcQAxIZChVTRU5TT1JfU1RBVEVfQ1JJVElDQUwQBBIYChRTRU5TT1JfU1RBVEVfVU5LTk9XThAFEh4KGlNFTlNPUl9TVEFURV9OT1RfQVZBSUxBQkxFEAYywQEKDVNlbnNvclNlcnZpY2USVAoJR2V0U2Vuc29yEiEuc2NoZW1hLnYxYWxwaGExLkdldFNlbnNvclJlcXVlc3QaIi5zY2hlbWEudjFhbHBoYTEuR2V0U2Vuc29yUmVzcG9uc2UiABJaCgtMaXN0U2Vuc29ycxIjLnNjaGVtYS52MWFscGhhMS5MaXN0U2Vuc29yc1JlcXVlc3QaJC5zY2hlbWEudjFhbHBoYTEuTGlzdFNlbnNvcnNSZXNwb25zZSIAQr4BChNjb20uc2NoZW1hLnYxYWxwaGExQgtTZW5zb3JQcm90b1ABWj1naXRodWIuY29tL3UtYm1jL3UtYm1jL2FwaS9nZW4vc2NoZW1hL3YxYWxwaGExO3NjaGVtYXYxYWxwaGExogIDU1hYqgIPU2NoZW1hLlYxYWxwaGExygIPU2NoZW1hXFYxYWxwaGEx4gIbU2NoZW1hXFYxYWxwaGExXEdQQk1ldGFkYXRh6gIQU2NoZW1hOjpWMWFscGhhMWIGcHJvdG8z", [file_buf_validate_validate]);
+  fileDesc("ChxzY2hlbWEvdjFhbHBoYTEvc2Vuc29yLnByb3RvEg9zY2hlbWEudjFhbHBoYTEinwoKBlNlbnNvchITCgJpZBgBIAEoCUIHukgEcgIQARIVCgRuYW1lGAIgASgJQge6SARyAhABEj4KB2NvbnRleHQYAyABKA4yHi5zY2hlbWEudjFhbHBoYTEuU2Vuc29yQ29udGV4dEIIukgFggECEAFIAYgBARI8CgZzdGF0dXMYBCABKA4yHS5zY2hlbWEudjFhbHBoYTEuU2Vuc29yU3RhdHVzQgi6SAWCAQIQAUgCiAEBEjgKBHVuaXQYBSABKA4yGy5zY2hlbWEudjFhbHBoYTEuU2Vuc29yVW5pdEIIukgFggECEAFIA4gBARI+Cg5hbmFsb2dfcmVhZGluZxgGIAEoCzIkLnNjaGVtYS52MWFscGhhMS5BbmFsb2dTZW5zb3JSZWFkaW5nSAASQgoQZGlzY3JldGVfcmVhZGluZxgHIAEoCzImLnNjaGVtYS52MWFscGhhMS5EaXNjcmV0ZVNlbnNvclJlYWRpbmdIABIwCghsb2NhdGlvbhgIIAEoCzIZLnNjaGVtYS52MWFscGhhMS5Mb2NhdGlvbkgEiAEBEj8KFmxhc3RfcmVhZGluZ190aW1lc3RhbXAYCSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAWIAQESSAoRY3VzdG9tX2F0dHJpYnV0ZXMYCiADKAsyLS5zY2hlbWEudjFhbHBoYTEuU2Vuc29yLkN1c3RvbUF0dHJpYnV0ZXNFbnRyeRo3ChVDdXN0b21BdHRyaWJ1dGVzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ATrcBLpI2AQa1QQKIXNlbnNvcl9jb250ZXh0X3VuaXRfY29tcGF0aWJpbGl0eRIyc2Vuc29yIHVuaXQgbXVzdCBiZSBjb21wYXRpYmxlIHdpdGggc2Vuc29yIGNvbnRleHQa+wModGhpcy5jb250ZXh0ID09IDEgJiYgKHRoaXMudW5pdCA9PSAxIHx8IHRoaXMudW5pdCA9PSAyIHx8IHRoaXMudW5pdCA9PSAzKSkgfHwgKHRoaXMuY29udGV4dCA9PSAyICYmIHRoaXMudW5pdCA9PSA0KSB8fCAodGhpcy5jb250ZXh0ID09IDMgJiYgdGhpcy51bml0ID09IDUpIHx8ICh0aGlzLmNvbnRleHQgPT0gNCAmJiAodGhpcy51bml0ID09IDEwIHx8IHRoaXMudW5pdCA9PSA5KSkgfHwgKHRoaXMuY29udGV4dCA9PSA1ICYmIHRoaXMudW5pdCA9PSA2KSB8fCAodGhpcy5jb250ZXh0ID09IDYgJiYgdGhpcy51bml0ID09IDcpIHx8ICh0aGlzLmNvbnRleHQgPT0gNyAmJiB0aGlzLnVuaXQgPT0gOCkgfHwgKHRoaXMuY29udGV4dCA9PSA4ICYmIHRoaXMudW5pdCA9PSA5KSB8fCAodGhpcy5jb250ZXh0ID09IDkgJiYgdGhpcy51bml0ID09IDEyKSB8fCAodGhpcy5jb250ZXh0ID09IDEwICYmIHRoaXMudW5pdCA9PSAxMykgfHwgdGhpcy5jb250ZXh0ID09IDAgfHwgdGhpcy51bml0ID09IDBCEAoHcmVhZGluZxIFukgCCAFCCgoIX2NvbnRleHRCCQoHX3N0YXR1c0IHCgVfdW5pdEILCglfbG9jYXRpb25CGQoXX2xhc3RfcmVhZGluZ190aW1lc3RhbXAiyAsKE0FuYWxvZ1NlbnNvclJlYWRpbmcSFQoFdmFsdWUYASABKAFCBrpIA8gBARI5ChB1cHBlcl90aHJlc2hvbGRzGAIgASgLMhouc2NoZW1hLnYxYWxwaGExLlRocmVzaG9sZEgAiAEBEjkKEGxvd2VyX3RocmVzaG9sZHMYAyABKAsyGi5zY2hlbWEudjFhbHBoYTEuVGhyZXNob2xkSAGIAQESPgoQbWluX21heF9yZWNvcmRlZBgEIAEoCzIfLnNjaGVtYS52MWFscGhhMS5NaW5NYXhSZWNvcmRlZEgCiAEBOqQJukigCRqTAgoeYW5hbG9nX3NlbnNvcl91cHBlcl90aHJlc2hvbGRzEkJ1cHBlciB3YXJuaW5nIHRocmVzaG9sZCBtdXN0IGJlIGxlc3MgdGhhbiB1cHBlciBjcml0aWNhbCB0aHJlc2hvbGQarAEhaGFzKHRoaXMudXBwZXJfdGhyZXNob2xkcykgfHwgIWhhcyh0aGlzLnVwcGVyX3RocmVzaG9sZHMud2FybmluZykgfHwgIWhhcyh0aGlzLnVwcGVyX3RocmVzaG9sZHMuY3JpdGljYWwpIHx8IHRoaXMudXBwZXJfdGhyZXNob2xkcy53YXJuaW5nIDwgdGhpcy51cHBlcl90aHJlc2hvbGRzLmNyaXRpY2FsGpMCCh5hbmFsb2dfc2Vuc29yX2xvd2VyX3RocmVzaG9sZHMSQmxvd2VyIGNyaXRpY2FsIHRocmVzaG9sZCBtdXN0IGJlIGxlc3MgdGhhbiBsb3dlciB3YXJuaW5nIHRocmVzaG9sZBqsASFoYXModGhpcy5sb3dlcl90aHJlc2hvbGRzKSB8fCAhaGFzKHRoaXMubG93ZXJfdGhyZXNob2xkcy53YXJuaW5nKSB8fCAhaGFzKHRoaXMubG93ZXJfdGhyZXNob2xkcy5jcml0aWNhbCkgfHwgdGhpcy5sb3dlcl90aHJlc2hvbGRzLmNyaXRpY2FsIDwgdGhpcy5sb3dlcl90aHJlc2hvbGRzLndhcm5pbmcaugMKHmFuYWxvZ19zZW5zb3JfdGhyZXNob2xkX2JvdW5kcxIzbG93ZXIgdGhyZXNob2xkcyBtdXN0IGJlIGxlc3MgdGhhbiB1cHBlciB0aHJlc2hvbGRzGuICKCFoYXModGhpcy5sb3dlcl90aHJlc2hvbGRzKSB8fCAhaGFzKHRoaXMudXBwZXJfdGhyZXNob2xkcykpIHx8ICghaGFzKHRoaXMubG93ZXJfdGhyZXNob2xkcy53YXJuaW5nKSB8fCAhaGFzKHRoaXMudXBwZXJfdGhyZXNob2xkcy53YXJuaW5nKSB8fCB0aGlzLmxvd2VyX3RocmVzaG9sZHMud2FybmluZyA8IHRoaXMudXBwZXJfdGhyZXNob2xkcy53YXJuaW5nKSAmJiAoIWhhcyh0aGlzLmxvd2VyX3RocmVzaG9sZHMuY3JpdGljYWwpIHx8ICFoYXModGhpcy51cHBlcl90aHJlc2hvbGRzLmNyaXRpY2FsKSB8fCB0aGlzLmxvd2VyX3RocmVzaG9sZHMuY3JpdGljYWwgPCB0aGlzLnVwcGVyX3RocmVzaG9sZHMuY3JpdGljYWwpGrQBChxhbmFsb2dfc2Vuc29yX21pbl9tYXhfYm91bmRzEjFtaW5fdmFsdWUgbXVzdCBiZSBsZXNzIHRoYW4gb3IgZXF1YWwgdG8gbWF4X3ZhbHVlGmEhaGFzKHRoaXMubWluX21heF9yZWNvcmRlZCkgfHwgdGhpcy5taW5fbWF4X3JlY29yZGVkLm1pbl92YWx1ZSA8PSB0aGlzLm1pbl9tYXhfcmVjb3JkZWQubWF4X3ZhbHVlQhMKEV91cHBlcl90aHJlc2hvbGRzQhMKEV9sb3dlcl90aHJlc2hvbGRzQhMKEV9taW5fbWF4X3JlY29yZGVkImUKFURpc2NyZXRlU2Vuc29yUmVhZGluZxIWCgVzdGF0ZRgBIAEoCUIHukgEcgIQARIeChFzdGF0ZV9kZXNjcmlwdGlvbhgCIAEoCUgAiAEBQhQKEl9zdGF0ZV9kZXNjcmlwdGlvbiKHAgoJVGhyZXNob2xkEhQKB3dhcm5pbmcYASABKAFIAIgBARIVCghjcml0aWNhbBgCIAEoAUgBiAEBOrMBukivARqVAQoSdGhyZXNob2xkX29yZGVyaW5nEjN3YXJuaW5nIHRocmVzaG9sZCBtdXN0IG5vdCBlcXVhbCBjcml0aWNhbCB0aHJlc2hvbGQaSiFoYXModGhpcy53YXJuaW5nKSB8fCAhaGFzKHRoaXMuY3JpdGljYWwpIHx8IHRoaXMud2FybmluZyAhPSB0aGlzLmNyaXRpY2FsIhUKB3dhcm5pbmcKCGNyaXRpY2FsEAFCCgoIX3dhcm5pbmdCCwoJX2NyaXRpY2FsIrYCCg5NaW5NYXhSZWNvcmRlZBIRCgltaW5fdmFsdWUYASABKAESEQoJbWF4X3ZhbHVlGAIgASgBEjYKDW1pbl90aW1lc3RhbXAYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSACIAQESNgoNbWF4X3RpbWVzdGFtcBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAYgBATpqukhnGmUKDm1pbl9tYXhfdmFsdWVzEjFtaW5fdmFsdWUgbXVzdCBiZSBsZXNzIHRoYW4gb3IgZXF1YWwgdG8gbWF4X3ZhbHVlGiB0aGlzLm1pbl92YWx1ZSA8PSB0aGlzLm1heF92YWx1ZUIQCg5fbWluX3RpbWVzdGFtcEIQCg5fbWF4X3RpbWVzdGFtcCJEChJMaXN0U2Vuc29yc1JlcXVlc3QSLgoKZmllbGRfbWFzaxgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2siPgoTTGlzdFNlbnNvcnNSZXNwb25zZRInCgZzZW5zb3IYASADKAsyFy5zY2hlbWEudjFhbHBoYTEuU2Vuc29yIogCChBHZXRTZW5zb3JSZXF1ZXN0EgwKAmlkGAEgASgJSAASDgoEbmFtZRgCIAEoCUgAEjEKB2NvbnRleHQYAyABKA4yHi5zY2hlbWEudjFhbHBoYTEuU2Vuc29yQ29udGV4dEgAEi8KBnN0YXR1cxgEIAEoDjIdLnNjaGVtYS52MWFscGhhMS5TZW5zb3JTdGF0dXNIABItCghsb2NhdGlvbhgFIAEoCzIZLnNjaGVtYS52MWFscGhhMS5Mb2NhdGlvbkgAEi4KCmZpZWxkX21hc2sYBiABKAsyGi5nb29nbGUucHJvdG9idWYuRmllbGRNYXNrQhMKCmlkZW50aWZpZXISBbpIAggBIj0KEUdldFNlbnNvclJlc3BvbnNlEigKB3NlbnNvcnMYASADKAsyFy5zY2hlbWEudjFhbHBoYTEuU2Vuc29yKsoCCg1TZW5zb3JDb250ZXh0Eh4KGlNFTlNPUl9DT05URVhUX1VOU1BFQ0lGSUVEEAASHgoaU0VOU09SX0NPTlRFWFRfVEVNUEVSQVRVUkUQARIaChZTRU5TT1JfQ09OVEVYVF9WT0xUQUdFEAISGgoWU0VOU09SX0NPTlRFWFRfQ1VSUkVOVBADEhcKE1NFTlNPUl9DT05URVhUX1RBQ0gQBBIYChRTRU5TT1JfQ09OVEVYVF9QT1dFUhAFEhkKFVNFTlNPUl9DT05URVhUX0VORVJHWRAGEhsKF1NFTlNPUl9DT05URVhUX1BSRVNTVVJFEAcSGwoXU0VOU09SX0NPTlRFWFRfSFVNSURJVFkQCBIbChdTRU5TT1JfQ09OVEVYVF9BTFRJVFVERRAJEhwKGFNFTlNPUl9DT05URVhUX0ZMT1dfUkFURRAKKu4BCgxTZW5zb3JTdGF0dXMSHQoZU0VOU09SX1NUQVRVU19VTlNQRUNJRklFRBAAEhkKFVNFTlNPUl9TVEFUVVNfRU5BQkxFRBABEhoKFlNFTlNPUl9TVEFUVVNfRElTQUJMRUQQAhIdChlTRU5TT1JfU1RBVFVTX05PVF9QUkVTRU5UEAMSGQoVU0VOU09SX1NUQVRVU19XQVJOSU5HEAQSGgoWU0VOU09SX1NUQVRVU19DUklUSUNBTBAFEhcKE1NFTlNPUl9TVEFUVVNfRVJST1IQBhIZChVTRU5TT1JfU1RBVFVTX1VOS05PV04QByrrAgoKU2Vuc29yVW5pdBIbChdTRU5TT1JfVU5JVF9VTlNQRUNJRklFRBAAEhcKE1NFTlNPUl9VTklUX0NFTFNJVVMQARIaChZTRU5TT1JfVU5JVF9GQUhSRU5IRUlUEAISFgoSU0VOU09SX1VOSVRfS0VMVklOEAMSFQoRU0VOU09SX1VOSVRfVk9MVFMQBBIUChBTRU5TT1JfVU5JVF9BTVBTEAUSFQoRU0VOU09SX1VOSVRfV0FUVFMQBhIWChJTRU5TT1JfVU5JVF9KT1VMRVMQBxIXChNTRU5TT1JfVU5JVF9QQVNDQUxTEAgSFwoTU0VOU09SX1VOSVRfUEVSQ0VOVBAJEhMKD1NFTlNPUl9VTklUX1JQTRAKEhUKEVNFTlNPUl9VTklUX0hFUlRaEAsSFgoSU0VOU09SX1VOSVRfTUVURVJTEAwSIQodU0VOU09SX1VOSVRfTElURVJTX1BFUl9NSU5VVEUQDUK+AQoTY29tLnNjaGVtYS52MWFscGhhMUILU2Vuc29yUHJvdG9QAVo9Z2l0aHViLmNvbS91LWJtYy91LWJtYy9hcGkvZ2VuL3NjaGVtYS92MWFscGhhMTtzY2hlbWF2MWFscGhhMaICA1NYWKoCD1NjaGVtYS5WMWFscGhhMcoCD1NjaGVtYVxWMWFscGhhMeICG1NjaGVtYVxWMWFscGhhMVxHUEJNZXRhZGF0YeoCEFNjaGVtYTo6VjFhbHBoYTFiBnByb3RvMw", [file_buf_validate_validate, file_google_protobuf_field_mask, file_google_protobuf_timestamp, file_schema_v1alpha1_location]);
 
 /**
- * Sensor represents a physical or virtual sensor device
- *
  * @generated from message schema.v1alpha1.Sensor
  */
 export type Sensor = Message<"schema.v1alpha1.Sensor"> & {
   /**
-   * Unique identifier for the sensor
-   *
    * @generated from field: string id = 1;
    */
   id: string;
 
   /**
-   * Human-readable name of the sensor
-   *
    * @generated from field: string name = 2;
    */
   name: string;
 
   /**
-   * Physical context of the sensor (e.g., Temperature, Voltage, Fan)
-   *
-   * @generated from field: schema.v1alpha1.SensorContext context = 3;
+   * @generated from field: optional schema.v1alpha1.SensorContext context = 3;
    */
-  context: SensorContext;
+  context?: SensorContext;
 
   /**
-   * Current status of the sensor
-   *
-   * @generated from field: schema.v1alpha1.SensorStatus status = 4;
+   * @generated from field: optional schema.v1alpha1.SensorStatus status = 4;
    */
-  status: SensorStatus;
+  status?: SensorStatus;
 
   /**
-   * Unit of measurement for the sensor readings
-   *
-   * @generated from field: schema.v1alpha1.SensorUnit unit = 5;
+   * @generated from field: optional schema.v1alpha1.SensorUnit unit = 5;
    */
-  unit: SensorUnit;
+  unit?: SensorUnit;
 
   /**
-   * Sensor reading information - either analog with thresholds or discrete state
-   *
    * @generated from oneof schema.v1alpha1.Sensor.reading
    */
   reading: {
     /**
-     * Analog sensor reading with thresholds
-     *
      * @generated from field: schema.v1alpha1.AnalogSensorReading analog_reading = 6;
      */
     value: AnalogSensorReading;
     case: "analogReading";
   } | {
     /**
-     * Discrete sensor reading with state
-     *
      * @generated from field: schema.v1alpha1.DiscreteSensorReading discrete_reading = 7;
      */
     value: DiscreteSensorReading;
@@ -80,18 +66,19 @@ export type Sensor = Message<"schema.v1alpha1.Sensor"> & {
   } | { case: undefined; value?: undefined };
 
   /**
-   * Physical location of the sensor
-   *
-   * @generated from field: string physical_location = 8;
+   * @generated from field: optional schema.v1alpha1.Location location = 8;
    */
-  physicalLocation: string;
+  location?: Location;
 
   /**
-   * Timestamp of the last reading
-   *
-   * @generated from field: int64 last_reading_timestamp = 9;
+   * @generated from field: optional google.protobuf.Timestamp last_reading_timestamp = 9;
    */
-  lastReadingTimestamp: bigint;
+  lastReadingTimestamp?: Timestamp;
+
+  /**
+   * @generated from field: map<string, string> custom_attributes = 10;
+   */
+  customAttributes: { [key: string]: string };
 };
 
 /**
@@ -102,36 +89,26 @@ export const SensorSchema: GenMessage<Sensor> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_sensor, 0);
 
 /**
- * AnalogSensorReading represents a sensor with continuous numerical readings and thresholds
- *
  * @generated from message schema.v1alpha1.AnalogSensorReading
  */
 export type AnalogSensorReading = Message<"schema.v1alpha1.AnalogSensorReading"> & {
   /**
-   * Current measured value
-   *
    * @generated from field: double value = 1;
    */
   value: number;
 
   /**
-   * Upper threshold values for warning and critical levels
-   *
-   * @generated from field: schema.v1alpha1.Threshold upper_thresholds = 2;
+   * @generated from field: optional schema.v1alpha1.Threshold upper_thresholds = 2;
    */
   upperThresholds?: Threshold;
 
   /**
-   * Lower threshold values for warning and critical levels
-   *
-   * @generated from field: schema.v1alpha1.Threshold lower_thresholds = 3;
+   * @generated from field: optional schema.v1alpha1.Threshold lower_thresholds = 3;
    */
   lowerThresholds?: Threshold;
 
   /**
-   * Minimum and maximum values recorded
-   *
-   * @generated from field: schema.v1alpha1.MinMaxRecorded min_max_recorded = 4;
+   * @generated from field: optional schema.v1alpha1.MinMaxRecorded min_max_recorded = 4;
    */
   minMaxRecorded?: MinMaxRecorded;
 };
@@ -144,24 +121,18 @@ export const AnalogSensorReadingSchema: GenMessage<AnalogSensorReading> = /*@__P
   messageDesc(file_schema_v1alpha1_sensor, 1);
 
 /**
- * DiscreteSensorReading represents a sensor with discrete states rather than numerical values
- *
  * @generated from message schema.v1alpha1.DiscreteSensorReading
  */
 export type DiscreteSensorReading = Message<"schema.v1alpha1.DiscreteSensorReading"> & {
   /**
-   * Current state of the sensor
-   *
-   * @generated from field: schema.v1alpha1.SensorState state = 1;
+   * @generated from field: string state = 1;
    */
-  state: SensorState;
+  state: string;
 
   /**
-   * Additional state information or description
-   *
-   * @generated from field: string state_description = 2;
+   * @generated from field: optional string state_description = 2;
    */
-  stateDescription: string;
+  stateDescription?: string;
 };
 
 /**
@@ -172,24 +143,18 @@ export const DiscreteSensorReadingSchema: GenMessage<DiscreteSensorReading> = /*
   messageDesc(file_schema_v1alpha1_sensor, 2);
 
 /**
- * Threshold defines warning and critical thresholds for sensor readings
- *
  * @generated from message schema.v1alpha1.Threshold
  */
 export type Threshold = Message<"schema.v1alpha1.Threshold"> & {
   /**
-   * Warning level threshold
-   *
-   * @generated from field: double warning = 1;
+   * @generated from field: optional double warning = 1;
    */
-  warning: number;
+  warning?: number;
 
   /**
-   * Critical level threshold
-   *
-   * @generated from field: double critical = 2;
+   * @generated from field: optional double critical = 2;
    */
-  critical: number;
+  critical?: number;
 };
 
 /**
@@ -200,38 +165,28 @@ export const ThresholdSchema: GenMessage<Threshold> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_sensor, 3);
 
 /**
- * MinMaxRecorded tracks the minimum and maximum values recorded by the sensor
- *
  * @generated from message schema.v1alpha1.MinMaxRecorded
  */
 export type MinMaxRecorded = Message<"schema.v1alpha1.MinMaxRecorded"> & {
   /**
-   * Minimum value recorded
-   *
    * @generated from field: double min_value = 1;
    */
   minValue: number;
 
   /**
-   * Maximum value recorded
-   *
    * @generated from field: double max_value = 2;
    */
   maxValue: number;
 
   /**
-   * Timestamp when minimum value was recorded
-   *
-   * @generated from field: int64 min_timestamp = 3;
+   * @generated from field: optional google.protobuf.Timestamp min_timestamp = 3;
    */
-  minTimestamp: bigint;
+  minTimestamp?: Timestamp;
 
   /**
-   * Timestamp when maximum value was recorded
-   *
-   * @generated from field: int64 max_timestamp = 4;
+   * @generated from field: optional google.protobuf.Timestamp max_timestamp = 4;
    */
-  maxTimestamp: bigint;
+  maxTimestamp?: Timestamp;
 };
 
 /**
@@ -242,62 +197,13 @@ export const MinMaxRecordedSchema: GenMessage<MinMaxRecorded> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_sensor, 4);
 
 /**
- * Request message for getting a single sensor by ID
- *
- * @generated from message schema.v1alpha1.GetSensorRequest
- */
-export type GetSensorRequest = Message<"schema.v1alpha1.GetSensorRequest"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-};
-
-/**
- * Describes the message schema.v1alpha1.GetSensorRequest.
- * Use `create(GetSensorRequestSchema)` to create a new message.
- */
-export const GetSensorRequestSchema: GenMessage<GetSensorRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_sensor, 5);
-
-/**
- * Response message for getting a single sensor
- *
- * @generated from message schema.v1alpha1.GetSensorResponse
- */
-export type GetSensorResponse = Message<"schema.v1alpha1.GetSensorResponse"> & {
-  /**
-   * @generated from field: schema.v1alpha1.Sensor sensor = 1;
-   */
-  sensor?: Sensor;
-};
-
-/**
- * Describes the message schema.v1alpha1.GetSensorResponse.
- * Use `create(GetSensorResponseSchema)` to create a new message.
- */
-export const GetSensorResponseSchema: GenMessage<GetSensorResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_sensor, 6);
-
-/**
- * Request message for listing sensors with optional filtering
- *
  * @generated from message schema.v1alpha1.ListSensorsRequest
  */
 export type ListSensorsRequest = Message<"schema.v1alpha1.ListSensorsRequest"> & {
   /**
-   * Optional filter by sensor context
-   *
-   * @generated from field: schema.v1alpha1.SensorContext context = 1;
+   * @generated from field: google.protobuf.FieldMask field_mask = 1;
    */
-  context: SensorContext;
-
-  /**
-   * Optional filter by sensor status
-   *
-   * @generated from field: schema.v1alpha1.SensorStatus status = 2;
-   */
-  status: SensorStatus;
+  fieldMask?: FieldMask;
 };
 
 /**
@@ -305,18 +211,16 @@ export type ListSensorsRequest = Message<"schema.v1alpha1.ListSensorsRequest"> &
  * Use `create(ListSensorsRequestSchema)` to create a new message.
  */
 export const ListSensorsRequestSchema: GenMessage<ListSensorsRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_sensor, 7);
+  messageDesc(file_schema_v1alpha1_sensor, 5);
 
 /**
- * Response message for listing sensors
- *
  * @generated from message schema.v1alpha1.ListSensorsResponse
  */
 export type ListSensorsResponse = Message<"schema.v1alpha1.ListSensorsResponse"> & {
   /**
-   * @generated from field: repeated schema.v1alpha1.Sensor sensors = 1;
+   * @generated from field: repeated schema.v1alpha1.Sensor sensor = 1;
    */
-  sensors: Sensor[];
+  sensor: Sensor[];
 };
 
 /**
@@ -324,11 +228,78 @@ export type ListSensorsResponse = Message<"schema.v1alpha1.ListSensorsResponse">
  * Use `create(ListSensorsResponseSchema)` to create a new message.
  */
 export const ListSensorsResponseSchema: GenMessage<ListSensorsResponse> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_sensor, 6);
+
+/**
+ * @generated from message schema.v1alpha1.GetSensorRequest
+ */
+export type GetSensorRequest = Message<"schema.v1alpha1.GetSensorRequest"> & {
+  /**
+   * @generated from oneof schema.v1alpha1.GetSensorRequest.identifier
+   */
+  identifier: {
+    /**
+     * @generated from field: string id = 1;
+     */
+    value: string;
+    case: "id";
+  } | {
+    /**
+     * @generated from field: string name = 2;
+     */
+    value: string;
+    case: "name";
+  } | {
+    /**
+     * @generated from field: schema.v1alpha1.SensorContext context = 3;
+     */
+    value: SensorContext;
+    case: "context";
+  } | {
+    /**
+     * @generated from field: schema.v1alpha1.SensorStatus status = 4;
+     */
+    value: SensorStatus;
+    case: "status";
+  } | {
+    /**
+     * @generated from field: schema.v1alpha1.Location location = 5;
+     */
+    value: Location;
+    case: "location";
+  } | { case: undefined; value?: undefined };
+
+  /**
+   * @generated from field: google.protobuf.FieldMask field_mask = 6;
+   */
+  fieldMask?: FieldMask;
+};
+
+/**
+ * Describes the message schema.v1alpha1.GetSensorRequest.
+ * Use `create(GetSensorRequestSchema)` to create a new message.
+ */
+export const GetSensorRequestSchema: GenMessage<GetSensorRequest> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_sensor, 7);
+
+/**
+ * @generated from message schema.v1alpha1.GetSensorResponse
+ */
+export type GetSensorResponse = Message<"schema.v1alpha1.GetSensorResponse"> & {
+  /**
+   * @generated from field: repeated schema.v1alpha1.Sensor sensors = 1;
+   */
+  sensors: Sensor[];
+};
+
+/**
+ * Describes the message schema.v1alpha1.GetSensorResponse.
+ * Use `create(GetSensorResponseSchema)` to create a new message.
+ */
+export const GetSensorResponseSchema: GenMessage<GetSensorResponse> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_sensor, 8);
 
 /**
- * SensorContext defines the physical context of the sensor
- *
  * @generated from enum schema.v1alpha1.SensorContext
  */
 export enum SensorContext {
@@ -353,9 +324,9 @@ export enum SensorContext {
   CURRENT = 3,
 
   /**
-   * @generated from enum value: SENSOR_CONTEXT_FAN = 4;
+   * @generated from enum value: SENSOR_CONTEXT_TACH = 4;
    */
-  FAN = 4,
+  TACH = 4,
 
   /**
    * @generated from enum value: SENSOR_CONTEXT_POWER = 5;
@@ -381,6 +352,11 @@ export enum SensorContext {
    * @generated from enum value: SENSOR_CONTEXT_ALTITUDE = 9;
    */
   ALTITUDE = 9,
+
+  /**
+   * @generated from enum value: SENSOR_CONTEXT_FLOW_RATE = 10;
+   */
+  FLOW_RATE = 10,
 }
 
 /**
@@ -390,8 +366,6 @@ export const SensorContextSchema: GenEnum<SensorContext> = /*@__PURE__*/
   enumDesc(file_schema_v1alpha1_sensor, 0);
 
 /**
- * SensorStatus represents the operational status of the sensor
- *
  * @generated from enum schema.v1alpha1.SensorStatus
  */
 export enum SensorStatus {
@@ -411,19 +385,29 @@ export enum SensorStatus {
   DISABLED = 2,
 
   /**
-   * @generated from enum value: SENSOR_STATUS_ERROR = 3;
+   * @generated from enum value: SENSOR_STATUS_NOT_PRESENT = 3;
    */
-  ERROR = 3,
+  NOT_PRESENT = 3,
 
   /**
-   * @generated from enum value: SENSOR_STATUS_NOT_PRESENT = 4;
+   * @generated from enum value: SENSOR_STATUS_WARNING = 4;
    */
-  NOT_PRESENT = 4,
+  WARNING = 4,
 
   /**
-   * @generated from enum value: SENSOR_STATUS_UNKNOWN = 5;
+   * @generated from enum value: SENSOR_STATUS_CRITICAL = 5;
    */
-  UNKNOWN = 5,
+  CRITICAL = 5,
+
+  /**
+   * @generated from enum value: SENSOR_STATUS_ERROR = 6;
+   */
+  ERROR = 6,
+
+  /**
+   * @generated from enum value: SENSOR_STATUS_UNKNOWN = 7;
+   */
+  UNKNOWN = 7,
 }
 
 /**
@@ -433,8 +417,6 @@ export const SensorStatusSchema: GenEnum<SensorStatus> = /*@__PURE__*/
   enumDesc(file_schema_v1alpha1_sensor, 1);
 
 /**
- * SensorUnit defines the unit of measurement for sensor readings
- *
  * @generated from enum schema.v1alpha1.SensorUnit
  */
 export enum SensorUnit {
@@ -497,6 +479,16 @@ export enum SensorUnit {
    * @generated from enum value: SENSOR_UNIT_HERTZ = 11;
    */
   HERTZ = 11,
+
+  /**
+   * @generated from enum value: SENSOR_UNIT_METERS = 12;
+   */
+  METERS = 12,
+
+  /**
+   * @generated from enum value: SENSOR_UNIT_LITERS_PER_MINUTE = 13;
+   */
+  LITERS_PER_MINUTE = 13,
 }
 
 /**
@@ -504,81 +496,4 @@ export enum SensorUnit {
  */
 export const SensorUnitSchema: GenEnum<SensorUnit> = /*@__PURE__*/
   enumDesc(file_schema_v1alpha1_sensor, 2);
-
-/**
- * SensorState represents the discrete states a sensor can be in
- *
- * @generated from enum schema.v1alpha1.SensorState
- */
-export enum SensorState {
-  /**
-   * @generated from enum value: SENSOR_STATE_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: SENSOR_STATE_NORMAL = 1;
-   */
-  NORMAL = 1,
-
-  /**
-   * @generated from enum value: SENSOR_STATE_FAULT = 2;
-   */
-  FAULT = 2,
-
-  /**
-   * @generated from enum value: SENSOR_STATE_WARNING = 3;
-   */
-  WARNING = 3,
-
-  /**
-   * @generated from enum value: SENSOR_STATE_CRITICAL = 4;
-   */
-  CRITICAL = 4,
-
-  /**
-   * @generated from enum value: SENSOR_STATE_UNKNOWN = 5;
-   */
-  UNKNOWN = 5,
-
-  /**
-   * @generated from enum value: SENSOR_STATE_NOT_AVAILABLE = 6;
-   */
-  NOT_AVAILABLE = 6,
-}
-
-/**
- * Describes the enum schema.v1alpha1.SensorState.
- */
-export const SensorStateSchema: GenEnum<SensorState> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_sensor, 3);
-
-/**
- * Service definition for sensor operations
- *
- * @generated from service schema.v1alpha1.SensorService
- */
-export const SensorService: GenService<{
-  /**
-   * Get a sensor by ID
-   *
-   * @generated from rpc schema.v1alpha1.SensorService.GetSensor
-   */
-  getSensor: {
-    methodKind: "unary";
-    input: typeof GetSensorRequestSchema;
-    output: typeof GetSensorResponseSchema;
-  },
-  /**
-   * List all sensors with optional filtering
-   *
-   * @generated from rpc schema.v1alpha1.SensorService.ListSensors
-   */
-  listSensors: {
-    methodKind: "unary";
-    input: typeof ListSensorsRequestSchema;
-    output: typeof ListSensorsResponseSchema;
-  },
-}> = /*@__PURE__*/
-  serviceDesc(file_schema_v1alpha1_sensor, 0);
 

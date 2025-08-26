@@ -12,6 +12,8 @@ import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	fieldmaskpb "google.golang.org/protobuf/types/known/fieldmaskpb"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -24,17 +26,18 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// UserSource represents the source system for a user account
 type UserSource int32
 
 const (
-	UserSource_USER_SOURCE_UNSPECIFIED UserSource = 0
-	UserSource_USER_SOURCE_LOCAL       UserSource = 1
-	UserSource_USER_SOURCE_LDAP        UserSource = 2
-	UserSource_USER_SOURCE_AD          UserSource = 3
-	UserSource_USER_SOURCE_IPMI        UserSource = 4
-	UserSource_USER_SOURCE_REDFISH     UserSource = 5
-	UserSource_USER_SOURCE_NATS        UserSource = 6
+	UserSource_USER_SOURCE_UNSPECIFIED  UserSource = 0
+	UserSource_USER_SOURCE_LOCAL        UserSource = 1
+	UserSource_USER_SOURCE_LDAP         UserSource = 2
+	UserSource_USER_SOURCE_AD           UserSource = 3
+	UserSource_USER_SOURCE_IPMI         UserSource = 4
+	UserSource_USER_SOURCE_REDFISH      UserSource = 5
+	UserSource_USER_SOURCE_NATS         UserSource = 6
+	UserSource_USER_SOURCE_UNIX         UserSource = 7
+	UserSource_USER_SOURCE_EXTERNAL_API UserSource = 8
 )
 
 // Enum value maps for UserSource.
@@ -47,15 +50,19 @@ var (
 		4: "USER_SOURCE_IPMI",
 		5: "USER_SOURCE_REDFISH",
 		6: "USER_SOURCE_NATS",
+		7: "USER_SOURCE_UNIX",
+		8: "USER_SOURCE_EXTERNAL_API",
 	}
 	UserSource_value = map[string]int32{
-		"USER_SOURCE_UNSPECIFIED": 0,
-		"USER_SOURCE_LOCAL":       1,
-		"USER_SOURCE_LDAP":        2,
-		"USER_SOURCE_AD":          3,
-		"USER_SOURCE_IPMI":        4,
-		"USER_SOURCE_REDFISH":     5,
-		"USER_SOURCE_NATS":        6,
+		"USER_SOURCE_UNSPECIFIED":  0,
+		"USER_SOURCE_LOCAL":        1,
+		"USER_SOURCE_LDAP":         2,
+		"USER_SOURCE_AD":           3,
+		"USER_SOURCE_IPMI":         4,
+		"USER_SOURCE_REDFISH":      5,
+		"USER_SOURCE_NATS":         6,
+		"USER_SOURCE_UNIX":         7,
+		"USER_SOURCE_EXTERNAL_API": 8,
 	}
 )
 
@@ -86,15 +93,79 @@ func (UserSource) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_user_proto_rawDescGZIP(), []int{0}
 }
 
-// PasswordHashAlgorithm represents the algorithm used for password hashing
+type UserCreationInterface int32
+
+const (
+	UserCreationInterface_USER_CREATION_INTERFACE_UNSPECIFIED    UserCreationInterface = 0
+	UserCreationInterface_USER_CREATION_INTERFACE_SCHEMA_API     UserCreationInterface = 1
+	UserCreationInterface_USER_CREATION_INTERFACE_UNIX_USERADD   UserCreationInterface = 2
+	UserCreationInterface_USER_CREATION_INTERFACE_LDAP_ADMIN     UserCreationInterface = 3
+	UserCreationInterface_USER_CREATION_INTERFACE_AD_ADMIN       UserCreationInterface = 4
+	UserCreationInterface_USER_CREATION_INTERFACE_REDFISH_API    UserCreationInterface = 5
+	UserCreationInterface_USER_CREATION_INTERFACE_NATS_CONFIG    UserCreationInterface = 6
+	UserCreationInterface_USER_CREATION_INTERFACE_IPMI_USER_MGMT UserCreationInterface = 7
+)
+
+// Enum value maps for UserCreationInterface.
+var (
+	UserCreationInterface_name = map[int32]string{
+		0: "USER_CREATION_INTERFACE_UNSPECIFIED",
+		1: "USER_CREATION_INTERFACE_SCHEMA_API",
+		2: "USER_CREATION_INTERFACE_UNIX_USERADD",
+		3: "USER_CREATION_INTERFACE_LDAP_ADMIN",
+		4: "USER_CREATION_INTERFACE_AD_ADMIN",
+		5: "USER_CREATION_INTERFACE_REDFISH_API",
+		6: "USER_CREATION_INTERFACE_NATS_CONFIG",
+		7: "USER_CREATION_INTERFACE_IPMI_USER_MGMT",
+	}
+	UserCreationInterface_value = map[string]int32{
+		"USER_CREATION_INTERFACE_UNSPECIFIED":    0,
+		"USER_CREATION_INTERFACE_SCHEMA_API":     1,
+		"USER_CREATION_INTERFACE_UNIX_USERADD":   2,
+		"USER_CREATION_INTERFACE_LDAP_ADMIN":     3,
+		"USER_CREATION_INTERFACE_AD_ADMIN":       4,
+		"USER_CREATION_INTERFACE_REDFISH_API":    5,
+		"USER_CREATION_INTERFACE_NATS_CONFIG":    6,
+		"USER_CREATION_INTERFACE_IPMI_USER_MGMT": 7,
+	}
+)
+
+func (x UserCreationInterface) Enum() *UserCreationInterface {
+	p := new(UserCreationInterface)
+	*p = x
+	return p
+}
+
+func (x UserCreationInterface) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (UserCreationInterface) Descriptor() protoreflect.EnumDescriptor {
+	return file_schema_v1alpha1_user_proto_enumTypes[1].Descriptor()
+}
+
+func (UserCreationInterface) Type() protoreflect.EnumType {
+	return &file_schema_v1alpha1_user_proto_enumTypes[1]
+}
+
+func (x UserCreationInterface) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use UserCreationInterface.Descriptor instead.
+func (UserCreationInterface) EnumDescriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_user_proto_rawDescGZIP(), []int{1}
+}
+
 type PasswordHashAlgorithm int32
 
 const (
-	PasswordHashAlgorithm_PASSWORD_HASH_ALGORITHM_UNSPECIFIED PasswordHashAlgorithm = 0
-	PasswordHashAlgorithm_PASSWORD_HASH_ALGORITHM_BCRYPT      PasswordHashAlgorithm = 1
-	PasswordHashAlgorithm_PASSWORD_HASH_ALGORITHM_ARGON2      PasswordHashAlgorithm = 2
-	PasswordHashAlgorithm_PASSWORD_HASH_ALGORITHM_SHA256      PasswordHashAlgorithm = 3
-	PasswordHashAlgorithm_PASSWORD_HASH_ALGORITHM_SHA512      PasswordHashAlgorithm = 4
+	PasswordHashAlgorithm_PASSWORD_HASH_ALGORITHM_UNSPECIFIED   PasswordHashAlgorithm = 0
+	PasswordHashAlgorithm_PASSWORD_HASH_ALGORITHM_BCRYPT        PasswordHashAlgorithm = 1
+	PasswordHashAlgorithm_PASSWORD_HASH_ALGORITHM_ARGON2ID      PasswordHashAlgorithm = 2
+	PasswordHashAlgorithm_PASSWORD_HASH_ALGORITHM_SCRYPT        PasswordHashAlgorithm = 3
+	PasswordHashAlgorithm_PASSWORD_HASH_ALGORITHM_PBKDF2_SHA256 PasswordHashAlgorithm = 4
+	PasswordHashAlgorithm_PASSWORD_HASH_ALGORITHM_PBKDF2_SHA512 PasswordHashAlgorithm = 5
 )
 
 // Enum value maps for PasswordHashAlgorithm.
@@ -102,16 +173,18 @@ var (
 	PasswordHashAlgorithm_name = map[int32]string{
 		0: "PASSWORD_HASH_ALGORITHM_UNSPECIFIED",
 		1: "PASSWORD_HASH_ALGORITHM_BCRYPT",
-		2: "PASSWORD_HASH_ALGORITHM_ARGON2",
-		3: "PASSWORD_HASH_ALGORITHM_SHA256",
-		4: "PASSWORD_HASH_ALGORITHM_SHA512",
+		2: "PASSWORD_HASH_ALGORITHM_ARGON2ID",
+		3: "PASSWORD_HASH_ALGORITHM_SCRYPT",
+		4: "PASSWORD_HASH_ALGORITHM_PBKDF2_SHA256",
+		5: "PASSWORD_HASH_ALGORITHM_PBKDF2_SHA512",
 	}
 	PasswordHashAlgorithm_value = map[string]int32{
-		"PASSWORD_HASH_ALGORITHM_UNSPECIFIED": 0,
-		"PASSWORD_HASH_ALGORITHM_BCRYPT":      1,
-		"PASSWORD_HASH_ALGORITHM_ARGON2":      2,
-		"PASSWORD_HASH_ALGORITHM_SHA256":      3,
-		"PASSWORD_HASH_ALGORITHM_SHA512":      4,
+		"PASSWORD_HASH_ALGORITHM_UNSPECIFIED":   0,
+		"PASSWORD_HASH_ALGORITHM_BCRYPT":        1,
+		"PASSWORD_HASH_ALGORITHM_ARGON2ID":      2,
+		"PASSWORD_HASH_ALGORITHM_SCRYPT":        3,
+		"PASSWORD_HASH_ALGORITHM_PBKDF2_SHA256": 4,
+		"PASSWORD_HASH_ALGORITHM_PBKDF2_SHA512": 5,
 	}
 )
 
@@ -126,11 +199,11 @@ func (x PasswordHashAlgorithm) String() string {
 }
 
 func (PasswordHashAlgorithm) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_user_proto_enumTypes[1].Descriptor()
+	return file_schema_v1alpha1_user_proto_enumTypes[2].Descriptor()
 }
 
 func (PasswordHashAlgorithm) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_user_proto_enumTypes[1]
+	return &file_schema_v1alpha1_user_proto_enumTypes[2]
 }
 
 func (x PasswordHashAlgorithm) Number() protoreflect.EnumNumber {
@@ -139,10 +212,9 @@ func (x PasswordHashAlgorithm) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PasswordHashAlgorithm.Descriptor instead.
 func (PasswordHashAlgorithm) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_user_proto_rawDescGZIP(), []int{1}
+	return file_schema_v1alpha1_user_proto_rawDescGZIP(), []int{2}
 }
 
-// LockoutReason represents the reason for account lockout
 type LockoutReason int32
 
 const (
@@ -150,6 +222,8 @@ const (
 	LockoutReason_LOCKOUT_REASON_FAILED_LOGIN_ATTEMPTS LockoutReason = 1
 	LockoutReason_LOCKOUT_REASON_ADMINISTRATIVE        LockoutReason = 2
 	LockoutReason_LOCKOUT_REASON_PASSWORD_EXPIRED      LockoutReason = 3
+	LockoutReason_LOCKOUT_REASON_ACCOUNT_EXPIRED       LockoutReason = 4
+	LockoutReason_LOCKOUT_REASON_SECURITY_POLICY       LockoutReason = 5
 )
 
 // Enum value maps for LockoutReason.
@@ -159,12 +233,16 @@ var (
 		1: "LOCKOUT_REASON_FAILED_LOGIN_ATTEMPTS",
 		2: "LOCKOUT_REASON_ADMINISTRATIVE",
 		3: "LOCKOUT_REASON_PASSWORD_EXPIRED",
+		4: "LOCKOUT_REASON_ACCOUNT_EXPIRED",
+		5: "LOCKOUT_REASON_SECURITY_POLICY",
 	}
 	LockoutReason_value = map[string]int32{
 		"LOCKOUT_REASON_UNSPECIFIED":           0,
 		"LOCKOUT_REASON_FAILED_LOGIN_ATTEMPTS": 1,
 		"LOCKOUT_REASON_ADMINISTRATIVE":        2,
 		"LOCKOUT_REASON_PASSWORD_EXPIRED":      3,
+		"LOCKOUT_REASON_ACCOUNT_EXPIRED":       4,
+		"LOCKOUT_REASON_SECURITY_POLICY":       5,
 	}
 )
 
@@ -179,11 +257,11 @@ func (x LockoutReason) String() string {
 }
 
 func (LockoutReason) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_user_proto_enumTypes[2].Descriptor()
+	return file_schema_v1alpha1_user_proto_enumTypes[3].Descriptor()
 }
 
 func (LockoutReason) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_user_proto_enumTypes[2]
+	return &file_schema_v1alpha1_user_proto_enumTypes[3]
 }
 
 func (x LockoutReason) Number() protoreflect.EnumNumber {
@@ -192,44 +270,81 @@ func (x LockoutReason) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use LockoutReason.Descriptor instead.
 func (LockoutReason) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_user_proto_rawDescGZIP(), []int{2}
+	return file_schema_v1alpha1_user_proto_rawDescGZIP(), []int{3}
 }
 
-// User represents a user account in the system
+type UserLinkAction int32
+
+const (
+	UserLinkAction_USER_LINK_ACTION_UNSPECIFIED   UserLinkAction = 0
+	UserLinkAction_USER_LINK_ACTION_LINK_EXISTING UserLinkAction = 1
+	UserLinkAction_USER_LINK_ACTION_CREATE_NEW    UserLinkAction = 2
+	UserLinkAction_USER_LINK_ACTION_NO_ACTION     UserLinkAction = 3
+)
+
+// Enum value maps for UserLinkAction.
+var (
+	UserLinkAction_name = map[int32]string{
+		0: "USER_LINK_ACTION_UNSPECIFIED",
+		1: "USER_LINK_ACTION_LINK_EXISTING",
+		2: "USER_LINK_ACTION_CREATE_NEW",
+		3: "USER_LINK_ACTION_NO_ACTION",
+	}
+	UserLinkAction_value = map[string]int32{
+		"USER_LINK_ACTION_UNSPECIFIED":   0,
+		"USER_LINK_ACTION_LINK_EXISTING": 1,
+		"USER_LINK_ACTION_CREATE_NEW":    2,
+		"USER_LINK_ACTION_NO_ACTION":     3,
+	}
+)
+
+func (x UserLinkAction) Enum() *UserLinkAction {
+	p := new(UserLinkAction)
+	*p = x
+	return p
+}
+
+func (x UserLinkAction) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (UserLinkAction) Descriptor() protoreflect.EnumDescriptor {
+	return file_schema_v1alpha1_user_proto_enumTypes[4].Descriptor()
+}
+
+func (UserLinkAction) Type() protoreflect.EnumType {
+	return &file_schema_v1alpha1_user_proto_enumTypes[4]
+}
+
+func (x UserLinkAction) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use UserLinkAction.Descriptor instead.
+func (UserLinkAction) EnumDescriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_user_proto_rawDescGZIP(), []int{4}
+}
+
 type User struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Unique identifier for the user
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Username for login
-	Username string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	// Full name of the user
-	FullName string `protobuf:"bytes,3,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
-	// Email address
-	Email string `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
-	// Whether the user account is enabled
-	Enabled bool `protobuf:"varint,5,opt,name=enabled,proto3" json:"enabled,omitempty"`
-	// Timestamp when the user was created
-	CreatedAt int64 `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	// Timestamp when the user was last updated
-	UpdatedAt int64 `protobuf:"varint,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	// Timestamp of last successful login
-	LastLogin int64 `protobuf:"varint,8,opt,name=last_login,json=lastLogin,proto3" json:"last_login,omitempty"`
-	// Source system where the user is managed
-	SourceSystem UserSource `protobuf:"varint,9,opt,name=source_system,json=sourceSystem,proto3,enum=schema.v1alpha1.UserSource" json:"source_system,omitempty"`
-	// Authentication data
-	AuthData *AuthenticationData `protobuf:"bytes,10,opt,name=auth_data,json=authData,proto3" json:"auth_data,omitempty"`
-	// Unix-specific user information (if mapped)
-	UnixInfo *UnixUserInfo `protobuf:"bytes,11,opt,name=unix_info,json=unixInfo,proto3" json:"unix_info,omitempty"`
-	// LDAP-specific user information (if mapped)
-	LdapInfo *LdapUserInfo `protobuf:"bytes,12,opt,name=ldap_info,json=ldapInfo,proto3" json:"ldap_info,omitempty"`
-	// Redfish-specific account information
-	RedfishInfo *RedfishAccountInfo `protobuf:"bytes,13,opt,name=redfish_info,json=redfishInfo,proto3" json:"redfish_info,omitempty"`
-	// NATS-specific account information
-	NatsInfo *NatsAccountInfo `protobuf:"bytes,14,opt,name=nats_info,json=natsInfo,proto3" json:"nats_info,omitempty"`
-	// SELinux-specific user mapping
-	SelinuxInfo   *SelinuxUserInfo `protobuf:"bytes,15,opt,name=selinux_info,json=selinuxInfo,proto3" json:"selinux_info,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Id                string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username          string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	FullName          *string                `protobuf:"bytes,3,opt,name=full_name,json=fullName,proto3,oneof" json:"full_name,omitempty"`
+	Email             *string                `protobuf:"bytes,4,opt,name=email,proto3,oneof" json:"email,omitempty"`
+	Enabled           bool                   `protobuf:"varint,5,opt,name=enabled,proto3" json:"enabled,omitempty"`
+	CreatedAt         *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt         *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	LastLogin         *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=last_login,json=lastLogin,proto3,oneof" json:"last_login,omitempty"`
+	SourceSystem      UserSource             `protobuf:"varint,9,opt,name=source_system,json=sourceSystem,proto3,enum=schema.v1alpha1.UserSource" json:"source_system,omitempty"`
+	CreationInterface UserCreationInterface  `protobuf:"varint,10,opt,name=creation_interface,json=creationInterface,proto3,enum=schema.v1alpha1.UserCreationInterface" json:"creation_interface,omitempty"`
+	AuthData          *AuthenticationData    `protobuf:"bytes,11,opt,name=auth_data,json=authData,proto3,oneof" json:"auth_data,omitempty"`
+	UnixInfo          *UnixUserInfo          `protobuf:"bytes,12,opt,name=unix_info,json=unixInfo,proto3,oneof" json:"unix_info,omitempty"`
+	LdapInfo          *LdapUserInfo          `protobuf:"bytes,13,opt,name=ldap_info,json=ldapInfo,proto3,oneof" json:"ldap_info,omitempty"`
+	RedfishInfo       *RedfishAccountInfo    `protobuf:"bytes,14,opt,name=redfish_info,json=redfishInfo,proto3,oneof" json:"redfish_info,omitempty"`
+	NatsInfo          *NatsAccountInfo       `protobuf:"bytes,15,opt,name=nats_info,json=natsInfo,proto3,oneof" json:"nats_info,omitempty"`
+	CustomAttributes  map[string]string      `protobuf:"bytes,16,rep,name=custom_attributes,json=customAttributes,proto3" json:"custom_attributes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *User) Reset() {
@@ -277,15 +392,15 @@ func (x *User) GetUsername() string {
 }
 
 func (x *User) GetFullName() string {
-	if x != nil {
-		return x.FullName
+	if x != nil && x.FullName != nil {
+		return *x.FullName
 	}
 	return ""
 }
 
 func (x *User) GetEmail() string {
-	if x != nil {
-		return x.Email
+	if x != nil && x.Email != nil {
+		return *x.Email
 	}
 	return ""
 }
@@ -297,25 +412,25 @@ func (x *User) GetEnabled() bool {
 	return false
 }
 
-func (x *User) GetCreatedAt() int64 {
+func (x *User) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreatedAt
 	}
-	return 0
+	return nil
 }
 
-func (x *User) GetUpdatedAt() int64 {
+func (x *User) GetUpdatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.UpdatedAt
 	}
-	return 0
+	return nil
 }
 
-func (x *User) GetLastLogin() int64 {
+func (x *User) GetLastLogin() *timestamppb.Timestamp {
 	if x != nil {
 		return x.LastLogin
 	}
-	return 0
+	return nil
 }
 
 func (x *User) GetSourceSystem() UserSource {
@@ -323,6 +438,13 @@ func (x *User) GetSourceSystem() UserSource {
 		return x.SourceSystem
 	}
 	return UserSource_USER_SOURCE_UNSPECIFIED
+}
+
+func (x *User) GetCreationInterface() UserCreationInterface {
+	if x != nil {
+		return x.CreationInterface
+	}
+	return UserCreationInterface_USER_CREATION_INTERFACE_UNSPECIFIED
 }
 
 func (x *User) GetAuthData() *AuthenticationData {
@@ -360,32 +482,24 @@ func (x *User) GetNatsInfo() *NatsAccountInfo {
 	return nil
 }
 
-func (x *User) GetSelinuxInfo() *SelinuxUserInfo {
+func (x *User) GetCustomAttributes() map[string]string {
 	if x != nil {
-		return x.SelinuxInfo
+		return x.CustomAttributes
 	}
 	return nil
 }
 
-// AuthenticationData contains password and authentication-related information
 type AuthenticationData struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Hashed password
-	PasswordHash string `protobuf:"bytes,1,opt,name=password_hash,json=passwordHash,proto3" json:"password_hash,omitempty"`
-	// Salt used for hashing
-	PasswordSalt string `protobuf:"bytes,2,opt,name=password_salt,json=passwordSalt,proto3" json:"password_salt,omitempty"`
-	// Hashing algorithm used
-	HashAlgorithm PasswordHashAlgorithm `protobuf:"varint,3,opt,name=hash_algorithm,json=hashAlgorithm,proto3,enum=schema.v1alpha1.PasswordHashAlgorithm" json:"hash_algorithm,omitempty"`
-	// Number of iterations for key derivation (if applicable)
-	Iterations int32 `protobuf:"varint,4,opt,name=iterations,proto3" json:"iterations,omitempty"`
-	// Timestamp of last password change
-	PasswordLastChanged int64 `protobuf:"varint,5,opt,name=password_last_changed,json=passwordLastChanged,proto3" json:"password_last_changed,omitempty"`
-	// Password expiration timestamp
-	PasswordExpiresAt int64 `protobuf:"varint,6,opt,name=password_expires_at,json=passwordExpiresAt,proto3" json:"password_expires_at,omitempty"`
-	// Account lockout information
-	LockoutInfo   *AccountLockoutInfo `protobuf:"bytes,7,opt,name=lockout_info,json=lockoutInfo,proto3" json:"lockout_info,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	PasswordHash        string                 `protobuf:"bytes,1,opt,name=password_hash,json=passwordHash,proto3" json:"password_hash,omitempty"`
+	PasswordSalt        *string                `protobuf:"bytes,2,opt,name=password_salt,json=passwordSalt,proto3,oneof" json:"password_salt,omitempty"`
+	HashAlgorithm       PasswordHashAlgorithm  `protobuf:"varint,3,opt,name=hash_algorithm,json=hashAlgorithm,proto3,enum=schema.v1alpha1.PasswordHashAlgorithm" json:"hash_algorithm,omitempty"`
+	Iterations          int32                  `protobuf:"varint,4,opt,name=iterations,proto3" json:"iterations,omitempty"`
+	PasswordLastChanged *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=password_last_changed,json=passwordLastChanged,proto3,oneof" json:"password_last_changed,omitempty"`
+	PasswordExpiresAt   *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=password_expires_at,json=passwordExpiresAt,proto3,oneof" json:"password_expires_at,omitempty"`
+	LockoutInfo         *AccountLockoutInfo    `protobuf:"bytes,7,opt,name=lockout_info,json=lockoutInfo,proto3,oneof" json:"lockout_info,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
 func (x *AuthenticationData) Reset() {
@@ -426,8 +540,8 @@ func (x *AuthenticationData) GetPasswordHash() string {
 }
 
 func (x *AuthenticationData) GetPasswordSalt() string {
-	if x != nil {
-		return x.PasswordSalt
+	if x != nil && x.PasswordSalt != nil {
+		return *x.PasswordSalt
 	}
 	return ""
 }
@@ -446,18 +560,18 @@ func (x *AuthenticationData) GetIterations() int32 {
 	return 0
 }
 
-func (x *AuthenticationData) GetPasswordLastChanged() int64 {
+func (x *AuthenticationData) GetPasswordLastChanged() *timestamppb.Timestamp {
 	if x != nil {
 		return x.PasswordLastChanged
 	}
-	return 0
+	return nil
 }
 
-func (x *AuthenticationData) GetPasswordExpiresAt() int64 {
+func (x *AuthenticationData) GetPasswordExpiresAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.PasswordExpiresAt
 	}
-	return 0
+	return nil
 }
 
 func (x *AuthenticationData) GetLockoutInfo() *AccountLockoutInfo {
@@ -467,19 +581,14 @@ func (x *AuthenticationData) GetLockoutInfo() *AccountLockoutInfo {
 	return nil
 }
 
-// AccountLockoutInfo contains information about account lockout status
 type AccountLockoutInfo struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Whether the account is currently locked
-	Locked bool `protobuf:"varint,1,opt,name=locked,proto3" json:"locked,omitempty"`
-	// Reason for lockout
-	Reason LockoutReason `protobuf:"varint,2,opt,name=reason,proto3,enum=schema.v1alpha1.LockoutReason" json:"reason,omitempty"`
-	// Timestamp when lockout occurred
-	LockoutTime int64 `protobuf:"varint,3,opt,name=lockout_time,json=lockoutTime,proto3" json:"lockout_time,omitempty"`
-	// Number of failed login attempts
-	FailedAttempts int32 `protobuf:"varint,4,opt,name=failed_attempts,json=failedAttempts,proto3" json:"failed_attempts,omitempty"`
-	// Timestamp when failed attempts counter was last reset
-	AttemptsResetTime int64 `protobuf:"varint,5,opt,name=attempts_reset_time,json=attemptsResetTime,proto3" json:"attempts_reset_time,omitempty"`
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Locked            bool                   `protobuf:"varint,1,opt,name=locked,proto3" json:"locked,omitempty"`
+	Reason            *LockoutReason         `protobuf:"varint,2,opt,name=reason,proto3,enum=schema.v1alpha1.LockoutReason,oneof" json:"reason,omitempty"`
+	LockoutTime       *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=lockout_time,json=lockoutTime,proto3,oneof" json:"lockout_time,omitempty"`
+	FailedAttempts    int32                  `protobuf:"varint,4,opt,name=failed_attempts,json=failedAttempts,proto3" json:"failed_attempts,omitempty"`
+	AttemptsResetTime *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=attempts_reset_time,json=attemptsResetTime,proto3,oneof" json:"attempts_reset_time,omitempty"`
+	MaxFailedAttempts *int32                 `protobuf:"varint,6,opt,name=max_failed_attempts,json=maxFailedAttempts,proto3,oneof" json:"max_failed_attempts,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -522,17 +631,17 @@ func (x *AccountLockoutInfo) GetLocked() bool {
 }
 
 func (x *AccountLockoutInfo) GetReason() LockoutReason {
-	if x != nil {
-		return x.Reason
+	if x != nil && x.Reason != nil {
+		return *x.Reason
 	}
 	return LockoutReason_LOCKOUT_REASON_UNSPECIFIED
 }
 
-func (x *AccountLockoutInfo) GetLockoutTime() int64 {
+func (x *AccountLockoutInfo) GetLockoutTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.LockoutTime
 	}
-	return 0
+	return nil
 }
 
 func (x *AccountLockoutInfo) GetFailedAttempts() int32 {
@@ -542,28 +651,30 @@ func (x *AccountLockoutInfo) GetFailedAttempts() int32 {
 	return 0
 }
 
-func (x *AccountLockoutInfo) GetAttemptsResetTime() int64 {
+func (x *AccountLockoutInfo) GetAttemptsResetTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.AttemptsResetTime
+	}
+	return nil
+}
+
+func (x *AccountLockoutInfo) GetMaxFailedAttempts() int32 {
+	if x != nil && x.MaxFailedAttempts != nil {
+		return *x.MaxFailedAttempts
 	}
 	return 0
 }
 
-// UnixUserInfo contains Unix-specific user information
 type UnixUserInfo struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Unix user ID
-	Uid int32 `protobuf:"varint,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	// Unix group ID
-	Gid int32 `protobuf:"varint,2,opt,name=gid,proto3" json:"gid,omitempty"`
-	// Home directory path
-	HomeDirectory string `protobuf:"bytes,3,opt,name=home_directory,json=homeDirectory,proto3" json:"home_directory,omitempty"`
-	// Login shell
-	Shell string `protobuf:"bytes,4,opt,name=shell,proto3" json:"shell,omitempty"`
-	// GECOS field (user information)
-	Gecos         string `protobuf:"bytes,5,opt,name=gecos,proto3" json:"gecos,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	Uid                 int32                  `protobuf:"varint,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	Gid                 int32                  `protobuf:"varint,2,opt,name=gid,proto3" json:"gid,omitempty"`
+	HomeDirectory       string                 `protobuf:"bytes,3,opt,name=home_directory,json=homeDirectory,proto3" json:"home_directory,omitempty"`
+	Shell               *string                `protobuf:"bytes,4,opt,name=shell,proto3,oneof" json:"shell,omitempty"`
+	Gecos               *string                `protobuf:"bytes,5,opt,name=gecos,proto3,oneof" json:"gecos,omitempty"`
+	SupplementaryGroups []int32                `protobuf:"varint,6,rep,packed,name=supplementary_groups,json=supplementaryGroups,proto3" json:"supplementary_groups,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
 func (x *UnixUserInfo) Reset() {
@@ -618,38 +729,39 @@ func (x *UnixUserInfo) GetHomeDirectory() string {
 }
 
 func (x *UnixUserInfo) GetShell() string {
-	if x != nil {
-		return x.Shell
+	if x != nil && x.Shell != nil {
+		return *x.Shell
 	}
 	return ""
 }
 
 func (x *UnixUserInfo) GetGecos() string {
-	if x != nil {
-		return x.Gecos
+	if x != nil && x.Gecos != nil {
+		return *x.Gecos
 	}
 	return ""
 }
 
-// LdapUserInfo contains LDAP-specific user information
+func (x *UnixUserInfo) GetSupplementaryGroups() []int32 {
+	if x != nil {
+		return x.SupplementaryGroups
+	}
+	return nil
+}
+
 type LdapUserInfo struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// LDAP Distinguished Name
-	LdapDn string `protobuf:"bytes,1,opt,name=ldap_dn,json=ldapDn,proto3" json:"ldap_dn,omitempty"`
-	// Object GUID
-	ObjectGuid string `protobuf:"bytes,2,opt,name=object_guid,json=objectGuid,proto3" json:"object_guid,omitempty"`
-	// SAM Account Name
-	SamAccountName string `protobuf:"bytes,3,opt,name=sam_account_name,json=samAccountName,proto3" json:"sam_account_name,omitempty"`
-	// User Principal Name
-	UserPrincipalName string `protobuf:"bytes,4,opt,name=user_principal_name,json=userPrincipalName,proto3" json:"user_principal_name,omitempty"`
-	// Groups the user is a member of
-	MemberOf []string `protobuf:"bytes,5,rep,name=member_of,json=memberOf,proto3" json:"member_of,omitempty"`
-	// Account expiration timestamp
-	AccountExpires int64 `protobuf:"varint,6,opt,name=account_expires,json=accountExpires,proto3" json:"account_expires,omitempty"`
-	// Timestamp when password was last set
-	PwdLastSet    int64 `protobuf:"varint,7,opt,name=pwd_last_set,json=pwdLastSet,proto3" json:"pwd_last_set,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	LdapDn             string                 `protobuf:"bytes,1,opt,name=ldap_dn,json=ldapDn,proto3" json:"ldap_dn,omitempty"`
+	ObjectGuid         *string                `protobuf:"bytes,2,opt,name=object_guid,json=objectGuid,proto3,oneof" json:"object_guid,omitempty"`
+	SamAccountName     *string                `protobuf:"bytes,3,opt,name=sam_account_name,json=samAccountName,proto3,oneof" json:"sam_account_name,omitempty"`
+	UserPrincipalName  *string                `protobuf:"bytes,4,opt,name=user_principal_name,json=userPrincipalName,proto3,oneof" json:"user_principal_name,omitempty"`
+	MemberOf           []string               `protobuf:"bytes,5,rep,name=member_of,json=memberOf,proto3" json:"member_of,omitempty"`
+	AccountExpires     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=account_expires,json=accountExpires,proto3,oneof" json:"account_expires,omitempty"`
+	PwdLastSet         *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=pwd_last_set,json=pwdLastSet,proto3,oneof" json:"pwd_last_set,omitempty"`
+	Domain             *string                `protobuf:"bytes,8,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
+	OrganizationalUnit *string                `protobuf:"bytes,9,opt,name=organizational_unit,json=organizationalUnit,proto3,oneof" json:"organizational_unit,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *LdapUserInfo) Reset() {
@@ -690,22 +802,22 @@ func (x *LdapUserInfo) GetLdapDn() string {
 }
 
 func (x *LdapUserInfo) GetObjectGuid() string {
-	if x != nil {
-		return x.ObjectGuid
+	if x != nil && x.ObjectGuid != nil {
+		return *x.ObjectGuid
 	}
 	return ""
 }
 
 func (x *LdapUserInfo) GetSamAccountName() string {
-	if x != nil {
-		return x.SamAccountName
+	if x != nil && x.SamAccountName != nil {
+		return *x.SamAccountName
 	}
 	return ""
 }
 
 func (x *LdapUserInfo) GetUserPrincipalName() string {
-	if x != nil {
-		return x.UserPrincipalName
+	if x != nil && x.UserPrincipalName != nil {
+		return *x.UserPrincipalName
 	}
 	return ""
 }
@@ -717,31 +829,43 @@ func (x *LdapUserInfo) GetMemberOf() []string {
 	return nil
 }
 
-func (x *LdapUserInfo) GetAccountExpires() int64 {
+func (x *LdapUserInfo) GetAccountExpires() *timestamppb.Timestamp {
 	if x != nil {
 		return x.AccountExpires
 	}
-	return 0
+	return nil
 }
 
-func (x *LdapUserInfo) GetPwdLastSet() int64 {
+func (x *LdapUserInfo) GetPwdLastSet() *timestamppb.Timestamp {
 	if x != nil {
 		return x.PwdLastSet
 	}
-	return 0
+	return nil
 }
 
-// RedfishAccountInfo contains Redfish-specific account information
+func (x *LdapUserInfo) GetDomain() string {
+	if x != nil && x.Domain != nil {
+		return *x.Domain
+	}
+	return ""
+}
+
+func (x *LdapUserInfo) GetOrganizationalUnit() string {
+	if x != nil && x.OrganizationalUnit != nil {
+		return *x.OrganizationalUnit
+	}
+	return ""
+}
+
 type RedfishAccountInfo struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Redfish account ID
-	AccountId string `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
-	// Redfish role ID
-	RoleId string `protobuf:"bytes,2,opt,name=role_id,json=roleId,proto3" json:"role_id,omitempty"`
-	// Account lockout policy information
-	LockoutPolicy *RedfishLockoutPolicy `protobuf:"bytes,3,opt,name=lockout_policy,json=lockoutPolicy,proto3" json:"lockout_policy,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state                  protoimpl.MessageState `protogen:"open.v1"`
+	AccountId              *string                `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3,oneof" json:"account_id,omitempty"`
+	RoleId                 string                 `protobuf:"bytes,2,opt,name=role_id,json=roleId,proto3" json:"role_id,omitempty"`
+	LockoutPolicy          *RedfishLockoutPolicy  `protobuf:"bytes,3,opt,name=lockout_policy,json=lockoutPolicy,proto3,oneof" json:"lockout_policy,omitempty"`
+	OemAccountTypes        []string               `protobuf:"bytes,4,rep,name=oem_account_types,json=oemAccountTypes,proto3" json:"oem_account_types,omitempty"`
+	PasswordChangeRequired *bool                  `protobuf:"varint,5,opt,name=password_change_required,json=passwordChangeRequired,proto3,oneof" json:"password_change_required,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *RedfishAccountInfo) Reset() {
@@ -775,8 +899,8 @@ func (*RedfishAccountInfo) Descriptor() ([]byte, []int) {
 }
 
 func (x *RedfishAccountInfo) GetAccountId() string {
-	if x != nil {
-		return x.AccountId
+	if x != nil && x.AccountId != nil {
+		return *x.AccountId
 	}
 	return ""
 }
@@ -795,15 +919,25 @@ func (x *RedfishAccountInfo) GetLockoutPolicy() *RedfishLockoutPolicy {
 	return nil
 }
 
-// RedfishLockoutPolicy contains Redfish-specific lockout policy settings
+func (x *RedfishAccountInfo) GetOemAccountTypes() []string {
+	if x != nil {
+		return x.OemAccountTypes
+	}
+	return nil
+}
+
+func (x *RedfishAccountInfo) GetPasswordChangeRequired() bool {
+	if x != nil && x.PasswordChangeRequired != nil {
+		return *x.PasswordChangeRequired
+	}
+	return false
+}
+
 type RedfishLockoutPolicy struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Number of failed login attempts before lockout
-	Threshold int32 `protobuf:"varint,1,opt,name=threshold,proto3" json:"threshold,omitempty"`
-	// Duration of lockout
-	Duration string `protobuf:"bytes,2,opt,name=duration,proto3" json:"duration,omitempty"`
-	// Time after which failed attempts counter is reset
-	ResetAfter    string `protobuf:"bytes,3,opt,name=reset_after,json=resetAfter,proto3" json:"reset_after,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Threshold     int32                  `protobuf:"varint,1,opt,name=threshold,proto3" json:"threshold,omitempty"`
+	Duration      *string                `protobuf:"bytes,2,opt,name=duration,proto3,oneof" json:"duration,omitempty"`
+	ResetAfter    *string                `protobuf:"bytes,3,opt,name=reset_after,json=resetAfter,proto3,oneof" json:"reset_after,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -846,34 +980,28 @@ func (x *RedfishLockoutPolicy) GetThreshold() int32 {
 }
 
 func (x *RedfishLockoutPolicy) GetDuration() string {
-	if x != nil {
-		return x.Duration
+	if x != nil && x.Duration != nil {
+		return *x.Duration
 	}
 	return ""
 }
 
 func (x *RedfishLockoutPolicy) GetResetAfter() string {
-	if x != nil {
-		return x.ResetAfter
+	if x != nil && x.ResetAfter != nil {
+		return *x.ResetAfter
 	}
 	return ""
 }
 
-// NatsAccountInfo contains NATS-specific account information
 type NatsAccountInfo struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// NATS account identifier
-	Account string `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
-	// NATS permissions
-	Permissions *NatsPermissions `protobuf:"bytes,2,opt,name=permissions,proto3" json:"permissions,omitempty"`
-	// NATS limits
-	Limits *NatsLimits `protobuf:"bytes,3,opt,name=limits,proto3" json:"limits,omitempty"`
-	// NATS user JWT
-	UserJwt string `protobuf:"bytes,4,opt,name=user_jwt,json=userJwt,proto3" json:"user_jwt,omitempty"`
-	// NATS user public key
-	UserKey string `protobuf:"bytes,5,opt,name=user_key,json=userKey,proto3" json:"user_key,omitempty"`
-	// NATS user credentials
-	UserCred      string `protobuf:"bytes,6,opt,name=user_cred,json=userCred,proto3" json:"user_cred,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Account       string                 `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
+	Permissions   *NatsPermissions       `protobuf:"bytes,2,opt,name=permissions,proto3,oneof" json:"permissions,omitempty"`
+	Limits        *NatsLimits            `protobuf:"bytes,3,opt,name=limits,proto3,oneof" json:"limits,omitempty"`
+	UserJwt       *string                `protobuf:"bytes,4,opt,name=user_jwt,json=userJwt,proto3,oneof" json:"user_jwt,omitempty"`
+	UserKey       *string                `protobuf:"bytes,5,opt,name=user_key,json=userKey,proto3,oneof" json:"user_key,omitempty"`
+	UserCred      *string                `protobuf:"bytes,6,opt,name=user_cred,json=userCred,proto3,oneof" json:"user_cred,omitempty"`
+	JwtExpiresAt  *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=jwt_expires_at,json=jwtExpiresAt,proto3,oneof" json:"jwt_expires_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -930,35 +1058,39 @@ func (x *NatsAccountInfo) GetLimits() *NatsLimits {
 }
 
 func (x *NatsAccountInfo) GetUserJwt() string {
-	if x != nil {
-		return x.UserJwt
+	if x != nil && x.UserJwt != nil {
+		return *x.UserJwt
 	}
 	return ""
 }
 
 func (x *NatsAccountInfo) GetUserKey() string {
-	if x != nil {
-		return x.UserKey
+	if x != nil && x.UserKey != nil {
+		return *x.UserKey
 	}
 	return ""
 }
 
 func (x *NatsAccountInfo) GetUserCred() string {
-	if x != nil {
-		return x.UserCred
+	if x != nil && x.UserCred != nil {
+		return *x.UserCred
 	}
 	return ""
 }
 
-// NatsPermissions contains NATS publish/subscribe permissions
+func (x *NatsAccountInfo) GetJwtExpiresAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.JwtExpiresAt
+	}
+	return nil
+}
+
 type NatsPermissions struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Subjects the user can publish to
-	Publish []string `protobuf:"bytes,1,rep,name=publish,proto3" json:"publish,omitempty"`
-	// Subjects the user can subscribe to
-	Subscribe []string `protobuf:"bytes,2,rep,name=subscribe,proto3" json:"subscribe,omitempty"`
-	// Subjects for allowing responses
-	AllowResponses []string `protobuf:"bytes,3,rep,name=allow_responses,json=allowResponses,proto3" json:"allow_responses,omitempty"`
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Publish        []string               `protobuf:"bytes,1,rep,name=publish,proto3" json:"publish,omitempty"`
+	Subscribe      []string               `protobuf:"bytes,2,rep,name=subscribe,proto3" json:"subscribe,omitempty"`
+	AllowResponses []string               `protobuf:"bytes,3,rep,name=allow_responses,json=allowResponses,proto3" json:"allow_responses,omitempty"`
+	Deny           []string               `protobuf:"bytes,4,rep,name=deny,proto3" json:"deny,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1014,15 +1146,20 @@ func (x *NatsPermissions) GetAllowResponses() []string {
 	return nil
 }
 
-// NatsLimits contains NATS resource limits for the user
+func (x *NatsPermissions) GetDeny() []string {
+	if x != nil {
+		return x.Deny
+	}
+	return nil
+}
+
 type NatsLimits struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Maximum data limit in bytes
-	Data int64 `protobuf:"varint,1,opt,name=data,proto3" json:"data,omitempty"`
-	// Maximum payload size in bytes
-	Payload int64 `protobuf:"varint,2,opt,name=payload,proto3" json:"payload,omitempty"`
-	// Maximum number of subscriptions
-	Subs          int64 `protobuf:"varint,3,opt,name=subs,proto3" json:"subs,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Data          int64                  `protobuf:"varint,1,opt,name=data,proto3" json:"data,omitempty"`
+	Payload       int64                  `protobuf:"varint,2,opt,name=payload,proto3" json:"payload,omitempty"`
+	Subs          int64                  `protobuf:"varint,3,opt,name=subs,proto3" json:"subs,omitempty"`
+	Conn          *int64                 `protobuf:"varint,4,opt,name=conn,proto3,oneof" json:"conn,omitempty"`
+	Leaf          *int64                 `protobuf:"varint,5,opt,name=leaf,proto3,oneof" json:"leaf,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1078,35 +1215,48 @@ func (x *NatsLimits) GetSubs() int64 {
 	return 0
 }
 
-// SelinuxUserInfo contains SELinux-specific user mapping information
-type SelinuxUserInfo struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// SELinux user
-	User string `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	// SELinux role
-	Role string `protobuf:"bytes,2,opt,name=role,proto3" json:"role,omitempty"`
-	// SELinux type
-	Type string `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
-	// SELinux level
-	Level         string `protobuf:"bytes,4,opt,name=level,proto3" json:"level,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+func (x *NatsLimits) GetConn() int64 {
+	if x != nil && x.Conn != nil {
+		return *x.Conn
+	}
+	return 0
 }
 
-func (x *SelinuxUserInfo) Reset() {
-	*x = SelinuxUserInfo{}
+func (x *NatsLimits) GetLeaf() int64 {
+	if x != nil && x.Leaf != nil {
+		return *x.Leaf
+	}
+	return 0
+}
+
+type UserLinkingOptions struct {
+	state                    protoimpl.MessageState `protogen:"open.v1"`
+	UnixAction               UserLinkAction         `protobuf:"varint,1,opt,name=unix_action,json=unixAction,proto3,enum=schema.v1alpha1.UserLinkAction" json:"unix_action,omitempty"`
+	LdapAction               UserLinkAction         `protobuf:"varint,2,opt,name=ldap_action,json=ldapAction,proto3,enum=schema.v1alpha1.UserLinkAction" json:"ldap_action,omitempty"`
+	RedfishAction            UserLinkAction         `protobuf:"varint,3,opt,name=redfish_action,json=redfishAction,proto3,enum=schema.v1alpha1.UserLinkAction" json:"redfish_action,omitempty"`
+	NatsAction               UserLinkAction         `protobuf:"varint,4,opt,name=nats_action,json=natsAction,proto3,enum=schema.v1alpha1.UserLinkAction" json:"nats_action,omitempty"`
+	ExistingUnixUsername     *string                `protobuf:"bytes,5,opt,name=existing_unix_username,json=existingUnixUsername,proto3,oneof" json:"existing_unix_username,omitempty"`
+	ExistingLdapDn           *string                `protobuf:"bytes,6,opt,name=existing_ldap_dn,json=existingLdapDn,proto3,oneof" json:"existing_ldap_dn,omitempty"`
+	ExistingRedfishAccountId *string                `protobuf:"bytes,7,opt,name=existing_redfish_account_id,json=existingRedfishAccountId,proto3,oneof" json:"existing_redfish_account_id,omitempty"`
+	ExistingNatsAccount      *string                `protobuf:"bytes,8,opt,name=existing_nats_account,json=existingNatsAccount,proto3,oneof" json:"existing_nats_account,omitempty"`
+	unknownFields            protoimpl.UnknownFields
+	sizeCache                protoimpl.SizeCache
+}
+
+func (x *UserLinkingOptions) Reset() {
+	*x = UserLinkingOptions{}
 	mi := &file_schema_v1alpha1_user_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SelinuxUserInfo) String() string {
+func (x *UserLinkingOptions) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SelinuxUserInfo) ProtoMessage() {}
+func (*UserLinkingOptions) ProtoMessage() {}
 
-func (x *SelinuxUserInfo) ProtoReflect() protoreflect.Message {
+func (x *UserLinkingOptions) ProtoReflect() protoreflect.Message {
 	mi := &file_schema_v1alpha1_user_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1118,48 +1268,75 @@ func (x *SelinuxUserInfo) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SelinuxUserInfo.ProtoReflect.Descriptor instead.
-func (*SelinuxUserInfo) Descriptor() ([]byte, []int) {
+// Deprecated: Use UserLinkingOptions.ProtoReflect.Descriptor instead.
+func (*UserLinkingOptions) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_user_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *SelinuxUserInfo) GetUser() string {
+func (x *UserLinkingOptions) GetUnixAction() UserLinkAction {
 	if x != nil {
-		return x.User
+		return x.UnixAction
+	}
+	return UserLinkAction_USER_LINK_ACTION_UNSPECIFIED
+}
+
+func (x *UserLinkingOptions) GetLdapAction() UserLinkAction {
+	if x != nil {
+		return x.LdapAction
+	}
+	return UserLinkAction_USER_LINK_ACTION_UNSPECIFIED
+}
+
+func (x *UserLinkingOptions) GetRedfishAction() UserLinkAction {
+	if x != nil {
+		return x.RedfishAction
+	}
+	return UserLinkAction_USER_LINK_ACTION_UNSPECIFIED
+}
+
+func (x *UserLinkingOptions) GetNatsAction() UserLinkAction {
+	if x != nil {
+		return x.NatsAction
+	}
+	return UserLinkAction_USER_LINK_ACTION_UNSPECIFIED
+}
+
+func (x *UserLinkingOptions) GetExistingUnixUsername() string {
+	if x != nil && x.ExistingUnixUsername != nil {
+		return *x.ExistingUnixUsername
 	}
 	return ""
 }
 
-func (x *SelinuxUserInfo) GetRole() string {
-	if x != nil {
-		return x.Role
+func (x *UserLinkingOptions) GetExistingLdapDn() string {
+	if x != nil && x.ExistingLdapDn != nil {
+		return *x.ExistingLdapDn
 	}
 	return ""
 }
 
-func (x *SelinuxUserInfo) GetType() string {
-	if x != nil {
-		return x.Type
+func (x *UserLinkingOptions) GetExistingRedfishAccountId() string {
+	if x != nil && x.ExistingRedfishAccountId != nil {
+		return *x.ExistingRedfishAccountId
 	}
 	return ""
 }
 
-func (x *SelinuxUserInfo) GetLevel() string {
-	if x != nil {
-		return x.Level
+func (x *UserLinkingOptions) GetExistingNatsAccount() string {
+	if x != nil && x.ExistingNatsAccount != nil {
+		return *x.ExistingNatsAccount
 	}
 	return ""
 }
 
-// Request message for creating a new user
 type CreateUserRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// User to create
-	User *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	// Plain text password (will be hashed server-side)
-	Password      string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	User           *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	Password       *string                `protobuf:"bytes,2,opt,name=password,proto3,oneof" json:"password,omitempty"`
+	LinkingOptions *UserLinkingOptions    `protobuf:"bytes,3,opt,name=linking_options,json=linkingOptions,proto3,oneof" json:"linking_options,omitempty"`
+	DryRun         *bool                  `protobuf:"varint,4,opt,name=dry_run,json=dryRun,proto3,oneof" json:"dry_run,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *CreateUserRequest) Reset() {
@@ -1200,19 +1377,33 @@ func (x *CreateUserRequest) GetUser() *User {
 }
 
 func (x *CreateUserRequest) GetPassword() string {
-	if x != nil {
-		return x.Password
+	if x != nil && x.Password != nil {
+		return *x.Password
 	}
 	return ""
 }
 
-// Response message for creating a new user
+func (x *CreateUserRequest) GetLinkingOptions() *UserLinkingOptions {
+	if x != nil {
+		return x.LinkingOptions
+	}
+	return nil
+}
+
+func (x *CreateUserRequest) GetDryRun() bool {
+	if x != nil && x.DryRun != nil {
+		return *x.DryRun
+	}
+	return false
+}
+
 type CreateUserResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Created user with server-generated fields
-	User          *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	User            *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	Warnings        []string               `protobuf:"bytes,2,rep,name=warnings,proto3" json:"warnings,omitempty"`
+	CreatedAccounts []string               `protobuf:"bytes,3,rep,name=created_accounts,json=createdAccounts,proto3" json:"created_accounts,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *CreateUserResponse) Reset() {
@@ -1252,11 +1443,29 @@ func (x *CreateUserResponse) GetUser() *User {
 	return nil
 }
 
-// Request message for getting a user by ID
+func (x *CreateUserResponse) GetWarnings() []string {
+	if x != nil {
+		return x.Warnings
+	}
+	return nil
+}
+
+func (x *CreateUserResponse) GetCreatedAccounts() []string {
+	if x != nil {
+		return x.CreatedAccounts
+	}
+	return nil
+}
+
 type GetUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// User ID
-	Id            string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Types that are valid to be assigned to Identifier:
+	//
+	//	*GetUserRequest_Id
+	//	*GetUserRequest_Username
+	//	*GetUserRequest_Email
+	Identifier    isGetUserRequest_Identifier `protobuf_oneof:"identifier"`
+	FieldMask     *fieldmaskpb.FieldMask      `protobuf:"bytes,4,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1291,18 +1500,72 @@ func (*GetUserRequest) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_user_proto_rawDescGZIP(), []int{13}
 }
 
+func (x *GetUserRequest) GetIdentifier() isGetUserRequest_Identifier {
+	if x != nil {
+		return x.Identifier
+	}
+	return nil
+}
+
 func (x *GetUserRequest) GetId() string {
 	if x != nil {
-		return x.Id
+		if x, ok := x.Identifier.(*GetUserRequest_Id); ok {
+			return x.Id
+		}
 	}
 	return ""
 }
 
-// Response message for getting a user
+func (x *GetUserRequest) GetUsername() string {
+	if x != nil {
+		if x, ok := x.Identifier.(*GetUserRequest_Username); ok {
+			return x.Username
+		}
+	}
+	return ""
+}
+
+func (x *GetUserRequest) GetEmail() string {
+	if x != nil {
+		if x, ok := x.Identifier.(*GetUserRequest_Email); ok {
+			return x.Email
+		}
+	}
+	return ""
+}
+
+func (x *GetUserRequest) GetFieldMask() *fieldmaskpb.FieldMask {
+	if x != nil {
+		return x.FieldMask
+	}
+	return nil
+}
+
+type isGetUserRequest_Identifier interface {
+	isGetUserRequest_Identifier()
+}
+
+type GetUserRequest_Id struct {
+	Id string `protobuf:"bytes,1,opt,name=id,proto3,oneof"`
+}
+
+type GetUserRequest_Username struct {
+	Username string `protobuf:"bytes,2,opt,name=username,proto3,oneof"`
+}
+
+type GetUserRequest_Email struct {
+	Email string `protobuf:"bytes,3,opt,name=email,proto3,oneof"`
+}
+
+func (*GetUserRequest_Id) isGetUserRequest_Identifier() {}
+
+func (*GetUserRequest_Username) isGetUserRequest_Identifier() {}
+
+func (*GetUserRequest_Email) isGetUserRequest_Identifier() {}
+
 type GetUserResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Retrieved user
-	User          *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	User          *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1344,13 +1607,13 @@ func (x *GetUserResponse) GetUser() *User {
 	return nil
 }
 
-// Request message for updating a user
 type UpdateUserRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Updated user information
-	User          *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	User           *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	FieldMask      *fieldmaskpb.FieldMask `protobuf:"bytes,2,opt,name=field_mask,json=fieldMask,proto3" json:"field_mask,omitempty"`
+	LinkingOptions *UserLinkingOptions    `protobuf:"bytes,3,opt,name=linking_options,json=linkingOptions,proto3,oneof" json:"linking_options,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *UpdateUserRequest) Reset() {
@@ -1390,11 +1653,24 @@ func (x *UpdateUserRequest) GetUser() *User {
 	return nil
 }
 
-// Response message for updating a user
+func (x *UpdateUserRequest) GetFieldMask() *fieldmaskpb.FieldMask {
+	if x != nil {
+		return x.FieldMask
+	}
+	return nil
+}
+
+func (x *UpdateUserRequest) GetLinkingOptions() *UserLinkingOptions {
+	if x != nil {
+		return x.LinkingOptions
+	}
+	return nil
+}
+
 type UpdateUserResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Updated user
-	User          *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	User          *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	Warnings      []string               `protobuf:"bytes,2,rep,name=warnings,proto3" json:"warnings,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1436,11 +1712,18 @@ func (x *UpdateUserResponse) GetUser() *User {
 	return nil
 }
 
-// Request message for deleting a user
+func (x *UpdateUserResponse) GetWarnings() []string {
+	if x != nil {
+		return x.Warnings
+	}
+	return nil
+}
+
 type DeleteUserRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// User ID to delete
-	Id            string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	CascadeDelete *bool                  `protobuf:"varint,2,opt,name=cascade_delete,json=cascadeDelete,proto3,oneof" json:"cascade_delete,omitempty"`
+	BackupData    *bool                  `protobuf:"varint,3,opt,name=backup_data,json=backupData,proto3,oneof" json:"backup_data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1482,13 +1765,27 @@ func (x *DeleteUserRequest) GetId() string {
 	return ""
 }
 
-// Response message for deleting a user
+func (x *DeleteUserRequest) GetCascadeDelete() bool {
+	if x != nil && x.CascadeDelete != nil {
+		return *x.CascadeDelete
+	}
+	return false
+}
+
+func (x *DeleteUserRequest) GetBackupData() bool {
+	if x != nil && x.BackupData != nil {
+		return *x.BackupData
+	}
+	return false
+}
+
 type DeleteUserResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Success indicator
-	Success       bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Success         bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	DeletedAccounts []string               `protobuf:"bytes,2,rep,name=deleted_accounts,json=deletedAccounts,proto3" json:"deleted_accounts,omitempty"`
+	BackupLocation  *string                `protobuf:"bytes,3,opt,name=backup_location,json=backupLocation,proto3,oneof" json:"backup_location,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *DeleteUserResponse) Reset() {
@@ -1528,15 +1825,28 @@ func (x *DeleteUserResponse) GetSuccess() bool {
 	return false
 }
 
-// Request message for listing users with optional filtering
+func (x *DeleteUserResponse) GetDeletedAccounts() []string {
+	if x != nil {
+		return x.DeletedAccounts
+	}
+	return nil
+}
+
+func (x *DeleteUserResponse) GetBackupLocation() string {
+	if x != nil && x.BackupLocation != nil {
+		return *x.BackupLocation
+	}
+	return ""
+}
+
 type ListUsersRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Optional filter by user source
-	Source UserSource `protobuf:"varint,1,opt,name=source,proto3,enum=schema.v1alpha1.UserSource" json:"source,omitempty"`
-	// Optional filter by enabled status
-	Enabled bool `protobuf:"varint,2,opt,name=enabled,proto3" json:"enabled,omitempty"`
-	// Optional filter by username (prefix match)
-	UsernamePrefix string `protobuf:"bytes,3,opt,name=username_prefix,json=usernamePrefix,proto3" json:"username_prefix,omitempty"`
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Source         *UserSource            `protobuf:"varint,1,opt,name=source,proto3,enum=schema.v1alpha1.UserSource,oneof" json:"source,omitempty"`
+	Enabled        *bool                  `protobuf:"varint,2,opt,name=enabled,proto3,oneof" json:"enabled,omitempty"`
+	UsernamePrefix *string                `protobuf:"bytes,3,opt,name=username_prefix,json=usernamePrefix,proto3,oneof" json:"username_prefix,omitempty"`
+	FieldMask      *fieldmaskpb.FieldMask `protobuf:"bytes,4,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
+	PageSize       *int32                 `protobuf:"varint,5,opt,name=page_size,json=pageSize,proto3,oneof" json:"page_size,omitempty"`
+	PageToken      *string                `protobuf:"bytes,6,opt,name=page_token,json=pageToken,proto3,oneof" json:"page_token,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1572,31 +1882,51 @@ func (*ListUsersRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListUsersRequest) GetSource() UserSource {
-	if x != nil {
-		return x.Source
+	if x != nil && x.Source != nil {
+		return *x.Source
 	}
 	return UserSource_USER_SOURCE_UNSPECIFIED
 }
 
 func (x *ListUsersRequest) GetEnabled() bool {
-	if x != nil {
-		return x.Enabled
+	if x != nil && x.Enabled != nil {
+		return *x.Enabled
 	}
 	return false
 }
 
 func (x *ListUsersRequest) GetUsernamePrefix() string {
-	if x != nil {
-		return x.UsernamePrefix
+	if x != nil && x.UsernamePrefix != nil {
+		return *x.UsernamePrefix
 	}
 	return ""
 }
 
-// Response message for listing users
+func (x *ListUsersRequest) GetFieldMask() *fieldmaskpb.FieldMask {
+	if x != nil {
+		return x.FieldMask
+	}
+	return nil
+}
+
+func (x *ListUsersRequest) GetPageSize() int32 {
+	if x != nil && x.PageSize != nil {
+		return *x.PageSize
+	}
+	return 0
+}
+
+func (x *ListUsersRequest) GetPageToken() string {
+	if x != nil && x.PageToken != nil {
+		return *x.PageToken
+	}
+	return ""
+}
+
 type ListUsersResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// List of users matching the criteria
-	Users         []*User `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Users         []*User                `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
+	NextPageToken *string                `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3,oneof" json:"next_page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1638,17 +1968,20 @@ func (x *ListUsersResponse) GetUsers() []*User {
 	return nil
 }
 
-// Request message for changing a user's password
+func (x *ListUsersResponse) GetNextPageToken() string {
+	if x != nil && x.NextPageToken != nil {
+		return *x.NextPageToken
+	}
+	return ""
+}
+
 type ChangePasswordRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// User ID
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Current password (for verification)
-	CurrentPassword string `protobuf:"bytes,2,opt,name=current_password,json=currentPassword,proto3" json:"current_password,omitempty"`
-	// New password
-	NewPassword   string `protobuf:"bytes,3,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Id              string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	CurrentPassword string                 `protobuf:"bytes,2,opt,name=current_password,json=currentPassword,proto3" json:"current_password,omitempty"`
+	NewPassword     string                 `protobuf:"bytes,3,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *ChangePasswordRequest) Reset() {
@@ -1702,11 +2035,10 @@ func (x *ChangePasswordRequest) GetNewPassword() string {
 	return ""
 }
 
-// Response message for changing a user's password
 type ChangePasswordResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Success indicator
-	Success       bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	FailureReason *string                `protobuf:"bytes,2,opt,name=failure_reason,json=failureReason,proto3,oneof" json:"failure_reason,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1748,17 +2080,21 @@ func (x *ChangePasswordResponse) GetSuccess() bool {
 	return false
 }
 
-// Request message for resetting a user's password
+func (x *ChangePasswordResponse) GetFailureReason() string {
+	if x != nil && x.FailureReason != nil {
+		return *x.FailureReason
+	}
+	return ""
+}
+
 type ResetPasswordRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// User ID
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// New password (if not provided, system generates one)
-	NewPassword string `protobuf:"bytes,2,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
-	// Whether to force reset regardless of current state
-	Force         bool `protobuf:"varint,3,opt,name=force,proto3" json:"force,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Id               string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	NewPassword      *string                `protobuf:"bytes,2,opt,name=new_password,json=newPassword,proto3,oneof" json:"new_password,omitempty"`
+	Force            *bool                  `protobuf:"varint,3,opt,name=force,proto3,oneof" json:"force,omitempty"`
+	GeneratePassword *bool                  `protobuf:"varint,4,opt,name=generate_password,json=generatePassword,proto3,oneof" json:"generate_password,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *ResetPasswordRequest) Reset() {
@@ -1799,26 +2135,31 @@ func (x *ResetPasswordRequest) GetId() string {
 }
 
 func (x *ResetPasswordRequest) GetNewPassword() string {
-	if x != nil {
-		return x.NewPassword
+	if x != nil && x.NewPassword != nil {
+		return *x.NewPassword
 	}
 	return ""
 }
 
 func (x *ResetPasswordRequest) GetForce() bool {
-	if x != nil {
-		return x.Force
+	if x != nil && x.Force != nil {
+		return *x.Force
 	}
 	return false
 }
 
-// Response message for resetting a user's password
+func (x *ResetPasswordRequest) GetGeneratePassword() bool {
+	if x != nil && x.GeneratePassword != nil {
+		return *x.GeneratePassword
+	}
+	return false
+}
+
 type ResetPasswordResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// The new password (if system-generated)
-	NewPassword string `protobuf:"bytes,1,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
-	// Success indicator
-	Success       bool `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	NewPassword   string                 `protobuf:"bytes,1,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
+	Success       bool                   `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
+	FailureReason *string                `protobuf:"bytes,3,opt,name=failure_reason,json=failureReason,proto3,oneof" json:"failure_reason,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1867,13 +2208,19 @@ func (x *ResetPasswordResponse) GetSuccess() bool {
 	return false
 }
 
-// Request message for authenticating a user
+func (x *ResetPasswordResponse) GetFailureReason() string {
+	if x != nil && x.FailureReason != nil {
+		return *x.FailureReason
+	}
+	return ""
+}
+
 type AuthenticateUserRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Username
-	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
-	// Password
-	Password      string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	SourceIp      *string                `protobuf:"bytes,3,opt,name=source_ip,json=sourceIp,proto3,oneof" json:"source_ip,omitempty"`
+	UserAgent     *string                `protobuf:"bytes,4,opt,name=user_agent,json=userAgent,proto3,oneof" json:"user_agent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1922,19 +2269,29 @@ func (x *AuthenticateUserRequest) GetPassword() string {
 	return ""
 }
 
-// Response message for authenticating a user
+func (x *AuthenticateUserRequest) GetSourceIp() string {
+	if x != nil && x.SourceIp != nil {
+		return *x.SourceIp
+	}
+	return ""
+}
+
+func (x *AuthenticateUserRequest) GetUserAgent() string {
+	if x != nil && x.UserAgent != nil {
+		return *x.UserAgent
+	}
+	return ""
+}
+
 type AuthenticateUserResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Authentication success
-	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	// User ID if authentication successful
-	UserId string `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	// Authentication token (if successful)
-	Token string `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
-	// Reason for authentication failure (if unsuccessful)
-	FailureReason string `protobuf:"bytes,4,opt,name=failure_reason,json=failureReason,proto3" json:"failure_reason,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Success        bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	UserId         *string                `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
+	Token          *string                `protobuf:"bytes,3,opt,name=token,proto3,oneof" json:"token,omitempty"`
+	FailureReason  *string                `protobuf:"bytes,4,opt,name=failure_reason,json=failureReason,proto3,oneof" json:"failure_reason,omitempty"`
+	TokenExpiresAt *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=token_expires_at,json=tokenExpiresAt,proto3,oneof" json:"token_expires_at,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *AuthenticateUserResponse) Reset() {
@@ -1975,158 +2332,312 @@ func (x *AuthenticateUserResponse) GetSuccess() bool {
 }
 
 func (x *AuthenticateUserResponse) GetUserId() string {
-	if x != nil {
-		return x.UserId
+	if x != nil && x.UserId != nil {
+		return *x.UserId
 	}
 	return ""
 }
 
 func (x *AuthenticateUserResponse) GetToken() string {
-	if x != nil {
-		return x.Token
+	if x != nil && x.Token != nil {
+		return *x.Token
 	}
 	return ""
 }
 
 func (x *AuthenticateUserResponse) GetFailureReason() string {
-	if x != nil {
-		return x.FailureReason
+	if x != nil && x.FailureReason != nil {
+		return *x.FailureReason
 	}
 	return ""
+}
+
+func (x *AuthenticateUserResponse) GetTokenExpiresAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.TokenExpiresAt
+	}
+	return nil
 }
 
 var File_schema_v1alpha1_user_proto protoreflect.FileDescriptor
 
 const file_schema_v1alpha1_user_proto_rawDesc = "" +
 	"\n" +
-	"\x1aschema/v1alpha1/user.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\"\xc8\x05\n" +
+	"\x1aschema/v1alpha1/user.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\"\xc5\x0f\n" +
 	"\x04User\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12#\n" +
-	"\busername\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\busername\x12$\n" +
-	"\tfull_name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bfullName\x12\x1d\n" +
-	"\x05email\x18\x04 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12\x18\n" +
-	"\aenabled\x18\x05 \x01(\bR\aenabled\x12\x1d\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x128\n" +
+	"\busername\x18\x02 \x01(\tB\x1c\xbaH\x19r\x17\x10\x01\x18@2\x11^[a-zA-Z0-9._-]+$R\busername\x12,\n" +
+	"\tfull_name\x18\x03 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\x01\x18\x80\x02H\x00R\bfullName\x88\x01\x01\x12%\n" +
+	"\x05email\x18\x04 \x01(\tB\n" +
+	"\xbaH\ar\x05\x18\xc0\x02`\x01H\x01R\x05email\x88\x01\x01\x12 \n" +
+	"\aenabled\x18\x05 \x01(\bB\x06\xbaH\x03\xc8\x01\x01R\aenabled\x12A\n" +
 	"\n" +
-	"created_at\x18\x06 \x01(\x03R\tcreatedAt\x12\x1d\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampB\x06\xbaH\x03\xc8\x01\x01R\tcreatedAt\x12A\n" +
 	"\n" +
-	"updated_at\x18\a \x01(\x03R\tupdatedAt\x12\x1d\n" +
+	"updated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampB\x06\xbaH\x03\xc8\x01\x01R\tupdatedAt\x12>\n" +
 	"\n" +
-	"last_login\x18\b \x01(\x03R\tlastLogin\x12@\n" +
-	"\rsource_system\x18\t \x01(\x0e2\x1b.schema.v1alpha1.UserSourceR\fsourceSystem\x12@\n" +
-	"\tauth_data\x18\n" +
-	" \x01(\v2#.schema.v1alpha1.AuthenticationDataR\bauthData\x12:\n" +
-	"\tunix_info\x18\v \x01(\v2\x1d.schema.v1alpha1.UnixUserInfoR\bunixInfo\x12:\n" +
-	"\tldap_info\x18\f \x01(\v2\x1d.schema.v1alpha1.LdapUserInfoR\bldapInfo\x12F\n" +
-	"\fredfish_info\x18\r \x01(\v2#.schema.v1alpha1.RedfishAccountInfoR\vredfishInfo\x12=\n" +
-	"\tnats_info\x18\x0e \x01(\v2 .schema.v1alpha1.NatsAccountInfoR\bnatsInfo\x12C\n" +
-	"\fselinux_info\x18\x0f \x01(\v2 .schema.v1alpha1.SelinuxUserInfoR\vselinuxInfo\"\xf9\x02\n" +
-	"\x12AuthenticationData\x12#\n" +
-	"\rpassword_hash\x18\x01 \x01(\tR\fpasswordHash\x12#\n" +
-	"\rpassword_salt\x18\x02 \x01(\tR\fpasswordSalt\x12M\n" +
-	"\x0ehash_algorithm\x18\x03 \x01(\x0e2&.schema.v1alpha1.PasswordHashAlgorithmR\rhashAlgorithm\x12\x1e\n" +
+	"last_login\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x02R\tlastLogin\x88\x01\x01\x12J\n" +
+	"\rsource_system\x18\t \x01(\x0e2\x1b.schema.v1alpha1.UserSourceB\b\xbaH\x05\x82\x01\x02\x10\x01R\fsourceSystem\x12_\n" +
+	"\x12creation_interface\x18\n" +
+	" \x01(\x0e2&.schema.v1alpha1.UserCreationInterfaceB\b\xbaH\x05\x82\x01\x02\x10\x01R\x11creationInterface\x12E\n" +
+	"\tauth_data\x18\v \x01(\v2#.schema.v1alpha1.AuthenticationDataH\x03R\bauthData\x88\x01\x01\x12?\n" +
+	"\tunix_info\x18\f \x01(\v2\x1d.schema.v1alpha1.UnixUserInfoH\x04R\bunixInfo\x88\x01\x01\x12?\n" +
+	"\tldap_info\x18\r \x01(\v2\x1d.schema.v1alpha1.LdapUserInfoH\x05R\bldapInfo\x88\x01\x01\x12K\n" +
+	"\fredfish_info\x18\x0e \x01(\v2#.schema.v1alpha1.RedfishAccountInfoH\x06R\vredfishInfo\x88\x01\x01\x12B\n" +
+	"\tnats_info\x18\x0f \x01(\v2 .schema.v1alpha1.NatsAccountInfoH\aR\bnatsInfo\x88\x01\x01\x12X\n" +
+	"\x11custom_attributes\x18\x10 \x03(\v2+.schema.v1alpha1.User.CustomAttributesEntryR\x10customAttributes\x1aC\n" +
+	"\x15CustomAttributesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:\x96\x06\xbaH\x92\x06\x1a\xcc\x03\n" +
+	"#user_source_system_info_consistency\x123user must have corresponding info for source system\x1a\xef\x02(this.source_system == 1 && has(this.auth_data)) || (this.source_system == 2 && has(this.ldap_info)) || (this.source_system == 3 && has(this.ldap_info)) || (this.source_system == 4) || (this.source_system == 5 && has(this.redfish_info)) || (this.source_system == 6 && has(this.nats_info)) || (this.source_system == 7 && has(this.unix_info)) || this.source_system == 0\x1a\xa2\x01\n" +
+	"\x18user_timestamps_ordering\x120created_at must be before or equal to updated_at\x1aT!has(this.created_at) || !has(this.updated_at) || this.created_at <= this.updated_at\x1a\x9b\x01\n" +
+	"\x1euser_last_login_after_creation\x12#last_login must be after created_at\x1aT!has(this.created_at) || !has(this.last_login) || this.created_at <= this.last_loginB\f\n" +
 	"\n" +
-	"iterations\x18\x04 \x01(\x05R\n" +
-	"iterations\x122\n" +
-	"\x15password_last_changed\x18\x05 \x01(\x03R\x13passwordLastChanged\x12.\n" +
-	"\x13password_expires_at\x18\x06 \x01(\x03R\x11passwordExpiresAt\x12F\n" +
-	"\flockout_info\x18\a \x01(\v2#.schema.v1alpha1.AccountLockoutInfoR\vlockoutInfo\"\xe0\x01\n" +
+	"_full_nameB\b\n" +
+	"\x06_emailB\r\n" +
+	"\v_last_loginB\f\n" +
+	"\n" +
+	"_auth_dataB\f\n" +
+	"\n" +
+	"_unix_infoB\f\n" +
+	"\n" +
+	"_ldap_infoB\x0f\n" +
+	"\r_redfish_infoB\f\n" +
+	"\n" +
+	"_nats_info\"\x81\n" +
+	"\n" +
+	"\x12AuthenticationData\x12,\n" +
+	"\rpassword_hash\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\fpasswordHash\x121\n" +
+	"\rpassword_salt\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\fpasswordSalt\x88\x01\x01\x12W\n" +
+	"\x0ehash_algorithm\x18\x03 \x01(\x0e2&.schema.v1alpha1.PasswordHashAlgorithmB\b\xbaH\x05\x82\x01\x02\x10\x01R\rhashAlgorithm\x12'\n" +
+	"\n" +
+	"iterations\x18\x04 \x01(\x05B\a\xbaH\x04\x1a\x02(\x01R\n" +
+	"iterations\x12S\n" +
+	"\x15password_last_changed\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampH\x01R\x13passwordLastChanged\x88\x01\x01\x12O\n" +
+	"\x13password_expires_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampH\x02R\x11passwordExpiresAt\x88\x01\x01\x12K\n" +
+	"\flockout_info\x18\a \x01(\v2#.schema.v1alpha1.AccountLockoutInfoH\x03R\vlockoutInfo\x88\x01\x01:\xbf\x05\xbaH\xbb\x05\x1a\xde\x01\n" +
+	"&auth_data_password_expiry_after_change\x127password_expires_at must be after password_last_changed\x1a{!has(this.password_last_changed) || !has(this.password_expires_at) || this.password_last_changed < this.password_expires_at\x1a\xd7\x03\n" +
+	"\"auth_data_iterations_for_algorithm\x121iterations must be appropriate for hash algorithm\x1a\xfd\x02(this.hash_algorithm == 1 && this.iterations >= 10 && this.iterations <= 15) || (this.hash_algorithm == 2 && this.iterations >= 1 && this.iterations <= 10) || (this.hash_algorithm == 3 && this.iterations >= 14 && this.iterations <= 20) || (this.hash_algorithm == 4 && this.iterations >= 100000) || (this.hash_algorithm == 5 && this.iterations >= 100000) || this.hash_algorithm == 0B\x10\n" +
+	"\x0e_password_saltB\x18\n" +
+	"\x16_password_last_changedB\x16\n" +
+	"\x14_password_expires_atB\x0f\n" +
+	"\r_lockout_info\"\x94\x06\n" +
 	"\x12AccountLockoutInfo\x12\x16\n" +
-	"\x06locked\x18\x01 \x01(\bR\x06locked\x126\n" +
-	"\x06reason\x18\x02 \x01(\x0e2\x1e.schema.v1alpha1.LockoutReasonR\x06reason\x12!\n" +
-	"\flockout_time\x18\x03 \x01(\x03R\vlockoutTime\x12'\n" +
-	"\x0ffailed_attempts\x18\x04 \x01(\x05R\x0efailedAttempts\x12.\n" +
-	"\x13attempts_reset_time\x18\x05 \x01(\x03R\x11attemptsResetTime\"\xa0\x01\n" +
-	"\fUnixUserInfo\x12\x19\n" +
-	"\x03uid\x18\x01 \x01(\x05B\a\xbaH\x04\x1a\x02(\x00R\x03uid\x12\x19\n" +
-	"\x03gid\x18\x02 \x01(\x05B\a\xbaH\x04\x1a\x02(\x00R\x03gid\x12.\n" +
-	"\x0ehome_directory\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\rhomeDirectory\x12\x14\n" +
-	"\x05shell\x18\x04 \x01(\tR\x05shell\x12\x14\n" +
-	"\x05gecos\x18\x05 \x01(\tR\x05gecos\"\x93\x02\n" +
+	"\x06locked\x18\x01 \x01(\bR\x06locked\x12E\n" +
+	"\x06reason\x18\x02 \x01(\x0e2\x1e.schema.v1alpha1.LockoutReasonB\b\xbaH\x05\x82\x01\x02\x10\x01H\x00R\x06reason\x88\x01\x01\x12B\n" +
+	"\flockout_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampH\x01R\vlockoutTime\x88\x01\x01\x120\n" +
+	"\x0ffailed_attempts\x18\x04 \x01(\x05B\a\xbaH\x04\x1a\x02(\x00R\x0efailedAttempts\x12O\n" +
+	"\x13attempts_reset_time\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampH\x02R\x11attemptsResetTime\x88\x01\x01\x12<\n" +
+	"\x13max_failed_attempts\x18\x06 \x01(\x05B\a\xbaH\x04\x1a\x02(\x01H\x03R\x11maxFailedAttempts\x88\x01\x01:\xcd\x02\xbaH\xc9\x02\x1ap\n" +
+	"\x18lockout_info_consistency\x12,lockout_time must be set when locked is true\x1a&!this.locked || has(this.lockout_time)\x1a\xd4\x01\n" +
+	"\"lockout_failed_attempts_reset_time\x12Battempts_reset_time should be after lockout_time when both are set\x1aj!has(this.lockout_time) || !has(this.attempts_reset_time) || this.lockout_time <= this.attempts_reset_timeB\t\n" +
+	"\a_reasonB\x0f\n" +
+	"\r_lockout_timeB\x16\n" +
+	"\x14_attempts_reset_timeB\x16\n" +
+	"\x14_max_failed_attempts\"\xa4\x02\n" +
+	"\fUnixUserInfo\x12\x1d\n" +
+	"\x03uid\x18\x01 \x01(\x05B\v\xbaH\b\x1a\x06\x18\xff\xff\x03(\x00R\x03uid\x12\x1d\n" +
+	"\x03gid\x18\x02 \x01(\x05B\v\xbaH\b\x1a\x06\x18\xff\xff\x03(\x00R\x03gid\x124\n" +
+	"\x0ehome_directory\x18\x03 \x01(\tB\r\xbaH\n" +
+	"r\b\x10\x012\x04^/.*R\rhomeDirectory\x12&\n" +
+	"\x05shell\x18\x04 \x01(\tB\v\xbaH\br\x062\x04^/.*H\x00R\x05shell\x88\x01\x01\x12#\n" +
+	"\x05gecos\x18\x05 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02H\x01R\x05gecos\x88\x01\x01\x12?\n" +
+	"\x14supplementary_groups\x18\x06 \x03(\x05B\f\xbaH\t\x92\x01\x06\"\x04\x1a\x02(\x00R\x13supplementaryGroupsB\b\n" +
+	"\x06_shellB\b\n" +
+	"\x06_gecos\"\xe2\x04\n" +
 	"\fLdapUserInfo\x12 \n" +
-	"\aldap_dn\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06ldapDn\x12\x1f\n" +
-	"\vobject_guid\x18\x02 \x01(\tR\n" +
-	"objectGuid\x12(\n" +
-	"\x10sam_account_name\x18\x03 \x01(\tR\x0esamAccountName\x12.\n" +
-	"\x13user_principal_name\x18\x04 \x01(\tR\x11userPrincipalName\x12\x1b\n" +
-	"\tmember_of\x18\x05 \x03(\tR\bmemberOf\x12'\n" +
-	"\x0faccount_expires\x18\x06 \x01(\x03R\x0eaccountExpires\x12 \n" +
-	"\fpwd_last_set\x18\a \x01(\x03R\n" +
-	"pwdLastSet\"\xa3\x01\n" +
-	"\x12RedfishAccountInfo\x12\x1d\n" +
+	"\aldap_dn\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06ldapDn\x12-\n" +
+	"\vobject_guid\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\n" +
+	"objectGuid\x88\x01\x01\x128\n" +
+	"\x10sam_account_name\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18\x14H\x01R\x0esamAccountName\x88\x01\x01\x12<\n" +
+	"\x13user_principal_name\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x02R\x11userPrincipalName\x88\x01\x01\x12\x1b\n" +
+	"\tmember_of\x18\x05 \x03(\tR\bmemberOf\x12H\n" +
+	"\x0faccount_expires\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampH\x03R\x0eaccountExpires\x88\x01\x01\x12A\n" +
+	"\fpwd_last_set\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x04R\n" +
+	"pwdLastSet\x88\x01\x01\x12$\n" +
+	"\x06domain\x18\b \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x05R\x06domain\x88\x01\x01\x124\n" +
+	"\x13organizational_unit\x18\t \x01(\tH\x06R\x12organizationalUnit\x88\x01\x01B\x0e\n" +
+	"\f_object_guidB\x13\n" +
+	"\x11_sam_account_nameB\x16\n" +
+	"\x14_user_principal_nameB\x12\n" +
+	"\x10_account_expiresB\x0f\n" +
+	"\r_pwd_last_setB\t\n" +
+	"\a_domainB\x16\n" +
+	"\x14_organizational_unit\"\xe0\x02\n" +
+	"\x12RedfishAccountInfo\x12+\n" +
 	"\n" +
-	"account_id\x18\x01 \x01(\tR\taccountId\x12 \n" +
-	"\arole_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06roleId\x12L\n" +
-	"\x0elockout_policy\x18\x03 \x01(\v2%.schema.v1alpha1.RedfishLockoutPolicyR\rlockoutPolicy\"z\n" +
-	"\x14RedfishLockoutPolicy\x12%\n" +
-	"\tthreshold\x18\x01 \x01(\x05B\a\xbaH\x04\x1a\x02(\x00R\tthreshold\x12\x1a\n" +
-	"\bduration\x18\x02 \x01(\tR\bduration\x12\x1f\n" +
-	"\vreset_after\x18\x03 \x01(\tR\n" +
-	"resetAfter\"\xf7\x01\n" +
-	"\x0fNatsAccountInfo\x12\x18\n" +
-	"\aaccount\x18\x01 \x01(\tR\aaccount\x12B\n" +
-	"\vpermissions\x18\x02 \x01(\v2 .schema.v1alpha1.NatsPermissionsR\vpermissions\x123\n" +
-	"\x06limits\x18\x03 \x01(\v2\x1b.schema.v1alpha1.NatsLimitsR\x06limits\x12\x19\n" +
-	"\buser_jwt\x18\x04 \x01(\tR\auserJwt\x12\x19\n" +
-	"\buser_key\x18\x05 \x01(\tR\auserKey\x12\x1b\n" +
-	"\tuser_cred\x18\x06 \x01(\tR\buserCred\"r\n" +
+	"account_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\taccountId\x88\x01\x01\x12 \n" +
+	"\arole_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06roleId\x12Q\n" +
+	"\x0elockout_policy\x18\x03 \x01(\v2%.schema.v1alpha1.RedfishLockoutPolicyH\x01R\rlockoutPolicy\x88\x01\x01\x12*\n" +
+	"\x11oem_account_types\x18\x04 \x03(\tR\x0foemAccountTypes\x12=\n" +
+	"\x18password_change_required\x18\x05 \x01(\bH\x02R\x16passwordChangeRequired\x88\x01\x01B\r\n" +
+	"\v_account_idB\x11\n" +
+	"\x0f_lockout_policyB\x1b\n" +
+	"\x19_password_change_required\"\xd4\x01\n" +
+	"\x14RedfishLockoutPolicy\x12(\n" +
+	"\tthreshold\x18\x01 \x01(\x05B\n" +
+	"\xbaH\a\x1a\x05\x18\xe7\a(\x00R\tthreshold\x127\n" +
+	"\bduration\x18\x02 \x01(\tB\x16\xbaH\x13r\x112\x0f^PT[0-9]+[HMS]$H\x00R\bduration\x88\x01\x01\x12<\n" +
+	"\vreset_after\x18\x03 \x01(\tB\x16\xbaH\x13r\x112\x0f^PT[0-9]+[HMS]$H\x01R\n" +
+	"resetAfter\x88\x01\x01B\v\n" +
+	"\t_durationB\x0e\n" +
+	"\f_reset_after\"\xd1\x03\n" +
+	"\x0fNatsAccountInfo\x12!\n" +
+	"\aaccount\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\aaccount\x12G\n" +
+	"\vpermissions\x18\x02 \x01(\v2 .schema.v1alpha1.NatsPermissionsH\x00R\vpermissions\x88\x01\x01\x128\n" +
+	"\x06limits\x18\x03 \x01(\v2\x1b.schema.v1alpha1.NatsLimitsH\x01R\x06limits\x88\x01\x01\x12'\n" +
+	"\buser_jwt\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x02R\auserJwt\x88\x01\x01\x12'\n" +
+	"\buser_key\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x03R\auserKey\x88\x01\x01\x12)\n" +
+	"\tuser_cred\x18\x06 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x04R\buserCred\x88\x01\x01\x12E\n" +
+	"\x0ejwt_expires_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x05R\fjwtExpiresAt\x88\x01\x01B\x0e\n" +
+	"\f_permissionsB\t\n" +
+	"\a_limitsB\v\n" +
+	"\t_user_jwtB\v\n" +
+	"\t_user_keyB\f\n" +
+	"\n" +
+	"_user_credB\x11\n" +
+	"\x0f_jwt_expires_at\"\x86\x01\n" +
 	"\x0fNatsPermissions\x12\x18\n" +
 	"\apublish\x18\x01 \x03(\tR\apublish\x12\x1c\n" +
 	"\tsubscribe\x18\x02 \x03(\tR\tsubscribe\x12'\n" +
-	"\x0fallow_responses\x18\x03 \x03(\tR\x0eallowResponses\"N\n" +
+	"\x0fallow_responses\x18\x03 \x03(\tR\x0eallowResponses\x12\x12\n" +
+	"\x04deny\x18\x04 \x03(\tR\x04deny\"\xec\x01\n" +
 	"\n" +
-	"NatsLimits\x12\x12\n" +
-	"\x04data\x18\x01 \x01(\x03R\x04data\x12\x18\n" +
-	"\apayload\x18\x02 \x01(\x03R\apayload\x12\x12\n" +
-	"\x04subs\x18\x03 \x01(\x03R\x04subs\"c\n" +
-	"\x0fSelinuxUserInfo\x12\x12\n" +
-	"\x04user\x18\x01 \x01(\tR\x04user\x12\x12\n" +
-	"\x04role\x18\x02 \x01(\tR\x04role\x12\x12\n" +
-	"\x04type\x18\x03 \x01(\tR\x04type\x12\x14\n" +
-	"\x05level\x18\x04 \x01(\tR\x05level\"k\n" +
+	"NatsLimits\x12$\n" +
+	"\x04data\x18\x01 \x01(\x03B\x10\xbaH\r\"\v(\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01R\x04data\x12*\n" +
+	"\apayload\x18\x02 \x01(\x03B\x10\xbaH\r\"\v(\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01R\apayload\x12$\n" +
+	"\x04subs\x18\x03 \x01(\x03B\x10\xbaH\r\"\v(\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01R\x04subs\x12)\n" +
+	"\x04conn\x18\x04 \x01(\x03B\x10\xbaH\r\"\v(\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01H\x00R\x04conn\x88\x01\x01\x12)\n" +
+	"\x04leaf\x18\x05 \x01(\x03B\x10\xbaH\r\"\v(\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01H\x01R\x04leaf\x88\x01\x01B\a\n" +
+	"\x05_connB\a\n" +
+	"\x05_leaf\"\x9b\x05\n" +
+	"\x12UserLinkingOptions\x12J\n" +
+	"\vunix_action\x18\x01 \x01(\x0e2\x1f.schema.v1alpha1.UserLinkActionB\b\xbaH\x05\x82\x01\x02\x10\x01R\n" +
+	"unixAction\x12J\n" +
+	"\vldap_action\x18\x02 \x01(\x0e2\x1f.schema.v1alpha1.UserLinkActionB\b\xbaH\x05\x82\x01\x02\x10\x01R\n" +
+	"ldapAction\x12P\n" +
+	"\x0eredfish_action\x18\x03 \x01(\x0e2\x1f.schema.v1alpha1.UserLinkActionB\b\xbaH\x05\x82\x01\x02\x10\x01R\rredfishAction\x12J\n" +
+	"\vnats_action\x18\x04 \x01(\x0e2\x1f.schema.v1alpha1.UserLinkActionB\b\xbaH\x05\x82\x01\x02\x10\x01R\n" +
+	"natsAction\x129\n" +
+	"\x16existing_unix_username\x18\x05 \x01(\tH\x00R\x14existingUnixUsername\x88\x01\x01\x12-\n" +
+	"\x10existing_ldap_dn\x18\x06 \x01(\tH\x01R\x0eexistingLdapDn\x88\x01\x01\x12B\n" +
+	"\x1bexisting_redfish_account_id\x18\a \x01(\tH\x02R\x18existingRedfishAccountId\x88\x01\x01\x127\n" +
+	"\x15existing_nats_account\x18\b \x01(\tH\x03R\x13existingNatsAccount\x88\x01\x01B\x19\n" +
+	"\x17_existing_unix_usernameB\x13\n" +
+	"\x11_existing_ldap_dnB\x1e\n" +
+	"\x1c_existing_redfish_account_idB\x18\n" +
+	"\x16_existing_nats_account\"\x9a\x03\n" +
 	"\x11CreateUserRequest\x121\n" +
-	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserB\x06\xbaH\x03\xc8\x01\x01R\x04user\x12#\n" +
-	"\bpassword\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\bR\bpassword\"?\n" +
+	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserB\x06\xbaH\x03\xc8\x01\x01R\x04user\x12(\n" +
+	"\bpassword\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\bH\x00R\bpassword\x88\x01\x01\x12Q\n" +
+	"\x0flinking_options\x18\x03 \x01(\v2#.schema.v1alpha1.UserLinkingOptionsH\x01R\x0elinkingOptions\x88\x01\x01\x12\x1c\n" +
+	"\adry_run\x18\x04 \x01(\bH\x02R\x06dryRun\x88\x01\x01:\x89\x01\xbaH\x85\x01\x1a\x82\x01\n" +
+	" create_user_password_requirement\x12$password is required for local users\x1a8this.user.source_system != 1 || size(this.password) >= 8B\v\n" +
+	"\t_passwordB\x12\n" +
+	"\x10_linking_optionsB\n" +
+	"\n" +
+	"\b_dry_run\"\x86\x01\n" +
 	"\x12CreateUserResponse\x12)\n" +
-	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserR\x04user\")\n" +
-	"\x0eGetUserRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"<\n" +
+	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserR\x04user\x12\x1a\n" +
+	"\bwarnings\x18\x02 \x03(\tR\bwarnings\x12)\n" +
+	"\x10created_accounts\x18\x03 \x03(\tR\x0fcreatedAccounts\"\xbc\x01\n" +
+	"\x0eGetUserRequest\x12\x10\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x12\x1c\n" +
+	"\busername\x18\x02 \x01(\tH\x00R\busername\x12\x16\n" +
+	"\x05email\x18\x03 \x01(\tH\x00R\x05email\x12>\n" +
+	"\n" +
+	"field_mask\x18\x04 \x01(\v2\x1a.google.protobuf.FieldMaskH\x01R\tfieldMask\x88\x01\x01B\x13\n" +
+	"\n" +
+	"identifier\x12\x05\xbaH\x02\b\x01B\r\n" +
+	"\v_field_mask\"<\n" +
 	"\x0fGetUserResponse\x12)\n" +
-	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserR\x04user\"F\n" +
+	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserR\x04user\"\xe8\x01\n" +
 	"\x11UpdateUserRequest\x121\n" +
-	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserB\x06\xbaH\x03\xc8\x01\x01R\x04user\"?\n" +
+	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserB\x06\xbaH\x03\xc8\x01\x01R\x04user\x129\n" +
+	"\n" +
+	"field_mask\x18\x02 \x01(\v2\x1a.google.protobuf.FieldMaskR\tfieldMask\x12Q\n" +
+	"\x0flinking_options\x18\x03 \x01(\v2#.schema.v1alpha1.UserLinkingOptionsH\x00R\x0elinkingOptions\x88\x01\x01B\x12\n" +
+	"\x10_linking_options\"[\n" +
 	"\x12UpdateUserResponse\x12)\n" +
-	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserR\x04user\",\n" +
+	"\x04user\x18\x01 \x01(\v2\x15.schema.v1alpha1.UserR\x04user\x12\x1a\n" +
+	"\bwarnings\x18\x02 \x03(\tR\bwarnings\"\xa1\x01\n" +
 	"\x11DeleteUserRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\".\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12*\n" +
+	"\x0ecascade_delete\x18\x02 \x01(\bH\x00R\rcascadeDelete\x88\x01\x01\x12$\n" +
+	"\vbackup_data\x18\x03 \x01(\bH\x01R\n" +
+	"backupData\x88\x01\x01B\x11\n" +
+	"\x0f_cascade_deleteB\x0e\n" +
+	"\f_backup_data\"\x9b\x01\n" +
 	"\x12DeleteUserResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"\x8a\x01\n" +
-	"\x10ListUsersRequest\x123\n" +
-	"\x06source\x18\x01 \x01(\x0e2\x1b.schema.v1alpha1.UserSourceR\x06source\x12\x18\n" +
-	"\aenabled\x18\x02 \x01(\bR\aenabled\x12'\n" +
-	"\x0fusername_prefix\x18\x03 \x01(\tR\x0eusernamePrefix\"@\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12)\n" +
+	"\x10deleted_accounts\x18\x02 \x03(\tR\x0fdeletedAccounts\x12,\n" +
+	"\x0fbackup_location\x18\x03 \x01(\tH\x00R\x0ebackupLocation\x88\x01\x01B\x12\n" +
+	"\x10_backup_location\"\x89\x03\n" +
+	"\x10ListUsersRequest\x12B\n" +
+	"\x06source\x18\x01 \x01(\x0e2\x1b.schema.v1alpha1.UserSourceB\b\xbaH\x05\x82\x01\x02\x10\x01H\x00R\x06source\x88\x01\x01\x12\x1d\n" +
+	"\aenabled\x18\x02 \x01(\bH\x01R\aenabled\x88\x01\x01\x12,\n" +
+	"\x0fusername_prefix\x18\x03 \x01(\tH\x02R\x0eusernamePrefix\x88\x01\x01\x12>\n" +
+	"\n" +
+	"field_mask\x18\x04 \x01(\v2\x1a.google.protobuf.FieldMaskH\x03R\tfieldMask\x88\x01\x01\x12)\n" +
+	"\tpage_size\x18\x05 \x01(\x05B\a\xbaH\x04\x1a\x02(\x01H\x04R\bpageSize\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"page_token\x18\x06 \x01(\tH\x05R\tpageToken\x88\x01\x01B\t\n" +
+	"\a_sourceB\n" +
+	"\n" +
+	"\b_enabledB\x12\n" +
+	"\x10_username_prefixB\r\n" +
+	"\v_field_maskB\f\n" +
+	"\n" +
+	"_page_sizeB\r\n" +
+	"\v_page_token\"\x81\x01\n" +
 	"\x11ListUsersResponse\x12+\n" +
-	"\x05users\x18\x01 \x03(\v2\x15.schema.v1alpha1.UserR\x05users\"\x90\x01\n" +
+	"\x05users\x18\x01 \x03(\v2\x15.schema.v1alpha1.UserR\x05users\x12+\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tH\x00R\rnextPageToken\x88\x01\x01B\x12\n" +
+	"\x10_next_page_token\"\x93\x01\n" +
 	"\x15ChangePasswordRequest\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x122\n" +
-	"\x10current_password\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0fcurrentPassword\x12*\n" +
-	"\fnew_password\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\bR\vnewPassword\"2\n" +
+	"\x10current_password\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0fcurrentPassword\x12-\n" +
+	"\fnew_password\x18\x03 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\b\x18\x80\x01R\vnewPassword\"q\n" +
 	"\x16ChangePasswordResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"q\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12*\n" +
+	"\x0efailure_reason\x18\x02 \x01(\tH\x00R\rfailureReason\x88\x01\x01B\x11\n" +
+	"\x0f_failure_reason\"\xe1\x01\n" +
 	"\x14ResetPasswordRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12*\n" +
-	"\fnew_password\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\bR\vnewPassword\x12\x14\n" +
-	"\x05force\x18\x03 \x01(\bR\x05force\"T\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x122\n" +
+	"\fnew_password\x18\x02 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\b\x18\x80\x01H\x00R\vnewPassword\x88\x01\x01\x12\x19\n" +
+	"\x05force\x18\x03 \x01(\bH\x01R\x05force\x88\x01\x01\x120\n" +
+	"\x11generate_password\x18\x04 \x01(\bH\x02R\x10generatePassword\x88\x01\x01B\x0f\n" +
+	"\r_new_passwordB\b\n" +
+	"\x06_forceB\x14\n" +
+	"\x12_generate_password\"\x93\x01\n" +
 	"\x15ResetPasswordResponse\x12!\n" +
 	"\fnew_password\x18\x01 \x01(\tR\vnewPassword\x12\x18\n" +
-	"\asuccess\x18\x02 \x01(\bR\asuccess\"c\n" +
+	"\asuccess\x18\x02 \x01(\bR\asuccess\x12*\n" +
+	"\x0efailure_reason\x18\x03 \x01(\tH\x00R\rfailureReason\x88\x01\x01B\x11\n" +
+	"\x0f_failure_reason\"\xc6\x01\n" +
 	"\x17AuthenticateUserRequest\x12#\n" +
 	"\busername\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\busername\x12#\n" +
-	"\bpassword\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bpassword\"\x8a\x01\n" +
+	"\bpassword\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bpassword\x12 \n" +
+	"\tsource_ip\x18\x03 \x01(\tH\x00R\bsourceIp\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"user_agent\x18\x04 \x01(\tH\x01R\tuserAgent\x88\x01\x01B\f\n" +
+	"\n" +
+	"_source_ipB\r\n" +
+	"\v_user_agent\"\xa2\x02\n" +
 	"\x18AuthenticateUserResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x14\n" +
-	"\x05token\x18\x03 \x01(\tR\x05token\x12%\n" +
-	"\x0efailure_reason\x18\x04 \x01(\tR\rfailureReason*\xaf\x01\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x1c\n" +
+	"\auser_id\x18\x02 \x01(\tH\x00R\x06userId\x88\x01\x01\x12\x19\n" +
+	"\x05token\x18\x03 \x01(\tH\x01R\x05token\x88\x01\x01\x12*\n" +
+	"\x0efailure_reason\x18\x04 \x01(\tH\x02R\rfailureReason\x88\x01\x01\x12I\n" +
+	"\x10token_expires_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampH\x03R\x0etokenExpiresAt\x88\x01\x01B\n" +
+	"\n" +
+	"\b_user_idB\b\n" +
+	"\x06_tokenB\x11\n" +
+	"\x0f_failure_reasonB\x13\n" +
+	"\x11_token_expires_at*\xe3\x01\n" +
 	"\n" +
 	"UserSource\x12\x1b\n" +
 	"\x17USER_SOURCE_UNSPECIFIED\x10\x00\x12\x15\n" +
@@ -2135,30 +2646,37 @@ const file_schema_v1alpha1_user_proto_rawDesc = "" +
 	"\x0eUSER_SOURCE_AD\x10\x03\x12\x14\n" +
 	"\x10USER_SOURCE_IPMI\x10\x04\x12\x17\n" +
 	"\x13USER_SOURCE_REDFISH\x10\x05\x12\x14\n" +
-	"\x10USER_SOURCE_NATS\x10\x06*\xd0\x01\n" +
+	"\x10USER_SOURCE_NATS\x10\x06\x12\x14\n" +
+	"\x10USER_SOURCE_UNIX\x10\a\x12\x1c\n" +
+	"\x18USER_SOURCE_EXTERNAL_API\x10\b*\xde\x02\n" +
+	"\x15UserCreationInterface\x12'\n" +
+	"#USER_CREATION_INTERFACE_UNSPECIFIED\x10\x00\x12&\n" +
+	"\"USER_CREATION_INTERFACE_SCHEMA_API\x10\x01\x12(\n" +
+	"$USER_CREATION_INTERFACE_UNIX_USERADD\x10\x02\x12&\n" +
+	"\"USER_CREATION_INTERFACE_LDAP_ADMIN\x10\x03\x12$\n" +
+	" USER_CREATION_INTERFACE_AD_ADMIN\x10\x04\x12'\n" +
+	"#USER_CREATION_INTERFACE_REDFISH_API\x10\x05\x12'\n" +
+	"#USER_CREATION_INTERFACE_NATS_CONFIG\x10\x06\x12*\n" +
+	"&USER_CREATION_INTERFACE_IPMI_USER_MGMT\x10\a*\x84\x02\n" +
 	"\x15PasswordHashAlgorithm\x12'\n" +
 	"#PASSWORD_HASH_ALGORITHM_UNSPECIFIED\x10\x00\x12\"\n" +
-	"\x1ePASSWORD_HASH_ALGORITHM_BCRYPT\x10\x01\x12\"\n" +
-	"\x1ePASSWORD_HASH_ALGORITHM_ARGON2\x10\x02\x12\"\n" +
-	"\x1ePASSWORD_HASH_ALGORITHM_SHA256\x10\x03\x12\"\n" +
-	"\x1ePASSWORD_HASH_ALGORITHM_SHA512\x10\x04*\xa1\x01\n" +
+	"\x1ePASSWORD_HASH_ALGORITHM_BCRYPT\x10\x01\x12$\n" +
+	" PASSWORD_HASH_ALGORITHM_ARGON2ID\x10\x02\x12\"\n" +
+	"\x1ePASSWORD_HASH_ALGORITHM_SCRYPT\x10\x03\x12)\n" +
+	"%PASSWORD_HASH_ALGORITHM_PBKDF2_SHA256\x10\x04\x12)\n" +
+	"%PASSWORD_HASH_ALGORITHM_PBKDF2_SHA512\x10\x05*\xe9\x01\n" +
 	"\rLockoutReason\x12\x1e\n" +
 	"\x1aLOCKOUT_REASON_UNSPECIFIED\x10\x00\x12(\n" +
 	"$LOCKOUT_REASON_FAILED_LOGIN_ATTEMPTS\x10\x01\x12!\n" +
 	"\x1dLOCKOUT_REASON_ADMINISTRATIVE\x10\x02\x12#\n" +
-	"\x1fLOCKOUT_REASON_PASSWORD_EXPIRED\x10\x032\xf0\x05\n" +
-	"\vUserService\x12W\n" +
-	"\n" +
-	"CreateUser\x12\".schema.v1alpha1.CreateUserRequest\x1a#.schema.v1alpha1.CreateUserResponse\"\x00\x12N\n" +
-	"\aGetUser\x12\x1f.schema.v1alpha1.GetUserRequest\x1a .schema.v1alpha1.GetUserResponse\"\x00\x12W\n" +
-	"\n" +
-	"UpdateUser\x12\".schema.v1alpha1.UpdateUserRequest\x1a#.schema.v1alpha1.UpdateUserResponse\"\x00\x12W\n" +
-	"\n" +
-	"DeleteUser\x12\".schema.v1alpha1.DeleteUserRequest\x1a#.schema.v1alpha1.DeleteUserResponse\"\x00\x12T\n" +
-	"\tListUsers\x12!.schema.v1alpha1.ListUsersRequest\x1a\".schema.v1alpha1.ListUsersResponse\"\x00\x12c\n" +
-	"\x0eChangePassword\x12&.schema.v1alpha1.ChangePasswordRequest\x1a'.schema.v1alpha1.ChangePasswordResponse\"\x00\x12`\n" +
-	"\rResetPassword\x12%.schema.v1alpha1.ResetPasswordRequest\x1a&.schema.v1alpha1.ResetPasswordResponse\"\x00\x12i\n" +
-	"\x10AuthenticateUser\x12(.schema.v1alpha1.AuthenticateUserRequest\x1a).schema.v1alpha1.AuthenticateUserResponse\"\x00B\xbc\x01\n" +
+	"\x1fLOCKOUT_REASON_PASSWORD_EXPIRED\x10\x03\x12\"\n" +
+	"\x1eLOCKOUT_REASON_ACCOUNT_EXPIRED\x10\x04\x12\"\n" +
+	"\x1eLOCKOUT_REASON_SECURITY_POLICY\x10\x05*\x97\x01\n" +
+	"\x0eUserLinkAction\x12 \n" +
+	"\x1cUSER_LINK_ACTION_UNSPECIFIED\x10\x00\x12\"\n" +
+	"\x1eUSER_LINK_ACTION_LINK_EXISTING\x10\x01\x12\x1f\n" +
+	"\x1bUSER_LINK_ACTION_CREATE_NEW\x10\x02\x12\x1e\n" +
+	"\x1aUSER_LINK_ACTION_NO_ACTION\x10\x03B\xbc\x01\n" +
 	"\x13com.schema.v1alpha1B\tUserProtoP\x01Z=github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;schemav1alpha1\xa2\x02\x03SXX\xaa\x02\x0fSchema.V1alpha1\xca\x02\x0fSchema\\V1alpha1\xe2\x02\x1bSchema\\V1alpha1\\GPBMetadata\xea\x02\x10Schema::V1alpha1b\x06proto3"
 
 var (
@@ -2173,82 +2691,92 @@ func file_schema_v1alpha1_user_proto_rawDescGZIP() []byte {
 	return file_schema_v1alpha1_user_proto_rawDescData
 }
 
-var file_schema_v1alpha1_user_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_schema_v1alpha1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
+var file_schema_v1alpha1_user_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
+var file_schema_v1alpha1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
 var file_schema_v1alpha1_user_proto_goTypes = []any{
 	(UserSource)(0),                  // 0: schema.v1alpha1.UserSource
-	(PasswordHashAlgorithm)(0),       // 1: schema.v1alpha1.PasswordHashAlgorithm
-	(LockoutReason)(0),               // 2: schema.v1alpha1.LockoutReason
-	(*User)(nil),                     // 3: schema.v1alpha1.User
-	(*AuthenticationData)(nil),       // 4: schema.v1alpha1.AuthenticationData
-	(*AccountLockoutInfo)(nil),       // 5: schema.v1alpha1.AccountLockoutInfo
-	(*UnixUserInfo)(nil),             // 6: schema.v1alpha1.UnixUserInfo
-	(*LdapUserInfo)(nil),             // 7: schema.v1alpha1.LdapUserInfo
-	(*RedfishAccountInfo)(nil),       // 8: schema.v1alpha1.RedfishAccountInfo
-	(*RedfishLockoutPolicy)(nil),     // 9: schema.v1alpha1.RedfishLockoutPolicy
-	(*NatsAccountInfo)(nil),          // 10: schema.v1alpha1.NatsAccountInfo
-	(*NatsPermissions)(nil),          // 11: schema.v1alpha1.NatsPermissions
-	(*NatsLimits)(nil),               // 12: schema.v1alpha1.NatsLimits
-	(*SelinuxUserInfo)(nil),          // 13: schema.v1alpha1.SelinuxUserInfo
-	(*CreateUserRequest)(nil),        // 14: schema.v1alpha1.CreateUserRequest
-	(*CreateUserResponse)(nil),       // 15: schema.v1alpha1.CreateUserResponse
-	(*GetUserRequest)(nil),           // 16: schema.v1alpha1.GetUserRequest
-	(*GetUserResponse)(nil),          // 17: schema.v1alpha1.GetUserResponse
-	(*UpdateUserRequest)(nil),        // 18: schema.v1alpha1.UpdateUserRequest
-	(*UpdateUserResponse)(nil),       // 19: schema.v1alpha1.UpdateUserResponse
-	(*DeleteUserRequest)(nil),        // 20: schema.v1alpha1.DeleteUserRequest
-	(*DeleteUserResponse)(nil),       // 21: schema.v1alpha1.DeleteUserResponse
-	(*ListUsersRequest)(nil),         // 22: schema.v1alpha1.ListUsersRequest
-	(*ListUsersResponse)(nil),        // 23: schema.v1alpha1.ListUsersResponse
-	(*ChangePasswordRequest)(nil),    // 24: schema.v1alpha1.ChangePasswordRequest
-	(*ChangePasswordResponse)(nil),   // 25: schema.v1alpha1.ChangePasswordResponse
-	(*ResetPasswordRequest)(nil),     // 26: schema.v1alpha1.ResetPasswordRequest
-	(*ResetPasswordResponse)(nil),    // 27: schema.v1alpha1.ResetPasswordResponse
-	(*AuthenticateUserRequest)(nil),  // 28: schema.v1alpha1.AuthenticateUserRequest
-	(*AuthenticateUserResponse)(nil), // 29: schema.v1alpha1.AuthenticateUserResponse
+	(UserCreationInterface)(0),       // 1: schema.v1alpha1.UserCreationInterface
+	(PasswordHashAlgorithm)(0),       // 2: schema.v1alpha1.PasswordHashAlgorithm
+	(LockoutReason)(0),               // 3: schema.v1alpha1.LockoutReason
+	(UserLinkAction)(0),              // 4: schema.v1alpha1.UserLinkAction
+	(*User)(nil),                     // 5: schema.v1alpha1.User
+	(*AuthenticationData)(nil),       // 6: schema.v1alpha1.AuthenticationData
+	(*AccountLockoutInfo)(nil),       // 7: schema.v1alpha1.AccountLockoutInfo
+	(*UnixUserInfo)(nil),             // 8: schema.v1alpha1.UnixUserInfo
+	(*LdapUserInfo)(nil),             // 9: schema.v1alpha1.LdapUserInfo
+	(*RedfishAccountInfo)(nil),       // 10: schema.v1alpha1.RedfishAccountInfo
+	(*RedfishLockoutPolicy)(nil),     // 11: schema.v1alpha1.RedfishLockoutPolicy
+	(*NatsAccountInfo)(nil),          // 12: schema.v1alpha1.NatsAccountInfo
+	(*NatsPermissions)(nil),          // 13: schema.v1alpha1.NatsPermissions
+	(*NatsLimits)(nil),               // 14: schema.v1alpha1.NatsLimits
+	(*UserLinkingOptions)(nil),       // 15: schema.v1alpha1.UserLinkingOptions
+	(*CreateUserRequest)(nil),        // 16: schema.v1alpha1.CreateUserRequest
+	(*CreateUserResponse)(nil),       // 17: schema.v1alpha1.CreateUserResponse
+	(*GetUserRequest)(nil),           // 18: schema.v1alpha1.GetUserRequest
+	(*GetUserResponse)(nil),          // 19: schema.v1alpha1.GetUserResponse
+	(*UpdateUserRequest)(nil),        // 20: schema.v1alpha1.UpdateUserRequest
+	(*UpdateUserResponse)(nil),       // 21: schema.v1alpha1.UpdateUserResponse
+	(*DeleteUserRequest)(nil),        // 22: schema.v1alpha1.DeleteUserRequest
+	(*DeleteUserResponse)(nil),       // 23: schema.v1alpha1.DeleteUserResponse
+	(*ListUsersRequest)(nil),         // 24: schema.v1alpha1.ListUsersRequest
+	(*ListUsersResponse)(nil),        // 25: schema.v1alpha1.ListUsersResponse
+	(*ChangePasswordRequest)(nil),    // 26: schema.v1alpha1.ChangePasswordRequest
+	(*ChangePasswordResponse)(nil),   // 27: schema.v1alpha1.ChangePasswordResponse
+	(*ResetPasswordRequest)(nil),     // 28: schema.v1alpha1.ResetPasswordRequest
+	(*ResetPasswordResponse)(nil),    // 29: schema.v1alpha1.ResetPasswordResponse
+	(*AuthenticateUserRequest)(nil),  // 30: schema.v1alpha1.AuthenticateUserRequest
+	(*AuthenticateUserResponse)(nil), // 31: schema.v1alpha1.AuthenticateUserResponse
+	nil,                              // 32: schema.v1alpha1.User.CustomAttributesEntry
+	(*timestamppb.Timestamp)(nil),    // 33: google.protobuf.Timestamp
+	(*fieldmaskpb.FieldMask)(nil),    // 34: google.protobuf.FieldMask
 }
 var file_schema_v1alpha1_user_proto_depIdxs = []int32{
-	0,  // 0: schema.v1alpha1.User.source_system:type_name -> schema.v1alpha1.UserSource
-	4,  // 1: schema.v1alpha1.User.auth_data:type_name -> schema.v1alpha1.AuthenticationData
-	6,  // 2: schema.v1alpha1.User.unix_info:type_name -> schema.v1alpha1.UnixUserInfo
-	7,  // 3: schema.v1alpha1.User.ldap_info:type_name -> schema.v1alpha1.LdapUserInfo
-	8,  // 4: schema.v1alpha1.User.redfish_info:type_name -> schema.v1alpha1.RedfishAccountInfo
-	10, // 5: schema.v1alpha1.User.nats_info:type_name -> schema.v1alpha1.NatsAccountInfo
-	13, // 6: schema.v1alpha1.User.selinux_info:type_name -> schema.v1alpha1.SelinuxUserInfo
-	1,  // 7: schema.v1alpha1.AuthenticationData.hash_algorithm:type_name -> schema.v1alpha1.PasswordHashAlgorithm
-	5,  // 8: schema.v1alpha1.AuthenticationData.lockout_info:type_name -> schema.v1alpha1.AccountLockoutInfo
-	2,  // 9: schema.v1alpha1.AccountLockoutInfo.reason:type_name -> schema.v1alpha1.LockoutReason
-	9,  // 10: schema.v1alpha1.RedfishAccountInfo.lockout_policy:type_name -> schema.v1alpha1.RedfishLockoutPolicy
-	11, // 11: schema.v1alpha1.NatsAccountInfo.permissions:type_name -> schema.v1alpha1.NatsPermissions
-	12, // 12: schema.v1alpha1.NatsAccountInfo.limits:type_name -> schema.v1alpha1.NatsLimits
-	3,  // 13: schema.v1alpha1.CreateUserRequest.user:type_name -> schema.v1alpha1.User
-	3,  // 14: schema.v1alpha1.CreateUserResponse.user:type_name -> schema.v1alpha1.User
-	3,  // 15: schema.v1alpha1.GetUserResponse.user:type_name -> schema.v1alpha1.User
-	3,  // 16: schema.v1alpha1.UpdateUserRequest.user:type_name -> schema.v1alpha1.User
-	3,  // 17: schema.v1alpha1.UpdateUserResponse.user:type_name -> schema.v1alpha1.User
-	0,  // 18: schema.v1alpha1.ListUsersRequest.source:type_name -> schema.v1alpha1.UserSource
-	3,  // 19: schema.v1alpha1.ListUsersResponse.users:type_name -> schema.v1alpha1.User
-	14, // 20: schema.v1alpha1.UserService.CreateUser:input_type -> schema.v1alpha1.CreateUserRequest
-	16, // 21: schema.v1alpha1.UserService.GetUser:input_type -> schema.v1alpha1.GetUserRequest
-	18, // 22: schema.v1alpha1.UserService.UpdateUser:input_type -> schema.v1alpha1.UpdateUserRequest
-	20, // 23: schema.v1alpha1.UserService.DeleteUser:input_type -> schema.v1alpha1.DeleteUserRequest
-	22, // 24: schema.v1alpha1.UserService.ListUsers:input_type -> schema.v1alpha1.ListUsersRequest
-	24, // 25: schema.v1alpha1.UserService.ChangePassword:input_type -> schema.v1alpha1.ChangePasswordRequest
-	26, // 26: schema.v1alpha1.UserService.ResetPassword:input_type -> schema.v1alpha1.ResetPasswordRequest
-	28, // 27: schema.v1alpha1.UserService.AuthenticateUser:input_type -> schema.v1alpha1.AuthenticateUserRequest
-	15, // 28: schema.v1alpha1.UserService.CreateUser:output_type -> schema.v1alpha1.CreateUserResponse
-	17, // 29: schema.v1alpha1.UserService.GetUser:output_type -> schema.v1alpha1.GetUserResponse
-	19, // 30: schema.v1alpha1.UserService.UpdateUser:output_type -> schema.v1alpha1.UpdateUserResponse
-	21, // 31: schema.v1alpha1.UserService.DeleteUser:output_type -> schema.v1alpha1.DeleteUserResponse
-	23, // 32: schema.v1alpha1.UserService.ListUsers:output_type -> schema.v1alpha1.ListUsersResponse
-	25, // 33: schema.v1alpha1.UserService.ChangePassword:output_type -> schema.v1alpha1.ChangePasswordResponse
-	27, // 34: schema.v1alpha1.UserService.ResetPassword:output_type -> schema.v1alpha1.ResetPasswordResponse
-	29, // 35: schema.v1alpha1.UserService.AuthenticateUser:output_type -> schema.v1alpha1.AuthenticateUserResponse
-	28, // [28:36] is the sub-list for method output_type
-	20, // [20:28] is the sub-list for method input_type
-	20, // [20:20] is the sub-list for extension type_name
-	20, // [20:20] is the sub-list for extension extendee
-	0,  // [0:20] is the sub-list for field type_name
+	33, // 0: schema.v1alpha1.User.created_at:type_name -> google.protobuf.Timestamp
+	33, // 1: schema.v1alpha1.User.updated_at:type_name -> google.protobuf.Timestamp
+	33, // 2: schema.v1alpha1.User.last_login:type_name -> google.protobuf.Timestamp
+	0,  // 3: schema.v1alpha1.User.source_system:type_name -> schema.v1alpha1.UserSource
+	1,  // 4: schema.v1alpha1.User.creation_interface:type_name -> schema.v1alpha1.UserCreationInterface
+	6,  // 5: schema.v1alpha1.User.auth_data:type_name -> schema.v1alpha1.AuthenticationData
+	8,  // 6: schema.v1alpha1.User.unix_info:type_name -> schema.v1alpha1.UnixUserInfo
+	9,  // 7: schema.v1alpha1.User.ldap_info:type_name -> schema.v1alpha1.LdapUserInfo
+	10, // 8: schema.v1alpha1.User.redfish_info:type_name -> schema.v1alpha1.RedfishAccountInfo
+	12, // 9: schema.v1alpha1.User.nats_info:type_name -> schema.v1alpha1.NatsAccountInfo
+	32, // 10: schema.v1alpha1.User.custom_attributes:type_name -> schema.v1alpha1.User.CustomAttributesEntry
+	2,  // 11: schema.v1alpha1.AuthenticationData.hash_algorithm:type_name -> schema.v1alpha1.PasswordHashAlgorithm
+	33, // 12: schema.v1alpha1.AuthenticationData.password_last_changed:type_name -> google.protobuf.Timestamp
+	33, // 13: schema.v1alpha1.AuthenticationData.password_expires_at:type_name -> google.protobuf.Timestamp
+	7,  // 14: schema.v1alpha1.AuthenticationData.lockout_info:type_name -> schema.v1alpha1.AccountLockoutInfo
+	3,  // 15: schema.v1alpha1.AccountLockoutInfo.reason:type_name -> schema.v1alpha1.LockoutReason
+	33, // 16: schema.v1alpha1.AccountLockoutInfo.lockout_time:type_name -> google.protobuf.Timestamp
+	33, // 17: schema.v1alpha1.AccountLockoutInfo.attempts_reset_time:type_name -> google.protobuf.Timestamp
+	33, // 18: schema.v1alpha1.LdapUserInfo.account_expires:type_name -> google.protobuf.Timestamp
+	33, // 19: schema.v1alpha1.LdapUserInfo.pwd_last_set:type_name -> google.protobuf.Timestamp
+	11, // 20: schema.v1alpha1.RedfishAccountInfo.lockout_policy:type_name -> schema.v1alpha1.RedfishLockoutPolicy
+	13, // 21: schema.v1alpha1.NatsAccountInfo.permissions:type_name -> schema.v1alpha1.NatsPermissions
+	14, // 22: schema.v1alpha1.NatsAccountInfo.limits:type_name -> schema.v1alpha1.NatsLimits
+	33, // 23: schema.v1alpha1.NatsAccountInfo.jwt_expires_at:type_name -> google.protobuf.Timestamp
+	4,  // 24: schema.v1alpha1.UserLinkingOptions.unix_action:type_name -> schema.v1alpha1.UserLinkAction
+	4,  // 25: schema.v1alpha1.UserLinkingOptions.ldap_action:type_name -> schema.v1alpha1.UserLinkAction
+	4,  // 26: schema.v1alpha1.UserLinkingOptions.redfish_action:type_name -> schema.v1alpha1.UserLinkAction
+	4,  // 27: schema.v1alpha1.UserLinkingOptions.nats_action:type_name -> schema.v1alpha1.UserLinkAction
+	5,  // 28: schema.v1alpha1.CreateUserRequest.user:type_name -> schema.v1alpha1.User
+	15, // 29: schema.v1alpha1.CreateUserRequest.linking_options:type_name -> schema.v1alpha1.UserLinkingOptions
+	5,  // 30: schema.v1alpha1.CreateUserResponse.user:type_name -> schema.v1alpha1.User
+	34, // 31: schema.v1alpha1.GetUserRequest.field_mask:type_name -> google.protobuf.FieldMask
+	5,  // 32: schema.v1alpha1.GetUserResponse.user:type_name -> schema.v1alpha1.User
+	5,  // 33: schema.v1alpha1.UpdateUserRequest.user:type_name -> schema.v1alpha1.User
+	34, // 34: schema.v1alpha1.UpdateUserRequest.field_mask:type_name -> google.protobuf.FieldMask
+	15, // 35: schema.v1alpha1.UpdateUserRequest.linking_options:type_name -> schema.v1alpha1.UserLinkingOptions
+	5,  // 36: schema.v1alpha1.UpdateUserResponse.user:type_name -> schema.v1alpha1.User
+	0,  // 37: schema.v1alpha1.ListUsersRequest.source:type_name -> schema.v1alpha1.UserSource
+	34, // 38: schema.v1alpha1.ListUsersRequest.field_mask:type_name -> google.protobuf.FieldMask
+	5,  // 39: schema.v1alpha1.ListUsersResponse.users:type_name -> schema.v1alpha1.User
+	33, // 40: schema.v1alpha1.AuthenticateUserResponse.token_expires_at:type_name -> google.protobuf.Timestamp
+	41, // [41:41] is the sub-list for method output_type
+	41, // [41:41] is the sub-list for method input_type
+	41, // [41:41] is the sub-list for extension type_name
+	41, // [41:41] is the sub-list for extension extendee
+	0,  // [0:41] is the sub-list for field type_name
 }
 
 func init() { file_schema_v1alpha1_user_proto_init() }
@@ -2256,15 +2784,41 @@ func file_schema_v1alpha1_user_proto_init() {
 	if File_schema_v1alpha1_user_proto != nil {
 		return
 	}
+	file_schema_v1alpha1_user_proto_msgTypes[0].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[1].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[2].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[3].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[4].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[5].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[6].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[7].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[9].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[10].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[11].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[13].OneofWrappers = []any{
+		(*GetUserRequest_Id)(nil),
+		(*GetUserRequest_Username)(nil),
+		(*GetUserRequest_Email)(nil),
+	}
+	file_schema_v1alpha1_user_proto_msgTypes[15].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[17].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[18].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[19].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[20].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[22].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[23].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[24].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[25].OneofWrappers = []any{}
+	file_schema_v1alpha1_user_proto_msgTypes[26].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_schema_v1alpha1_user_proto_rawDesc), len(file_schema_v1alpha1_user_proto_rawDesc)),
-			NumEnums:      3,
-			NumMessages:   27,
+			NumEnums:      5,
+			NumMessages:   28,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   0,
 		},
 		GoTypes:           file_schema_v1alpha1_user_proto_goTypes,
 		DependencyIndexes: file_schema_v1alpha1_user_proto_depIdxs,

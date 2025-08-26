@@ -12,6 +12,9 @@ import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	durationpb "google.golang.org/protobuf/types/known/durationpb"
+	fieldmaskpb "google.golang.org/protobuf/types/known/fieldmaskpb"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -24,431 +27,150 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// HostState represents the operational state of a host
-type HostState int32
+type HealthStatus int32
 
 const (
-	HostState_HOST_STATE_UNSPECIFIED HostState = 0
-	HostState_HOST_STATE_ON          HostState = 1
-	HostState_HOST_STATE_OFF         HostState = 2
-	HostState_HOST_STATE_ERROR       HostState = 3
-	HostState_HOST_STATE_UNKNOWN     HostState = 4
-	HostState_HOST_STATE_STARTING    HostState = 5
-	HostState_HOST_STATE_STOPPING    HostState = 6
+	HealthStatus_HEALTH_STATUS_UNSPECIFIED HealthStatus = 0
+	HealthStatus_HEALTH_STATUS_OK          HealthStatus = 1
+	HealthStatus_HEALTH_STATUS_WARNING     HealthStatus = 2
+	HealthStatus_HEALTH_STATUS_CRITICAL    HealthStatus = 3
+	HealthStatus_HEALTH_STATUS_UNKNOWN     HealthStatus = 4
 )
 
-// Enum value maps for HostState.
+// Enum value maps for HealthStatus.
 var (
-	HostState_name = map[int32]string{
-		0: "HOST_STATE_UNSPECIFIED",
-		1: "HOST_STATE_ON",
-		2: "HOST_STATE_OFF",
-		3: "HOST_STATE_ERROR",
-		4: "HOST_STATE_UNKNOWN",
-		5: "HOST_STATE_STARTING",
-		6: "HOST_STATE_STOPPING",
+	HealthStatus_name = map[int32]string{
+		0: "HEALTH_STATUS_UNSPECIFIED",
+		1: "HEALTH_STATUS_OK",
+		2: "HEALTH_STATUS_WARNING",
+		3: "HEALTH_STATUS_CRITICAL",
+		4: "HEALTH_STATUS_UNKNOWN",
 	}
-	HostState_value = map[string]int32{
-		"HOST_STATE_UNSPECIFIED": 0,
-		"HOST_STATE_ON":          1,
-		"HOST_STATE_OFF":         2,
-		"HOST_STATE_ERROR":       3,
-		"HOST_STATE_UNKNOWN":     4,
-		"HOST_STATE_STARTING":    5,
-		"HOST_STATE_STOPPING":    6,
+	HealthStatus_value = map[string]int32{
+		"HEALTH_STATUS_UNSPECIFIED": 0,
+		"HEALTH_STATUS_OK":          1,
+		"HEALTH_STATUS_WARNING":     2,
+		"HEALTH_STATUS_CRITICAL":    3,
+		"HEALTH_STATUS_UNKNOWN":     4,
 	}
 )
 
-func (x HostState) Enum() *HostState {
-	p := new(HostState)
+func (x HealthStatus) Enum() *HealthStatus {
+	p := new(HealthStatus)
 	*p = x
 	return p
 }
 
-func (x HostState) String() string {
+func (x HealthStatus) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (HostState) Descriptor() protoreflect.EnumDescriptor {
+func (HealthStatus) Descriptor() protoreflect.EnumDescriptor {
 	return file_schema_v1alpha1_system_proto_enumTypes[0].Descriptor()
 }
 
-func (HostState) Type() protoreflect.EnumType {
+func (HealthStatus) Type() protoreflect.EnumType {
 	return &file_schema_v1alpha1_system_proto_enumTypes[0]
 }
 
-func (x HostState) Number() protoreflect.EnumNumber {
+func (x HealthStatus) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use HostState.Descriptor instead.
-func (HostState) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use HealthStatus.Descriptor instead.
+func (HealthStatus) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{0}
 }
 
-// HostHealth represents the health status of a host
-type HostHealth int32
+type SystemState int32
 
 const (
-	HostHealth_HOST_HEALTH_UNSPECIFIED HostHealth = 0
-	HostHealth_HOST_HEALTH_OK          HostHealth = 1
-	HostHealth_HOST_HEALTH_WARNING     HostHealth = 2
-	HostHealth_HOST_HEALTH_CRITICAL    HostHealth = 3
-	HostHealth_HOST_HEALTH_UNKNOWN     HostHealth = 4
+	SystemState_SYSTEM_STATE_UNSPECIFIED SystemState = 0
+	SystemState_SYSTEM_STATE_STARTING    SystemState = 1
+	SystemState_SYSTEM_STATE_ENABLED     SystemState = 2
+	SystemState_SYSTEM_STATE_DISABLED    SystemState = 3
+	SystemState_SYSTEM_STATE_STANDBY     SystemState = 4
+	SystemState_SYSTEM_STATE_QUIESCED    SystemState = 5
+	SystemState_SYSTEM_STATE_IN_TEST     SystemState = 6
+	SystemState_SYSTEM_STATE_UPDATING    SystemState = 7
 )
 
-// Enum value maps for HostHealth.
+// Enum value maps for SystemState.
 var (
-	HostHealth_name = map[int32]string{
-		0: "HOST_HEALTH_UNSPECIFIED",
-		1: "HOST_HEALTH_OK",
-		2: "HOST_HEALTH_WARNING",
-		3: "HOST_HEALTH_CRITICAL",
-		4: "HOST_HEALTH_UNKNOWN",
+	SystemState_name = map[int32]string{
+		0: "SYSTEM_STATE_UNSPECIFIED",
+		1: "SYSTEM_STATE_STARTING",
+		2: "SYSTEM_STATE_ENABLED",
+		3: "SYSTEM_STATE_DISABLED",
+		4: "SYSTEM_STATE_STANDBY",
+		5: "SYSTEM_STATE_QUIESCED",
+		6: "SYSTEM_STATE_IN_TEST",
+		7: "SYSTEM_STATE_UPDATING",
 	}
-	HostHealth_value = map[string]int32{
-		"HOST_HEALTH_UNSPECIFIED": 0,
-		"HOST_HEALTH_OK":          1,
-		"HOST_HEALTH_WARNING":     2,
-		"HOST_HEALTH_CRITICAL":    3,
-		"HOST_HEALTH_UNKNOWN":     4,
+	SystemState_value = map[string]int32{
+		"SYSTEM_STATE_UNSPECIFIED": 0,
+		"SYSTEM_STATE_STARTING":    1,
+		"SYSTEM_STATE_ENABLED":     2,
+		"SYSTEM_STATE_DISABLED":    3,
+		"SYSTEM_STATE_STANDBY":     4,
+		"SYSTEM_STATE_QUIESCED":    5,
+		"SYSTEM_STATE_IN_TEST":     6,
+		"SYSTEM_STATE_UPDATING":    7,
 	}
 )
 
-func (x HostHealth) Enum() *HostHealth {
-	p := new(HostHealth)
+func (x SystemState) Enum() *SystemState {
+	p := new(SystemState)
 	*p = x
 	return p
 }
 
-func (x HostHealth) String() string {
+func (x SystemState) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (HostHealth) Descriptor() protoreflect.EnumDescriptor {
+func (SystemState) Descriptor() protoreflect.EnumDescriptor {
 	return file_schema_v1alpha1_system_proto_enumTypes[1].Descriptor()
 }
 
-func (HostHealth) Type() protoreflect.EnumType {
+func (SystemState) Type() protoreflect.EnumType {
 	return &file_schema_v1alpha1_system_proto_enumTypes[1]
 }
 
-func (x HostHealth) Number() protoreflect.EnumNumber {
+func (x SystemState) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use HostHealth.Descriptor instead.
-func (HostHealth) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use SystemState.Descriptor instead.
+func (SystemState) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{1}
 }
 
-// PowerState represents the power state of a component
-type PowerState int32
-
-const (
-	PowerState_POWER_STATE_UNSPECIFIED PowerState = 0
-	PowerState_POWER_STATE_ON          PowerState = 1
-	PowerState_POWER_STATE_OFF         PowerState = 2
-	PowerState_POWER_STATE_UNKNOWN     PowerState = 3
-)
-
-// Enum value maps for PowerState.
-var (
-	PowerState_name = map[int32]string{
-		0: "POWER_STATE_UNSPECIFIED",
-		1: "POWER_STATE_ON",
-		2: "POWER_STATE_OFF",
-		3: "POWER_STATE_UNKNOWN",
-	}
-	PowerState_value = map[string]int32{
-		"POWER_STATE_UNSPECIFIED": 0,
-		"POWER_STATE_ON":          1,
-		"POWER_STATE_OFF":         2,
-		"POWER_STATE_UNKNOWN":     3,
-	}
-)
-
-func (x PowerState) Enum() *PowerState {
-	p := new(PowerState)
-	*p = x
-	return p
+type Health struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Status            HealthStatus           `protobuf:"varint,1,opt,name=status,proto3,enum=schema.v1alpha1.HealthStatus" json:"status,omitempty"`
+	StatusDescription *string                `protobuf:"bytes,2,opt,name=status_description,json=statusDescription,proto3,oneof" json:"status_description,omitempty"`
+	Details           []*HealthDetail        `protobuf:"bytes,3,rep,name=details,proto3" json:"details,omitempty"`
+	LastUpdated       *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=last_updated,json=lastUpdated,proto3,oneof" json:"last_updated,omitempty"`
+	Uptime            *durationpb.Duration   `protobuf:"bytes,5,opt,name=uptime,proto3,oneof" json:"uptime,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
-func (x PowerState) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (PowerState) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_system_proto_enumTypes[2].Descriptor()
-}
-
-func (PowerState) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_system_proto_enumTypes[2]
-}
-
-func (x PowerState) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use PowerState.Descriptor instead.
-func (PowerState) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{2}
-}
-
-// ChassisType represents the type of chassis
-type ChassisType int32
-
-const (
-	ChassisType_CHASSIS_TYPE_UNSPECIFIED ChassisType = 0
-	ChassisType_CHASSIS_TYPE_RACK        ChassisType = 1
-	ChassisType_CHASSIS_TYPE_BLADE       ChassisType = 2
-	ChassisType_CHASSIS_TYPE_STANDALONE  ChassisType = 3
-	ChassisType_CHASSIS_TYPE_CARD        ChassisType = 4
-)
-
-// Enum value maps for ChassisType.
-var (
-	ChassisType_name = map[int32]string{
-		0: "CHASSIS_TYPE_UNSPECIFIED",
-		1: "CHASSIS_TYPE_RACK",
-		2: "CHASSIS_TYPE_BLADE",
-		3: "CHASSIS_TYPE_STANDALONE",
-		4: "CHASSIS_TYPE_CARD",
-	}
-	ChassisType_value = map[string]int32{
-		"CHASSIS_TYPE_UNSPECIFIED": 0,
-		"CHASSIS_TYPE_RACK":        1,
-		"CHASSIS_TYPE_BLADE":       2,
-		"CHASSIS_TYPE_STANDALONE":  3,
-		"CHASSIS_TYPE_CARD":        4,
-	}
-)
-
-func (x ChassisType) Enum() *ChassisType {
-	p := new(ChassisType)
-	*p = x
-	return p
-}
-
-func (x ChassisType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ChassisType) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_system_proto_enumTypes[3].Descriptor()
-}
-
-func (ChassisType) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_system_proto_enumTypes[3]
-}
-
-func (x ChassisType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ChassisType.Descriptor instead.
-func (ChassisType) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{3}
-}
-
-// ChassisStatus represents the operational status of a chassis
-type ChassisStatus int32
-
-const (
-	ChassisStatus_CHASSIS_STATUS_UNSPECIFIED ChassisStatus = 0
-	ChassisStatus_CHASSIS_STATUS_OK          ChassisStatus = 1
-	ChassisStatus_CHASSIS_STATUS_WARNING     ChassisStatus = 2
-	ChassisStatus_CHASSIS_STATUS_CRITICAL    ChassisStatus = 3
-	ChassisStatus_CHASSIS_STATUS_UNKNOWN     ChassisStatus = 4
-)
-
-// Enum value maps for ChassisStatus.
-var (
-	ChassisStatus_name = map[int32]string{
-		0: "CHASSIS_STATUS_UNSPECIFIED",
-		1: "CHASSIS_STATUS_OK",
-		2: "CHASSIS_STATUS_WARNING",
-		3: "CHASSIS_STATUS_CRITICAL",
-		4: "CHASSIS_STATUS_UNKNOWN",
-	}
-	ChassisStatus_value = map[string]int32{
-		"CHASSIS_STATUS_UNSPECIFIED": 0,
-		"CHASSIS_STATUS_OK":          1,
-		"CHASSIS_STATUS_WARNING":     2,
-		"CHASSIS_STATUS_CRITICAL":    3,
-		"CHASSIS_STATUS_UNKNOWN":     4,
-	}
-)
-
-func (x ChassisStatus) Enum() *ChassisStatus {
-	p := new(ChassisStatus)
-	*p = x
-	return p
-}
-
-func (x ChassisStatus) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ChassisStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_system_proto_enumTypes[4].Descriptor()
-}
-
-func (ChassisStatus) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_system_proto_enumTypes[4]
-}
-
-func (x ChassisStatus) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ChassisStatus.Descriptor instead.
-func (ChassisStatus) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{4}
-}
-
-// ManagementControllerType represents the type of management controller
-type ManagementControllerType int32
-
-const (
-	ManagementControllerType_MANAGEMENT_CONTROLLER_TYPE_UNSPECIFIED        ManagementControllerType = 0
-	ManagementControllerType_MANAGEMENT_CONTROLLER_TYPE_SATELLITE          ManagementControllerType = 1
-	ManagementControllerType_MANAGEMENT_CONTROLLER_TYPE_BMC                ManagementControllerType = 2
-	ManagementControllerType_MANAGEMENT_CONTROLLER_TYPE_CHASSIS_CONTROLLER ManagementControllerType = 3
-)
-
-// Enum value maps for ManagementControllerType.
-var (
-	ManagementControllerType_name = map[int32]string{
-		0: "MANAGEMENT_CONTROLLER_TYPE_UNSPECIFIED",
-		1: "MANAGEMENT_CONTROLLER_TYPE_SATELLITE",
-		2: "MANAGEMENT_CONTROLLER_TYPE_BMC",
-		3: "MANAGEMENT_CONTROLLER_TYPE_CHASSIS_CONTROLLER",
-	}
-	ManagementControllerType_value = map[string]int32{
-		"MANAGEMENT_CONTROLLER_TYPE_UNSPECIFIED":        0,
-		"MANAGEMENT_CONTROLLER_TYPE_SATELLITE":          1,
-		"MANAGEMENT_CONTROLLER_TYPE_BMC":                2,
-		"MANAGEMENT_CONTROLLER_TYPE_CHASSIS_CONTROLLER": 3,
-	}
-)
-
-func (x ManagementControllerType) Enum() *ManagementControllerType {
-	p := new(ManagementControllerType)
-	*p = x
-	return p
-}
-
-func (x ManagementControllerType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ManagementControllerType) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_system_proto_enumTypes[5].Descriptor()
-}
-
-func (ManagementControllerType) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_system_proto_enumTypes[5]
-}
-
-func (x ManagementControllerType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ManagementControllerType.Descriptor instead.
-func (ManagementControllerType) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{5}
-}
-
-// ManagementControllerStatus represents the operational status of a management controller
-type ManagementControllerStatus int32
-
-const (
-	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED ManagementControllerStatus = 0
-	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_OK          ManagementControllerStatus = 1
-	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_WARNING     ManagementControllerStatus = 2
-	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR       ManagementControllerStatus = 3
-	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_UNKNOWN     ManagementControllerStatus = 4
-)
-
-// Enum value maps for ManagementControllerStatus.
-var (
-	ManagementControllerStatus_name = map[int32]string{
-		0: "MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED",
-		1: "MANAGEMENT_CONTROLLER_STATUS_OK",
-		2: "MANAGEMENT_CONTROLLER_STATUS_WARNING",
-		3: "MANAGEMENT_CONTROLLER_STATUS_ERROR",
-		4: "MANAGEMENT_CONTROLLER_STATUS_UNKNOWN",
-	}
-	ManagementControllerStatus_value = map[string]int32{
-		"MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED": 0,
-		"MANAGEMENT_CONTROLLER_STATUS_OK":          1,
-		"MANAGEMENT_CONTROLLER_STATUS_WARNING":     2,
-		"MANAGEMENT_CONTROLLER_STATUS_ERROR":       3,
-		"MANAGEMENT_CONTROLLER_STATUS_UNKNOWN":     4,
-	}
-)
-
-func (x ManagementControllerStatus) Enum() *ManagementControllerStatus {
-	p := new(ManagementControllerStatus)
-	*p = x
-	return p
-}
-
-func (x ManagementControllerStatus) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ManagementControllerStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_system_proto_enumTypes[6].Descriptor()
-}
-
-func (ManagementControllerStatus) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_system_proto_enumTypes[6]
-}
-
-func (x ManagementControllerStatus) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ManagementControllerStatus.Descriptor instead.
-func (ManagementControllerStatus) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{6}
-}
-
-// HostManagement represents the overall host and chassis management configuration
-type HostManagement struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Unique identifier for the host management instance
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Human-readable name for the host management instance
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// List of chassis managed by this host management instance
-	Chassis []*Chassis `protobuf:"bytes,3,rep,name=chassis,proto3" json:"chassis,omitempty"`
-	// List of hosts managed by this host management instance
-	Hosts []*Host `protobuf:"bytes,4,rep,name=hosts,proto3" json:"hosts,omitempty"`
-	// Management hierarchy topology
-	Topology *ManagementTopology `protobuf:"bytes,5,opt,name=topology,proto3" json:"topology,omitempty"`
-	// Timestamp of the last update
-	LastUpdateTimestamp int64 `protobuf:"varint,6,opt,name=last_update_timestamp,json=lastUpdateTimestamp,proto3" json:"last_update_timestamp,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
-}
-
-func (x *HostManagement) Reset() {
-	*x = HostManagement{}
+func (x *Health) Reset() {
+	*x = Health{}
 	mi := &file_schema_v1alpha1_system_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *HostManagement) String() string {
+func (x *Health) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*HostManagement) ProtoMessage() {}
+func (*Health) ProtoMessage() {}
 
-func (x *HostManagement) ProtoReflect() protoreflect.Message {
+func (x *Health) ProtoReflect() protoreflect.Message {
 	mi := &file_schema_v1alpha1_system_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -460,94 +182,70 @@ func (x *HostManagement) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use HostManagement.ProtoReflect.Descriptor instead.
-func (*HostManagement) Descriptor() ([]byte, []int) {
+// Deprecated: Use Health.ProtoReflect.Descriptor instead.
+func (*Health) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *HostManagement) GetId() string {
+func (x *Health) GetStatus() HealthStatus {
 	if x != nil {
-		return x.Id
+		return x.Status
+	}
+	return HealthStatus_HEALTH_STATUS_UNSPECIFIED
+}
+
+func (x *Health) GetStatusDescription() string {
+	if x != nil && x.StatusDescription != nil {
+		return *x.StatusDescription
 	}
 	return ""
 }
 
-func (x *HostManagement) GetName() string {
+func (x *Health) GetDetails() []*HealthDetail {
 	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *HostManagement) GetChassis() []*Chassis {
-	if x != nil {
-		return x.Chassis
+		return x.Details
 	}
 	return nil
 }
 
-func (x *HostManagement) GetHosts() []*Host {
+func (x *Health) GetLastUpdated() *timestamppb.Timestamp {
 	if x != nil {
-		return x.Hosts
+		return x.LastUpdated
 	}
 	return nil
 }
 
-func (x *HostManagement) GetTopology() *ManagementTopology {
+func (x *Health) GetUptime() *durationpb.Duration {
 	if x != nil {
-		return x.Topology
+		return x.Uptime
 	}
 	return nil
 }
 
-func (x *HostManagement) GetLastUpdateTimestamp() int64 {
-	if x != nil {
-		return x.LastUpdateTimestamp
-	}
-	return 0
+type HealthDetail struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Component     string                 `protobuf:"bytes,1,opt,name=component,proto3" json:"component,omitempty"`
+	Status        HealthStatus           `protobuf:"varint,2,opt,name=status,proto3,enum=schema.v1alpha1.HealthStatus" json:"status,omitempty"`
+	Message       *string                `protobuf:"bytes,3,opt,name=message,proto3,oneof" json:"message,omitempty"`
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-// Chassis represents a physical or virtual chassis containing hosts and other components
-type Chassis struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Unique identifier for the chassis
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Human-readable name for the chassis
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// Chassis type (e.g., Rack, Blade, Standalone)
-	Type ChassisType `protobuf:"varint,3,opt,name=type,proto3,enum=schema.v1alpha1.ChassisType" json:"type,omitempty"`
-	// Current power state of the chassis
-	PowerState PowerState `protobuf:"varint,4,opt,name=power_state,json=powerState,proto3,enum=schema.v1alpha1.PowerState" json:"power_state,omitempty"`
-	// Physical location of the chassis
-	PhysicalLocation string `protobuf:"bytes,5,opt,name=physical_location,json=physicalLocation,proto3" json:"physical_location,omitempty"`
-	// List of host IDs contained in this chassis
-	HostIds []string `protobuf:"bytes,6,rep,name=host_ids,json=hostIds,proto3" json:"host_ids,omitempty"`
-	// List of sensor IDs associated with this chassis
-	SensorIds []string `protobuf:"bytes,7,rep,name=sensor_ids,json=sensorIds,proto3" json:"sensor_ids,omitempty"`
-	// List of thermal zone IDs associated with this chassis
-	ThermalZoneIds []string `protobuf:"bytes,8,rep,name=thermal_zone_ids,json=thermalZoneIds,proto3" json:"thermal_zone_ids,omitempty"`
-	// Status of the chassis
-	Status ChassisStatus `protobuf:"varint,9,opt,name=status,proto3,enum=schema.v1alpha1.ChassisStatus" json:"status,omitempty"`
-	// Timestamp of the last update
-	LastUpdateTimestamp int64 `protobuf:"varint,10,opt,name=last_update_timestamp,json=lastUpdateTimestamp,proto3" json:"last_update_timestamp,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
-}
-
-func (x *Chassis) Reset() {
-	*x = Chassis{}
+func (x *HealthDetail) Reset() {
+	*x = HealthDetail{}
 	mi := &file_schema_v1alpha1_system_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Chassis) String() string {
+func (x *HealthDetail) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Chassis) ProtoMessage() {}
+func (*HealthDetail) ProtoMessage() {}
 
-func (x *Chassis) ProtoReflect() protoreflect.Message {
+func (x *HealthDetail) ProtoReflect() protoreflect.Message {
 	mi := &file_schema_v1alpha1_system_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -559,122 +257,68 @@ func (x *Chassis) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Chassis.ProtoReflect.Descriptor instead.
-func (*Chassis) Descriptor() ([]byte, []int) {
+// Deprecated: Use HealthDetail.ProtoReflect.Descriptor instead.
+func (*HealthDetail) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Chassis) GetId() string {
+func (x *HealthDetail) GetComponent() string {
 	if x != nil {
-		return x.Id
+		return x.Component
 	}
 	return ""
 }
 
-func (x *Chassis) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *Chassis) GetType() ChassisType {
-	if x != nil {
-		return x.Type
-	}
-	return ChassisType_CHASSIS_TYPE_UNSPECIFIED
-}
-
-func (x *Chassis) GetPowerState() PowerState {
-	if x != nil {
-		return x.PowerState
-	}
-	return PowerState_POWER_STATE_UNSPECIFIED
-}
-
-func (x *Chassis) GetPhysicalLocation() string {
-	if x != nil {
-		return x.PhysicalLocation
-	}
-	return ""
-}
-
-func (x *Chassis) GetHostIds() []string {
-	if x != nil {
-		return x.HostIds
-	}
-	return nil
-}
-
-func (x *Chassis) GetSensorIds() []string {
-	if x != nil {
-		return x.SensorIds
-	}
-	return nil
-}
-
-func (x *Chassis) GetThermalZoneIds() []string {
-	if x != nil {
-		return x.ThermalZoneIds
-	}
-	return nil
-}
-
-func (x *Chassis) GetStatus() ChassisStatus {
+func (x *HealthDetail) GetStatus() HealthStatus {
 	if x != nil {
 		return x.Status
 	}
-	return ChassisStatus_CHASSIS_STATUS_UNSPECIFIED
+	return HealthStatus_HEALTH_STATUS_UNSPECIFIED
 }
 
-func (x *Chassis) GetLastUpdateTimestamp() int64 {
-	if x != nil {
-		return x.LastUpdateTimestamp
+func (x *HealthDetail) GetMessage() string {
+	if x != nil && x.Message != nil {
+		return *x.Message
 	}
-	return 0
+	return ""
 }
 
-// Host represents a compute host within a chassis
-type Host struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Unique identifier for the host
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Human-readable name for the host
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// Host state (on, off, error, etc.)
-	State HostState `protobuf:"varint,3,opt,name=state,proto3,enum=schema.v1alpha1.HostState" json:"state,omitempty"`
-	// Requested host state (what we want the host to be)
-	RequestedState HostState `protobuf:"varint,4,opt,name=requested_state,json=requestedState,proto3,enum=schema.v1alpha1.HostState" json:"requested_state,omitempty"`
-	// Host health status
-	Health HostHealth `protobuf:"varint,5,opt,name=health,proto3,enum=schema.v1alpha1.HostHealth" json:"health,omitempty"`
-	// Chassis ID this host belongs to
-	ChassisId string `protobuf:"bytes,6,opt,name=chassis_id,json=chassisId,proto3" json:"chassis_id,omitempty"`
-	// Physical location of the host within the chassis
-	PhysicalLocation string `protobuf:"bytes,7,opt,name=physical_location,json=physicalLocation,proto3" json:"physical_location,omitempty"`
-	// BIOS/UEFI version
-	BiosVersion string `protobuf:"bytes,8,opt,name=bios_version,json=biosVersion,proto3" json:"bios_version,omitempty"`
-	// Host power state
-	PowerState PowerState `protobuf:"varint,9,opt,name=power_state,json=powerState,proto3,enum=schema.v1alpha1.PowerState" json:"power_state,omitempty"`
-	// Timestamp of the last update
-	LastUpdateTimestamp int64 `protobuf:"varint,10,opt,name=last_update_timestamp,json=lastUpdateTimestamp,proto3" json:"last_update_timestamp,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+func (x *HealthDetail) GetTimestamp() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Timestamp
+	}
+	return nil
 }
 
-func (x *Host) Reset() {
-	*x = Host{}
+type SystemInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Description   *string                `protobuf:"bytes,2,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	State         SystemState            `protobuf:"varint,3,opt,name=state,proto3,enum=schema.v1alpha1.SystemState" json:"state,omitempty"`
+	Health        *Health                `protobuf:"bytes,4,opt,name=health,proto3" json:"health,omitempty"`
+	Version       *string                `protobuf:"bytes,5,opt,name=version,proto3,oneof" json:"version,omitempty"`
+	BootTime      *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=boot_time,json=bootTime,proto3,oneof" json:"boot_time,omitempty"`
+	Uptime        *durationpb.Duration   `protobuf:"bytes,7,opt,name=uptime,proto3,oneof" json:"uptime,omitempty"`
+	ContactInfo   *ContactInfo           `protobuf:"bytes,8,opt,name=contact_info,json=contactInfo,proto3,oneof" json:"contact_info,omitempty"`
+	Metadata      map[string]string      `protobuf:"bytes,9,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SystemInfo) Reset() {
+	*x = SystemInfo{}
 	mi := &file_schema_v1alpha1_system_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Host) String() string {
+func (x *SystemInfo) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Host) ProtoMessage() {}
+func (*SystemInfo) ProtoMessage() {}
 
-func (x *Host) ProtoReflect() protoreflect.Message {
+func (x *SystemInfo) ProtoReflect() protoreflect.Message {
 	mi := &file_schema_v1alpha1_system_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -686,104 +330,95 @@ func (x *Host) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Host.ProtoReflect.Descriptor instead.
-func (*Host) Descriptor() ([]byte, []int) {
+// Deprecated: Use SystemInfo.ProtoReflect.Descriptor instead.
+func (*SystemInfo) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *Host) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *Host) GetName() string {
+func (x *SystemInfo) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *Host) GetState() HostState {
+func (x *SystemInfo) GetDescription() string {
+	if x != nil && x.Description != nil {
+		return *x.Description
+	}
+	return ""
+}
+
+func (x *SystemInfo) GetState() SystemState {
 	if x != nil {
 		return x.State
 	}
-	return HostState_HOST_STATE_UNSPECIFIED
+	return SystemState_SYSTEM_STATE_UNSPECIFIED
 }
 
-func (x *Host) GetRequestedState() HostState {
-	if x != nil {
-		return x.RequestedState
-	}
-	return HostState_HOST_STATE_UNSPECIFIED
-}
-
-func (x *Host) GetHealth() HostHealth {
+func (x *SystemInfo) GetHealth() *Health {
 	if x != nil {
 		return x.Health
 	}
-	return HostHealth_HOST_HEALTH_UNSPECIFIED
+	return nil
 }
 
-func (x *Host) GetChassisId() string {
-	if x != nil {
-		return x.ChassisId
+func (x *SystemInfo) GetVersion() string {
+	if x != nil && x.Version != nil {
+		return *x.Version
 	}
 	return ""
 }
 
-func (x *Host) GetPhysicalLocation() string {
+func (x *SystemInfo) GetBootTime() *timestamppb.Timestamp {
 	if x != nil {
-		return x.PhysicalLocation
+		return x.BootTime
 	}
-	return ""
+	return nil
 }
 
-func (x *Host) GetBiosVersion() string {
+func (x *SystemInfo) GetUptime() *durationpb.Duration {
 	if x != nil {
-		return x.BiosVersion
+		return x.Uptime
 	}
-	return ""
+	return nil
 }
 
-func (x *Host) GetPowerState() PowerState {
+func (x *SystemInfo) GetContactInfo() *ContactInfo {
 	if x != nil {
-		return x.PowerState
+		return x.ContactInfo
 	}
-	return PowerState_POWER_STATE_UNSPECIFIED
+	return nil
 }
 
-func (x *Host) GetLastUpdateTimestamp() int64 {
+func (x *SystemInfo) GetMetadata() map[string]string {
 	if x != nil {
-		return x.LastUpdateTimestamp
+		return x.Metadata
 	}
-	return 0
+	return nil
 }
 
-// ManagementTopology represents the hierarchical management structure
-type ManagementTopology struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Root management controllers
-	RootControllers []*ManagementController `protobuf:"bytes,1,rep,name=root_controllers,json=rootControllers,proto3" json:"root_controllers,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+type GetSystemInfoRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FieldMask     *fieldmaskpb.FieldMask `protobuf:"bytes,1,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ManagementTopology) Reset() {
-	*x = ManagementTopology{}
+func (x *GetSystemInfoRequest) Reset() {
+	*x = GetSystemInfoRequest{}
 	mi := &file_schema_v1alpha1_system_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ManagementTopology) String() string {
+func (x *GetSystemInfoRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ManagementTopology) ProtoMessage() {}
+func (*GetSystemInfoRequest) ProtoMessage() {}
 
-func (x *ManagementTopology) ProtoReflect() protoreflect.Message {
+func (x *GetSystemInfoRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_schema_v1alpha1_system_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -795,57 +430,39 @@ func (x *ManagementTopology) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ManagementTopology.ProtoReflect.Descriptor instead.
-func (*ManagementTopology) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetSystemInfoRequest.ProtoReflect.Descriptor instead.
+func (*GetSystemInfoRequest) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ManagementTopology) GetRootControllers() []*ManagementController {
+func (x *GetSystemInfoRequest) GetFieldMask() *fieldmaskpb.FieldMask {
 	if x != nil {
-		return x.RootControllers
+		return x.FieldMask
 	}
 	return nil
 }
 
-// ManagementController represents a management controller in the hierarchy
-type ManagementController struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Unique identifier for the management controller
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Human-readable name for the management controller
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// Type of management controller
-	Type ManagementControllerType `protobuf:"varint,3,opt,name=type,proto3,enum=schema.v1alpha1.ManagementControllerType" json:"type,omitempty"`
-	// Host IDs managed by this controller
-	ManagedHostIds []string `protobuf:"bytes,4,rep,name=managed_host_ids,json=managedHostIds,proto3" json:"managed_host_ids,omitempty"`
-	// Chassis IDs managed by this controller
-	ManagedChassisIds []string `protobuf:"bytes,5,rep,name=managed_chassis_ids,json=managedChassisIds,proto3" json:"managed_chassis_ids,omitempty"`
-	// Child management controllers (e.g., BMCs managed by an SMC)
-	ChildControllers []*ManagementController `protobuf:"bytes,6,rep,name=child_controllers,json=childControllers,proto3" json:"child_controllers,omitempty"`
-	// Physical location of the management controller
-	PhysicalLocation string `protobuf:"bytes,7,opt,name=physical_location,json=physicalLocation,proto3" json:"physical_location,omitempty"`
-	// Status of the management controller
-	Status ManagementControllerStatus `protobuf:"varint,8,opt,name=status,proto3,enum=schema.v1alpha1.ManagementControllerStatus" json:"status,omitempty"`
-	// Timestamp of the last update
-	LastUpdateTimestamp int64 `protobuf:"varint,9,opt,name=last_update_timestamp,json=lastUpdateTimestamp,proto3" json:"last_update_timestamp,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+type GetSystemInfoResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SystemInfo    *SystemInfo            `protobuf:"bytes,1,opt,name=system_info,json=systemInfo,proto3" json:"system_info,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ManagementController) Reset() {
-	*x = ManagementController{}
+func (x *GetSystemInfoResponse) Reset() {
+	*x = GetSystemInfoResponse{}
 	mi := &file_schema_v1alpha1_system_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ManagementController) String() string {
+func (x *GetSystemInfoResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ManagementController) ProtoMessage() {}
+func (*GetSystemInfoResponse) ProtoMessage() {}
 
-func (x *ManagementController) ProtoReflect() protoreflect.Message {
+func (x *GetSystemInfoResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_schema_v1alpha1_system_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -857,96 +474,39 @@ func (x *ManagementController) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ManagementController.ProtoReflect.Descriptor instead.
-func (*ManagementController) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetSystemInfoResponse.ProtoReflect.Descriptor instead.
+func (*GetSystemInfoResponse) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *ManagementController) GetId() string {
+func (x *GetSystemInfoResponse) GetSystemInfo() *SystemInfo {
 	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *ManagementController) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *ManagementController) GetType() ManagementControllerType {
-	if x != nil {
-		return x.Type
-	}
-	return ManagementControllerType_MANAGEMENT_CONTROLLER_TYPE_UNSPECIFIED
-}
-
-func (x *ManagementController) GetManagedHostIds() []string {
-	if x != nil {
-		return x.ManagedHostIds
+		return x.SystemInfo
 	}
 	return nil
 }
 
-func (x *ManagementController) GetManagedChassisIds() []string {
-	if x != nil {
-		return x.ManagedChassisIds
-	}
-	return nil
-}
-
-func (x *ManagementController) GetChildControllers() []*ManagementController {
-	if x != nil {
-		return x.ChildControllers
-	}
-	return nil
-}
-
-func (x *ManagementController) GetPhysicalLocation() string {
-	if x != nil {
-		return x.PhysicalLocation
-	}
-	return ""
-}
-
-func (x *ManagementController) GetStatus() ManagementControllerStatus {
-	if x != nil {
-		return x.Status
-	}
-	return ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED
-}
-
-func (x *ManagementController) GetLastUpdateTimestamp() int64 {
-	if x != nil {
-		return x.LastUpdateTimestamp
-	}
-	return 0
-}
-
-// Request message for getting a host management configuration by ID
-type GetHostManagementRequest struct {
+type GetHealthRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	FieldMask     *fieldmaskpb.FieldMask `protobuf:"bytes,1,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetHostManagementRequest) Reset() {
-	*x = GetHostManagementRequest{}
+func (x *GetHealthRequest) Reset() {
+	*x = GetHealthRequest{}
 	mi := &file_schema_v1alpha1_system_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetHostManagementRequest) String() string {
+func (x *GetHealthRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetHostManagementRequest) ProtoMessage() {}
+func (*GetHealthRequest) ProtoMessage() {}
 
-func (x *GetHostManagementRequest) ProtoReflect() protoreflect.Message {
+func (x *GetHealthRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_schema_v1alpha1_system_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -958,40 +518,39 @@ func (x *GetHostManagementRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetHostManagementRequest.ProtoReflect.Descriptor instead.
-func (*GetHostManagementRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetHealthRequest.ProtoReflect.Descriptor instead.
+func (*GetHealthRequest) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetHostManagementRequest) GetId() string {
+func (x *GetHealthRequest) GetFieldMask() *fieldmaskpb.FieldMask {
 	if x != nil {
-		return x.Id
+		return x.FieldMask
 	}
-	return ""
+	return nil
 }
 
-// Response message for getting a host management configuration
-type GetHostManagementResponse struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	HostManagement *HostManagement        `protobuf:"bytes,1,opt,name=host_management,json=hostManagement,proto3" json:"host_management,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+type GetHealthResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Health        *Health                `protobuf:"bytes,1,opt,name=health,proto3" json:"health,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetHostManagementResponse) Reset() {
-	*x = GetHostManagementResponse{}
+func (x *GetHealthResponse) Reset() {
+	*x = GetHealthResponse{}
 	mi := &file_schema_v1alpha1_system_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetHostManagementResponse) String() string {
+func (x *GetHealthResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetHostManagementResponse) ProtoMessage() {}
+func (*GetHealthResponse) ProtoMessage() {}
 
-func (x *GetHostManagementResponse) ProtoReflect() protoreflect.Message {
+func (x *GetHealthResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_schema_v1alpha1_system_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1003,668 +562,14 @@ func (x *GetHostManagementResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetHostManagementResponse.ProtoReflect.Descriptor instead.
-func (*GetHostManagementResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetHealthResponse.ProtoReflect.Descriptor instead.
+func (*GetHealthResponse) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *GetHostManagementResponse) GetHostManagement() *HostManagement {
-	if x != nil {
-		return x.HostManagement
-	}
-	return nil
-}
-
-// Request message for listing host management configurations
-type ListHostManagementRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListHostManagementRequest) Reset() {
-	*x = ListHostManagementRequest{}
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListHostManagementRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListHostManagementRequest) ProtoMessage() {}
-
-func (x *ListHostManagementRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListHostManagementRequest.ProtoReflect.Descriptor instead.
-func (*ListHostManagementRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{7}
-}
-
-// Response message for listing host management configurations
-type ListHostManagementResponse struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	HostManagements []*HostManagement      `protobuf:"bytes,1,rep,name=host_managements,json=hostManagements,proto3" json:"host_managements,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *ListHostManagementResponse) Reset() {
-	*x = ListHostManagementResponse{}
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListHostManagementResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListHostManagementResponse) ProtoMessage() {}
-
-func (x *ListHostManagementResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListHostManagementResponse.ProtoReflect.Descriptor instead.
-func (*ListHostManagementResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *ListHostManagementResponse) GetHostManagements() []*HostManagement {
-	if x != nil {
-		return x.HostManagements
-	}
-	return nil
-}
-
-// Request message for getting a chassis by ID
-type GetChassisRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetChassisRequest) Reset() {
-	*x = GetChassisRequest{}
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetChassisRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetChassisRequest) ProtoMessage() {}
-
-func (x *GetChassisRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetChassisRequest.ProtoReflect.Descriptor instead.
-func (*GetChassisRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *GetChassisRequest) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-// Response message for getting a chassis
-type GetChassisResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Chassis       *Chassis               `protobuf:"bytes,1,opt,name=chassis,proto3" json:"chassis,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetChassisResponse) Reset() {
-	*x = GetChassisResponse{}
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetChassisResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetChassisResponse) ProtoMessage() {}
-
-func (x *GetChassisResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[10]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetChassisResponse.ProtoReflect.Descriptor instead.
-func (*GetChassisResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *GetChassisResponse) GetChassis() *Chassis {
-	if x != nil {
-		return x.Chassis
-	}
-	return nil
-}
-
-// Request message for listing chassis with optional filtering
-type ListChassisRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          ChassisType            `protobuf:"varint,1,opt,name=type,proto3,enum=schema.v1alpha1.ChassisType" json:"type,omitempty"`
-	Status        ChassisStatus          `protobuf:"varint,2,opt,name=status,proto3,enum=schema.v1alpha1.ChassisStatus" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListChassisRequest) Reset() {
-	*x = ListChassisRequest{}
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListChassisRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListChassisRequest) ProtoMessage() {}
-
-func (x *ListChassisRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListChassisRequest.ProtoReflect.Descriptor instead.
-func (*ListChassisRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *ListChassisRequest) GetType() ChassisType {
-	if x != nil {
-		return x.Type
-	}
-	return ChassisType_CHASSIS_TYPE_UNSPECIFIED
-}
-
-func (x *ListChassisRequest) GetStatus() ChassisStatus {
-	if x != nil {
-		return x.Status
-	}
-	return ChassisStatus_CHASSIS_STATUS_UNSPECIFIED
-}
-
-// Response message for listing chassis
-type ListChassisResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Chassis       []*Chassis             `protobuf:"bytes,1,rep,name=chassis,proto3" json:"chassis,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListChassisResponse) Reset() {
-	*x = ListChassisResponse{}
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListChassisResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListChassisResponse) ProtoMessage() {}
-
-func (x *ListChassisResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListChassisResponse.ProtoReflect.Descriptor instead.
-func (*ListChassisResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *ListChassisResponse) GetChassis() []*Chassis {
-	if x != nil {
-		return x.Chassis
-	}
-	return nil
-}
-
-// Request message for getting a host by ID
-type GetHostRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetHostRequest) Reset() {
-	*x = GetHostRequest{}
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetHostRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetHostRequest) ProtoMessage() {}
-
-func (x *GetHostRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[13]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetHostRequest.ProtoReflect.Descriptor instead.
-func (*GetHostRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *GetHostRequest) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-// Response message for getting a host
-type GetHostResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Host          *Host                  `protobuf:"bytes,1,opt,name=host,proto3" json:"host,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetHostResponse) Reset() {
-	*x = GetHostResponse{}
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[14]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetHostResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetHostResponse) ProtoMessage() {}
-
-func (x *GetHostResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[14]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetHostResponse.ProtoReflect.Descriptor instead.
-func (*GetHostResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *GetHostResponse) GetHost() *Host {
-	if x != nil {
-		return x.Host
-	}
-	return nil
-}
-
-// Request message for listing hosts with optional filtering
-type ListHostsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	State         HostState              `protobuf:"varint,1,opt,name=state,proto3,enum=schema.v1alpha1.HostState" json:"state,omitempty"`
-	Health        HostHealth             `protobuf:"varint,2,opt,name=health,proto3,enum=schema.v1alpha1.HostHealth" json:"health,omitempty"`
-	ChassisId     string                 `protobuf:"bytes,3,opt,name=chassis_id,json=chassisId,proto3" json:"chassis_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListHostsRequest) Reset() {
-	*x = ListHostsRequest{}
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[15]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListHostsRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListHostsRequest) ProtoMessage() {}
-
-func (x *ListHostsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[15]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListHostsRequest.ProtoReflect.Descriptor instead.
-func (*ListHostsRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *ListHostsRequest) GetState() HostState {
-	if x != nil {
-		return x.State
-	}
-	return HostState_HOST_STATE_UNSPECIFIED
-}
-
-func (x *ListHostsRequest) GetHealth() HostHealth {
+func (x *GetHealthResponse) GetHealth() *Health {
 	if x != nil {
 		return x.Health
-	}
-	return HostHealth_HOST_HEALTH_UNSPECIFIED
-}
-
-func (x *ListHostsRequest) GetChassisId() string {
-	if x != nil {
-		return x.ChassisId
-	}
-	return ""
-}
-
-// Response message for listing hosts
-type ListHostsResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Hosts         []*Host                `protobuf:"bytes,1,rep,name=hosts,proto3" json:"hosts,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListHostsResponse) Reset() {
-	*x = ListHostsResponse{}
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[16]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListHostsResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListHostsResponse) ProtoMessage() {}
-
-func (x *ListHostsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[16]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListHostsResponse.ProtoReflect.Descriptor instead.
-func (*ListHostsResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{16}
-}
-
-func (x *ListHostsResponse) GetHosts() []*Host {
-	if x != nil {
-		return x.Hosts
-	}
-	return nil
-}
-
-// Request message for getting a management controller by ID
-type GetManagementControllerRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetManagementControllerRequest) Reset() {
-	*x = GetManagementControllerRequest{}
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[17]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetManagementControllerRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetManagementControllerRequest) ProtoMessage() {}
-
-func (x *GetManagementControllerRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[17]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetManagementControllerRequest.ProtoReflect.Descriptor instead.
-func (*GetManagementControllerRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{17}
-}
-
-func (x *GetManagementControllerRequest) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-// Response message for getting a management controller
-type GetManagementControllerResponse struct {
-	state                protoimpl.MessageState `protogen:"open.v1"`
-	ManagementController *ManagementController  `protobuf:"bytes,1,opt,name=management_controller,json=managementController,proto3" json:"management_controller,omitempty"`
-	unknownFields        protoimpl.UnknownFields
-	sizeCache            protoimpl.SizeCache
-}
-
-func (x *GetManagementControllerResponse) Reset() {
-	*x = GetManagementControllerResponse{}
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[18]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetManagementControllerResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetManagementControllerResponse) ProtoMessage() {}
-
-func (x *GetManagementControllerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[18]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetManagementControllerResponse.ProtoReflect.Descriptor instead.
-func (*GetManagementControllerResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *GetManagementControllerResponse) GetManagementController() *ManagementController {
-	if x != nil {
-		return x.ManagementController
-	}
-	return nil
-}
-
-// Request message for listing management controllers with optional filtering
-type ListManagementControllersRequest struct {
-	state         protoimpl.MessageState     `protogen:"open.v1"`
-	Type          ManagementControllerType   `protobuf:"varint,1,opt,name=type,proto3,enum=schema.v1alpha1.ManagementControllerType" json:"type,omitempty"`
-	Status        ManagementControllerStatus `protobuf:"varint,2,opt,name=status,proto3,enum=schema.v1alpha1.ManagementControllerStatus" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListManagementControllersRequest) Reset() {
-	*x = ListManagementControllersRequest{}
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[19]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListManagementControllersRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListManagementControllersRequest) ProtoMessage() {}
-
-func (x *ListManagementControllersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[19]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListManagementControllersRequest.ProtoReflect.Descriptor instead.
-func (*ListManagementControllersRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *ListManagementControllersRequest) GetType() ManagementControllerType {
-	if x != nil {
-		return x.Type
-	}
-	return ManagementControllerType_MANAGEMENT_CONTROLLER_TYPE_UNSPECIFIED
-}
-
-func (x *ListManagementControllersRequest) GetStatus() ManagementControllerStatus {
-	if x != nil {
-		return x.Status
-	}
-	return ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED
-}
-
-// Response message for listing management controllers
-type ListManagementControllersResponse struct {
-	state                 protoimpl.MessageState  `protogen:"open.v1"`
-	ManagementControllers []*ManagementController `protobuf:"bytes,1,rep,name=management_controllers,json=managementControllers,proto3" json:"management_controllers,omitempty"`
-	unknownFields         protoimpl.UnknownFields
-	sizeCache             protoimpl.SizeCache
-}
-
-func (x *ListManagementControllersResponse) Reset() {
-	*x = ListManagementControllersResponse{}
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[20]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListManagementControllersResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListManagementControllersResponse) ProtoMessage() {}
-
-func (x *ListManagementControllersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_system_proto_msgTypes[20]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListManagementControllersResponse.ProtoReflect.Descriptor instead.
-func (*ListManagementControllersResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_system_proto_rawDescGZIP(), []int{20}
-}
-
-func (x *ListManagementControllersResponse) GetManagementControllers() []*ManagementController {
-	if x != nil {
-		return x.ManagementControllers
 	}
 	return nil
 }
@@ -1673,147 +578,111 @@ var File_schema_v1alpha1_system_proto protoreflect.FileDescriptor
 
 const file_schema_v1alpha1_system_proto_rawDesc = "" +
 	"\n" +
-	"\x1cschema/v1alpha1/system.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\"\xb0\x02\n" +
-	"\x0eHostManagement\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12<\n" +
-	"\achassis\x18\x03 \x03(\v2\x18.schema.v1alpha1.ChassisB\b\xbaH\x05\x92\x01\x02\b\x01R\achassis\x125\n" +
-	"\x05hosts\x18\x04 \x03(\v2\x15.schema.v1alpha1.HostB\b\xbaH\x05\x92\x01\x02\b\x01R\x05hosts\x12?\n" +
-	"\btopology\x18\x05 \x01(\v2#.schema.v1alpha1.ManagementTopologyR\btopology\x122\n" +
-	"\x15last_update_timestamp\x18\x06 \x01(\x03R\x13lastUpdateTimestamp\"\xca\x03\n" +
-	"\aChassis\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x120\n" +
-	"\x04type\x18\x03 \x01(\x0e2\x1c.schema.v1alpha1.ChassisTypeR\x04type\x12<\n" +
-	"\vpower_state\x18\x04 \x01(\x0e2\x1b.schema.v1alpha1.PowerStateR\n" +
-	"powerState\x12+\n" +
-	"\x11physical_location\x18\x05 \x01(\tR\x10physicalLocation\x12#\n" +
-	"\bhost_ids\x18\x06 \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x00R\ahostIds\x12'\n" +
+	"\x1cschema/v1alpha1/system.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bschema/v1alpha1/asset.proto\x1a\x1dschema/v1alpha1/chassis.proto\x1a\x1dschema/v1alpha1/contact.proto\x1a\x1aschema/v1alpha1/host.proto\x1a*schema/v1alpha1/managementcontroller.proto\x1a\x1cschema/v1alpha1/sensor.proto\x1a\x1dschema/v1alpha1/thermal.proto\x1a\x1aschema/v1alpha1/user.proto\"\xe5\x02\n" +
+	"\x06Health\x12?\n" +
+	"\x06status\x18\x01 \x01(\x0e2\x1d.schema.v1alpha1.HealthStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06status\x122\n" +
+	"\x12status_description\x18\x02 \x01(\tH\x00R\x11statusDescription\x88\x01\x01\x127\n" +
+	"\adetails\x18\x03 \x03(\v2\x1d.schema.v1alpha1.HealthDetailR\adetails\x12B\n" +
+	"\flast_updated\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampH\x01R\vlastUpdated\x88\x01\x01\x126\n" +
+	"\x06uptime\x18\x05 \x01(\v2\x19.google.protobuf.DurationH\x02R\x06uptime\x88\x01\x01B\x15\n" +
+	"\x13_status_descriptionB\x0f\n" +
+	"\r_last_updatedB\t\n" +
+	"\a_uptime\"\xee\x01\n" +
+	"\fHealthDetail\x12%\n" +
+	"\tcomponent\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tcomponent\x12?\n" +
+	"\x06status\x18\x02 \x01(\x0e2\x1d.schema.v1alpha1.HealthStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06status\x12\x1d\n" +
+	"\amessage\x18\x03 \x01(\tH\x00R\amessage\x88\x01\x01\x12=\n" +
+	"\ttimestamp\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampH\x01R\ttimestamp\x88\x01\x01B\n" +
 	"\n" +
-	"sensor_ids\x18\a \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x00R\tsensorIds\x122\n" +
-	"\x10thermal_zone_ids\x18\b \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x00R\x0ethermalZoneIds\x126\n" +
-	"\x06status\x18\t \x01(\x0e2\x1e.schema.v1alpha1.ChassisStatusR\x06status\x122\n" +
-	"\x15last_update_timestamp\x18\n" +
-	" \x01(\x03R\x13lastUpdateTimestamp\"\xd2\x03\n" +
-	"\x04Host\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x120\n" +
-	"\x05state\x18\x03 \x01(\x0e2\x1a.schema.v1alpha1.HostStateR\x05state\x12C\n" +
-	"\x0frequested_state\x18\x04 \x01(\x0e2\x1a.schema.v1alpha1.HostStateR\x0erequestedState\x123\n" +
-	"\x06health\x18\x05 \x01(\x0e2\x1b.schema.v1alpha1.HostHealthR\x06health\x12&\n" +
+	"\b_messageB\f\n" +
 	"\n" +
-	"chassis_id\x18\x06 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tchassisId\x12+\n" +
-	"\x11physical_location\x18\a \x01(\tR\x10physicalLocation\x12!\n" +
-	"\fbios_version\x18\b \x01(\tR\vbiosVersion\x12<\n" +
-	"\vpower_state\x18\t \x01(\x0e2\x1b.schema.v1alpha1.PowerStateR\n" +
-	"powerState\x122\n" +
-	"\x15last_update_timestamp\x18\n" +
-	" \x01(\x03R\x13lastUpdateTimestamp\"p\n" +
-	"\x12ManagementTopology\x12Z\n" +
-	"\x10root_controllers\x18\x01 \x03(\v2%.schema.v1alpha1.ManagementControllerB\b\xbaH\x05\x92\x01\x02\b\x01R\x0frootControllers\"\xfd\x03\n" +
-	"\x14ManagementController\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12=\n" +
-	"\x04type\x18\x03 \x01(\x0e2).schema.v1alpha1.ManagementControllerTypeR\x04type\x122\n" +
-	"\x10managed_host_ids\x18\x04 \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x00R\x0emanagedHostIds\x128\n" +
-	"\x13managed_chassis_ids\x18\x05 \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x00R\x11managedChassisIds\x12\\\n" +
-	"\x11child_controllers\x18\x06 \x03(\v2%.schema.v1alpha1.ManagementControllerB\b\xbaH\x05\x92\x01\x02\b\x00R\x10childControllers\x12+\n" +
-	"\x11physical_location\x18\a \x01(\tR\x10physicalLocation\x12C\n" +
-	"\x06status\x18\b \x01(\x0e2+.schema.v1alpha1.ManagementControllerStatusR\x06status\x122\n" +
-	"\x15last_update_timestamp\x18\t \x01(\x03R\x13lastUpdateTimestamp\"3\n" +
-	"\x18GetHostManagementRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"e\n" +
-	"\x19GetHostManagementResponse\x12H\n" +
-	"\x0fhost_management\x18\x01 \x01(\v2\x1f.schema.v1alpha1.HostManagementR\x0ehostManagement\"\x1b\n" +
-	"\x19ListHostManagementRequest\"h\n" +
-	"\x1aListHostManagementResponse\x12J\n" +
-	"\x10host_managements\x18\x01 \x03(\v2\x1f.schema.v1alpha1.HostManagementR\x0fhostManagements\",\n" +
-	"\x11GetChassisRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"H\n" +
-	"\x12GetChassisResponse\x122\n" +
-	"\achassis\x18\x01 \x01(\v2\x18.schema.v1alpha1.ChassisR\achassis\"~\n" +
-	"\x12ListChassisRequest\x120\n" +
-	"\x04type\x18\x01 \x01(\x0e2\x1c.schema.v1alpha1.ChassisTypeR\x04type\x126\n" +
-	"\x06status\x18\x02 \x01(\x0e2\x1e.schema.v1alpha1.ChassisStatusR\x06status\"I\n" +
-	"\x13ListChassisResponse\x122\n" +
-	"\achassis\x18\x01 \x03(\v2\x18.schema.v1alpha1.ChassisR\achassis\")\n" +
-	"\x0eGetHostRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"<\n" +
-	"\x0fGetHostResponse\x12)\n" +
-	"\x04host\x18\x01 \x01(\v2\x15.schema.v1alpha1.HostR\x04host\"\x98\x01\n" +
-	"\x10ListHostsRequest\x120\n" +
-	"\x05state\x18\x01 \x01(\x0e2\x1a.schema.v1alpha1.HostStateR\x05state\x123\n" +
-	"\x06health\x18\x02 \x01(\x0e2\x1b.schema.v1alpha1.HostHealthR\x06health\x12\x1d\n" +
+	"_timestamp\"\xec\x04\n" +
 	"\n" +
-	"chassis_id\x18\x03 \x01(\tR\tchassisId\"@\n" +
-	"\x11ListHostsResponse\x12+\n" +
-	"\x05hosts\x18\x01 \x03(\v2\x15.schema.v1alpha1.HostR\x05hosts\"9\n" +
-	"\x1eGetManagementControllerRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"}\n" +
-	"\x1fGetManagementControllerResponse\x12Z\n" +
-	"\x15management_controller\x18\x01 \x01(\v2%.schema.v1alpha1.ManagementControllerR\x14managementController\"\xa6\x01\n" +
-	" ListManagementControllersRequest\x12=\n" +
-	"\x04type\x18\x01 \x01(\x0e2).schema.v1alpha1.ManagementControllerTypeR\x04type\x12C\n" +
-	"\x06status\x18\x02 \x01(\x0e2+.schema.v1alpha1.ManagementControllerStatusR\x06status\"\x81\x01\n" +
-	"!ListManagementControllersResponse\x12\\\n" +
-	"\x16management_controllers\x18\x01 \x03(\v2%.schema.v1alpha1.ManagementControllerR\x15managementControllers*\xae\x01\n" +
-	"\tHostState\x12\x1a\n" +
-	"\x16HOST_STATE_UNSPECIFIED\x10\x00\x12\x11\n" +
-	"\rHOST_STATE_ON\x10\x01\x12\x12\n" +
-	"\x0eHOST_STATE_OFF\x10\x02\x12\x14\n" +
-	"\x10HOST_STATE_ERROR\x10\x03\x12\x16\n" +
-	"\x12HOST_STATE_UNKNOWN\x10\x04\x12\x17\n" +
-	"\x13HOST_STATE_STARTING\x10\x05\x12\x17\n" +
-	"\x13HOST_STATE_STOPPING\x10\x06*\x89\x01\n" +
+	"SystemInfo\x12\x1b\n" +
+	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12%\n" +
+	"\vdescription\x18\x02 \x01(\tH\x00R\vdescription\x88\x01\x01\x12<\n" +
+	"\x05state\x18\x03 \x01(\x0e2\x1c.schema.v1alpha1.SystemStateB\b\xbaH\x05\x82\x01\x02\x10\x01R\x05state\x127\n" +
+	"\x06health\x18\x04 \x01(\v2\x17.schema.v1alpha1.HealthB\x06\xbaH\x03\xc8\x01\x01R\x06health\x12\x1d\n" +
+	"\aversion\x18\x05 \x01(\tH\x01R\aversion\x88\x01\x01\x12<\n" +
+	"\tboot_time\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampH\x02R\bbootTime\x88\x01\x01\x126\n" +
+	"\x06uptime\x18\a \x01(\v2\x19.google.protobuf.DurationH\x03R\x06uptime\x88\x01\x01\x12D\n" +
+	"\fcontact_info\x18\b \x01(\v2\x1c.schema.v1alpha1.ContactInfoH\x04R\vcontactInfo\x88\x01\x01\x12E\n" +
+	"\bmetadata\x18\t \x03(\v2).schema.v1alpha1.SystemInfo.MetadataEntryR\bmetadata\x1a;\n" +
+	"\rMetadataEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\x0e\n" +
+	"\f_descriptionB\n" +
 	"\n" +
-	"HostHealth\x12\x1b\n" +
-	"\x17HOST_HEALTH_UNSPECIFIED\x10\x00\x12\x12\n" +
-	"\x0eHOST_HEALTH_OK\x10\x01\x12\x17\n" +
-	"\x13HOST_HEALTH_WARNING\x10\x02\x12\x18\n" +
-	"\x14HOST_HEALTH_CRITICAL\x10\x03\x12\x17\n" +
-	"\x13HOST_HEALTH_UNKNOWN\x10\x04*k\n" +
+	"\b_versionB\f\n" +
 	"\n" +
-	"PowerState\x12\x1b\n" +
-	"\x17POWER_STATE_UNSPECIFIED\x10\x00\x12\x12\n" +
-	"\x0ePOWER_STATE_ON\x10\x01\x12\x13\n" +
-	"\x0fPOWER_STATE_OFF\x10\x02\x12\x17\n" +
-	"\x13POWER_STATE_UNKNOWN\x10\x03*\x8e\x01\n" +
-	"\vChassisType\x12\x1c\n" +
-	"\x18CHASSIS_TYPE_UNSPECIFIED\x10\x00\x12\x15\n" +
-	"\x11CHASSIS_TYPE_RACK\x10\x01\x12\x16\n" +
-	"\x12CHASSIS_TYPE_BLADE\x10\x02\x12\x1b\n" +
-	"\x17CHASSIS_TYPE_STANDALONE\x10\x03\x12\x15\n" +
-	"\x11CHASSIS_TYPE_CARD\x10\x04*\x9b\x01\n" +
-	"\rChassisStatus\x12\x1e\n" +
-	"\x1aCHASSIS_STATUS_UNSPECIFIED\x10\x00\x12\x15\n" +
-	"\x11CHASSIS_STATUS_OK\x10\x01\x12\x1a\n" +
-	"\x16CHASSIS_STATUS_WARNING\x10\x02\x12\x1b\n" +
-	"\x17CHASSIS_STATUS_CRITICAL\x10\x03\x12\x1a\n" +
-	"\x16CHASSIS_STATUS_UNKNOWN\x10\x04*\xc7\x01\n" +
-	"\x18ManagementControllerType\x12*\n" +
-	"&MANAGEMENT_CONTROLLER_TYPE_UNSPECIFIED\x10\x00\x12(\n" +
-	"$MANAGEMENT_CONTROLLER_TYPE_SATELLITE\x10\x01\x12\"\n" +
-	"\x1eMANAGEMENT_CONTROLLER_TYPE_BMC\x10\x02\x121\n" +
-	"-MANAGEMENT_CONTROLLER_TYPE_CHASSIS_CONTROLLER\x10\x03*\xeb\x01\n" +
-	"\x1aManagementControllerStatus\x12,\n" +
-	"(MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED\x10\x00\x12#\n" +
-	"\x1fMANAGEMENT_CONTROLLER_STATUS_OK\x10\x01\x12(\n" +
-	"$MANAGEMENT_CONTROLLER_STATUS_WARNING\x10\x02\x12&\n" +
-	"\"MANAGEMENT_CONTROLLER_STATUS_ERROR\x10\x03\x12(\n" +
-	"$MANAGEMENT_CONTROLLER_STATUS_UNKNOWN\x10\x042\xf6\x01\n" +
-	"\x15HostManagementService\x12l\n" +
-	"\x11GetHostManagement\x12).schema.v1alpha1.GetHostManagementRequest\x1a*.schema.v1alpha1.GetHostManagementResponse\"\x00\x12o\n" +
-	"\x12ListHostManagement\x12*.schema.v1alpha1.ListHostManagementRequest\x1a+.schema.v1alpha1.ListHostManagementResponse\"\x002\xc5\x01\n" +
-	"\x0eChassisService\x12W\n" +
+	"_boot_timeB\t\n" +
+	"\a_uptimeB\x0f\n" +
+	"\r_contact_info\"e\n" +
+	"\x14GetSystemInfoRequest\x12>\n" +
 	"\n" +
-	"GetChassis\x12\".schema.v1alpha1.GetChassisRequest\x1a#.schema.v1alpha1.GetChassisResponse\"\x00\x12Z\n" +
-	"\vListChassis\x12#.schema.v1alpha1.ListChassisRequest\x1a$.schema.v1alpha1.ListChassisResponse\"\x002\xb3\x01\n" +
-	"\vHostService\x12N\n" +
-	"\aGetHost\x12\x1f.schema.v1alpha1.GetHostRequest\x1a .schema.v1alpha1.GetHostResponse\"\x00\x12T\n" +
-	"\tListHosts\x12!.schema.v1alpha1.ListHostsRequest\x1a\".schema.v1alpha1.ListHostsResponse\"\x002\xa4\x02\n" +
-	"\x1bManagementControllerService\x12~\n" +
-	"\x17GetManagementController\x12/.schema.v1alpha1.GetManagementControllerRequest\x1a0.schema.v1alpha1.GetManagementControllerResponse\"\x00\x12\x84\x01\n" +
-	"\x19ListManagementControllers\x121.schema.v1alpha1.ListManagementControllersRequest\x1a2.schema.v1alpha1.ListManagementControllersResponse\"\x00B\xbe\x01\n" +
+	"field_mask\x18\x01 \x01(\v2\x1a.google.protobuf.FieldMaskH\x00R\tfieldMask\x88\x01\x01B\r\n" +
+	"\v_field_mask\"U\n" +
+	"\x15GetSystemInfoResponse\x12<\n" +
+	"\vsystem_info\x18\x01 \x01(\v2\x1b.schema.v1alpha1.SystemInfoR\n" +
+	"systemInfo\"a\n" +
+	"\x10GetHealthRequest\x12>\n" +
+	"\n" +
+	"field_mask\x18\x01 \x01(\v2\x1a.google.protobuf.FieldMaskH\x00R\tfieldMask\x88\x01\x01B\r\n" +
+	"\v_field_mask\"D\n" +
+	"\x11GetHealthResponse\x12/\n" +
+	"\x06health\x18\x01 \x01(\v2\x17.schema.v1alpha1.HealthR\x06health*\x95\x01\n" +
+	"\fHealthStatus\x12\x1d\n" +
+	"\x19HEALTH_STATUS_UNSPECIFIED\x10\x00\x12\x14\n" +
+	"\x10HEALTH_STATUS_OK\x10\x01\x12\x19\n" +
+	"\x15HEALTH_STATUS_WARNING\x10\x02\x12\x1a\n" +
+	"\x16HEALTH_STATUS_CRITICAL\x10\x03\x12\x19\n" +
+	"\x15HEALTH_STATUS_UNKNOWN\x10\x04*\xe5\x01\n" +
+	"\vSystemState\x12\x1c\n" +
+	"\x18SYSTEM_STATE_UNSPECIFIED\x10\x00\x12\x19\n" +
+	"\x15SYSTEM_STATE_STARTING\x10\x01\x12\x18\n" +
+	"\x14SYSTEM_STATE_ENABLED\x10\x02\x12\x19\n" +
+	"\x15SYSTEM_STATE_DISABLED\x10\x03\x12\x18\n" +
+	"\x14SYSTEM_STATE_STANDBY\x10\x04\x12\x19\n" +
+	"\x15SYSTEM_STATE_QUIESCED\x10\x05\x12\x18\n" +
+	"\x14SYSTEM_STATE_IN_TEST\x10\x06\x12\x19\n" +
+	"\x15SYSTEM_STATE_UPDATING\x10\a2\x82\x17\n" +
+	"\n" +
+	"BMCService\x12^\n" +
+	"\rGetSystemInfo\x12%.schema.v1alpha1.GetSystemInfoRequest\x1a&.schema.v1alpha1.GetSystemInfoResponse\x12R\n" +
+	"\tGetHealth\x12!.schema.v1alpha1.GetHealthRequest\x1a\".schema.v1alpha1.GetHealthResponse\x12[\n" +
+	"\fGetAssetInfo\x12$.schema.v1alpha1.GetAssetInfoRequest\x1a%.schema.v1alpha1.GetAssetInfoResponse\x12[\n" +
+	"\fSetAssetInfo\x12$.schema.v1alpha1.SetAssetInfoRequest\x1a%.schema.v1alpha1.SetAssetInfoResponse\x12U\n" +
+	"\n" +
+	"GetChassis\x12\".schema.v1alpha1.GetChassisRequest\x1a#.schema.v1alpha1.GetChassisResponse\x12X\n" +
+	"\vListChassis\x12#.schema.v1alpha1.ListChassisRequest\x1a$.schema.v1alpha1.ListChassisResponse\x12^\n" +
+	"\rUpdateChassis\x12%.schema.v1alpha1.UpdateChassisRequest\x1a&.schema.v1alpha1.UpdateChassisResponse\x12m\n" +
+	"\x12ChassisChangeState\x12*.schema.v1alpha1.ChassisChangeStateRequest\x1a+.schema.v1alpha1.ChassisChangeStateResponse\x12a\n" +
+	"\x0eChassisControl\x12&.schema.v1alpha1.ChassisControlRequest\x1a'.schema.v1alpha1.ChassisControlResponse\x12L\n" +
+	"\aGetHost\x12\x1f.schema.v1alpha1.GetHostRequest\x1a .schema.v1alpha1.GetHostResponse\x12R\n" +
+	"\tListHosts\x12!.schema.v1alpha1.ListHostsRequest\x1a\".schema.v1alpha1.ListHostsResponse\x12U\n" +
+	"\n" +
+	"UpdateHost\x12\".schema.v1alpha1.UpdateHostRequest\x1a#.schema.v1alpha1.UpdateHostResponse\x12d\n" +
+	"\x0fHostChangeState\x12'.schema.v1alpha1.HostChangeStateRequest\x1a(.schema.v1alpha1.HostChangeStateResponse\x12|\n" +
+	"\x17GetManagementController\x12/.schema.v1alpha1.GetManagementControllerRequest\x1a0.schema.v1alpha1.GetManagementControllerResponse\x12\x82\x01\n" +
+	"\x19ListManagementControllers\x121.schema.v1alpha1.ListManagementControllersRequest\x1a2.schema.v1alpha1.ListManagementControllersResponse\x12\x85\x01\n" +
+	"\x1aUpdateManagementController\x122.schema.v1alpha1.UpdateManagementControllerRequest\x1a3.schema.v1alpha1.UpdateManagementControllerResponse\x12\x88\x01\n" +
+	"\x1bManagementControllerControl\x123.schema.v1alpha1.ManagementControllerControlRequest\x1a4.schema.v1alpha1.ManagementControllerControlResponse\x12X\n" +
+	"\vListSensors\x12#.schema.v1alpha1.ListSensorsRequest\x1a$.schema.v1alpha1.ListSensorsResponse\x12R\n" +
+	"\tGetSensor\x12!.schema.v1alpha1.GetSensorRequest\x1a\".schema.v1alpha1.GetSensorResponse\x12a\n" +
+	"\x0eGetThermalZone\x12&.schema.v1alpha1.GetThermalZoneRequest\x1a'.schema.v1alpha1.GetThermalZoneResponse\x12a\n" +
+	"\x0eSetThermalZone\x12&.schema.v1alpha1.SetThermalZoneRequest\x1a'.schema.v1alpha1.SetThermalZoneResponse\x12g\n" +
+	"\x10ListThermalZones\x12(.schema.v1alpha1.ListThermalZonesRequest\x1a).schema.v1alpha1.ListThermalZonesResponse\x12U\n" +
+	"\n" +
+	"CreateUser\x12\".schema.v1alpha1.CreateUserRequest\x1a#.schema.v1alpha1.CreateUserResponse\x12L\n" +
+	"\aGetUser\x12\x1f.schema.v1alpha1.GetUserRequest\x1a .schema.v1alpha1.GetUserResponse\x12U\n" +
+	"\n" +
+	"UpdateUser\x12\".schema.v1alpha1.UpdateUserRequest\x1a#.schema.v1alpha1.UpdateUserResponse\x12U\n" +
+	"\n" +
+	"DeleteUser\x12\".schema.v1alpha1.DeleteUserRequest\x1a#.schema.v1alpha1.DeleteUserResponse\x12R\n" +
+	"\tListUsers\x12!.schema.v1alpha1.ListUsersRequest\x1a\".schema.v1alpha1.ListUsersResponse\x12a\n" +
+	"\x0eChangePassword\x12&.schema.v1alpha1.ChangePasswordRequest\x1a'.schema.v1alpha1.ChangePasswordResponse\x12^\n" +
+	"\rResetPassword\x12%.schema.v1alpha1.ResetPasswordRequest\x1a&.schema.v1alpha1.ResetPasswordResponse\x12g\n" +
+	"\x10AuthenticateUser\x12(.schema.v1alpha1.AuthenticateUserRequest\x1a).schema.v1alpha1.AuthenticateUserResponseB\xbe\x01\n" +
 	"\x13com.schema.v1alpha1B\vSystemProtoP\x01Z=github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;schemav1alpha1\xa2\x02\x03SXX\xaa\x02\x0fSchema.V1alpha1\xca\x02\x0fSchema\\V1alpha1\xe2\x02\x1bSchema\\V1alpha1\\GPBMetadata\xea\x02\x10Schema::V1alpha1b\x06proto3"
 
 var (
@@ -1828,88 +697,162 @@ func file_schema_v1alpha1_system_proto_rawDescGZIP() []byte {
 	return file_schema_v1alpha1_system_proto_rawDescData
 }
 
-var file_schema_v1alpha1_system_proto_enumTypes = make([]protoimpl.EnumInfo, 7)
-var file_schema_v1alpha1_system_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_schema_v1alpha1_system_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_schema_v1alpha1_system_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_schema_v1alpha1_system_proto_goTypes = []any{
-	(HostState)(0),                            // 0: schema.v1alpha1.HostState
-	(HostHealth)(0),                           // 1: schema.v1alpha1.HostHealth
-	(PowerState)(0),                           // 2: schema.v1alpha1.PowerState
-	(ChassisType)(0),                          // 3: schema.v1alpha1.ChassisType
-	(ChassisStatus)(0),                        // 4: schema.v1alpha1.ChassisStatus
-	(ManagementControllerType)(0),             // 5: schema.v1alpha1.ManagementControllerType
-	(ManagementControllerStatus)(0),           // 6: schema.v1alpha1.ManagementControllerStatus
-	(*HostManagement)(nil),                    // 7: schema.v1alpha1.HostManagement
-	(*Chassis)(nil),                           // 8: schema.v1alpha1.Chassis
-	(*Host)(nil),                              // 9: schema.v1alpha1.Host
-	(*ManagementTopology)(nil),                // 10: schema.v1alpha1.ManagementTopology
-	(*ManagementController)(nil),              // 11: schema.v1alpha1.ManagementController
-	(*GetHostManagementRequest)(nil),          // 12: schema.v1alpha1.GetHostManagementRequest
-	(*GetHostManagementResponse)(nil),         // 13: schema.v1alpha1.GetHostManagementResponse
-	(*ListHostManagementRequest)(nil),         // 14: schema.v1alpha1.ListHostManagementRequest
-	(*ListHostManagementResponse)(nil),        // 15: schema.v1alpha1.ListHostManagementResponse
-	(*GetChassisRequest)(nil),                 // 16: schema.v1alpha1.GetChassisRequest
-	(*GetChassisResponse)(nil),                // 17: schema.v1alpha1.GetChassisResponse
-	(*ListChassisRequest)(nil),                // 18: schema.v1alpha1.ListChassisRequest
-	(*ListChassisResponse)(nil),               // 19: schema.v1alpha1.ListChassisResponse
-	(*GetHostRequest)(nil),                    // 20: schema.v1alpha1.GetHostRequest
-	(*GetHostResponse)(nil),                   // 21: schema.v1alpha1.GetHostResponse
-	(*ListHostsRequest)(nil),                  // 22: schema.v1alpha1.ListHostsRequest
-	(*ListHostsResponse)(nil),                 // 23: schema.v1alpha1.ListHostsResponse
-	(*GetManagementControllerRequest)(nil),    // 24: schema.v1alpha1.GetManagementControllerRequest
-	(*GetManagementControllerResponse)(nil),   // 25: schema.v1alpha1.GetManagementControllerResponse
-	(*ListManagementControllersRequest)(nil),  // 26: schema.v1alpha1.ListManagementControllersRequest
-	(*ListManagementControllersResponse)(nil), // 27: schema.v1alpha1.ListManagementControllersResponse
+	(HealthStatus)(0),                           // 0: schema.v1alpha1.HealthStatus
+	(SystemState)(0),                            // 1: schema.v1alpha1.SystemState
+	(*Health)(nil),                              // 2: schema.v1alpha1.Health
+	(*HealthDetail)(nil),                        // 3: schema.v1alpha1.HealthDetail
+	(*SystemInfo)(nil),                          // 4: schema.v1alpha1.SystemInfo
+	(*GetSystemInfoRequest)(nil),                // 5: schema.v1alpha1.GetSystemInfoRequest
+	(*GetSystemInfoResponse)(nil),               // 6: schema.v1alpha1.GetSystemInfoResponse
+	(*GetHealthRequest)(nil),                    // 7: schema.v1alpha1.GetHealthRequest
+	(*GetHealthResponse)(nil),                   // 8: schema.v1alpha1.GetHealthResponse
+	nil,                                         // 9: schema.v1alpha1.SystemInfo.MetadataEntry
+	(*timestamppb.Timestamp)(nil),               // 10: google.protobuf.Timestamp
+	(*durationpb.Duration)(nil),                 // 11: google.protobuf.Duration
+	(*ContactInfo)(nil),                         // 12: schema.v1alpha1.ContactInfo
+	(*fieldmaskpb.FieldMask)(nil),               // 13: google.protobuf.FieldMask
+	(*GetAssetInfoRequest)(nil),                 // 14: schema.v1alpha1.GetAssetInfoRequest
+	(*SetAssetInfoRequest)(nil),                 // 15: schema.v1alpha1.SetAssetInfoRequest
+	(*GetChassisRequest)(nil),                   // 16: schema.v1alpha1.GetChassisRequest
+	(*ListChassisRequest)(nil),                  // 17: schema.v1alpha1.ListChassisRequest
+	(*UpdateChassisRequest)(nil),                // 18: schema.v1alpha1.UpdateChassisRequest
+	(*ChassisChangeStateRequest)(nil),           // 19: schema.v1alpha1.ChassisChangeStateRequest
+	(*ChassisControlRequest)(nil),               // 20: schema.v1alpha1.ChassisControlRequest
+	(*GetHostRequest)(nil),                      // 21: schema.v1alpha1.GetHostRequest
+	(*ListHostsRequest)(nil),                    // 22: schema.v1alpha1.ListHostsRequest
+	(*UpdateHostRequest)(nil),                   // 23: schema.v1alpha1.UpdateHostRequest
+	(*HostChangeStateRequest)(nil),              // 24: schema.v1alpha1.HostChangeStateRequest
+	(*GetManagementControllerRequest)(nil),      // 25: schema.v1alpha1.GetManagementControllerRequest
+	(*ListManagementControllersRequest)(nil),    // 26: schema.v1alpha1.ListManagementControllersRequest
+	(*UpdateManagementControllerRequest)(nil),   // 27: schema.v1alpha1.UpdateManagementControllerRequest
+	(*ManagementControllerControlRequest)(nil),  // 28: schema.v1alpha1.ManagementControllerControlRequest
+	(*ListSensorsRequest)(nil),                  // 29: schema.v1alpha1.ListSensorsRequest
+	(*GetSensorRequest)(nil),                    // 30: schema.v1alpha1.GetSensorRequest
+	(*GetThermalZoneRequest)(nil),               // 31: schema.v1alpha1.GetThermalZoneRequest
+	(*SetThermalZoneRequest)(nil),               // 32: schema.v1alpha1.SetThermalZoneRequest
+	(*ListThermalZonesRequest)(nil),             // 33: schema.v1alpha1.ListThermalZonesRequest
+	(*CreateUserRequest)(nil),                   // 34: schema.v1alpha1.CreateUserRequest
+	(*GetUserRequest)(nil),                      // 35: schema.v1alpha1.GetUserRequest
+	(*UpdateUserRequest)(nil),                   // 36: schema.v1alpha1.UpdateUserRequest
+	(*DeleteUserRequest)(nil),                   // 37: schema.v1alpha1.DeleteUserRequest
+	(*ListUsersRequest)(nil),                    // 38: schema.v1alpha1.ListUsersRequest
+	(*ChangePasswordRequest)(nil),               // 39: schema.v1alpha1.ChangePasswordRequest
+	(*ResetPasswordRequest)(nil),                // 40: schema.v1alpha1.ResetPasswordRequest
+	(*AuthenticateUserRequest)(nil),             // 41: schema.v1alpha1.AuthenticateUserRequest
+	(*GetAssetInfoResponse)(nil),                // 42: schema.v1alpha1.GetAssetInfoResponse
+	(*SetAssetInfoResponse)(nil),                // 43: schema.v1alpha1.SetAssetInfoResponse
+	(*GetChassisResponse)(nil),                  // 44: schema.v1alpha1.GetChassisResponse
+	(*ListChassisResponse)(nil),                 // 45: schema.v1alpha1.ListChassisResponse
+	(*UpdateChassisResponse)(nil),               // 46: schema.v1alpha1.UpdateChassisResponse
+	(*ChassisChangeStateResponse)(nil),          // 47: schema.v1alpha1.ChassisChangeStateResponse
+	(*ChassisControlResponse)(nil),              // 48: schema.v1alpha1.ChassisControlResponse
+	(*GetHostResponse)(nil),                     // 49: schema.v1alpha1.GetHostResponse
+	(*ListHostsResponse)(nil),                   // 50: schema.v1alpha1.ListHostsResponse
+	(*UpdateHostResponse)(nil),                  // 51: schema.v1alpha1.UpdateHostResponse
+	(*HostChangeStateResponse)(nil),             // 52: schema.v1alpha1.HostChangeStateResponse
+	(*GetManagementControllerResponse)(nil),     // 53: schema.v1alpha1.GetManagementControllerResponse
+	(*ListManagementControllersResponse)(nil),   // 54: schema.v1alpha1.ListManagementControllersResponse
+	(*UpdateManagementControllerResponse)(nil),  // 55: schema.v1alpha1.UpdateManagementControllerResponse
+	(*ManagementControllerControlResponse)(nil), // 56: schema.v1alpha1.ManagementControllerControlResponse
+	(*ListSensorsResponse)(nil),                 // 57: schema.v1alpha1.ListSensorsResponse
+	(*GetSensorResponse)(nil),                   // 58: schema.v1alpha1.GetSensorResponse
+	(*GetThermalZoneResponse)(nil),              // 59: schema.v1alpha1.GetThermalZoneResponse
+	(*SetThermalZoneResponse)(nil),              // 60: schema.v1alpha1.SetThermalZoneResponse
+	(*ListThermalZonesResponse)(nil),            // 61: schema.v1alpha1.ListThermalZonesResponse
+	(*CreateUserResponse)(nil),                  // 62: schema.v1alpha1.CreateUserResponse
+	(*GetUserResponse)(nil),                     // 63: schema.v1alpha1.GetUserResponse
+	(*UpdateUserResponse)(nil),                  // 64: schema.v1alpha1.UpdateUserResponse
+	(*DeleteUserResponse)(nil),                  // 65: schema.v1alpha1.DeleteUserResponse
+	(*ListUsersResponse)(nil),                   // 66: schema.v1alpha1.ListUsersResponse
+	(*ChangePasswordResponse)(nil),              // 67: schema.v1alpha1.ChangePasswordResponse
+	(*ResetPasswordResponse)(nil),               // 68: schema.v1alpha1.ResetPasswordResponse
+	(*AuthenticateUserResponse)(nil),            // 69: schema.v1alpha1.AuthenticateUserResponse
 }
 var file_schema_v1alpha1_system_proto_depIdxs = []int32{
-	8,  // 0: schema.v1alpha1.HostManagement.chassis:type_name -> schema.v1alpha1.Chassis
-	9,  // 1: schema.v1alpha1.HostManagement.hosts:type_name -> schema.v1alpha1.Host
-	10, // 2: schema.v1alpha1.HostManagement.topology:type_name -> schema.v1alpha1.ManagementTopology
-	3,  // 3: schema.v1alpha1.Chassis.type:type_name -> schema.v1alpha1.ChassisType
-	2,  // 4: schema.v1alpha1.Chassis.power_state:type_name -> schema.v1alpha1.PowerState
-	4,  // 5: schema.v1alpha1.Chassis.status:type_name -> schema.v1alpha1.ChassisStatus
-	0,  // 6: schema.v1alpha1.Host.state:type_name -> schema.v1alpha1.HostState
-	0,  // 7: schema.v1alpha1.Host.requested_state:type_name -> schema.v1alpha1.HostState
-	1,  // 8: schema.v1alpha1.Host.health:type_name -> schema.v1alpha1.HostHealth
-	2,  // 9: schema.v1alpha1.Host.power_state:type_name -> schema.v1alpha1.PowerState
-	11, // 10: schema.v1alpha1.ManagementTopology.root_controllers:type_name -> schema.v1alpha1.ManagementController
-	5,  // 11: schema.v1alpha1.ManagementController.type:type_name -> schema.v1alpha1.ManagementControllerType
-	11, // 12: schema.v1alpha1.ManagementController.child_controllers:type_name -> schema.v1alpha1.ManagementController
-	6,  // 13: schema.v1alpha1.ManagementController.status:type_name -> schema.v1alpha1.ManagementControllerStatus
-	7,  // 14: schema.v1alpha1.GetHostManagementResponse.host_management:type_name -> schema.v1alpha1.HostManagement
-	7,  // 15: schema.v1alpha1.ListHostManagementResponse.host_managements:type_name -> schema.v1alpha1.HostManagement
-	8,  // 16: schema.v1alpha1.GetChassisResponse.chassis:type_name -> schema.v1alpha1.Chassis
-	3,  // 17: schema.v1alpha1.ListChassisRequest.type:type_name -> schema.v1alpha1.ChassisType
-	4,  // 18: schema.v1alpha1.ListChassisRequest.status:type_name -> schema.v1alpha1.ChassisStatus
-	8,  // 19: schema.v1alpha1.ListChassisResponse.chassis:type_name -> schema.v1alpha1.Chassis
-	9,  // 20: schema.v1alpha1.GetHostResponse.host:type_name -> schema.v1alpha1.Host
-	0,  // 21: schema.v1alpha1.ListHostsRequest.state:type_name -> schema.v1alpha1.HostState
-	1,  // 22: schema.v1alpha1.ListHostsRequest.health:type_name -> schema.v1alpha1.HostHealth
-	9,  // 23: schema.v1alpha1.ListHostsResponse.hosts:type_name -> schema.v1alpha1.Host
-	11, // 24: schema.v1alpha1.GetManagementControllerResponse.management_controller:type_name -> schema.v1alpha1.ManagementController
-	5,  // 25: schema.v1alpha1.ListManagementControllersRequest.type:type_name -> schema.v1alpha1.ManagementControllerType
-	6,  // 26: schema.v1alpha1.ListManagementControllersRequest.status:type_name -> schema.v1alpha1.ManagementControllerStatus
-	11, // 27: schema.v1alpha1.ListManagementControllersResponse.management_controllers:type_name -> schema.v1alpha1.ManagementController
-	12, // 28: schema.v1alpha1.HostManagementService.GetHostManagement:input_type -> schema.v1alpha1.GetHostManagementRequest
-	14, // 29: schema.v1alpha1.HostManagementService.ListHostManagement:input_type -> schema.v1alpha1.ListHostManagementRequest
-	16, // 30: schema.v1alpha1.ChassisService.GetChassis:input_type -> schema.v1alpha1.GetChassisRequest
-	18, // 31: schema.v1alpha1.ChassisService.ListChassis:input_type -> schema.v1alpha1.ListChassisRequest
-	20, // 32: schema.v1alpha1.HostService.GetHost:input_type -> schema.v1alpha1.GetHostRequest
-	22, // 33: schema.v1alpha1.HostService.ListHosts:input_type -> schema.v1alpha1.ListHostsRequest
-	24, // 34: schema.v1alpha1.ManagementControllerService.GetManagementController:input_type -> schema.v1alpha1.GetManagementControllerRequest
-	26, // 35: schema.v1alpha1.ManagementControllerService.ListManagementControllers:input_type -> schema.v1alpha1.ListManagementControllersRequest
-	13, // 36: schema.v1alpha1.HostManagementService.GetHostManagement:output_type -> schema.v1alpha1.GetHostManagementResponse
-	15, // 37: schema.v1alpha1.HostManagementService.ListHostManagement:output_type -> schema.v1alpha1.ListHostManagementResponse
-	17, // 38: schema.v1alpha1.ChassisService.GetChassis:output_type -> schema.v1alpha1.GetChassisResponse
-	19, // 39: schema.v1alpha1.ChassisService.ListChassis:output_type -> schema.v1alpha1.ListChassisResponse
-	21, // 40: schema.v1alpha1.HostService.GetHost:output_type -> schema.v1alpha1.GetHostResponse
-	23, // 41: schema.v1alpha1.HostService.ListHosts:output_type -> schema.v1alpha1.ListHostsResponse
-	25, // 42: schema.v1alpha1.ManagementControllerService.GetManagementController:output_type -> schema.v1alpha1.GetManagementControllerResponse
-	27, // 43: schema.v1alpha1.ManagementControllerService.ListManagementControllers:output_type -> schema.v1alpha1.ListManagementControllersResponse
-	36, // [36:44] is the sub-list for method output_type
-	28, // [28:36] is the sub-list for method input_type
-	28, // [28:28] is the sub-list for extension type_name
-	28, // [28:28] is the sub-list for extension extendee
-	0,  // [0:28] is the sub-list for field type_name
+	0,  // 0: schema.v1alpha1.Health.status:type_name -> schema.v1alpha1.HealthStatus
+	3,  // 1: schema.v1alpha1.Health.details:type_name -> schema.v1alpha1.HealthDetail
+	10, // 2: schema.v1alpha1.Health.last_updated:type_name -> google.protobuf.Timestamp
+	11, // 3: schema.v1alpha1.Health.uptime:type_name -> google.protobuf.Duration
+	0,  // 4: schema.v1alpha1.HealthDetail.status:type_name -> schema.v1alpha1.HealthStatus
+	10, // 5: schema.v1alpha1.HealthDetail.timestamp:type_name -> google.protobuf.Timestamp
+	1,  // 6: schema.v1alpha1.SystemInfo.state:type_name -> schema.v1alpha1.SystemState
+	2,  // 7: schema.v1alpha1.SystemInfo.health:type_name -> schema.v1alpha1.Health
+	10, // 8: schema.v1alpha1.SystemInfo.boot_time:type_name -> google.protobuf.Timestamp
+	11, // 9: schema.v1alpha1.SystemInfo.uptime:type_name -> google.protobuf.Duration
+	12, // 10: schema.v1alpha1.SystemInfo.contact_info:type_name -> schema.v1alpha1.ContactInfo
+	9,  // 11: schema.v1alpha1.SystemInfo.metadata:type_name -> schema.v1alpha1.SystemInfo.MetadataEntry
+	13, // 12: schema.v1alpha1.GetSystemInfoRequest.field_mask:type_name -> google.protobuf.FieldMask
+	4,  // 13: schema.v1alpha1.GetSystemInfoResponse.system_info:type_name -> schema.v1alpha1.SystemInfo
+	13, // 14: schema.v1alpha1.GetHealthRequest.field_mask:type_name -> google.protobuf.FieldMask
+	2,  // 15: schema.v1alpha1.GetHealthResponse.health:type_name -> schema.v1alpha1.Health
+	5,  // 16: schema.v1alpha1.BMCService.GetSystemInfo:input_type -> schema.v1alpha1.GetSystemInfoRequest
+	7,  // 17: schema.v1alpha1.BMCService.GetHealth:input_type -> schema.v1alpha1.GetHealthRequest
+	14, // 18: schema.v1alpha1.BMCService.GetAssetInfo:input_type -> schema.v1alpha1.GetAssetInfoRequest
+	15, // 19: schema.v1alpha1.BMCService.SetAssetInfo:input_type -> schema.v1alpha1.SetAssetInfoRequest
+	16, // 20: schema.v1alpha1.BMCService.GetChassis:input_type -> schema.v1alpha1.GetChassisRequest
+	17, // 21: schema.v1alpha1.BMCService.ListChassis:input_type -> schema.v1alpha1.ListChassisRequest
+	18, // 22: schema.v1alpha1.BMCService.UpdateChassis:input_type -> schema.v1alpha1.UpdateChassisRequest
+	19, // 23: schema.v1alpha1.BMCService.ChassisChangeState:input_type -> schema.v1alpha1.ChassisChangeStateRequest
+	20, // 24: schema.v1alpha1.BMCService.ChassisControl:input_type -> schema.v1alpha1.ChassisControlRequest
+	21, // 25: schema.v1alpha1.BMCService.GetHost:input_type -> schema.v1alpha1.GetHostRequest
+	22, // 26: schema.v1alpha1.BMCService.ListHosts:input_type -> schema.v1alpha1.ListHostsRequest
+	23, // 27: schema.v1alpha1.BMCService.UpdateHost:input_type -> schema.v1alpha1.UpdateHostRequest
+	24, // 28: schema.v1alpha1.BMCService.HostChangeState:input_type -> schema.v1alpha1.HostChangeStateRequest
+	25, // 29: schema.v1alpha1.BMCService.GetManagementController:input_type -> schema.v1alpha1.GetManagementControllerRequest
+	26, // 30: schema.v1alpha1.BMCService.ListManagementControllers:input_type -> schema.v1alpha1.ListManagementControllersRequest
+	27, // 31: schema.v1alpha1.BMCService.UpdateManagementController:input_type -> schema.v1alpha1.UpdateManagementControllerRequest
+	28, // 32: schema.v1alpha1.BMCService.ManagementControllerControl:input_type -> schema.v1alpha1.ManagementControllerControlRequest
+	29, // 33: schema.v1alpha1.BMCService.ListSensors:input_type -> schema.v1alpha1.ListSensorsRequest
+	30, // 34: schema.v1alpha1.BMCService.GetSensor:input_type -> schema.v1alpha1.GetSensorRequest
+	31, // 35: schema.v1alpha1.BMCService.GetThermalZone:input_type -> schema.v1alpha1.GetThermalZoneRequest
+	32, // 36: schema.v1alpha1.BMCService.SetThermalZone:input_type -> schema.v1alpha1.SetThermalZoneRequest
+	33, // 37: schema.v1alpha1.BMCService.ListThermalZones:input_type -> schema.v1alpha1.ListThermalZonesRequest
+	34, // 38: schema.v1alpha1.BMCService.CreateUser:input_type -> schema.v1alpha1.CreateUserRequest
+	35, // 39: schema.v1alpha1.BMCService.GetUser:input_type -> schema.v1alpha1.GetUserRequest
+	36, // 40: schema.v1alpha1.BMCService.UpdateUser:input_type -> schema.v1alpha1.UpdateUserRequest
+	37, // 41: schema.v1alpha1.BMCService.DeleteUser:input_type -> schema.v1alpha1.DeleteUserRequest
+	38, // 42: schema.v1alpha1.BMCService.ListUsers:input_type -> schema.v1alpha1.ListUsersRequest
+	39, // 43: schema.v1alpha1.BMCService.ChangePassword:input_type -> schema.v1alpha1.ChangePasswordRequest
+	40, // 44: schema.v1alpha1.BMCService.ResetPassword:input_type -> schema.v1alpha1.ResetPasswordRequest
+	41, // 45: schema.v1alpha1.BMCService.AuthenticateUser:input_type -> schema.v1alpha1.AuthenticateUserRequest
+	6,  // 46: schema.v1alpha1.BMCService.GetSystemInfo:output_type -> schema.v1alpha1.GetSystemInfoResponse
+	8,  // 47: schema.v1alpha1.BMCService.GetHealth:output_type -> schema.v1alpha1.GetHealthResponse
+	42, // 48: schema.v1alpha1.BMCService.GetAssetInfo:output_type -> schema.v1alpha1.GetAssetInfoResponse
+	43, // 49: schema.v1alpha1.BMCService.SetAssetInfo:output_type -> schema.v1alpha1.SetAssetInfoResponse
+	44, // 50: schema.v1alpha1.BMCService.GetChassis:output_type -> schema.v1alpha1.GetChassisResponse
+	45, // 51: schema.v1alpha1.BMCService.ListChassis:output_type -> schema.v1alpha1.ListChassisResponse
+	46, // 52: schema.v1alpha1.BMCService.UpdateChassis:output_type -> schema.v1alpha1.UpdateChassisResponse
+	47, // 53: schema.v1alpha1.BMCService.ChassisChangeState:output_type -> schema.v1alpha1.ChassisChangeStateResponse
+	48, // 54: schema.v1alpha1.BMCService.ChassisControl:output_type -> schema.v1alpha1.ChassisControlResponse
+	49, // 55: schema.v1alpha1.BMCService.GetHost:output_type -> schema.v1alpha1.GetHostResponse
+	50, // 56: schema.v1alpha1.BMCService.ListHosts:output_type -> schema.v1alpha1.ListHostsResponse
+	51, // 57: schema.v1alpha1.BMCService.UpdateHost:output_type -> schema.v1alpha1.UpdateHostResponse
+	52, // 58: schema.v1alpha1.BMCService.HostChangeState:output_type -> schema.v1alpha1.HostChangeStateResponse
+	53, // 59: schema.v1alpha1.BMCService.GetManagementController:output_type -> schema.v1alpha1.GetManagementControllerResponse
+	54, // 60: schema.v1alpha1.BMCService.ListManagementControllers:output_type -> schema.v1alpha1.ListManagementControllersResponse
+	55, // 61: schema.v1alpha1.BMCService.UpdateManagementController:output_type -> schema.v1alpha1.UpdateManagementControllerResponse
+	56, // 62: schema.v1alpha1.BMCService.ManagementControllerControl:output_type -> schema.v1alpha1.ManagementControllerControlResponse
+	57, // 63: schema.v1alpha1.BMCService.ListSensors:output_type -> schema.v1alpha1.ListSensorsResponse
+	58, // 64: schema.v1alpha1.BMCService.GetSensor:output_type -> schema.v1alpha1.GetSensorResponse
+	59, // 65: schema.v1alpha1.BMCService.GetThermalZone:output_type -> schema.v1alpha1.GetThermalZoneResponse
+	60, // 66: schema.v1alpha1.BMCService.SetThermalZone:output_type -> schema.v1alpha1.SetThermalZoneResponse
+	61, // 67: schema.v1alpha1.BMCService.ListThermalZones:output_type -> schema.v1alpha1.ListThermalZonesResponse
+	62, // 68: schema.v1alpha1.BMCService.CreateUser:output_type -> schema.v1alpha1.CreateUserResponse
+	63, // 69: schema.v1alpha1.BMCService.GetUser:output_type -> schema.v1alpha1.GetUserResponse
+	64, // 70: schema.v1alpha1.BMCService.UpdateUser:output_type -> schema.v1alpha1.UpdateUserResponse
+	65, // 71: schema.v1alpha1.BMCService.DeleteUser:output_type -> schema.v1alpha1.DeleteUserResponse
+	66, // 72: schema.v1alpha1.BMCService.ListUsers:output_type -> schema.v1alpha1.ListUsersResponse
+	67, // 73: schema.v1alpha1.BMCService.ChangePassword:output_type -> schema.v1alpha1.ChangePasswordResponse
+	68, // 74: schema.v1alpha1.BMCService.ResetPassword:output_type -> schema.v1alpha1.ResetPasswordResponse
+	69, // 75: schema.v1alpha1.BMCService.AuthenticateUser:output_type -> schema.v1alpha1.AuthenticateUserResponse
+	46, // [46:76] is the sub-list for method output_type
+	16, // [16:46] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_schema_v1alpha1_system_proto_init() }
@@ -1917,15 +860,28 @@ func file_schema_v1alpha1_system_proto_init() {
 	if File_schema_v1alpha1_system_proto != nil {
 		return
 	}
+	file_schema_v1alpha1_asset_proto_init()
+	file_schema_v1alpha1_chassis_proto_init()
+	file_schema_v1alpha1_contact_proto_init()
+	file_schema_v1alpha1_host_proto_init()
+	file_schema_v1alpha1_managementcontroller_proto_init()
+	file_schema_v1alpha1_sensor_proto_init()
+	file_schema_v1alpha1_thermal_proto_init()
+	file_schema_v1alpha1_user_proto_init()
+	file_schema_v1alpha1_system_proto_msgTypes[0].OneofWrappers = []any{}
+	file_schema_v1alpha1_system_proto_msgTypes[1].OneofWrappers = []any{}
+	file_schema_v1alpha1_system_proto_msgTypes[2].OneofWrappers = []any{}
+	file_schema_v1alpha1_system_proto_msgTypes[3].OneofWrappers = []any{}
+	file_schema_v1alpha1_system_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_schema_v1alpha1_system_proto_rawDesc), len(file_schema_v1alpha1_system_proto_rawDesc)),
-			NumEnums:      7,
-			NumMessages:   21,
+			NumEnums:      2,
+			NumMessages:   8,
 			NumExtensions: 0,
-			NumServices:   4,
+			NumServices:   1,
 		},
 		GoTypes:           file_schema_v1alpha1_system_proto_goTypes,
 		DependencyIndexes: file_schema_v1alpha1_system_proto_depIdxs,

@@ -5,203 +5,11 @@ syntax = "proto3";
 package schema.v1alpha1;
 
 import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "schema/v1alpha1/location.proto";
+import "schema/v1alpha1/sensor.proto";
 
-// ThermalManagement represents the overall thermal management configuration for a server chassis
-message ThermalManagement {
-  // Unique identifier for the thermal management instance
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-
-  // Human-readable name for the thermal management instance
-  string name = 2 [(buf.validate.field).string.min_len = 1];
-
-  // List of thermal zones within the chassis
-  repeated ThermalZone zones = 3 [(buf.validate.field).repeated.min_items = 1];
-
-  // Global thermal profile settings
-  ThermalProfile profile = 4;
-
-  // Timestamp of the last update
-  int64 last_update_timestamp = 5;
-}
-
-// ThermalZone represents a specific zone within the chassis that has its own thermal control
-message ThermalZone {
-  // Unique identifier for the thermal zone
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-
-  // Human-readable name for the thermal zone
-  string name = 2 [(buf.validate.field).string.min_len = 1];
-
-  // List of sensors associated with this zone
-  repeated string sensor_ids = 3 [(buf.validate.field).repeated.min_items = 1];
-
-  // List of cooling devices (fans, pumps) associated with this zone
-  repeated string cooling_device_ids = 4 [(buf.validate.field).repeated.min_items = 1];
-
-  // Current temperature in the zone (aggregated from sensors)
-  double current_temperature = 5;
-
-  // Target temperature for the zone
-  double target_temperature = 6 [(buf.validate.field).double.gt = 0];
-
-  // PID controller settings for this zone
-  PIDSettings pid_settings = 7;
-
-  // Status of the thermal zone
-  ThermalZoneStatus status = 8;
-
-  // Timestamp of the last update
-  int64 last_update_timestamp = 9;
-}
-
-// CoolingDevice represents a physical device used for thermal management
-message CoolingDevice {
-  // Unique identifier for the cooling device
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-
-  // Human-readable name for the cooling device
-  string name = 2 [(buf.validate.field).string.min_len = 1];
-
-  // Type of cooling device
-  CoolingDeviceType type = 3;
-
-  // Current speed or power level (0-100%)
-  double speed_percent = 4 [(buf.validate.field).double.gte = 0, (buf.validate.field).double.lte = 100];
-
-  // Minimum allowed speed
-  double min_speed_percent = 5 [(buf.validate.field).double.gte = 0, (buf.validate.field).double.lte = 100];
-
-  // Maximum allowed speed
-  double max_speed_percent = 6 [(buf.validate.field).double.gte = 0, (buf.validate.field).double.lte = 100];
-
-  // Status of the cooling device
-  CoolingDeviceStatus status = 7;
-
-  // Physical location of the device
-  string physical_location = 8;
-
-  // Timestamp of the last update
-  int64 last_update_timestamp = 9;
-}
-
-// PIDSettings represents the parameters for PID control
-message PIDSettings {
-  // Proportional gain
-  double kp = 1 [(buf.validate.field).double.gte = 0];
-
-  // Integral gain
-  double ki = 2 [(buf.validate.field).double.gte = 0];
-
-  // Derivative gain
-  double kd = 3 [(buf.validate.field).double.gte = 0];
-
-  // Sample time in seconds
-  double sample_time = 4 [(buf.validate.field).double.gt = 0];
-
-  // Output limits (0-100% for fan speeds)
-  double output_min = 5 [(buf.validate.field).double.gte = 0, (buf.validate.field).double.lte = 100];
-  double output_max = 6 [(buf.validate.field).double.gte = 0, (buf.validate.field).double.lte = 100];
-}
-
-// ThermalProfile represents predefined thermal management profiles
-message ThermalProfile {
-  // Profile type
-  ThermalProfileType type = 1;
-
-  // Custom PID settings (only used when type is CUSTOM)
-  PIDSettings custom_settings = 2;
-
-  // Description of the profile
-  string description = 3;
-}
-
-// Request message for getting a thermal management configuration by ID
-message GetThermalManagementRequest {
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-}
-
-// Response message for getting a thermal management configuration
-message GetThermalManagementResponse {
-  ThermalManagement thermal_management = 1;
-}
-
-// Request message for listing thermal management configurations
-message ListThermalManagementRequest {}
-
-// Response message for listing thermal management configurations
-message ListThermalManagementResponse {
-  repeated ThermalManagement thermal_managements = 1;
-}
-
-// Request message for getting a thermal zone by ID
-message GetThermalZoneRequest {
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-}
-
-// Response message for getting a thermal zone
-message GetThermalZoneResponse {
-  ThermalZone thermal_zone = 1;
-}
-
-// Request message for listing thermal zones with optional filtering
-message ListThermalZonesRequest {
-  ThermalZoneStatus status = 1;
-}
-
-// Response message for listing thermal zones
-message ListThermalZonesResponse {
-  repeated ThermalZone thermal_zones = 1;
-}
-
-// Request message for getting a cooling device by ID
-message GetCoolingDeviceRequest {
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-}
-
-// Response message for getting a cooling device
-message GetCoolingDeviceResponse {
-  CoolingDevice cooling_device = 1;
-}
-
-// Request message for listing cooling devices with optional filtering
-message ListCoolingDevicesRequest {
-  CoolingDeviceType type = 1;
-  CoolingDeviceStatus status = 2;
-}
-
-// Response message for listing cooling devices
-message ListCoolingDevicesResponse {
-  repeated CoolingDevice cooling_devices = 1;
-}
-
-// Service definition for thermal management operations
-service ThermalManagementService {
-  // Get a thermal management configuration by ID
-  rpc GetThermalManagement(GetThermalManagementRequest) returns (GetThermalManagementResponse) {}
-
-  // List all thermal management configurations
-  rpc ListThermalManagement(ListThermalManagementRequest) returns (ListThermalManagementResponse) {}
-}
-
-// Service definition for thermal zone operations
-service ThermalZoneService {
-  // Get a thermal zone by ID
-  rpc GetThermalZone(GetThermalZoneRequest) returns (GetThermalZoneResponse) {}
-
-  // List all thermal zones with optional filtering
-  rpc ListThermalZones(ListThermalZonesRequest) returns (ListThermalZonesResponse) {}
-}
-
-// Service definition for cooling device operations
-service CoolingDeviceService {
-  // Get a cooling device by ID
-  rpc GetCoolingDevice(GetCoolingDeviceRequest) returns (GetCoolingDeviceResponse) {}
-
-  // List all cooling devices with optional filtering
-  rpc ListCoolingDevices(ListCoolingDevicesRequest) returns (ListCoolingDevicesResponse) {}
-}
-
-// Enumerations
 enum ThermalZoneStatus {
   THERMAL_ZONE_STATUS_UNSPECIFIED = 0;
   THERMAL_ZONE_STATUS_NORMAL = 1;
@@ -215,20 +23,146 @@ enum CoolingDeviceType {
   COOLING_DEVICE_TYPE_FAN = 1;
   COOLING_DEVICE_TYPE_WATER_PUMP = 2;
   COOLING_DEVICE_TYPE_HEAT_EXCHANGER = 3;
+  COOLING_DEVICE_TYPE_LIQUID_COOLER = 4;
+  COOLING_DEVICE_TYPE_BLOWER = 5;
 }
 
 enum CoolingDeviceStatus {
   COOLING_DEVICE_STATUS_UNSPECIFIED = 0;
   COOLING_DEVICE_STATUS_ENABLED = 1;
   COOLING_DEVICE_STATUS_DISABLED = 2;
-  COOLING_DEVICE_STATUS_ERROR = 3;
-  COOLING_DEVICE_STATUS_NOT_PRESENT = 4;
+  COOLING_DEVICE_STATUS_NOT_PRESENT = 3;
+  COOLING_DEVICE_STATUS_ERROR = 4;
+  COOLING_DEVICE_STATUS_UNKNOWN = 5;
 }
 
-enum ThermalProfileType {
-  THERMAL_PROFILE_TYPE_UNSPECIFIED = 0;
-  THERMAL_PROFILE_TYPE_QUIET = 1;
-  THERMAL_PROFILE_TYPE_BALANCED = 2;
-  THERMAL_PROFILE_TYPE_AGGRESSIVE = 3;
-  THERMAL_PROFILE_TYPE_CUSTOM = 4;
+enum CoolingDeviceControlMode {
+  COOLING_DEVICE_CONTROL_MODE_UNSPECIFIED = 0;
+  COOLING_DEVICE_CONTROL_MODE_AUTOMATIC = 1;
+  COOLING_DEVICE_CONTROL_MODE_MANUAL = 2;
+  COOLING_DEVICE_CONTROL_MODE_PID = 3;
 }
+
+enum CoolingDeviceProfileType {
+  COOLING_DEVICE_PROFILE_TYPE_UNSPECIFIED = 0;
+  COOLING_DEVICE_PROFILE_TYPE_QUIET = 1;
+  COOLING_DEVICE_PROFILE_TYPE_BALANCED = 2;
+  COOLING_DEVICE_PROFILE_TYPE_AGGRESSIVE = 3;
+  COOLING_DEVICE_PROFILE_TYPE_CUSTOM = 4;
+}
+
+message ThermalZone {
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  repeated string sensor_names = 2
+      [ (buf.validate.field).repeated.min_items = 1 ];
+  repeated string cooling_device_names = 3;
+  double current_temperature = 4;
+  optional double target_temperature = 5;
+  optional PIDSettings pid_settings = 6;
+  ThermalZoneStatus status = 7
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional Location location = 8;
+  optional google.protobuf.Timestamp last_updated = 9;
+  map<string, string> custom_attributes = 10;
+}
+
+message CoolingDevice {
+  option (buf.validate.message).cel = {
+    id : "cooling_device_bounds",
+    message : "max_cooling_power_percent must be >= min_cooling_power_percent",
+    expression : "!has(this.max_cooling_power_percent) || "
+                 "!has(this.min_cooling_power_percent) "
+                 "|| this.max_cooling_power_percent >= "
+                 "this.min_cooling_power_percent"
+  };
+  option (buf.validate.message).cel = {
+    id : "cooling_device_power_within_range",
+    message : "cooling_power_percent must be within "
+              "min_cooling_power_percent and "
+              "max_cooling_power_percent",
+    expression : "!has(this.cooling_power_percent) || "
+                 "!has(this.min_cooling_power_percent) || "
+                 "!has(this.max_cooling_power_percent) || "
+                 "(this.cooling_power_percent >= "
+                 "this.min_cooling_power_percent && this.cooling_power_percent "
+                 "<= "
+                 "this.max_cooling_power_percent)"
+  };
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional CoolingDeviceType type = 2
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional double cooling_power_percent = 3 [
+    (buf.validate.field).double.gte = 0,
+    (buf.validate.field).double.lte = 100
+  ];
+  optional double min_cooling_power_percent = 4 [
+    (buf.validate.field).double.gte = 0,
+    (buf.validate.field).double.lte = 100
+  ];
+  optional double max_cooling_power_percent = 5 [
+    (buf.validate.field).double.gte = 0,
+    (buf.validate.field).double.lte = 100
+  ];
+  repeated Sensor sensors = 6;
+  optional CoolingDeviceStatus status = 7
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional CoolingDeviceControlMode control_mode = 8
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional Location location = 9;
+  optional google.protobuf.Timestamp last_updated = 10;
+  map<string, string> custom_attributes = 11;
+}
+
+message ThermalProfile {
+  option (buf.validate.message).cel = {
+    id : "thermal_profile_custom_settings",
+    message : "custom_settings must be provided when type is CUSTOM",
+    expression : "this.type != 4 || has(this.custom_settings)"
+  };
+  CoolingDeviceProfileType type = 1
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional PIDSettings custom_settings = 2;
+  optional string description = 3;
+}
+
+message PIDSettings {
+  option (buf.validate.message).cel = {
+    id : "pid_output_bounds",
+    message : "output_min must be <= output_max",
+    expression : "!has(this.output_min) || !has(this.output_max) || "
+                 "this.output_min <= this.output_max"
+  };
+  double kp = 1 [ (buf.validate.field).double.gte = 0 ];
+  double ki = 2 [ (buf.validate.field).double.gte = 0 ];
+  double kd = 3 [ (buf.validate.field).double.gte = 0 ];
+  double sample_time = 4 [ (buf.validate.field).double.gt = 0 ];
+  optional double output_min = 5;
+  optional double output_max = 6;
+}
+
+message GetThermalZoneRequest {
+  oneof identifier {
+    option (buf.validate.oneof).required = true;
+    string name = 1;
+    ThermalZoneStatus status = 2;
+    Location location = 3;
+  }
+  google.protobuf.FieldMask field_mask = 4;
+}
+
+message GetThermalZoneResponse { repeated ThermalZone thermal_zones = 1; }
+
+message SetThermalZoneRequest {
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional double target_temperature = 2;
+  optional PIDSettings pid_settings = 3;
+  optional ThermalZoneStatus status = 4
+      [ (buf.validate.field).enum.defined_only = true ];
+  google.protobuf.FieldMask field_mask = 5;
+}
+
+message SetThermalZoneResponse { ThermalZone thermal_zone = 1; }
+
+message ListThermalZonesRequest { google.protobuf.FieldMask field_mask = 1; }
+
+message ListThermalZonesResponse { repeated ThermalZone thermal_zones = 1; }

@@ -1,0 +1,179 @@
+// SPDX-License-Identifier: BSD-3-Clause
+
+syntax = "proto3";
+
+package schema.v1alpha1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "schema/v1alpha1/asset.proto";
+import "schema/v1alpha1/location.proto";
+import "schema/v1alpha1/firmware.proto";
+
+enum HostType {
+  HOST_TYPE_UNSPECIFIED = 0;
+  HOST_TYPE_PHYSICAL = 1;
+  HOST_TYPE_VIRTUAL = 2;
+  HOST_TYPE_CONTAINER = 3;
+  HOST_TYPE_BLADE = 4;
+  HOST_TYPE_COMPUTE_NODE = 5;
+}
+
+enum HostState {
+  HOST_STATE_UNSPECIFIED = 0;
+  HOST_STATE_OFF = 1;
+  HOST_STATE_ON = 2;
+  HOST_STATE_TRANSITIONING = 3;
+  HOST_STATE_QUIESCED = 4;
+  HOST_STATE_DIAGNOSTIC_MODE = 5;
+  HOST_STATE_ERROR = 6;
+}
+
+enum HostTransition {
+  HOST_TRANSITION_UNSPECIFIED = 0;
+  HOST_TRANSITION_ON = 1;
+  HOST_TRANSITION_OFF = 2;
+  HOST_TRANSITION_REBOOT = 3;
+  HOST_TRANSITION_FORCE_OFF = 4;
+  HOST_TRANSITION_FORCE_RESTART = 5;
+}
+
+enum HostRestartCause {
+  HOST_RESTART_CAUSE_UNSPECIFIED = 0;
+  HOST_RESTART_CAUSE_POWER_BUTTON = 1;
+  HOST_RESTART_CAUSE_RESET_BUTTON = 2;
+  HOST_RESTART_CAUSE_POWER_CYCLE = 3;
+  HOST_RESTART_CAUSE_WATCHDOG = 4;
+  HOST_RESTART_CAUSE_SOFT_RESET = 5;
+  HOST_RESTART_CAUSE_THERMAL = 6;
+  HOST_RESTART_CAUSE_POWER_SUPPLY = 7;
+  HOST_RESTART_CAUSE_OTHER = 8;
+  HOST_RESTART_CAUSE_UNKNOWN = 9;
+}
+
+enum BootProgressStage {
+  BOOT_PROGRESS_STAGE_UNSPECIFIED = 0;
+  BOOT_PROGRESS_STAGE_SYSTEM_HARDWARE_INITIALIZATION = 1;
+  BOOT_PROGRESS_STAGE_SYSTEM_INITIALIZATION = 2;
+  BOOT_PROGRESS_STAGE_PRIMARY_PROCESSOR_INITIALIZATION = 3;
+  BOOT_PROGRESS_STAGE_MEMORY_INITIALIZATION = 4;
+  BOOT_PROGRESS_STAGE_SECONDARY_PROCESSOR_INITIALIZATION = 5;
+  BOOT_PROGRESS_STAGE_PCI_RESOURCE_CONFIG = 6;
+  BOOT_PROGRESS_STAGE_STARTING_OPERATING_SYSTEM = 7;
+  BOOT_PROGRESS_STAGE_BASEBOARD_INITIALIZATION = 8;
+  BOOT_PROGRESS_STAGE_MOTHERBOARD_INITIALIZATION = 9;
+  BOOT_PROGRESS_STAGE_OPERATING_SYSTEM_BOOT = 10;
+  BOOT_PROGRESS_STAGE_COMPLETE = 11;
+}
+
+enum OSStatus {
+  OS_STATUS_UNSPECIFIED = 0;
+  OS_STATUS_BOOT_COMPLETE = 1;
+  OS_STATUS_PXE_BOOT_COMPLETE = 2;
+  OS_STATUS_DIAGNOSTIC_BOOT_COMPLETE = 3;
+  OS_STATUS_CD_BOOT_COMPLETE = 4;
+  OS_STATUS_ROM_BOOT_COMPLETE = 5;
+  OS_STATUS_BOOT_COMPLETE_UNSPECIFIED = 6;
+  OS_STATUS_INSTALL_IN_PROGRESS = 7;
+  OS_STATUS_INSTALL_COMPLETE = 8;
+  OS_STATUS_INSTALL_ERROR = 9;
+}
+
+message Host {
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  AssetInfo asset = 2;
+  optional string description = 3;
+  optional HostType type = 4 [ (buf.validate.field).enum.defined_only = true ];
+  optional HostState current_state = 5
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional HostTransition requested_transition = 6
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional HostRestartCause last_restart_cause = 7
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional Location location = 8;
+  optional Firmware firmware = 9;
+  optional HostOperatingSystem operating_system = 10;
+  optional BootProgress boot_progress = 11;
+  optional HostRebootInfo last_reboot = 12;
+  optional google.protobuf.Timestamp updated_at = 13;
+  map<string, string> metadata = 14;
+}
+
+message HostOperatingSystem {
+  optional string name = 1;
+  optional string version = 2;
+  optional string distribution = 3;
+  optional string architecture = 4;
+  optional string kernel_version = 5;
+  optional string build_number = 6;
+  optional google.protobuf.Timestamp installation_date = 7;
+  optional google.protobuf.Timestamp last_boot_time = 8;
+  optional OSStatus status = 9
+      [ (buf.validate.field).enum.defined_only = true ];
+}
+
+message BootProgress {
+  BootProgressStage stage = 1 [ (buf.validate.field).enum.defined_only = true ];
+  uint32 progress_percent = 2 [ (buf.validate.field).uint32.lte = 100 ];
+  optional google.protobuf.Timestamp last_boot_time = 3;
+}
+
+message HostRebootInfo {
+  optional google.protobuf.Timestamp last_reboot_time = 1;
+  optional HostRestartCause reboot_cause = 2
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional uint32 reboot_count = 3;
+  optional google.protobuf.Duration uptime = 4;
+  optional google.protobuf.Duration boot_time = 5;
+}
+
+message GetHostRequest {
+  oneof identifier {
+    option (buf.validate.oneof).required = true;
+    string host_id = 1;
+    string name = 2;
+    HostType type = 3;
+    HostState state = 4;
+    Location location = 5;
+  }
+  optional google.protobuf.FieldMask field_mask = 6;
+}
+
+message GetHostResponse { repeated Host hosts = 1; }
+
+message ListHostsRequest {
+  optional HostType type = 1 [ (buf.validate.field).enum.defined_only = true ];
+  optional HostState state = 2
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional google.protobuf.FieldMask field_mask = 3;
+}
+
+message ListHostsResponse { repeated Host hosts = 1; }
+
+message UpdateHostRequest {
+  string host_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  Host host = 2 [ (buf.validate.field).required = true ];
+  google.protobuf.FieldMask field_mask = 3;
+}
+
+message UpdateHostResponse { Host host = 1; }
+
+message HostChangeStateRequest {
+  string host_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  HostTransition transition = 2
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional bool force = 3;
+  map<string, string> metadata = 4;
+}
+
+message HostChangeStateResponse {
+  bool success = 1;
+  optional string error_message = 2;
+  optional HostState current_state = 3
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional string transition_id = 4;
+  optional google.protobuf.Timestamp estimated_completion = 5;
+  map<string, string> metadata = 6;
+}

@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package schema.v1alpha1;
+
+import "buf/validate/validate.proto";
+import "google/type/postal_address.proto";
+import "google/type/latlng.proto";
+
+enum LocationAccuracy {
+  LOCATION_ACCURACY_UNSPECIFIED = 0;
+  LOCATION_ACCURACY_EXACT = 1;
+  LOCATION_ACCURACY_APPROXIMATE = 2;
+  LOCATION_ACCURACY_ESTIMATED = 3;
+}
+
+message Location {
+  option (buf.validate.message).oneof = {
+    fields : [
+      "geographical_location",
+      "facility_location",
+      "rack_location",
+      "chassis_location",
+      "component_location"
+    ],
+    required : true
+  };
+  optional GeographicalLocation geographical_location = 1;
+  optional FacilityLocation facility_location = 2;
+  optional RackLocation rack_location = 3;
+  optional ChassisLocation chassis_location = 4;
+  optional ComponentLocation component_location = 5;
+  optional LocationAccuracy accuracy = 6
+      [ (buf.validate.field).enum.defined_only = true ];
+  map<string, string> custom_attributes = 7;
+}
+
+message GeographicalLocation {
+  option (buf.validate.message).oneof = {
+    fields : [
+      "address",
+      "coordinates",
+      "altitude_meters",
+      "timezone",
+      "country_code"
+    ],
+    required : true
+  };
+  optional google.type.PostalAddress address = 1;
+  optional google.type.LatLng coordinates = 2;
+  optional double altitude_meters = 3;
+  optional string timezone = 4;
+  optional string country_code = 5;
+}
+
+message FacilityLocation {
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string site = 2;
+  optional string building = 3;
+  optional string floor = 4;
+  optional string room = 5;
+}
+
+message RackLocation {
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string zone = 2;
+  optional string aisle = 3;
+  optional string row = 4;
+}
+
+message ChassisLocation {
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string rack_unit = 2;
+  optional string height_unit = 3;
+  optional string slot = 4;
+  optional string bay = 5;
+  optional string position = 6;
+}
+
+message ComponentLocation {
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string socket = 2;
+  optional string slot = 3;
+  optional string bay = 4;
+  optional string position = 5;
+}

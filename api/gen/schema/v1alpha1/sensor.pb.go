@@ -12,6 +12,8 @@ import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	fieldmaskpb "google.golang.org/protobuf/types/known/fieldmaskpb"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -24,7 +26,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// SensorContext defines the physical context of the sensor
 type SensorContext int32
 
 const (
@@ -32,39 +33,42 @@ const (
 	SensorContext_SENSOR_CONTEXT_TEMPERATURE SensorContext = 1
 	SensorContext_SENSOR_CONTEXT_VOLTAGE     SensorContext = 2
 	SensorContext_SENSOR_CONTEXT_CURRENT     SensorContext = 3
-	SensorContext_SENSOR_CONTEXT_FAN         SensorContext = 4
+	SensorContext_SENSOR_CONTEXT_TACH        SensorContext = 4
 	SensorContext_SENSOR_CONTEXT_POWER       SensorContext = 5
 	SensorContext_SENSOR_CONTEXT_ENERGY      SensorContext = 6
 	SensorContext_SENSOR_CONTEXT_PRESSURE    SensorContext = 7
 	SensorContext_SENSOR_CONTEXT_HUMIDITY    SensorContext = 8
 	SensorContext_SENSOR_CONTEXT_ALTITUDE    SensorContext = 9
+	SensorContext_SENSOR_CONTEXT_FLOW_RATE   SensorContext = 10
 )
 
 // Enum value maps for SensorContext.
 var (
 	SensorContext_name = map[int32]string{
-		0: "SENSOR_CONTEXT_UNSPECIFIED",
-		1: "SENSOR_CONTEXT_TEMPERATURE",
-		2: "SENSOR_CONTEXT_VOLTAGE",
-		3: "SENSOR_CONTEXT_CURRENT",
-		4: "SENSOR_CONTEXT_FAN",
-		5: "SENSOR_CONTEXT_POWER",
-		6: "SENSOR_CONTEXT_ENERGY",
-		7: "SENSOR_CONTEXT_PRESSURE",
-		8: "SENSOR_CONTEXT_HUMIDITY",
-		9: "SENSOR_CONTEXT_ALTITUDE",
+		0:  "SENSOR_CONTEXT_UNSPECIFIED",
+		1:  "SENSOR_CONTEXT_TEMPERATURE",
+		2:  "SENSOR_CONTEXT_VOLTAGE",
+		3:  "SENSOR_CONTEXT_CURRENT",
+		4:  "SENSOR_CONTEXT_TACH",
+		5:  "SENSOR_CONTEXT_POWER",
+		6:  "SENSOR_CONTEXT_ENERGY",
+		7:  "SENSOR_CONTEXT_PRESSURE",
+		8:  "SENSOR_CONTEXT_HUMIDITY",
+		9:  "SENSOR_CONTEXT_ALTITUDE",
+		10: "SENSOR_CONTEXT_FLOW_RATE",
 	}
 	SensorContext_value = map[string]int32{
 		"SENSOR_CONTEXT_UNSPECIFIED": 0,
 		"SENSOR_CONTEXT_TEMPERATURE": 1,
 		"SENSOR_CONTEXT_VOLTAGE":     2,
 		"SENSOR_CONTEXT_CURRENT":     3,
-		"SENSOR_CONTEXT_FAN":         4,
+		"SENSOR_CONTEXT_TACH":        4,
 		"SENSOR_CONTEXT_POWER":       5,
 		"SENSOR_CONTEXT_ENERGY":      6,
 		"SENSOR_CONTEXT_PRESSURE":    7,
 		"SENSOR_CONTEXT_HUMIDITY":    8,
 		"SENSOR_CONTEXT_ALTITUDE":    9,
+		"SENSOR_CONTEXT_FLOW_RATE":   10,
 	}
 )
 
@@ -95,16 +99,17 @@ func (SensorContext) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{0}
 }
 
-// SensorStatus represents the operational status of the sensor
 type SensorStatus int32
 
 const (
 	SensorStatus_SENSOR_STATUS_UNSPECIFIED SensorStatus = 0
 	SensorStatus_SENSOR_STATUS_ENABLED     SensorStatus = 1
 	SensorStatus_SENSOR_STATUS_DISABLED    SensorStatus = 2
-	SensorStatus_SENSOR_STATUS_ERROR       SensorStatus = 3
-	SensorStatus_SENSOR_STATUS_NOT_PRESENT SensorStatus = 4
-	SensorStatus_SENSOR_STATUS_UNKNOWN     SensorStatus = 5
+	SensorStatus_SENSOR_STATUS_NOT_PRESENT SensorStatus = 3
+	SensorStatus_SENSOR_STATUS_WARNING     SensorStatus = 4
+	SensorStatus_SENSOR_STATUS_CRITICAL    SensorStatus = 5
+	SensorStatus_SENSOR_STATUS_ERROR       SensorStatus = 6
+	SensorStatus_SENSOR_STATUS_UNKNOWN     SensorStatus = 7
 )
 
 // Enum value maps for SensorStatus.
@@ -113,17 +118,21 @@ var (
 		0: "SENSOR_STATUS_UNSPECIFIED",
 		1: "SENSOR_STATUS_ENABLED",
 		2: "SENSOR_STATUS_DISABLED",
-		3: "SENSOR_STATUS_ERROR",
-		4: "SENSOR_STATUS_NOT_PRESENT",
-		5: "SENSOR_STATUS_UNKNOWN",
+		3: "SENSOR_STATUS_NOT_PRESENT",
+		4: "SENSOR_STATUS_WARNING",
+		5: "SENSOR_STATUS_CRITICAL",
+		6: "SENSOR_STATUS_ERROR",
+		7: "SENSOR_STATUS_UNKNOWN",
 	}
 	SensorStatus_value = map[string]int32{
 		"SENSOR_STATUS_UNSPECIFIED": 0,
 		"SENSOR_STATUS_ENABLED":     1,
 		"SENSOR_STATUS_DISABLED":    2,
-		"SENSOR_STATUS_ERROR":       3,
-		"SENSOR_STATUS_NOT_PRESENT": 4,
-		"SENSOR_STATUS_UNKNOWN":     5,
+		"SENSOR_STATUS_NOT_PRESENT": 3,
+		"SENSOR_STATUS_WARNING":     4,
+		"SENSOR_STATUS_CRITICAL":    5,
+		"SENSOR_STATUS_ERROR":       6,
+		"SENSOR_STATUS_UNKNOWN":     7,
 	}
 )
 
@@ -154,22 +163,23 @@ func (SensorStatus) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{1}
 }
 
-// SensorUnit defines the unit of measurement for sensor readings
 type SensorUnit int32
 
 const (
-	SensorUnit_SENSOR_UNIT_UNSPECIFIED SensorUnit = 0
-	SensorUnit_SENSOR_UNIT_CELSIUS     SensorUnit = 1
-	SensorUnit_SENSOR_UNIT_FAHRENHEIT  SensorUnit = 2
-	SensorUnit_SENSOR_UNIT_KELVIN      SensorUnit = 3
-	SensorUnit_SENSOR_UNIT_VOLTS       SensorUnit = 4
-	SensorUnit_SENSOR_UNIT_AMPS        SensorUnit = 5
-	SensorUnit_SENSOR_UNIT_WATTS       SensorUnit = 6
-	SensorUnit_SENSOR_UNIT_JOULES      SensorUnit = 7
-	SensorUnit_SENSOR_UNIT_PASCALS     SensorUnit = 8
-	SensorUnit_SENSOR_UNIT_PERCENT     SensorUnit = 9
-	SensorUnit_SENSOR_UNIT_RPM         SensorUnit = 10
-	SensorUnit_SENSOR_UNIT_HERTZ       SensorUnit = 11
+	SensorUnit_SENSOR_UNIT_UNSPECIFIED       SensorUnit = 0
+	SensorUnit_SENSOR_UNIT_CELSIUS           SensorUnit = 1
+	SensorUnit_SENSOR_UNIT_FAHRENHEIT        SensorUnit = 2
+	SensorUnit_SENSOR_UNIT_KELVIN            SensorUnit = 3
+	SensorUnit_SENSOR_UNIT_VOLTS             SensorUnit = 4
+	SensorUnit_SENSOR_UNIT_AMPS              SensorUnit = 5
+	SensorUnit_SENSOR_UNIT_WATTS             SensorUnit = 6
+	SensorUnit_SENSOR_UNIT_JOULES            SensorUnit = 7
+	SensorUnit_SENSOR_UNIT_PASCALS           SensorUnit = 8
+	SensorUnit_SENSOR_UNIT_PERCENT           SensorUnit = 9
+	SensorUnit_SENSOR_UNIT_RPM               SensorUnit = 10
+	SensorUnit_SENSOR_UNIT_HERTZ             SensorUnit = 11
+	SensorUnit_SENSOR_UNIT_METERS            SensorUnit = 12
+	SensorUnit_SENSOR_UNIT_LITERS_PER_MINUTE SensorUnit = 13
 )
 
 // Enum value maps for SensorUnit.
@@ -187,20 +197,24 @@ var (
 		9:  "SENSOR_UNIT_PERCENT",
 		10: "SENSOR_UNIT_RPM",
 		11: "SENSOR_UNIT_HERTZ",
+		12: "SENSOR_UNIT_METERS",
+		13: "SENSOR_UNIT_LITERS_PER_MINUTE",
 	}
 	SensorUnit_value = map[string]int32{
-		"SENSOR_UNIT_UNSPECIFIED": 0,
-		"SENSOR_UNIT_CELSIUS":     1,
-		"SENSOR_UNIT_FAHRENHEIT":  2,
-		"SENSOR_UNIT_KELVIN":      3,
-		"SENSOR_UNIT_VOLTS":       4,
-		"SENSOR_UNIT_AMPS":        5,
-		"SENSOR_UNIT_WATTS":       6,
-		"SENSOR_UNIT_JOULES":      7,
-		"SENSOR_UNIT_PASCALS":     8,
-		"SENSOR_UNIT_PERCENT":     9,
-		"SENSOR_UNIT_RPM":         10,
-		"SENSOR_UNIT_HERTZ":       11,
+		"SENSOR_UNIT_UNSPECIFIED":       0,
+		"SENSOR_UNIT_CELSIUS":           1,
+		"SENSOR_UNIT_FAHRENHEIT":        2,
+		"SENSOR_UNIT_KELVIN":            3,
+		"SENSOR_UNIT_VOLTS":             4,
+		"SENSOR_UNIT_AMPS":              5,
+		"SENSOR_UNIT_WATTS":             6,
+		"SENSOR_UNIT_JOULES":            7,
+		"SENSOR_UNIT_PASCALS":           8,
+		"SENSOR_UNIT_PERCENT":           9,
+		"SENSOR_UNIT_RPM":               10,
+		"SENSOR_UNIT_HERTZ":             11,
+		"SENSOR_UNIT_METERS":            12,
+		"SENSOR_UNIT_LITERS_PER_MINUTE": 13,
 	}
 )
 
@@ -231,92 +245,21 @@ func (SensorUnit) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{2}
 }
 
-// SensorState represents the discrete states a sensor can be in
-type SensorState int32
-
-const (
-	SensorState_SENSOR_STATE_UNSPECIFIED   SensorState = 0
-	SensorState_SENSOR_STATE_NORMAL        SensorState = 1
-	SensorState_SENSOR_STATE_FAULT         SensorState = 2
-	SensorState_SENSOR_STATE_WARNING       SensorState = 3
-	SensorState_SENSOR_STATE_CRITICAL      SensorState = 4
-	SensorState_SENSOR_STATE_UNKNOWN       SensorState = 5
-	SensorState_SENSOR_STATE_NOT_AVAILABLE SensorState = 6
-)
-
-// Enum value maps for SensorState.
-var (
-	SensorState_name = map[int32]string{
-		0: "SENSOR_STATE_UNSPECIFIED",
-		1: "SENSOR_STATE_NORMAL",
-		2: "SENSOR_STATE_FAULT",
-		3: "SENSOR_STATE_WARNING",
-		4: "SENSOR_STATE_CRITICAL",
-		5: "SENSOR_STATE_UNKNOWN",
-		6: "SENSOR_STATE_NOT_AVAILABLE",
-	}
-	SensorState_value = map[string]int32{
-		"SENSOR_STATE_UNSPECIFIED":   0,
-		"SENSOR_STATE_NORMAL":        1,
-		"SENSOR_STATE_FAULT":         2,
-		"SENSOR_STATE_WARNING":       3,
-		"SENSOR_STATE_CRITICAL":      4,
-		"SENSOR_STATE_UNKNOWN":       5,
-		"SENSOR_STATE_NOT_AVAILABLE": 6,
-	}
-)
-
-func (x SensorState) Enum() *SensorState {
-	p := new(SensorState)
-	*p = x
-	return p
-}
-
-func (x SensorState) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (SensorState) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_sensor_proto_enumTypes[3].Descriptor()
-}
-
-func (SensorState) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_sensor_proto_enumTypes[3]
-}
-
-func (x SensorState) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use SensorState.Descriptor instead.
-func (SensorState) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{3}
-}
-
-// Sensor represents a physical or virtual sensor device
 type Sensor struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Unique identifier for the sensor
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Human-readable name of the sensor
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// Physical context of the sensor (e.g., Temperature, Voltage, Fan)
-	Context SensorContext `protobuf:"varint,3,opt,name=context,proto3,enum=schema.v1alpha1.SensorContext" json:"context,omitempty"`
-	// Current status of the sensor
-	Status SensorStatus `protobuf:"varint,4,opt,name=status,proto3,enum=schema.v1alpha1.SensorStatus" json:"status,omitempty"`
-	// Unit of measurement for the sensor readings
-	Unit SensorUnit `protobuf:"varint,5,opt,name=unit,proto3,enum=schema.v1alpha1.SensorUnit" json:"unit,omitempty"`
-	// Sensor reading information - either analog with thresholds or discrete state
-	//
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Id      string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name    string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Context *SensorContext         `protobuf:"varint,3,opt,name=context,proto3,enum=schema.v1alpha1.SensorContext,oneof" json:"context,omitempty"`
+	Status  *SensorStatus          `protobuf:"varint,4,opt,name=status,proto3,enum=schema.v1alpha1.SensorStatus,oneof" json:"status,omitempty"`
+	Unit    *SensorUnit            `protobuf:"varint,5,opt,name=unit,proto3,enum=schema.v1alpha1.SensorUnit,oneof" json:"unit,omitempty"`
 	// Types that are valid to be assigned to Reading:
 	//
 	//	*Sensor_AnalogReading
 	//	*Sensor_DiscreteReading
-	Reading isSensor_Reading `protobuf_oneof:"reading"`
-	// Physical location of the sensor
-	PhysicalLocation string `protobuf:"bytes,8,opt,name=physical_location,json=physicalLocation,proto3" json:"physical_location,omitempty"`
-	// Timestamp of the last reading
-	LastReadingTimestamp int64 `protobuf:"varint,9,opt,name=last_reading_timestamp,json=lastReadingTimestamp,proto3" json:"last_reading_timestamp,omitempty"`
+	Reading              isSensor_Reading       `protobuf_oneof:"reading"`
+	Location             *Location              `protobuf:"bytes,8,opt,name=location,proto3,oneof" json:"location,omitempty"`
+	LastReadingTimestamp *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=last_reading_timestamp,json=lastReadingTimestamp,proto3,oneof" json:"last_reading_timestamp,omitempty"`
+	CustomAttributes     map[string]string      `protobuf:"bytes,10,rep,name=custom_attributes,json=customAttributes,proto3" json:"custom_attributes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -366,22 +309,22 @@ func (x *Sensor) GetName() string {
 }
 
 func (x *Sensor) GetContext() SensorContext {
-	if x != nil {
-		return x.Context
+	if x != nil && x.Context != nil {
+		return *x.Context
 	}
 	return SensorContext_SENSOR_CONTEXT_UNSPECIFIED
 }
 
 func (x *Sensor) GetStatus() SensorStatus {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return SensorStatus_SENSOR_STATUS_UNSPECIFIED
 }
 
 func (x *Sensor) GetUnit() SensorUnit {
-	if x != nil {
-		return x.Unit
+	if x != nil && x.Unit != nil {
+		return *x.Unit
 	}
 	return SensorUnit_SENSOR_UNIT_UNSPECIFIED
 }
@@ -411,18 +354,25 @@ func (x *Sensor) GetDiscreteReading() *DiscreteSensorReading {
 	return nil
 }
 
-func (x *Sensor) GetPhysicalLocation() string {
+func (x *Sensor) GetLocation() *Location {
 	if x != nil {
-		return x.PhysicalLocation
+		return x.Location
 	}
-	return ""
+	return nil
 }
 
-func (x *Sensor) GetLastReadingTimestamp() int64 {
+func (x *Sensor) GetLastReadingTimestamp() *timestamppb.Timestamp {
 	if x != nil {
 		return x.LastReadingTimestamp
 	}
-	return 0
+	return nil
+}
+
+func (x *Sensor) GetCustomAttributes() map[string]string {
+	if x != nil {
+		return x.CustomAttributes
+	}
+	return nil
 }
 
 type isSensor_Reading interface {
@@ -430,12 +380,10 @@ type isSensor_Reading interface {
 }
 
 type Sensor_AnalogReading struct {
-	// Analog sensor reading with thresholds
 	AnalogReading *AnalogSensorReading `protobuf:"bytes,6,opt,name=analog_reading,json=analogReading,proto3,oneof"`
 }
 
 type Sensor_DiscreteReading struct {
-	// Discrete sensor reading with state
 	DiscreteReading *DiscreteSensorReading `protobuf:"bytes,7,opt,name=discrete_reading,json=discreteReading,proto3,oneof"`
 }
 
@@ -443,19 +391,14 @@ func (*Sensor_AnalogReading) isSensor_Reading() {}
 
 func (*Sensor_DiscreteReading) isSensor_Reading() {}
 
-// AnalogSensorReading represents a sensor with continuous numerical readings and thresholds
 type AnalogSensorReading struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Current measured value
-	Value float64 `protobuf:"fixed64,1,opt,name=value,proto3" json:"value,omitempty"`
-	// Upper threshold values for warning and critical levels
-	UpperThresholds *Threshold `protobuf:"bytes,2,opt,name=upper_thresholds,json=upperThresholds,proto3" json:"upper_thresholds,omitempty"`
-	// Lower threshold values for warning and critical levels
-	LowerThresholds *Threshold `protobuf:"bytes,3,opt,name=lower_thresholds,json=lowerThresholds,proto3" json:"lower_thresholds,omitempty"`
-	// Minimum and maximum values recorded
-	MinMaxRecorded *MinMaxRecorded `protobuf:"bytes,4,opt,name=min_max_recorded,json=minMaxRecorded,proto3" json:"min_max_recorded,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Value           float64                `protobuf:"fixed64,1,opt,name=value,proto3" json:"value,omitempty"`
+	UpperThresholds *Threshold             `protobuf:"bytes,2,opt,name=upper_thresholds,json=upperThresholds,proto3,oneof" json:"upper_thresholds,omitempty"`
+	LowerThresholds *Threshold             `protobuf:"bytes,3,opt,name=lower_thresholds,json=lowerThresholds,proto3,oneof" json:"lower_thresholds,omitempty"`
+	MinMaxRecorded  *MinMaxRecorded        `protobuf:"bytes,4,opt,name=min_max_recorded,json=minMaxRecorded,proto3,oneof" json:"min_max_recorded,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *AnalogSensorReading) Reset() {
@@ -516,13 +459,10 @@ func (x *AnalogSensorReading) GetMinMaxRecorded() *MinMaxRecorded {
 	return nil
 }
 
-// DiscreteSensorReading represents a sensor with discrete states rather than numerical values
 type DiscreteSensorReading struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Current state of the sensor
-	State SensorState `protobuf:"varint,1,opt,name=state,proto3,enum=schema.v1alpha1.SensorState" json:"state,omitempty"`
-	// Additional state information or description
-	StateDescription string `protobuf:"bytes,2,opt,name=state_description,json=stateDescription,proto3" json:"state_description,omitempty"`
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	State            string                 `protobuf:"bytes,1,opt,name=state,proto3" json:"state,omitempty"`
+	StateDescription *string                `protobuf:"bytes,2,opt,name=state_description,json=stateDescription,proto3,oneof" json:"state_description,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -557,27 +497,24 @@ func (*DiscreteSensorReading) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *DiscreteSensorReading) GetState() SensorState {
+func (x *DiscreteSensorReading) GetState() string {
 	if x != nil {
 		return x.State
-	}
-	return SensorState_SENSOR_STATE_UNSPECIFIED
-}
-
-func (x *DiscreteSensorReading) GetStateDescription() string {
-	if x != nil {
-		return x.StateDescription
 	}
 	return ""
 }
 
-// Threshold defines warning and critical thresholds for sensor readings
+func (x *DiscreteSensorReading) GetStateDescription() string {
+	if x != nil && x.StateDescription != nil {
+		return *x.StateDescription
+	}
+	return ""
+}
+
 type Threshold struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Warning level threshold
-	Warning float64 `protobuf:"fixed64,1,opt,name=warning,proto3" json:"warning,omitempty"`
-	// Critical level threshold
-	Critical      float64 `protobuf:"fixed64,2,opt,name=critical,proto3" json:"critical,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Warning       *float64               `protobuf:"fixed64,1,opt,name=warning,proto3,oneof" json:"warning,omitempty"`
+	Critical      *float64               `protobuf:"fixed64,2,opt,name=critical,proto3,oneof" json:"critical,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -613,30 +550,25 @@ func (*Threshold) Descriptor() ([]byte, []int) {
 }
 
 func (x *Threshold) GetWarning() float64 {
-	if x != nil {
-		return x.Warning
+	if x != nil && x.Warning != nil {
+		return *x.Warning
 	}
 	return 0
 }
 
 func (x *Threshold) GetCritical() float64 {
-	if x != nil {
-		return x.Critical
+	if x != nil && x.Critical != nil {
+		return *x.Critical
 	}
 	return 0
 }
 
-// MinMaxRecorded tracks the minimum and maximum values recorded by the sensor
 type MinMaxRecorded struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Minimum value recorded
-	MinValue float64 `protobuf:"fixed64,1,opt,name=min_value,json=minValue,proto3" json:"min_value,omitempty"`
-	// Maximum value recorded
-	MaxValue float64 `protobuf:"fixed64,2,opt,name=max_value,json=maxValue,proto3" json:"max_value,omitempty"`
-	// Timestamp when minimum value was recorded
-	MinTimestamp int64 `protobuf:"varint,3,opt,name=min_timestamp,json=minTimestamp,proto3" json:"min_timestamp,omitempty"`
-	// Timestamp when maximum value was recorded
-	MaxTimestamp  int64 `protobuf:"varint,4,opt,name=max_timestamp,json=maxTimestamp,proto3" json:"max_timestamp,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MinValue      float64                `protobuf:"fixed64,1,opt,name=min_value,json=minValue,proto3" json:"min_value,omitempty"`
+	MaxValue      float64                `protobuf:"fixed64,2,opt,name=max_value,json=maxValue,proto3" json:"max_value,omitempty"`
+	MinTimestamp  *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=min_timestamp,json=minTimestamp,proto3,oneof" json:"min_timestamp,omitempty"`
+	MaxTimestamp  *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=max_timestamp,json=maxTimestamp,proto3,oneof" json:"max_timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -685,124 +617,30 @@ func (x *MinMaxRecorded) GetMaxValue() float64 {
 	return 0
 }
 
-func (x *MinMaxRecorded) GetMinTimestamp() int64 {
+func (x *MinMaxRecorded) GetMinTimestamp() *timestamppb.Timestamp {
 	if x != nil {
 		return x.MinTimestamp
-	}
-	return 0
-}
-
-func (x *MinMaxRecorded) GetMaxTimestamp() int64 {
-	if x != nil {
-		return x.MaxTimestamp
-	}
-	return 0
-}
-
-// Request message for getting a single sensor by ID
-type GetSensorRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetSensorRequest) Reset() {
-	*x = GetSensorRequest{}
-	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetSensorRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetSensorRequest) ProtoMessage() {}
-
-func (x *GetSensorRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetSensorRequest.ProtoReflect.Descriptor instead.
-func (*GetSensorRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *GetSensorRequest) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-// Response message for getting a single sensor
-type GetSensorResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Sensor        *Sensor                `protobuf:"bytes,1,opt,name=sensor,proto3" json:"sensor,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetSensorResponse) Reset() {
-	*x = GetSensorResponse{}
-	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetSensorResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetSensorResponse) ProtoMessage() {}
-
-func (x *GetSensorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetSensorResponse.ProtoReflect.Descriptor instead.
-func (*GetSensorResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *GetSensorResponse) GetSensor() *Sensor {
-	if x != nil {
-		return x.Sensor
 	}
 	return nil
 }
 
-// Request message for listing sensors with optional filtering
+func (x *MinMaxRecorded) GetMaxTimestamp() *timestamppb.Timestamp {
+	if x != nil {
+		return x.MaxTimestamp
+	}
+	return nil
+}
+
 type ListSensorsRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Optional filter by sensor context
-	Context SensorContext `protobuf:"varint,1,opt,name=context,proto3,enum=schema.v1alpha1.SensorContext" json:"context,omitempty"`
-	// Optional filter by sensor status
-	Status        SensorStatus `protobuf:"varint,2,opt,name=status,proto3,enum=schema.v1alpha1.SensorStatus" json:"status,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FieldMask     *fieldmaskpb.FieldMask `protobuf:"bytes,1,opt,name=field_mask,json=fieldMask,proto3" json:"field_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListSensorsRequest) Reset() {
 	*x = ListSensorsRequest{}
-	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[7]
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -814,7 +652,7 @@ func (x *ListSensorsRequest) String() string {
 func (*ListSensorsRequest) ProtoMessage() {}
 
 func (x *ListSensorsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[7]
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -827,34 +665,26 @@ func (x *ListSensorsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSensorsRequest.ProtoReflect.Descriptor instead.
 func (*ListSensorsRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{7}
+	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *ListSensorsRequest) GetContext() SensorContext {
+func (x *ListSensorsRequest) GetFieldMask() *fieldmaskpb.FieldMask {
 	if x != nil {
-		return x.Context
+		return x.FieldMask
 	}
-	return SensorContext_SENSOR_CONTEXT_UNSPECIFIED
+	return nil
 }
 
-func (x *ListSensorsRequest) GetStatus() SensorStatus {
-	if x != nil {
-		return x.Status
-	}
-	return SensorStatus_SENSOR_STATUS_UNSPECIFIED
-}
-
-// Response message for listing sensors
 type ListSensorsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Sensors       []*Sensor              `protobuf:"bytes,1,rep,name=sensors,proto3" json:"sensors,omitempty"`
+	Sensor        []*Sensor              `protobuf:"bytes,1,rep,name=sensor,proto3" json:"sensor,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListSensorsResponse) Reset() {
 	*x = ListSensorsResponse{}
-	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[8]
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -866,7 +696,7 @@ func (x *ListSensorsResponse) String() string {
 func (*ListSensorsResponse) ProtoMessage() {}
 
 func (x *ListSensorsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[8]
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -879,10 +709,192 @@ func (x *ListSensorsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSensorsResponse.ProtoReflect.Descriptor instead.
 func (*ListSensorsResponse) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ListSensorsResponse) GetSensor() []*Sensor {
+	if x != nil {
+		return x.Sensor
+	}
+	return nil
+}
+
+type GetSensorRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Identifier:
+	//
+	//	*GetSensorRequest_Id
+	//	*GetSensorRequest_Name
+	//	*GetSensorRequest_Context
+	//	*GetSensorRequest_Status
+	//	*GetSensorRequest_Location
+	Identifier    isGetSensorRequest_Identifier `protobuf_oneof:"identifier"`
+	FieldMask     *fieldmaskpb.FieldMask        `protobuf:"bytes,6,opt,name=field_mask,json=fieldMask,proto3" json:"field_mask,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetSensorRequest) Reset() {
+	*x = GetSensorRequest{}
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetSensorRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetSensorRequest) ProtoMessage() {}
+
+func (x *GetSensorRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetSensorRequest.ProtoReflect.Descriptor instead.
+func (*GetSensorRequest) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *GetSensorRequest) GetIdentifier() isGetSensorRequest_Identifier {
+	if x != nil {
+		return x.Identifier
+	}
+	return nil
+}
+
+func (x *GetSensorRequest) GetId() string {
+	if x != nil {
+		if x, ok := x.Identifier.(*GetSensorRequest_Id); ok {
+			return x.Id
+		}
+	}
+	return ""
+}
+
+func (x *GetSensorRequest) GetName() string {
+	if x != nil {
+		if x, ok := x.Identifier.(*GetSensorRequest_Name); ok {
+			return x.Name
+		}
+	}
+	return ""
+}
+
+func (x *GetSensorRequest) GetContext() SensorContext {
+	if x != nil {
+		if x, ok := x.Identifier.(*GetSensorRequest_Context); ok {
+			return x.Context
+		}
+	}
+	return SensorContext_SENSOR_CONTEXT_UNSPECIFIED
+}
+
+func (x *GetSensorRequest) GetStatus() SensorStatus {
+	if x != nil {
+		if x, ok := x.Identifier.(*GetSensorRequest_Status); ok {
+			return x.Status
+		}
+	}
+	return SensorStatus_SENSOR_STATUS_UNSPECIFIED
+}
+
+func (x *GetSensorRequest) GetLocation() *Location {
+	if x != nil {
+		if x, ok := x.Identifier.(*GetSensorRequest_Location); ok {
+			return x.Location
+		}
+	}
+	return nil
+}
+
+func (x *GetSensorRequest) GetFieldMask() *fieldmaskpb.FieldMask {
+	if x != nil {
+		return x.FieldMask
+	}
+	return nil
+}
+
+type isGetSensorRequest_Identifier interface {
+	isGetSensorRequest_Identifier()
+}
+
+type GetSensorRequest_Id struct {
+	Id string `protobuf:"bytes,1,opt,name=id,proto3,oneof"`
+}
+
+type GetSensorRequest_Name struct {
+	Name string `protobuf:"bytes,2,opt,name=name,proto3,oneof"`
+}
+
+type GetSensorRequest_Context struct {
+	Context SensorContext `protobuf:"varint,3,opt,name=context,proto3,enum=schema.v1alpha1.SensorContext,oneof"`
+}
+
+type GetSensorRequest_Status struct {
+	Status SensorStatus `protobuf:"varint,4,opt,name=status,proto3,enum=schema.v1alpha1.SensorStatus,oneof"`
+}
+
+type GetSensorRequest_Location struct {
+	Location *Location `protobuf:"bytes,5,opt,name=location,proto3,oneof"`
+}
+
+func (*GetSensorRequest_Id) isGetSensorRequest_Identifier() {}
+
+func (*GetSensorRequest_Name) isGetSensorRequest_Identifier() {}
+
+func (*GetSensorRequest_Context) isGetSensorRequest_Identifier() {}
+
+func (*GetSensorRequest_Status) isGetSensorRequest_Identifier() {}
+
+func (*GetSensorRequest_Location) isGetSensorRequest_Identifier() {}
+
+type GetSensorResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Sensors       []*Sensor              `protobuf:"bytes,1,rep,name=sensors,proto3" json:"sensors,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetSensorResponse) Reset() {
+	*x = GetSensorResponse{}
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetSensorResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetSensorResponse) ProtoMessage() {}
+
+func (x *GetSensorResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetSensorResponse.ProtoReflect.Descriptor instead.
+func (*GetSensorResponse) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *ListSensorsResponse) GetSensors() []*Sensor {
+func (x *GetSensorResponse) GetSensors() []*Sensor {
 	if x != nil {
 		return x.Sensors
 	}
@@ -893,61 +905,102 @@ var File_schema_v1alpha1_sensor_proto protoreflect.FileDescriptor
 
 const file_schema_v1alpha1_sensor_proto_rawDesc = "" +
 	"\n" +
-	"\x1cschema/v1alpha1/sensor.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\"\xf2\x03\n" +
+	"\x1cschema/v1alpha1/sensor.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1eschema/v1alpha1/location.proto\"\x9e\v\n" +
 	"\x06Sensor\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x128\n" +
-	"\acontext\x18\x03 \x01(\x0e2\x1e.schema.v1alpha1.SensorContextR\acontext\x125\n" +
-	"\x06status\x18\x04 \x01(\x0e2\x1d.schema.v1alpha1.SensorStatusR\x06status\x12/\n" +
-	"\x04unit\x18\x05 \x01(\x0e2\x1b.schema.v1alpha1.SensorUnitR\x04unit\x12M\n" +
+	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12G\n" +
+	"\acontext\x18\x03 \x01(\x0e2\x1e.schema.v1alpha1.SensorContextB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\acontext\x88\x01\x01\x12D\n" +
+	"\x06status\x18\x04 \x01(\x0e2\x1d.schema.v1alpha1.SensorStatusB\b\xbaH\x05\x82\x01\x02\x10\x01H\x02R\x06status\x88\x01\x01\x12>\n" +
+	"\x04unit\x18\x05 \x01(\x0e2\x1b.schema.v1alpha1.SensorUnitB\b\xbaH\x05\x82\x01\x02\x10\x01H\x03R\x04unit\x88\x01\x01\x12M\n" +
 	"\x0eanalog_reading\x18\x06 \x01(\v2$.schema.v1alpha1.AnalogSensorReadingH\x00R\ranalogReading\x12S\n" +
-	"\x10discrete_reading\x18\a \x01(\v2&.schema.v1alpha1.DiscreteSensorReadingH\x00R\x0fdiscreteReading\x12+\n" +
-	"\x11physical_location\x18\b \x01(\tR\x10physicalLocation\x124\n" +
-	"\x16last_reading_timestamp\x18\t \x01(\x03R\x14lastReadingTimestampB\t\n" +
-	"\areading\"\x84\x02\n" +
-	"\x13AnalogSensorReading\x12\x14\n" +
-	"\x05value\x18\x01 \x01(\x01R\x05value\x12E\n" +
-	"\x10upper_thresholds\x18\x02 \x01(\v2\x1a.schema.v1alpha1.ThresholdR\x0fupperThresholds\x12E\n" +
-	"\x10lower_thresholds\x18\x03 \x01(\v2\x1a.schema.v1alpha1.ThresholdR\x0flowerThresholds\x12I\n" +
-	"\x10min_max_recorded\x18\x04 \x01(\v2\x1f.schema.v1alpha1.MinMaxRecordedR\x0eminMaxRecorded\"x\n" +
-	"\x15DiscreteSensorReading\x122\n" +
-	"\x05state\x18\x01 \x01(\x0e2\x1c.schema.v1alpha1.SensorStateR\x05state\x12+\n" +
-	"\x11state_description\x18\x02 \x01(\tR\x10stateDescription\"A\n" +
-	"\tThreshold\x12\x18\n" +
-	"\awarning\x18\x01 \x01(\x01R\awarning\x12\x1a\n" +
-	"\bcritical\x18\x02 \x01(\x01R\bcritical\"\x94\x01\n" +
+	"\x10discrete_reading\x18\a \x01(\v2&.schema.v1alpha1.DiscreteSensorReadingH\x00R\x0fdiscreteReading\x12:\n" +
+	"\blocation\x18\b \x01(\v2\x19.schema.v1alpha1.LocationH\x04R\blocation\x88\x01\x01\x12U\n" +
+	"\x16last_reading_timestamp\x18\t \x01(\v2\x1a.google.protobuf.TimestampH\x05R\x14lastReadingTimestamp\x88\x01\x01\x12Z\n" +
+	"\x11custom_attributes\x18\n" +
+	" \x03(\v2-.schema.v1alpha1.Sensor.CustomAttributesEntryR\x10customAttributes\x1aC\n" +
+	"\x15CustomAttributesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:\xdc\x04\xbaH\xd8\x04\x1a\xd5\x04\n" +
+	"!sensor_context_unit_compatibility\x122sensor unit must be compatible with sensor context\x1a\xfb\x03(this.context == 1 && (this.unit == 1 || this.unit == 2 || this.unit == 3)) || (this.context == 2 && this.unit == 4) || (this.context == 3 && this.unit == 5) || (this.context == 4 && (this.unit == 10 || this.unit == 9)) || (this.context == 5 && this.unit == 6) || (this.context == 6 && this.unit == 7) || (this.context == 7 && this.unit == 8) || (this.context == 8 && this.unit == 9) || (this.context == 9 && this.unit == 12) || (this.context == 10 && this.unit == 13) || this.context == 0 || this.unit == 0B\x10\n" +
+	"\areading\x12\x05\xbaH\x02\b\x01B\n" +
+	"\n" +
+	"\b_contextB\t\n" +
+	"\a_statusB\a\n" +
+	"\x05_unitB\v\n" +
+	"\t_locationB\x19\n" +
+	"\x17_last_reading_timestamp\"\x81\f\n" +
+	"\x13AnalogSensorReading\x12\x1c\n" +
+	"\x05value\x18\x01 \x01(\x01B\x06\xbaH\x03\xc8\x01\x01R\x05value\x12J\n" +
+	"\x10upper_thresholds\x18\x02 \x01(\v2\x1a.schema.v1alpha1.ThresholdH\x00R\x0fupperThresholds\x88\x01\x01\x12J\n" +
+	"\x10lower_thresholds\x18\x03 \x01(\v2\x1a.schema.v1alpha1.ThresholdH\x01R\x0flowerThresholds\x88\x01\x01\x12N\n" +
+	"\x10min_max_recorded\x18\x04 \x01(\v2\x1f.schema.v1alpha1.MinMaxRecordedH\x02R\x0eminMaxRecorded\x88\x01\x01:\xa4\t\xbaH\xa0\t\x1a\x93\x02\n" +
+	"\x1eanalog_sensor_upper_thresholds\x12Bupper warning threshold must be less than upper critical threshold\x1a\xac\x01!has(this.upper_thresholds) || !has(this.upper_thresholds.warning) || !has(this.upper_thresholds.critical) || this.upper_thresholds.warning < this.upper_thresholds.critical\x1a\x93\x02\n" +
+	"\x1eanalog_sensor_lower_thresholds\x12Blower critical threshold must be less than lower warning threshold\x1a\xac\x01!has(this.lower_thresholds) || !has(this.lower_thresholds.warning) || !has(this.lower_thresholds.critical) || this.lower_thresholds.critical < this.lower_thresholds.warning\x1a\xba\x03\n" +
+	"\x1eanalog_sensor_threshold_bounds\x123lower thresholds must be less than upper thresholds\x1a\xe2\x02(!has(this.lower_thresholds) || !has(this.upper_thresholds)) || (!has(this.lower_thresholds.warning) || !has(this.upper_thresholds.warning) || this.lower_thresholds.warning < this.upper_thresholds.warning) && (!has(this.lower_thresholds.critical) || !has(this.upper_thresholds.critical) || this.lower_thresholds.critical < this.upper_thresholds.critical)\x1a\xb4\x01\n" +
+	"\x1canalog_sensor_min_max_bounds\x121min_value must be less than or equal to max_value\x1aa!has(this.min_max_recorded) || this.min_max_recorded.min_value <= this.min_max_recorded.max_valueB\x13\n" +
+	"\x11_upper_thresholdsB\x13\n" +
+	"\x11_lower_thresholdsB\x13\n" +
+	"\x11_min_max_recorded\"~\n" +
+	"\x15DiscreteSensorReading\x12\x1d\n" +
+	"\x05state\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05state\x120\n" +
+	"\x11state_description\x18\x02 \x01(\tH\x00R\x10stateDescription\x88\x01\x01B\x14\n" +
+	"\x12_state_description\"\x9a\x02\n" +
+	"\tThreshold\x12\x1d\n" +
+	"\awarning\x18\x01 \x01(\x01H\x00R\awarning\x88\x01\x01\x12\x1f\n" +
+	"\bcritical\x18\x02 \x01(\x01H\x01R\bcritical\x88\x01\x01:\xb3\x01\xbaH\xaf\x01\x1a\x95\x01\n" +
+	"\x12threshold_ordering\x123warning threshold must not equal critical threshold\x1aJ!has(this.warning) || !has(this.critical) || this.warning != this.critical\"\x15\n" +
+	"\awarning\n" +
+	"\bcritical\x10\x01B\n" +
+	"\n" +
+	"\b_warningB\v\n" +
+	"\t_critical\"\xe6\x02\n" +
 	"\x0eMinMaxRecorded\x12\x1b\n" +
 	"\tmin_value\x18\x01 \x01(\x01R\bminValue\x12\x1b\n" +
-	"\tmax_value\x18\x02 \x01(\x01R\bmaxValue\x12#\n" +
-	"\rmin_timestamp\x18\x03 \x01(\x03R\fminTimestamp\x12#\n" +
-	"\rmax_timestamp\x18\x04 \x01(\x03R\fmaxTimestamp\"+\n" +
-	"\x10GetSensorRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"D\n" +
-	"\x11GetSensorResponse\x12/\n" +
-	"\x06sensor\x18\x01 \x01(\v2\x17.schema.v1alpha1.SensorR\x06sensor\"\x85\x01\n" +
-	"\x12ListSensorsRequest\x128\n" +
-	"\acontext\x18\x01 \x01(\x0e2\x1e.schema.v1alpha1.SensorContextR\acontext\x125\n" +
-	"\x06status\x18\x02 \x01(\x0e2\x1d.schema.v1alpha1.SensorStatusR\x06status\"H\n" +
-	"\x13ListSensorsResponse\x121\n" +
-	"\asensors\x18\x01 \x03(\v2\x17.schema.v1alpha1.SensorR\asensors*\xab\x02\n" +
+	"\tmax_value\x18\x02 \x01(\x01R\bmaxValue\x12D\n" +
+	"\rmin_timestamp\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\fminTimestamp\x88\x01\x01\x12D\n" +
+	"\rmax_timestamp\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampH\x01R\fmaxTimestamp\x88\x01\x01:j\xbaHg\x1ae\n" +
+	"\x0emin_max_values\x121min_value must be less than or equal to max_value\x1a this.min_value <= this.max_valueB\x10\n" +
+	"\x0e_min_timestampB\x10\n" +
+	"\x0e_max_timestamp\"O\n" +
+	"\x12ListSensorsRequest\x129\n" +
+	"\n" +
+	"field_mask\x18\x01 \x01(\v2\x1a.google.protobuf.FieldMaskR\tfieldMask\"F\n" +
+	"\x13ListSensorsResponse\x12/\n" +
+	"\x06sensor\x18\x01 \x03(\v2\x17.schema.v1alpha1.SensorR\x06sensor\"\xb8\x02\n" +
+	"\x10GetSensorRequest\x12\x10\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x12\x14\n" +
+	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x12:\n" +
+	"\acontext\x18\x03 \x01(\x0e2\x1e.schema.v1alpha1.SensorContextH\x00R\acontext\x127\n" +
+	"\x06status\x18\x04 \x01(\x0e2\x1d.schema.v1alpha1.SensorStatusH\x00R\x06status\x127\n" +
+	"\blocation\x18\x05 \x01(\v2\x19.schema.v1alpha1.LocationH\x00R\blocation\x129\n" +
+	"\n" +
+	"field_mask\x18\x06 \x01(\v2\x1a.google.protobuf.FieldMaskR\tfieldMaskB\x13\n" +
+	"\n" +
+	"identifier\x12\x05\xbaH\x02\b\x01\"F\n" +
+	"\x11GetSensorResponse\x121\n" +
+	"\asensors\x18\x01 \x03(\v2\x17.schema.v1alpha1.SensorR\asensors*\xca\x02\n" +
 	"\rSensorContext\x12\x1e\n" +
 	"\x1aSENSOR_CONTEXT_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aSENSOR_CONTEXT_TEMPERATURE\x10\x01\x12\x1a\n" +
 	"\x16SENSOR_CONTEXT_VOLTAGE\x10\x02\x12\x1a\n" +
-	"\x16SENSOR_CONTEXT_CURRENT\x10\x03\x12\x16\n" +
-	"\x12SENSOR_CONTEXT_FAN\x10\x04\x12\x18\n" +
+	"\x16SENSOR_CONTEXT_CURRENT\x10\x03\x12\x17\n" +
+	"\x13SENSOR_CONTEXT_TACH\x10\x04\x12\x18\n" +
 	"\x14SENSOR_CONTEXT_POWER\x10\x05\x12\x19\n" +
 	"\x15SENSOR_CONTEXT_ENERGY\x10\x06\x12\x1b\n" +
 	"\x17SENSOR_CONTEXT_PRESSURE\x10\a\x12\x1b\n" +
 	"\x17SENSOR_CONTEXT_HUMIDITY\x10\b\x12\x1b\n" +
-	"\x17SENSOR_CONTEXT_ALTITUDE\x10\t*\xb7\x01\n" +
+	"\x17SENSOR_CONTEXT_ALTITUDE\x10\t\x12\x1c\n" +
+	"\x18SENSOR_CONTEXT_FLOW_RATE\x10\n" +
+	"*\xee\x01\n" +
 	"\fSensorStatus\x12\x1d\n" +
 	"\x19SENSOR_STATUS_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15SENSOR_STATUS_ENABLED\x10\x01\x12\x1a\n" +
-	"\x16SENSOR_STATUS_DISABLED\x10\x02\x12\x17\n" +
-	"\x13SENSOR_STATUS_ERROR\x10\x03\x12\x1d\n" +
-	"\x19SENSOR_STATUS_NOT_PRESENT\x10\x04\x12\x19\n" +
-	"\x15SENSOR_STATUS_UNKNOWN\x10\x05*\xb0\x02\n" +
+	"\x16SENSOR_STATUS_DISABLED\x10\x02\x12\x1d\n" +
+	"\x19SENSOR_STATUS_NOT_PRESENT\x10\x03\x12\x19\n" +
+	"\x15SENSOR_STATUS_WARNING\x10\x04\x12\x1a\n" +
+	"\x16SENSOR_STATUS_CRITICAL\x10\x05\x12\x17\n" +
+	"\x13SENSOR_STATUS_ERROR\x10\x06\x12\x19\n" +
+	"\x15SENSOR_STATUS_UNKNOWN\x10\a*\xeb\x02\n" +
 	"\n" +
 	"SensorUnit\x12\x1b\n" +
 	"\x17SENSOR_UNIT_UNSPECIFIED\x10\x00\x12\x17\n" +
@@ -962,18 +1015,9 @@ const file_schema_v1alpha1_sensor_proto_rawDesc = "" +
 	"\x13SENSOR_UNIT_PERCENT\x10\t\x12\x13\n" +
 	"\x0fSENSOR_UNIT_RPM\x10\n" +
 	"\x12\x15\n" +
-	"\x11SENSOR_UNIT_HERTZ\x10\v*\xcb\x01\n" +
-	"\vSensorState\x12\x1c\n" +
-	"\x18SENSOR_STATE_UNSPECIFIED\x10\x00\x12\x17\n" +
-	"\x13SENSOR_STATE_NORMAL\x10\x01\x12\x16\n" +
-	"\x12SENSOR_STATE_FAULT\x10\x02\x12\x18\n" +
-	"\x14SENSOR_STATE_WARNING\x10\x03\x12\x19\n" +
-	"\x15SENSOR_STATE_CRITICAL\x10\x04\x12\x18\n" +
-	"\x14SENSOR_STATE_UNKNOWN\x10\x05\x12\x1e\n" +
-	"\x1aSENSOR_STATE_NOT_AVAILABLE\x10\x062\xc1\x01\n" +
-	"\rSensorService\x12T\n" +
-	"\tGetSensor\x12!.schema.v1alpha1.GetSensorRequest\x1a\".schema.v1alpha1.GetSensorResponse\"\x00\x12Z\n" +
-	"\vListSensors\x12#.schema.v1alpha1.ListSensorsRequest\x1a$.schema.v1alpha1.ListSensorsResponse\"\x00B\xbe\x01\n" +
+	"\x11SENSOR_UNIT_HERTZ\x10\v\x12\x16\n" +
+	"\x12SENSOR_UNIT_METERS\x10\f\x12!\n" +
+	"\x1dSENSOR_UNIT_LITERS_PER_MINUTE\x10\rB\xbe\x01\n" +
 	"\x13com.schema.v1alpha1B\vSensorProtoP\x01Z=github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;schemav1alpha1\xa2\x02\x03SXX\xaa\x02\x0fSchema.V1alpha1\xca\x02\x0fSchema\\V1alpha1\xe2\x02\x1bSchema\\V1alpha1\\GPBMetadata\xea\x02\x10Schema::V1alpha1b\x06proto3"
 
 var (
@@ -988,46 +1032,52 @@ func file_schema_v1alpha1_sensor_proto_rawDescGZIP() []byte {
 	return file_schema_v1alpha1_sensor_proto_rawDescData
 }
 
-var file_schema_v1alpha1_sensor_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_schema_v1alpha1_sensor_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_schema_v1alpha1_sensor_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_schema_v1alpha1_sensor_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_schema_v1alpha1_sensor_proto_goTypes = []any{
 	(SensorContext)(0),            // 0: schema.v1alpha1.SensorContext
 	(SensorStatus)(0),             // 1: schema.v1alpha1.SensorStatus
 	(SensorUnit)(0),               // 2: schema.v1alpha1.SensorUnit
-	(SensorState)(0),              // 3: schema.v1alpha1.SensorState
-	(*Sensor)(nil),                // 4: schema.v1alpha1.Sensor
-	(*AnalogSensorReading)(nil),   // 5: schema.v1alpha1.AnalogSensorReading
-	(*DiscreteSensorReading)(nil), // 6: schema.v1alpha1.DiscreteSensorReading
-	(*Threshold)(nil),             // 7: schema.v1alpha1.Threshold
-	(*MinMaxRecorded)(nil),        // 8: schema.v1alpha1.MinMaxRecorded
-	(*GetSensorRequest)(nil),      // 9: schema.v1alpha1.GetSensorRequest
-	(*GetSensorResponse)(nil),     // 10: schema.v1alpha1.GetSensorResponse
-	(*ListSensorsRequest)(nil),    // 11: schema.v1alpha1.ListSensorsRequest
-	(*ListSensorsResponse)(nil),   // 12: schema.v1alpha1.ListSensorsResponse
+	(*Sensor)(nil),                // 3: schema.v1alpha1.Sensor
+	(*AnalogSensorReading)(nil),   // 4: schema.v1alpha1.AnalogSensorReading
+	(*DiscreteSensorReading)(nil), // 5: schema.v1alpha1.DiscreteSensorReading
+	(*Threshold)(nil),             // 6: schema.v1alpha1.Threshold
+	(*MinMaxRecorded)(nil),        // 7: schema.v1alpha1.MinMaxRecorded
+	(*ListSensorsRequest)(nil),    // 8: schema.v1alpha1.ListSensorsRequest
+	(*ListSensorsResponse)(nil),   // 9: schema.v1alpha1.ListSensorsResponse
+	(*GetSensorRequest)(nil),      // 10: schema.v1alpha1.GetSensorRequest
+	(*GetSensorResponse)(nil),     // 11: schema.v1alpha1.GetSensorResponse
+	nil,                           // 12: schema.v1alpha1.Sensor.CustomAttributesEntry
+	(*Location)(nil),              // 13: schema.v1alpha1.Location
+	(*timestamppb.Timestamp)(nil), // 14: google.protobuf.Timestamp
+	(*fieldmaskpb.FieldMask)(nil), // 15: google.protobuf.FieldMask
 }
 var file_schema_v1alpha1_sensor_proto_depIdxs = []int32{
 	0,  // 0: schema.v1alpha1.Sensor.context:type_name -> schema.v1alpha1.SensorContext
 	1,  // 1: schema.v1alpha1.Sensor.status:type_name -> schema.v1alpha1.SensorStatus
 	2,  // 2: schema.v1alpha1.Sensor.unit:type_name -> schema.v1alpha1.SensorUnit
-	5,  // 3: schema.v1alpha1.Sensor.analog_reading:type_name -> schema.v1alpha1.AnalogSensorReading
-	6,  // 4: schema.v1alpha1.Sensor.discrete_reading:type_name -> schema.v1alpha1.DiscreteSensorReading
-	7,  // 5: schema.v1alpha1.AnalogSensorReading.upper_thresholds:type_name -> schema.v1alpha1.Threshold
-	7,  // 6: schema.v1alpha1.AnalogSensorReading.lower_thresholds:type_name -> schema.v1alpha1.Threshold
-	8,  // 7: schema.v1alpha1.AnalogSensorReading.min_max_recorded:type_name -> schema.v1alpha1.MinMaxRecorded
-	3,  // 8: schema.v1alpha1.DiscreteSensorReading.state:type_name -> schema.v1alpha1.SensorState
-	4,  // 9: schema.v1alpha1.GetSensorResponse.sensor:type_name -> schema.v1alpha1.Sensor
-	0,  // 10: schema.v1alpha1.ListSensorsRequest.context:type_name -> schema.v1alpha1.SensorContext
-	1,  // 11: schema.v1alpha1.ListSensorsRequest.status:type_name -> schema.v1alpha1.SensorStatus
-	4,  // 12: schema.v1alpha1.ListSensorsResponse.sensors:type_name -> schema.v1alpha1.Sensor
-	9,  // 13: schema.v1alpha1.SensorService.GetSensor:input_type -> schema.v1alpha1.GetSensorRequest
-	11, // 14: schema.v1alpha1.SensorService.ListSensors:input_type -> schema.v1alpha1.ListSensorsRequest
-	10, // 15: schema.v1alpha1.SensorService.GetSensor:output_type -> schema.v1alpha1.GetSensorResponse
-	12, // 16: schema.v1alpha1.SensorService.ListSensors:output_type -> schema.v1alpha1.ListSensorsResponse
-	15, // [15:17] is the sub-list for method output_type
-	13, // [13:15] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	4,  // 3: schema.v1alpha1.Sensor.analog_reading:type_name -> schema.v1alpha1.AnalogSensorReading
+	5,  // 4: schema.v1alpha1.Sensor.discrete_reading:type_name -> schema.v1alpha1.DiscreteSensorReading
+	13, // 5: schema.v1alpha1.Sensor.location:type_name -> schema.v1alpha1.Location
+	14, // 6: schema.v1alpha1.Sensor.last_reading_timestamp:type_name -> google.protobuf.Timestamp
+	12, // 7: schema.v1alpha1.Sensor.custom_attributes:type_name -> schema.v1alpha1.Sensor.CustomAttributesEntry
+	6,  // 8: schema.v1alpha1.AnalogSensorReading.upper_thresholds:type_name -> schema.v1alpha1.Threshold
+	6,  // 9: schema.v1alpha1.AnalogSensorReading.lower_thresholds:type_name -> schema.v1alpha1.Threshold
+	7,  // 10: schema.v1alpha1.AnalogSensorReading.min_max_recorded:type_name -> schema.v1alpha1.MinMaxRecorded
+	14, // 11: schema.v1alpha1.MinMaxRecorded.min_timestamp:type_name -> google.protobuf.Timestamp
+	14, // 12: schema.v1alpha1.MinMaxRecorded.max_timestamp:type_name -> google.protobuf.Timestamp
+	15, // 13: schema.v1alpha1.ListSensorsRequest.field_mask:type_name -> google.protobuf.FieldMask
+	3,  // 14: schema.v1alpha1.ListSensorsResponse.sensor:type_name -> schema.v1alpha1.Sensor
+	0,  // 15: schema.v1alpha1.GetSensorRequest.context:type_name -> schema.v1alpha1.SensorContext
+	1,  // 16: schema.v1alpha1.GetSensorRequest.status:type_name -> schema.v1alpha1.SensorStatus
+	13, // 17: schema.v1alpha1.GetSensorRequest.location:type_name -> schema.v1alpha1.Location
+	15, // 18: schema.v1alpha1.GetSensorRequest.field_mask:type_name -> google.protobuf.FieldMask
+	3,  // 19: schema.v1alpha1.GetSensorResponse.sensors:type_name -> schema.v1alpha1.Sensor
+	20, // [20:20] is the sub-list for method output_type
+	20, // [20:20] is the sub-list for method input_type
+	20, // [20:20] is the sub-list for extension type_name
+	20, // [20:20] is the sub-list for extension extendee
+	0,  // [0:20] is the sub-list for field type_name
 }
 
 func init() { file_schema_v1alpha1_sensor_proto_init() }
@@ -1035,19 +1085,31 @@ func file_schema_v1alpha1_sensor_proto_init() {
 	if File_schema_v1alpha1_sensor_proto != nil {
 		return
 	}
+	file_schema_v1alpha1_location_proto_init()
 	file_schema_v1alpha1_sensor_proto_msgTypes[0].OneofWrappers = []any{
 		(*Sensor_AnalogReading)(nil),
 		(*Sensor_DiscreteReading)(nil),
+	}
+	file_schema_v1alpha1_sensor_proto_msgTypes[1].OneofWrappers = []any{}
+	file_schema_v1alpha1_sensor_proto_msgTypes[2].OneofWrappers = []any{}
+	file_schema_v1alpha1_sensor_proto_msgTypes[3].OneofWrappers = []any{}
+	file_schema_v1alpha1_sensor_proto_msgTypes[4].OneofWrappers = []any{}
+	file_schema_v1alpha1_sensor_proto_msgTypes[7].OneofWrappers = []any{
+		(*GetSensorRequest_Id)(nil),
+		(*GetSensorRequest_Name)(nil),
+		(*GetSensorRequest_Context)(nil),
+		(*GetSensorRequest_Status)(nil),
+		(*GetSensorRequest_Location)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_schema_v1alpha1_sensor_proto_rawDesc), len(file_schema_v1alpha1_sensor_proto_rawDesc)),
-			NumEnums:      4,
-			NumMessages:   9,
+			NumEnums:      3,
+			NumMessages:   10,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   0,
 		},
 		GoTypes:           file_schema_v1alpha1_sensor_proto_goTypes,
 		DependencyIndexes: file_schema_v1alpha1_sensor_proto_depIdxs,
