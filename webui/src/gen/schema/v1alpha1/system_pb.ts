@@ -7,961 +7,351 @@
 import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
 import { file_buf_validate_validate } from "../../buf/validate/validate_pb";
+import type { Duration, FieldMask, Timestamp } from "@bufbuild/protobuf/wkt";
+import { file_google_protobuf_duration, file_google_protobuf_field_mask, file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
+import type { GetAssetInfoRequestSchema, GetAssetInfoResponseSchema, SetAssetInfoRequestSchema, SetAssetInfoResponseSchema } from "./asset_pb";
+import { file_schema_v1alpha1_asset } from "./asset_pb";
+import type { ChassisChangeStateRequestSchema, ChassisChangeStateResponseSchema, ChassisControlRequestSchema, ChassisControlResponseSchema, GetChassisRequestSchema, GetChassisResponseSchema, ListChassisRequestSchema, ListChassisResponseSchema, UpdateChassisRequestSchema, UpdateChassisResponseSchema } from "./chassis_pb";
+import { file_schema_v1alpha1_chassis } from "./chassis_pb";
+import type { ContactInfo } from "./contact_pb";
+import { file_schema_v1alpha1_contact } from "./contact_pb";
+import type { GetHostRequestSchema, GetHostResponseSchema, HostChangeStateRequestSchema, HostChangeStateResponseSchema, ListHostsRequestSchema, ListHostsResponseSchema, UpdateHostRequestSchema, UpdateHostResponseSchema } from "./host_pb";
+import { file_schema_v1alpha1_host } from "./host_pb";
+import type { GetManagementControllerRequestSchema, GetManagementControllerResponseSchema, ListManagementControllersRequestSchema, ListManagementControllersResponseSchema, ManagementControllerControlRequestSchema, ManagementControllerControlResponseSchema, UpdateManagementControllerRequestSchema, UpdateManagementControllerResponseSchema } from "./managementcontroller_pb";
+import { file_schema_v1alpha1_managementcontroller } from "./managementcontroller_pb";
+import type { GetSensorRequestSchema, GetSensorResponseSchema, ListSensorsRequestSchema, ListSensorsResponseSchema } from "./sensor_pb";
+import { file_schema_v1alpha1_sensor } from "./sensor_pb";
+import type { GetThermalZoneRequestSchema, GetThermalZoneResponseSchema, ListThermalZonesRequestSchema, ListThermalZonesResponseSchema, SetThermalZoneRequestSchema, SetThermalZoneResponseSchema } from "./thermal_pb";
+import { file_schema_v1alpha1_thermal } from "./thermal_pb";
+import type { AuthenticateUserRequestSchema, AuthenticateUserResponseSchema, ChangePasswordRequestSchema, ChangePasswordResponseSchema, CreateUserRequestSchema, CreateUserResponseSchema, DeleteUserRequestSchema, DeleteUserResponseSchema, GetUserRequestSchema, GetUserResponseSchema, ListUsersRequestSchema, ListUsersResponseSchema, ResetPasswordRequestSchema, ResetPasswordResponseSchema, UpdateUserRequestSchema, UpdateUserResponseSchema } from "./user_pb";
+import { file_schema_v1alpha1_user } from "./user_pb";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file schema/v1alpha1/system.proto.
  */
 export const file_schema_v1alpha1_system: GenFile = /*@__PURE__*/
-  fileDesc("ChxzY2hlbWEvdjFhbHBoYTEvc3lzdGVtLnByb3RvEg9zY2hlbWEudjFhbHBoYTEi9wEKDkhvc3RNYW5hZ2VtZW50EhMKAmlkGAEgASgJQge6SARyAhABEhUKBG5hbWUYAiABKAlCB7pIBHICEAESMwoHY2hhc3NpcxgDIAMoCzIYLnNjaGVtYS52MWFscGhhMS5DaGFzc2lzQgi6SAWSAQIIARIuCgVob3N0cxgEIAMoCzIVLnNjaGVtYS52MWFscGhhMS5Ib3N0Qgi6SAWSAQIIARI1Cgh0b3BvbG9neRgFIAEoCzIjLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50VG9wb2xvZ3kSHQoVbGFzdF91cGRhdGVfdGltZXN0YW1wGAYgASgDItsCCgdDaGFzc2lzEhMKAmlkGAEgASgJQge6SARyAhABEhUKBG5hbWUYAiABKAlCB7pIBHICEAESKgoEdHlwZRgDIAEoDjIcLnNjaGVtYS52MWFscGhhMS5DaGFzc2lzVHlwZRIwCgtwb3dlcl9zdGF0ZRgEIAEoDjIbLnNjaGVtYS52MWFscGhhMS5Qb3dlclN0YXRlEhkKEXBoeXNpY2FsX2xvY2F0aW9uGAUgASgJEhoKCGhvc3RfaWRzGAYgAygJQgi6SAWSAQIIABIcCgpzZW5zb3JfaWRzGAcgAygJQgi6SAWSAQIIABIiChB0aGVybWFsX3pvbmVfaWRzGAggAygJQgi6SAWSAQIIABIuCgZzdGF0dXMYCSABKA4yHi5zY2hlbWEudjFhbHBoYTEuQ2hhc3Npc1N0YXR1cxIdChVsYXN0X3VwZGF0ZV90aW1lc3RhbXAYCiABKAMi3gIKBEhvc3QSEwoCaWQYASABKAlCB7pIBHICEAESFQoEbmFtZRgCIAEoCUIHukgEcgIQARIpCgVzdGF0ZRgDIAEoDjIaLnNjaGVtYS52MWFscGhhMS5Ib3N0U3RhdGUSMwoPcmVxdWVzdGVkX3N0YXRlGAQgASgOMhouc2NoZW1hLnYxYWxwaGExLkhvc3RTdGF0ZRIrCgZoZWFsdGgYBSABKA4yGy5zY2hlbWEudjFhbHBoYTEuSG9zdEhlYWx0aBIbCgpjaGFzc2lzX2lkGAYgASgJQge6SARyAhABEhkKEXBoeXNpY2FsX2xvY2F0aW9uGAcgASgJEhQKDGJpb3NfdmVyc2lvbhgIIAEoCRIwCgtwb3dlcl9zdGF0ZRgJIAEoDjIbLnNjaGVtYS52MWFscGhhMS5Qb3dlclN0YXRlEh0KFWxhc3RfdXBkYXRlX3RpbWVzdGFtcBgKIAEoAyJfChJNYW5hZ2VtZW50VG9wb2xvZ3kSSQoQcm9vdF9jb250cm9sbGVycxgBIAMoCzIlLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlckIIukgFkgECCAEiiQMKFE1hbmFnZW1lbnRDb250cm9sbGVyEhMKAmlkGAEgASgJQge6SARyAhABEhUKBG5hbWUYAiABKAlCB7pIBHICEAESNwoEdHlwZRgDIAEoDjIpLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlclR5cGUSIgoQbWFuYWdlZF9ob3N0X2lkcxgEIAMoCUIIukgFkgECCAASJQoTbWFuYWdlZF9jaGFzc2lzX2lkcxgFIAMoCUIIukgFkgECCAASSgoRY2hpbGRfY29udHJvbGxlcnMYBiADKAsyJS5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJCCLpIBZIBAggAEhkKEXBoeXNpY2FsX2xvY2F0aW9uGAcgASgJEjsKBnN0YXR1cxgIIAEoDjIrLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlclN0YXR1cxIdChVsYXN0X3VwZGF0ZV90aW1lc3RhbXAYCSABKAMiLwoYR2V0SG9zdE1hbmFnZW1lbnRSZXF1ZXN0EhMKAmlkGAEgASgJQge6SARyAhABIlUKGUdldEhvc3RNYW5hZ2VtZW50UmVzcG9uc2USOAoPaG9zdF9tYW5hZ2VtZW50GAEgASgLMh8uc2NoZW1hLnYxYWxwaGExLkhvc3RNYW5hZ2VtZW50IhsKGUxpc3RIb3N0TWFuYWdlbWVudFJlcXVlc3QiVwoaTGlzdEhvc3RNYW5hZ2VtZW50UmVzcG9uc2USOQoQaG9zdF9tYW5hZ2VtZW50cxgBIAMoCzIfLnNjaGVtYS52MWFscGhhMS5Ib3N0TWFuYWdlbWVudCIoChFHZXRDaGFzc2lzUmVxdWVzdBITCgJpZBgBIAEoCUIHukgEcgIQASI/ChJHZXRDaGFzc2lzUmVzcG9uc2USKQoHY2hhc3NpcxgBIAEoCzIYLnNjaGVtYS52MWFscGhhMS5DaGFzc2lzInAKEkxpc3RDaGFzc2lzUmVxdWVzdBIqCgR0eXBlGAEgASgOMhwuc2NoZW1hLnYxYWxwaGExLkNoYXNzaXNUeXBlEi4KBnN0YXR1cxgCIAEoDjIeLnNjaGVtYS52MWFscGhhMS5DaGFzc2lzU3RhdHVzIkAKE0xpc3RDaGFzc2lzUmVzcG9uc2USKQoHY2hhc3NpcxgBIAMoCzIYLnNjaGVtYS52MWFscGhhMS5DaGFzc2lzIiUKDkdldEhvc3RSZXF1ZXN0EhMKAmlkGAEgASgJQge6SARyAhABIjYKD0dldEhvc3RSZXNwb25zZRIjCgRob3N0GAEgASgLMhUuc2NoZW1hLnYxYWxwaGExLkhvc3QifgoQTGlzdEhvc3RzUmVxdWVzdBIpCgVzdGF0ZRgBIAEoDjIaLnNjaGVtYS52MWFscGhhMS5Ib3N0U3RhdGUSKwoGaGVhbHRoGAIgASgOMhsuc2NoZW1hLnYxYWxwaGExLkhvc3RIZWFsdGgSEgoKY2hhc3Npc19pZBgDIAEoCSI5ChFMaXN0SG9zdHNSZXNwb25zZRIkCgVob3N0cxgBIAMoCzIVLnNjaGVtYS52MWFscGhhMS5Ib3N0IjUKHkdldE1hbmFnZW1lbnRDb250cm9sbGVyUmVxdWVzdBITCgJpZBgBIAEoCUIHukgEcgIQASJnCh9HZXRNYW5hZ2VtZW50Q29udHJvbGxlclJlc3BvbnNlEkQKFW1hbmFnZW1lbnRfY29udHJvbGxlchgBIAEoCzIlLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlciKYAQogTGlzdE1hbmFnZW1lbnRDb250cm9sbGVyc1JlcXVlc3QSNwoEdHlwZRgBIAEoDjIpLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlclR5cGUSOwoGc3RhdHVzGAIgASgOMisuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyU3RhdHVzImoKIUxpc3RNYW5hZ2VtZW50Q29udHJvbGxlcnNSZXNwb25zZRJFChZtYW5hZ2VtZW50X2NvbnRyb2xsZXJzGAEgAygLMiUuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyKq4BCglIb3N0U3RhdGUSGgoWSE9TVF9TVEFURV9VTlNQRUNJRklFRBAAEhEKDUhPU1RfU1RBVEVfT04QARISCg5IT1NUX1NUQVRFX09GRhACEhQKEEhPU1RfU1RBVEVfRVJST1IQAxIWChJIT1NUX1NUQVRFX1VOS05PV04QBBIXChNIT1NUX1NUQVRFX1NUQVJUSU5HEAUSFwoTSE9TVF9TVEFURV9TVE9QUElORxAGKokBCgpIb3N0SGVhbHRoEhsKF0hPU1RfSEVBTFRIX1VOU1BFQ0lGSUVEEAASEgoOSE9TVF9IRUFMVEhfT0sQARIXChNIT1NUX0hFQUxUSF9XQVJOSU5HEAISGAoUSE9TVF9IRUFMVEhfQ1JJVElDQUwQAxIXChNIT1NUX0hFQUxUSF9VTktOT1dOEAQqawoKUG93ZXJTdGF0ZRIbChdQT1dFUl9TVEFURV9VTlNQRUNJRklFRBAAEhIKDlBPV0VSX1NUQVRFX09OEAESEwoPUE9XRVJfU1RBVEVfT0ZGEAISFwoTUE9XRVJfU1RBVEVfVU5LTk9XThADKo4BCgtDaGFzc2lzVHlwZRIcChhDSEFTU0lTX1RZUEVfVU5TUEVDSUZJRUQQABIVChFDSEFTU0lTX1RZUEVfUkFDSxABEhYKEkNIQVNTSVNfVFlQRV9CTEFERRACEhsKF0NIQVNTSVNfVFlQRV9TVEFOREFMT05FEAMSFQoRQ0hBU1NJU19UWVBFX0NBUkQQBCqbAQoNQ2hhc3Npc1N0YXR1cxIeChpDSEFTU0lTX1NUQVRVU19VTlNQRUNJRklFRBAAEhUKEUNIQVNTSVNfU1RBVFVTX09LEAESGgoWQ0hBU1NJU19TVEFUVVNfV0FSTklORxACEhsKF0NIQVNTSVNfU1RBVFVTX0NSSVRJQ0FMEAMSGgoWQ0hBU1NJU19TVEFUVVNfVU5LTk9XThAEKscBChhNYW5hZ2VtZW50Q29udHJvbGxlclR5cGUSKgomTUFOQUdFTUVOVF9DT05UUk9MTEVSX1RZUEVfVU5TUEVDSUZJRUQQABIoCiRNQU5BR0VNRU5UX0NPTlRST0xMRVJfVFlQRV9TQVRFTExJVEUQARIiCh5NQU5BR0VNRU5UX0NPTlRST0xMRVJfVFlQRV9CTUMQAhIxCi1NQU5BR0VNRU5UX0NPTlRST0xMRVJfVFlQRV9DSEFTU0lTX0NPTlRST0xMRVIQAyrrAQoaTWFuYWdlbWVudENvbnRyb2xsZXJTdGF0dXMSLAooTUFOQUdFTUVOVF9DT05UUk9MTEVSX1NUQVRVU19VTlNQRUNJRklFRBAAEiMKH01BTkFHRU1FTlRfQ09OVFJPTExFUl9TVEFUVVNfT0sQARIoCiRNQU5BR0VNRU5UX0NPTlRST0xMRVJfU1RBVFVTX1dBUk5JTkcQAhImCiJNQU5BR0VNRU5UX0NPTlRST0xMRVJfU1RBVFVTX0VSUk9SEAMSKAokTUFOQUdFTUVOVF9DT05UUk9MTEVSX1NUQVRVU19VTktOT1dOEAQy9gEKFUhvc3RNYW5hZ2VtZW50U2VydmljZRJsChFHZXRIb3N0TWFuYWdlbWVudBIpLnNjaGVtYS52MWFscGhhMS5HZXRIb3N0TWFuYWdlbWVudFJlcXVlc3QaKi5zY2hlbWEudjFhbHBoYTEuR2V0SG9zdE1hbmFnZW1lbnRSZXNwb25zZSIAEm8KEkxpc3RIb3N0TWFuYWdlbWVudBIqLnNjaGVtYS52MWFscGhhMS5MaXN0SG9zdE1hbmFnZW1lbnRSZXF1ZXN0Gisuc2NoZW1hLnYxYWxwaGExLkxpc3RIb3N0TWFuYWdlbWVudFJlc3BvbnNlIgAyxQEKDkNoYXNzaXNTZXJ2aWNlElcKCkdldENoYXNzaXMSIi5zY2hlbWEudjFhbHBoYTEuR2V0Q2hhc3Npc1JlcXVlc3QaIy5zY2hlbWEudjFhbHBoYTEuR2V0Q2hhc3Npc1Jlc3BvbnNlIgASWgoLTGlzdENoYXNzaXMSIy5zY2hlbWEudjFhbHBoYTEuTGlzdENoYXNzaXNSZXF1ZXN0GiQuc2NoZW1hLnYxYWxwaGExLkxpc3RDaGFzc2lzUmVzcG9uc2UiADKzAQoLSG9zdFNlcnZpY2USTgoHR2V0SG9zdBIfLnNjaGVtYS52MWFscGhhMS5HZXRIb3N0UmVxdWVzdBogLnNjaGVtYS52MWFscGhhMS5HZXRIb3N0UmVzcG9uc2UiABJUCglMaXN0SG9zdHMSIS5zY2hlbWEudjFhbHBoYTEuTGlzdEhvc3RzUmVxdWVzdBoiLnNjaGVtYS52MWFscGhhMS5MaXN0SG9zdHNSZXNwb25zZSIAMqQCChtNYW5hZ2VtZW50Q29udHJvbGxlclNlcnZpY2USfgoXR2V0TWFuYWdlbWVudENvbnRyb2xsZXISLy5zY2hlbWEudjFhbHBoYTEuR2V0TWFuYWdlbWVudENvbnRyb2xsZXJSZXF1ZXN0GjAuc2NoZW1hLnYxYWxwaGExLkdldE1hbmFnZW1lbnRDb250cm9sbGVyUmVzcG9uc2UiABKEAQoZTGlzdE1hbmFnZW1lbnRDb250cm9sbGVycxIxLnNjaGVtYS52MWFscGhhMS5MaXN0TWFuYWdlbWVudENvbnRyb2xsZXJzUmVxdWVzdBoyLnNjaGVtYS52MWFscGhhMS5MaXN0TWFuYWdlbWVudENvbnRyb2xsZXJzUmVzcG9uc2UiAEK+AQoTY29tLnNjaGVtYS52MWFscGhhMUILU3lzdGVtUHJvdG9QAVo9Z2l0aHViLmNvbS91LWJtYy91LWJtYy9hcGkvZ2VuL3NjaGVtYS92MWFscGhhMTtzY2hlbWF2MWFscGhhMaICA1NYWKoCD1NjaGVtYS5WMWFscGhhMcoCD1NjaGVtYVxWMWFscGhhMeICG1NjaGVtYVxWMWFscGhhMVxHUEJNZXRhZGF0YeoCEFNjaGVtYTo6VjFhbHBoYTFiBnByb3RvMw", [file_buf_validate_validate]);
+  fileDesc("ChxzY2hlbWEvdjFhbHBoYTEvc3lzdGVtLnByb3RvEg9zY2hlbWEudjFhbHBoYTEirAIKBkhlYWx0aBI3CgZzdGF0dXMYASABKA4yHS5zY2hlbWEudjFhbHBoYTEuSGVhbHRoU3RhdHVzQgi6SAWCAQIQARIfChJzdGF0dXNfZGVzY3JpcHRpb24YAiABKAlIAIgBARIuCgdkZXRhaWxzGAMgAygLMh0uc2NoZW1hLnYxYWxwaGExLkhlYWx0aERldGFpbBI1CgxsYXN0X3VwZGF0ZWQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAGIAQESLgoGdXB0aW1lGAUgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uSAKIAQFCFQoTX3N0YXR1c19kZXNjcmlwdGlvbkIPCg1fbGFzdF91cGRhdGVkQgkKB191cHRpbWUixwEKDEhlYWx0aERldGFpbBIaCgljb21wb25lbnQYASABKAlCB7pIBHICEAESNwoGc3RhdHVzGAIgASgOMh0uc2NoZW1hLnYxYWxwaGExLkhlYWx0aFN0YXR1c0IIukgFggECEAESFAoHbWVzc2FnZRgDIAEoCUgAiAEBEjIKCXRpbWVzdGFtcBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAYgBAUIKCghfbWVzc2FnZUIMCgpfdGltZXN0YW1wIowECgpTeXN0ZW1JbmZvEhUKBG5hbWUYASABKAlCB7pIBHICEAESGAoLZGVzY3JpcHRpb24YAiABKAlIAIgBARI1CgVzdGF0ZRgDIAEoDjIcLnNjaGVtYS52MWFscGhhMS5TeXN0ZW1TdGF0ZUIIukgFggECEAESLwoGaGVhbHRoGAQgASgLMhcuc2NoZW1hLnYxYWxwaGExLkhlYWx0aEIGukgDyAEBEhQKB3ZlcnNpb24YBSABKAlIAYgBARIyCglib290X3RpbWUYBiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAKIAQESLgoGdXB0aW1lGAcgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uSAOIAQESNwoMY29udGFjdF9pbmZvGAggASgLMhwuc2NoZW1hLnYxYWxwaGExLkNvbnRhY3RJbmZvSASIAQESOwoIbWV0YWRhdGEYCSADKAsyKS5zY2hlbWEudjFhbHBoYTEuU3lzdGVtSW5mby5NZXRhZGF0YUVudHJ5Gi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIOCgxfZGVzY3JpcHRpb25CCgoIX3ZlcnNpb25CDAoKX2Jvb3RfdGltZUIJCgdfdXB0aW1lQg8KDV9jb250YWN0X2luZm8iWgoUR2V0U3lzdGVtSW5mb1JlcXVlc3QSMwoKZmllbGRfbWFzaxgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2tIAIgBAUINCgtfZmllbGRfbWFzayJJChVHZXRTeXN0ZW1JbmZvUmVzcG9uc2USMAoLc3lzdGVtX2luZm8YASABKAsyGy5zY2hlbWEudjFhbHBoYTEuU3lzdGVtSW5mbyJWChBHZXRIZWFsdGhSZXF1ZXN0EjMKCmZpZWxkX21hc2sYASABKAsyGi5nb29nbGUucHJvdG9idWYuRmllbGRNYXNrSACIAQFCDQoLX2ZpZWxkX21hc2siPAoRR2V0SGVhbHRoUmVzcG9uc2USJwoGaGVhbHRoGAEgASgLMhcuc2NoZW1hLnYxYWxwaGExLkhlYWx0aCqVAQoMSGVhbHRoU3RhdHVzEh0KGUhFQUxUSF9TVEFUVVNfVU5TUEVDSUZJRUQQABIUChBIRUFMVEhfU1RBVFVTX09LEAESGQoVSEVBTFRIX1NUQVRVU19XQVJOSU5HEAISGgoWSEVBTFRIX1NUQVRVU19DUklUSUNBTBADEhkKFUhFQUxUSF9TVEFUVVNfVU5LTk9XThAEKuUBCgtTeXN0ZW1TdGF0ZRIcChhTWVNURU1fU1RBVEVfVU5TUEVDSUZJRUQQABIZChVTWVNURU1fU1RBVEVfU1RBUlRJTkcQARIYChRTWVNURU1fU1RBVEVfRU5BQkxFRBACEhkKFVNZU1RFTV9TVEFURV9ESVNBQkxFRBADEhgKFFNZU1RFTV9TVEFURV9TVEFOREJZEAQSGQoVU1lTVEVNX1NUQVRFX1FVSUVTQ0VEEAUSGAoUU1lTVEVNX1NUQVRFX0lOX1RFU1QQBhIZChVTWVNURU1fU1RBVEVfVVBEQVRJTkcQBzKCFwoKQk1DU2VydmljZRJeCg1HZXRTeXN0ZW1JbmZvEiUuc2NoZW1hLnYxYWxwaGExLkdldFN5c3RlbUluZm9SZXF1ZXN0GiYuc2NoZW1hLnYxYWxwaGExLkdldFN5c3RlbUluZm9SZXNwb25zZRJSCglHZXRIZWFsdGgSIS5zY2hlbWEudjFhbHBoYTEuR2V0SGVhbHRoUmVxdWVzdBoiLnNjaGVtYS52MWFscGhhMS5HZXRIZWFsdGhSZXNwb25zZRJbCgxHZXRBc3NldEluZm8SJC5zY2hlbWEudjFhbHBoYTEuR2V0QXNzZXRJbmZvUmVxdWVzdBolLnNjaGVtYS52MWFscGhhMS5HZXRBc3NldEluZm9SZXNwb25zZRJbCgxTZXRBc3NldEluZm8SJC5zY2hlbWEudjFhbHBoYTEuU2V0QXNzZXRJbmZvUmVxdWVzdBolLnNjaGVtYS52MWFscGhhMS5TZXRBc3NldEluZm9SZXNwb25zZRJVCgpHZXRDaGFzc2lzEiIuc2NoZW1hLnYxYWxwaGExLkdldENoYXNzaXNSZXF1ZXN0GiMuc2NoZW1hLnYxYWxwaGExLkdldENoYXNzaXNSZXNwb25zZRJYCgtMaXN0Q2hhc3NpcxIjLnNjaGVtYS52MWFscGhhMS5MaXN0Q2hhc3Npc1JlcXVlc3QaJC5zY2hlbWEudjFhbHBoYTEuTGlzdENoYXNzaXNSZXNwb25zZRJeCg1VcGRhdGVDaGFzc2lzEiUuc2NoZW1hLnYxYWxwaGExLlVwZGF0ZUNoYXNzaXNSZXF1ZXN0GiYuc2NoZW1hLnYxYWxwaGExLlVwZGF0ZUNoYXNzaXNSZXNwb25zZRJtChJDaGFzc2lzQ2hhbmdlU3RhdGUSKi5zY2hlbWEudjFhbHBoYTEuQ2hhc3Npc0NoYW5nZVN0YXRlUmVxdWVzdBorLnNjaGVtYS52MWFscGhhMS5DaGFzc2lzQ2hhbmdlU3RhdGVSZXNwb25zZRJhCg5DaGFzc2lzQ29udHJvbBImLnNjaGVtYS52MWFscGhhMS5DaGFzc2lzQ29udHJvbFJlcXVlc3QaJy5zY2hlbWEudjFhbHBoYTEuQ2hhc3Npc0NvbnRyb2xSZXNwb25zZRJMCgdHZXRIb3N0Eh8uc2NoZW1hLnYxYWxwaGExLkdldEhvc3RSZXF1ZXN0GiAuc2NoZW1hLnYxYWxwaGExLkdldEhvc3RSZXNwb25zZRJSCglMaXN0SG9zdHMSIS5zY2hlbWEudjFhbHBoYTEuTGlzdEhvc3RzUmVxdWVzdBoiLnNjaGVtYS52MWFscGhhMS5MaXN0SG9zdHNSZXNwb25zZRJVCgpVcGRhdGVIb3N0EiIuc2NoZW1hLnYxYWxwaGExLlVwZGF0ZUhvc3RSZXF1ZXN0GiMuc2NoZW1hLnYxYWxwaGExLlVwZGF0ZUhvc3RSZXNwb25zZRJkCg9Ib3N0Q2hhbmdlU3RhdGUSJy5zY2hlbWEudjFhbHBoYTEuSG9zdENoYW5nZVN0YXRlUmVxdWVzdBooLnNjaGVtYS52MWFscGhhMS5Ib3N0Q2hhbmdlU3RhdGVSZXNwb25zZRJ8ChdHZXRNYW5hZ2VtZW50Q29udHJvbGxlchIvLnNjaGVtYS52MWFscGhhMS5HZXRNYW5hZ2VtZW50Q29udHJvbGxlclJlcXVlc3QaMC5zY2hlbWEudjFhbHBoYTEuR2V0TWFuYWdlbWVudENvbnRyb2xsZXJSZXNwb25zZRKCAQoZTGlzdE1hbmFnZW1lbnRDb250cm9sbGVycxIxLnNjaGVtYS52MWFscGhhMS5MaXN0TWFuYWdlbWVudENvbnRyb2xsZXJzUmVxdWVzdBoyLnNjaGVtYS52MWFscGhhMS5MaXN0TWFuYWdlbWVudENvbnRyb2xsZXJzUmVzcG9uc2UShQEKGlVwZGF0ZU1hbmFnZW1lbnRDb250cm9sbGVyEjIuc2NoZW1hLnYxYWxwaGExLlVwZGF0ZU1hbmFnZW1lbnRDb250cm9sbGVyUmVxdWVzdBozLnNjaGVtYS52MWFscGhhMS5VcGRhdGVNYW5hZ2VtZW50Q29udHJvbGxlclJlc3BvbnNlEogBChtNYW5hZ2VtZW50Q29udHJvbGxlckNvbnRyb2wSMy5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJDb250cm9sUmVxdWVzdBo0LnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlckNvbnRyb2xSZXNwb25zZRJYCgtMaXN0U2Vuc29ycxIjLnNjaGVtYS52MWFscGhhMS5MaXN0U2Vuc29yc1JlcXVlc3QaJC5zY2hlbWEudjFhbHBoYTEuTGlzdFNlbnNvcnNSZXNwb25zZRJSCglHZXRTZW5zb3ISIS5zY2hlbWEudjFhbHBoYTEuR2V0U2Vuc29yUmVxdWVzdBoiLnNjaGVtYS52MWFscGhhMS5HZXRTZW5zb3JSZXNwb25zZRJhCg5HZXRUaGVybWFsWm9uZRImLnNjaGVtYS52MWFscGhhMS5HZXRUaGVybWFsWm9uZVJlcXVlc3QaJy5zY2hlbWEudjFhbHBoYTEuR2V0VGhlcm1hbFpvbmVSZXNwb25zZRJhCg5TZXRUaGVybWFsWm9uZRImLnNjaGVtYS52MWFscGhhMS5TZXRUaGVybWFsWm9uZVJlcXVlc3QaJy5zY2hlbWEudjFhbHBoYTEuU2V0VGhlcm1hbFpvbmVSZXNwb25zZRJnChBMaXN0VGhlcm1hbFpvbmVzEiguc2NoZW1hLnYxYWxwaGExLkxpc3RUaGVybWFsWm9uZXNSZXF1ZXN0Gikuc2NoZW1hLnYxYWxwaGExLkxpc3RUaGVybWFsWm9uZXNSZXNwb25zZRJVCgpDcmVhdGVVc2VyEiIuc2NoZW1hLnYxYWxwaGExLkNyZWF0ZVVzZXJSZXF1ZXN0GiMuc2NoZW1hLnYxYWxwaGExLkNyZWF0ZVVzZXJSZXNwb25zZRJMCgdHZXRVc2VyEh8uc2NoZW1hLnYxYWxwaGExLkdldFVzZXJSZXF1ZXN0GiAuc2NoZW1hLnYxYWxwaGExLkdldFVzZXJSZXNwb25zZRJVCgpVcGRhdGVVc2VyEiIuc2NoZW1hLnYxYWxwaGExLlVwZGF0ZVVzZXJSZXF1ZXN0GiMuc2NoZW1hLnYxYWxwaGExLlVwZGF0ZVVzZXJSZXNwb25zZRJVCgpEZWxldGVVc2VyEiIuc2NoZW1hLnYxYWxwaGExLkRlbGV0ZVVzZXJSZXF1ZXN0GiMuc2NoZW1hLnYxYWxwaGExLkRlbGV0ZVVzZXJSZXNwb25zZRJSCglMaXN0VXNlcnMSIS5zY2hlbWEudjFhbHBoYTEuTGlzdFVzZXJzUmVxdWVzdBoiLnNjaGVtYS52MWFscGhhMS5MaXN0VXNlcnNSZXNwb25zZRJhCg5DaGFuZ2VQYXNzd29yZBImLnNjaGVtYS52MWFscGhhMS5DaGFuZ2VQYXNzd29yZFJlcXVlc3QaJy5zY2hlbWEudjFhbHBoYTEuQ2hhbmdlUGFzc3dvcmRSZXNwb25zZRJeCg1SZXNldFBhc3N3b3JkEiUuc2NoZW1hLnYxYWxwaGExLlJlc2V0UGFzc3dvcmRSZXF1ZXN0GiYuc2NoZW1hLnYxYWxwaGExLlJlc2V0UGFzc3dvcmRSZXNwb25zZRJnChBBdXRoZW50aWNhdGVVc2VyEiguc2NoZW1hLnYxYWxwaGExLkF1dGhlbnRpY2F0ZVVzZXJSZXF1ZXN0Gikuc2NoZW1hLnYxYWxwaGExLkF1dGhlbnRpY2F0ZVVzZXJSZXNwb25zZUK+AQoTY29tLnNjaGVtYS52MWFscGhhMUILU3lzdGVtUHJvdG9QAVo9Z2l0aHViLmNvbS91LWJtYy91LWJtYy9hcGkvZ2VuL3NjaGVtYS92MWFscGhhMTtzY2hlbWF2MWFscGhhMaICA1NYWKoCD1NjaGVtYS5WMWFscGhhMcoCD1NjaGVtYVxWMWFscGhhMeICG1NjaGVtYVxWMWFscGhhMVxHUEJNZXRhZGF0YeoCEFNjaGVtYTo6VjFhbHBoYTFiBnByb3RvMw", [file_buf_validate_validate, file_google_protobuf_field_mask, file_google_protobuf_timestamp, file_google_protobuf_duration, file_schema_v1alpha1_asset, file_schema_v1alpha1_chassis, file_schema_v1alpha1_contact, file_schema_v1alpha1_host, file_schema_v1alpha1_managementcontroller, file_schema_v1alpha1_sensor, file_schema_v1alpha1_thermal, file_schema_v1alpha1_user]);
 
 /**
- * HostManagement represents the overall host and chassis management configuration
- *
- * @generated from message schema.v1alpha1.HostManagement
+ * @generated from message schema.v1alpha1.Health
  */
-export type HostManagement = Message<"schema.v1alpha1.HostManagement"> & {
+export type Health = Message<"schema.v1alpha1.Health"> & {
   /**
-   * Unique identifier for the host management instance
-   *
-   * @generated from field: string id = 1;
+   * @generated from field: schema.v1alpha1.HealthStatus status = 1;
    */
-  id: string;
+  status: HealthStatus;
 
   /**
-   * Human-readable name for the host management instance
-   *
-   * @generated from field: string name = 2;
+   * @generated from field: optional string status_description = 2;
    */
-  name: string;
+  statusDescription?: string;
 
   /**
-   * List of chassis managed by this host management instance
-   *
-   * @generated from field: repeated schema.v1alpha1.Chassis chassis = 3;
+   * @generated from field: repeated schema.v1alpha1.HealthDetail details = 3;
    */
-  chassis: Chassis[];
+  details: HealthDetail[];
 
   /**
-   * List of hosts managed by this host management instance
-   *
-   * @generated from field: repeated schema.v1alpha1.Host hosts = 4;
+   * @generated from field: optional google.protobuf.Timestamp last_updated = 4;
    */
-  hosts: Host[];
+  lastUpdated?: Timestamp;
 
   /**
-   * Management hierarchy topology
-   *
-   * @generated from field: schema.v1alpha1.ManagementTopology topology = 5;
+   * @generated from field: optional google.protobuf.Duration uptime = 5;
    */
-  topology?: ManagementTopology;
-
-  /**
-   * Timestamp of the last update
-   *
-   * @generated from field: int64 last_update_timestamp = 6;
-   */
-  lastUpdateTimestamp: bigint;
+  uptime?: Duration;
 };
 
 /**
- * Describes the message schema.v1alpha1.HostManagement.
- * Use `create(HostManagementSchema)` to create a new message.
+ * Describes the message schema.v1alpha1.Health.
+ * Use `create(HealthSchema)` to create a new message.
  */
-export const HostManagementSchema: GenMessage<HostManagement> = /*@__PURE__*/
+export const HealthSchema: GenMessage<Health> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_system, 0);
 
 /**
- * Chassis represents a physical or virtual chassis containing hosts and other components
- *
- * @generated from message schema.v1alpha1.Chassis
+ * @generated from message schema.v1alpha1.HealthDetail
  */
-export type Chassis = Message<"schema.v1alpha1.Chassis"> & {
+export type HealthDetail = Message<"schema.v1alpha1.HealthDetail"> & {
   /**
-   * Unique identifier for the chassis
-   *
-   * @generated from field: string id = 1;
+   * @generated from field: string component = 1;
    */
-  id: string;
+  component: string;
 
   /**
-   * Human-readable name for the chassis
-   *
-   * @generated from field: string name = 2;
+   * @generated from field: schema.v1alpha1.HealthStatus status = 2;
    */
-  name: string;
+  status: HealthStatus;
 
   /**
-   * Chassis type (e.g., Rack, Blade, Standalone)
-   *
-   * @generated from field: schema.v1alpha1.ChassisType type = 3;
+   * @generated from field: optional string message = 3;
    */
-  type: ChassisType;
+  message?: string;
 
   /**
-   * Current power state of the chassis
-   *
-   * @generated from field: schema.v1alpha1.PowerState power_state = 4;
+   * @generated from field: optional google.protobuf.Timestamp timestamp = 4;
    */
-  powerState: PowerState;
-
-  /**
-   * Physical location of the chassis
-   *
-   * @generated from field: string physical_location = 5;
-   */
-  physicalLocation: string;
-
-  /**
-   * List of host IDs contained in this chassis
-   *
-   * @generated from field: repeated string host_ids = 6;
-   */
-  hostIds: string[];
-
-  /**
-   * List of sensor IDs associated with this chassis
-   *
-   * @generated from field: repeated string sensor_ids = 7;
-   */
-  sensorIds: string[];
-
-  /**
-   * List of thermal zone IDs associated with this chassis
-   *
-   * @generated from field: repeated string thermal_zone_ids = 8;
-   */
-  thermalZoneIds: string[];
-
-  /**
-   * Status of the chassis
-   *
-   * @generated from field: schema.v1alpha1.ChassisStatus status = 9;
-   */
-  status: ChassisStatus;
-
-  /**
-   * Timestamp of the last update
-   *
-   * @generated from field: int64 last_update_timestamp = 10;
-   */
-  lastUpdateTimestamp: bigint;
+  timestamp?: Timestamp;
 };
 
 /**
- * Describes the message schema.v1alpha1.Chassis.
- * Use `create(ChassisSchema)` to create a new message.
+ * Describes the message schema.v1alpha1.HealthDetail.
+ * Use `create(HealthDetailSchema)` to create a new message.
  */
-export const ChassisSchema: GenMessage<Chassis> = /*@__PURE__*/
+export const HealthDetailSchema: GenMessage<HealthDetail> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_system, 1);
 
 /**
- * Host represents a compute host within a chassis
- *
- * @generated from message schema.v1alpha1.Host
+ * @generated from message schema.v1alpha1.SystemInfo
  */
-export type Host = Message<"schema.v1alpha1.Host"> & {
+export type SystemInfo = Message<"schema.v1alpha1.SystemInfo"> & {
   /**
-   * Unique identifier for the host
-   *
-   * @generated from field: string id = 1;
-   */
-  id: string;
-
-  /**
-   * Human-readable name for the host
-   *
-   * @generated from field: string name = 2;
+   * @generated from field: string name = 1;
    */
   name: string;
 
   /**
-   * Host state (on, off, error, etc.)
-   *
-   * @generated from field: schema.v1alpha1.HostState state = 3;
+   * @generated from field: optional string description = 2;
    */
-  state: HostState;
+  description?: string;
 
   /**
-   * Requested host state (what we want the host to be)
-   *
-   * @generated from field: schema.v1alpha1.HostState requested_state = 4;
+   * @generated from field: schema.v1alpha1.SystemState state = 3;
    */
-  requestedState: HostState;
+  state: SystemState;
 
   /**
-   * Host health status
-   *
-   * @generated from field: schema.v1alpha1.HostHealth health = 5;
+   * @generated from field: schema.v1alpha1.Health health = 4;
    */
-  health: HostHealth;
+  health?: Health;
 
   /**
-   * Chassis ID this host belongs to
-   *
-   * @generated from field: string chassis_id = 6;
+   * @generated from field: optional string version = 5;
    */
-  chassisId: string;
+  version?: string;
 
   /**
-   * Physical location of the host within the chassis
-   *
-   * @generated from field: string physical_location = 7;
+   * @generated from field: optional google.protobuf.Timestamp boot_time = 6;
    */
-  physicalLocation: string;
+  bootTime?: Timestamp;
 
   /**
-   * BIOS/UEFI version
-   *
-   * @generated from field: string bios_version = 8;
+   * @generated from field: optional google.protobuf.Duration uptime = 7;
    */
-  biosVersion: string;
+  uptime?: Duration;
 
   /**
-   * Host power state
-   *
-   * @generated from field: schema.v1alpha1.PowerState power_state = 9;
+   * @generated from field: optional schema.v1alpha1.ContactInfo contact_info = 8;
    */
-  powerState: PowerState;
+  contactInfo?: ContactInfo;
 
   /**
-   * Timestamp of the last update
-   *
-   * @generated from field: int64 last_update_timestamp = 10;
+   * @generated from field: map<string, string> metadata = 9;
    */
-  lastUpdateTimestamp: bigint;
+  metadata: { [key: string]: string };
 };
 
 /**
- * Describes the message schema.v1alpha1.Host.
- * Use `create(HostSchema)` to create a new message.
+ * Describes the message schema.v1alpha1.SystemInfo.
+ * Use `create(SystemInfoSchema)` to create a new message.
  */
-export const HostSchema: GenMessage<Host> = /*@__PURE__*/
+export const SystemInfoSchema: GenMessage<SystemInfo> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_system, 2);
 
 /**
- * ManagementTopology represents the hierarchical management structure
- *
- * @generated from message schema.v1alpha1.ManagementTopology
+ * @generated from message schema.v1alpha1.GetSystemInfoRequest
  */
-export type ManagementTopology = Message<"schema.v1alpha1.ManagementTopology"> & {
+export type GetSystemInfoRequest = Message<"schema.v1alpha1.GetSystemInfoRequest"> & {
   /**
-   * Root management controllers
-   *
-   * @generated from field: repeated schema.v1alpha1.ManagementController root_controllers = 1;
+   * @generated from field: optional google.protobuf.FieldMask field_mask = 1;
    */
-  rootControllers: ManagementController[];
+  fieldMask?: FieldMask;
 };
 
 /**
- * Describes the message schema.v1alpha1.ManagementTopology.
- * Use `create(ManagementTopologySchema)` to create a new message.
+ * Describes the message schema.v1alpha1.GetSystemInfoRequest.
+ * Use `create(GetSystemInfoRequestSchema)` to create a new message.
  */
-export const ManagementTopologySchema: GenMessage<ManagementTopology> = /*@__PURE__*/
+export const GetSystemInfoRequestSchema: GenMessage<GetSystemInfoRequest> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_system, 3);
 
 /**
- * ManagementController represents a management controller in the hierarchy
- *
- * @generated from message schema.v1alpha1.ManagementController
+ * @generated from message schema.v1alpha1.GetSystemInfoResponse
  */
-export type ManagementController = Message<"schema.v1alpha1.ManagementController"> & {
+export type GetSystemInfoResponse = Message<"schema.v1alpha1.GetSystemInfoResponse"> & {
   /**
-   * Unique identifier for the management controller
-   *
-   * @generated from field: string id = 1;
+   * @generated from field: schema.v1alpha1.SystemInfo system_info = 1;
    */
-  id: string;
-
-  /**
-   * Human-readable name for the management controller
-   *
-   * @generated from field: string name = 2;
-   */
-  name: string;
-
-  /**
-   * Type of management controller
-   *
-   * @generated from field: schema.v1alpha1.ManagementControllerType type = 3;
-   */
-  type: ManagementControllerType;
-
-  /**
-   * Host IDs managed by this controller
-   *
-   * @generated from field: repeated string managed_host_ids = 4;
-   */
-  managedHostIds: string[];
-
-  /**
-   * Chassis IDs managed by this controller
-   *
-   * @generated from field: repeated string managed_chassis_ids = 5;
-   */
-  managedChassisIds: string[];
-
-  /**
-   * Child management controllers (e.g., BMCs managed by an SMC)
-   *
-   * @generated from field: repeated schema.v1alpha1.ManagementController child_controllers = 6;
-   */
-  childControllers: ManagementController[];
-
-  /**
-   * Physical location of the management controller
-   *
-   * @generated from field: string physical_location = 7;
-   */
-  physicalLocation: string;
-
-  /**
-   * Status of the management controller
-   *
-   * @generated from field: schema.v1alpha1.ManagementControllerStatus status = 8;
-   */
-  status: ManagementControllerStatus;
-
-  /**
-   * Timestamp of the last update
-   *
-   * @generated from field: int64 last_update_timestamp = 9;
-   */
-  lastUpdateTimestamp: bigint;
+  systemInfo?: SystemInfo;
 };
 
 /**
- * Describes the message schema.v1alpha1.ManagementController.
- * Use `create(ManagementControllerSchema)` to create a new message.
+ * Describes the message schema.v1alpha1.GetSystemInfoResponse.
+ * Use `create(GetSystemInfoResponseSchema)` to create a new message.
  */
-export const ManagementControllerSchema: GenMessage<ManagementController> = /*@__PURE__*/
+export const GetSystemInfoResponseSchema: GenMessage<GetSystemInfoResponse> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_system, 4);
 
 /**
- * Request message for getting a host management configuration by ID
- *
- * @generated from message schema.v1alpha1.GetHostManagementRequest
+ * @generated from message schema.v1alpha1.GetHealthRequest
  */
-export type GetHostManagementRequest = Message<"schema.v1alpha1.GetHostManagementRequest"> & {
+export type GetHealthRequest = Message<"schema.v1alpha1.GetHealthRequest"> & {
   /**
-   * @generated from field: string id = 1;
+   * @generated from field: optional google.protobuf.FieldMask field_mask = 1;
    */
-  id: string;
+  fieldMask?: FieldMask;
 };
 
 /**
- * Describes the message schema.v1alpha1.GetHostManagementRequest.
- * Use `create(GetHostManagementRequestSchema)` to create a new message.
+ * Describes the message schema.v1alpha1.GetHealthRequest.
+ * Use `create(GetHealthRequestSchema)` to create a new message.
  */
-export const GetHostManagementRequestSchema: GenMessage<GetHostManagementRequest> = /*@__PURE__*/
+export const GetHealthRequestSchema: GenMessage<GetHealthRequest> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_system, 5);
 
 /**
- * Response message for getting a host management configuration
- *
- * @generated from message schema.v1alpha1.GetHostManagementResponse
+ * @generated from message schema.v1alpha1.GetHealthResponse
  */
-export type GetHostManagementResponse = Message<"schema.v1alpha1.GetHostManagementResponse"> & {
+export type GetHealthResponse = Message<"schema.v1alpha1.GetHealthResponse"> & {
   /**
-   * @generated from field: schema.v1alpha1.HostManagement host_management = 1;
+   * @generated from field: schema.v1alpha1.Health health = 1;
    */
-  hostManagement?: HostManagement;
+  health?: Health;
 };
 
 /**
- * Describes the message schema.v1alpha1.GetHostManagementResponse.
- * Use `create(GetHostManagementResponseSchema)` to create a new message.
+ * Describes the message schema.v1alpha1.GetHealthResponse.
+ * Use `create(GetHealthResponseSchema)` to create a new message.
  */
-export const GetHostManagementResponseSchema: GenMessage<GetHostManagementResponse> = /*@__PURE__*/
+export const GetHealthResponseSchema: GenMessage<GetHealthResponse> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_system, 6);
 
 /**
- * Request message for listing host management configurations
- *
- * @generated from message schema.v1alpha1.ListHostManagementRequest
+ * @generated from enum schema.v1alpha1.HealthStatus
  */
-export type ListHostManagementRequest = Message<"schema.v1alpha1.ListHostManagementRequest"> & {
-};
-
-/**
- * Describes the message schema.v1alpha1.ListHostManagementRequest.
- * Use `create(ListHostManagementRequestSchema)` to create a new message.
- */
-export const ListHostManagementRequestSchema: GenMessage<ListHostManagementRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_system, 7);
-
-/**
- * Response message for listing host management configurations
- *
- * @generated from message schema.v1alpha1.ListHostManagementResponse
- */
-export type ListHostManagementResponse = Message<"schema.v1alpha1.ListHostManagementResponse"> & {
+export enum HealthStatus {
   /**
-   * @generated from field: repeated schema.v1alpha1.HostManagement host_managements = 1;
-   */
-  hostManagements: HostManagement[];
-};
-
-/**
- * Describes the message schema.v1alpha1.ListHostManagementResponse.
- * Use `create(ListHostManagementResponseSchema)` to create a new message.
- */
-export const ListHostManagementResponseSchema: GenMessage<ListHostManagementResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_system, 8);
-
-/**
- * Request message for getting a chassis by ID
- *
- * @generated from message schema.v1alpha1.GetChassisRequest
- */
-export type GetChassisRequest = Message<"schema.v1alpha1.GetChassisRequest"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-};
-
-/**
- * Describes the message schema.v1alpha1.GetChassisRequest.
- * Use `create(GetChassisRequestSchema)` to create a new message.
- */
-export const GetChassisRequestSchema: GenMessage<GetChassisRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_system, 9);
-
-/**
- * Response message for getting a chassis
- *
- * @generated from message schema.v1alpha1.GetChassisResponse
- */
-export type GetChassisResponse = Message<"schema.v1alpha1.GetChassisResponse"> & {
-  /**
-   * @generated from field: schema.v1alpha1.Chassis chassis = 1;
-   */
-  chassis?: Chassis;
-};
-
-/**
- * Describes the message schema.v1alpha1.GetChassisResponse.
- * Use `create(GetChassisResponseSchema)` to create a new message.
- */
-export const GetChassisResponseSchema: GenMessage<GetChassisResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_system, 10);
-
-/**
- * Request message for listing chassis with optional filtering
- *
- * @generated from message schema.v1alpha1.ListChassisRequest
- */
-export type ListChassisRequest = Message<"schema.v1alpha1.ListChassisRequest"> & {
-  /**
-   * @generated from field: schema.v1alpha1.ChassisType type = 1;
-   */
-  type: ChassisType;
-
-  /**
-   * @generated from field: schema.v1alpha1.ChassisStatus status = 2;
-   */
-  status: ChassisStatus;
-};
-
-/**
- * Describes the message schema.v1alpha1.ListChassisRequest.
- * Use `create(ListChassisRequestSchema)` to create a new message.
- */
-export const ListChassisRequestSchema: GenMessage<ListChassisRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_system, 11);
-
-/**
- * Response message for listing chassis
- *
- * @generated from message schema.v1alpha1.ListChassisResponse
- */
-export type ListChassisResponse = Message<"schema.v1alpha1.ListChassisResponse"> & {
-  /**
-   * @generated from field: repeated schema.v1alpha1.Chassis chassis = 1;
-   */
-  chassis: Chassis[];
-};
-
-/**
- * Describes the message schema.v1alpha1.ListChassisResponse.
- * Use `create(ListChassisResponseSchema)` to create a new message.
- */
-export const ListChassisResponseSchema: GenMessage<ListChassisResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_system, 12);
-
-/**
- * Request message for getting a host by ID
- *
- * @generated from message schema.v1alpha1.GetHostRequest
- */
-export type GetHostRequest = Message<"schema.v1alpha1.GetHostRequest"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-};
-
-/**
- * Describes the message schema.v1alpha1.GetHostRequest.
- * Use `create(GetHostRequestSchema)` to create a new message.
- */
-export const GetHostRequestSchema: GenMessage<GetHostRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_system, 13);
-
-/**
- * Response message for getting a host
- *
- * @generated from message schema.v1alpha1.GetHostResponse
- */
-export type GetHostResponse = Message<"schema.v1alpha1.GetHostResponse"> & {
-  /**
-   * @generated from field: schema.v1alpha1.Host host = 1;
-   */
-  host?: Host;
-};
-
-/**
- * Describes the message schema.v1alpha1.GetHostResponse.
- * Use `create(GetHostResponseSchema)` to create a new message.
- */
-export const GetHostResponseSchema: GenMessage<GetHostResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_system, 14);
-
-/**
- * Request message for listing hosts with optional filtering
- *
- * @generated from message schema.v1alpha1.ListHostsRequest
- */
-export type ListHostsRequest = Message<"schema.v1alpha1.ListHostsRequest"> & {
-  /**
-   * @generated from field: schema.v1alpha1.HostState state = 1;
-   */
-  state: HostState;
-
-  /**
-   * @generated from field: schema.v1alpha1.HostHealth health = 2;
-   */
-  health: HostHealth;
-
-  /**
-   * @generated from field: string chassis_id = 3;
-   */
-  chassisId: string;
-};
-
-/**
- * Describes the message schema.v1alpha1.ListHostsRequest.
- * Use `create(ListHostsRequestSchema)` to create a new message.
- */
-export const ListHostsRequestSchema: GenMessage<ListHostsRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_system, 15);
-
-/**
- * Response message for listing hosts
- *
- * @generated from message schema.v1alpha1.ListHostsResponse
- */
-export type ListHostsResponse = Message<"schema.v1alpha1.ListHostsResponse"> & {
-  /**
-   * @generated from field: repeated schema.v1alpha1.Host hosts = 1;
-   */
-  hosts: Host[];
-};
-
-/**
- * Describes the message schema.v1alpha1.ListHostsResponse.
- * Use `create(ListHostsResponseSchema)` to create a new message.
- */
-export const ListHostsResponseSchema: GenMessage<ListHostsResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_system, 16);
-
-/**
- * Request message for getting a management controller by ID
- *
- * @generated from message schema.v1alpha1.GetManagementControllerRequest
- */
-export type GetManagementControllerRequest = Message<"schema.v1alpha1.GetManagementControllerRequest"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-};
-
-/**
- * Describes the message schema.v1alpha1.GetManagementControllerRequest.
- * Use `create(GetManagementControllerRequestSchema)` to create a new message.
- */
-export const GetManagementControllerRequestSchema: GenMessage<GetManagementControllerRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_system, 17);
-
-/**
- * Response message for getting a management controller
- *
- * @generated from message schema.v1alpha1.GetManagementControllerResponse
- */
-export type GetManagementControllerResponse = Message<"schema.v1alpha1.GetManagementControllerResponse"> & {
-  /**
-   * @generated from field: schema.v1alpha1.ManagementController management_controller = 1;
-   */
-  managementController?: ManagementController;
-};
-
-/**
- * Describes the message schema.v1alpha1.GetManagementControllerResponse.
- * Use `create(GetManagementControllerResponseSchema)` to create a new message.
- */
-export const GetManagementControllerResponseSchema: GenMessage<GetManagementControllerResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_system, 18);
-
-/**
- * Request message for listing management controllers with optional filtering
- *
- * @generated from message schema.v1alpha1.ListManagementControllersRequest
- */
-export type ListManagementControllersRequest = Message<"schema.v1alpha1.ListManagementControllersRequest"> & {
-  /**
-   * @generated from field: schema.v1alpha1.ManagementControllerType type = 1;
-   */
-  type: ManagementControllerType;
-
-  /**
-   * @generated from field: schema.v1alpha1.ManagementControllerStatus status = 2;
-   */
-  status: ManagementControllerStatus;
-};
-
-/**
- * Describes the message schema.v1alpha1.ListManagementControllersRequest.
- * Use `create(ListManagementControllersRequestSchema)` to create a new message.
- */
-export const ListManagementControllersRequestSchema: GenMessage<ListManagementControllersRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_system, 19);
-
-/**
- * Response message for listing management controllers
- *
- * @generated from message schema.v1alpha1.ListManagementControllersResponse
- */
-export type ListManagementControllersResponse = Message<"schema.v1alpha1.ListManagementControllersResponse"> & {
-  /**
-   * @generated from field: repeated schema.v1alpha1.ManagementController management_controllers = 1;
-   */
-  managementControllers: ManagementController[];
-};
-
-/**
- * Describes the message schema.v1alpha1.ListManagementControllersResponse.
- * Use `create(ListManagementControllersResponseSchema)` to create a new message.
- */
-export const ListManagementControllersResponseSchema: GenMessage<ListManagementControllersResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_system, 20);
-
-/**
- * HostState represents the operational state of a host
- *
- * @generated from enum schema.v1alpha1.HostState
- */
-export enum HostState {
-  /**
-   * @generated from enum value: HOST_STATE_UNSPECIFIED = 0;
+   * @generated from enum value: HEALTH_STATUS_UNSPECIFIED = 0;
    */
   UNSPECIFIED = 0,
 
   /**
-   * @generated from enum value: HOST_STATE_ON = 1;
+   * @generated from enum value: HEALTH_STATUS_OK = 1;
    */
-  ON = 1,
+  OK = 1,
 
   /**
-   * @generated from enum value: HOST_STATE_OFF = 2;
+   * @generated from enum value: HEALTH_STATUS_WARNING = 2;
    */
-  OFF = 2,
+  WARNING = 2,
 
   /**
-   * @generated from enum value: HOST_STATE_ERROR = 3;
+   * @generated from enum value: HEALTH_STATUS_CRITICAL = 3;
    */
-  ERROR = 3,
+  CRITICAL = 3,
 
   /**
-   * @generated from enum value: HOST_STATE_UNKNOWN = 4;
+   * @generated from enum value: HEALTH_STATUS_UNKNOWN = 4;
    */
   UNKNOWN = 4,
-
-  /**
-   * @generated from enum value: HOST_STATE_STARTING = 5;
-   */
-  STARTING = 5,
-
-  /**
-   * @generated from enum value: HOST_STATE_STOPPING = 6;
-   */
-  STOPPING = 6,
 }
 
 /**
- * Describes the enum schema.v1alpha1.HostState.
+ * Describes the enum schema.v1alpha1.HealthStatus.
  */
-export const HostStateSchema: GenEnum<HostState> = /*@__PURE__*/
+export const HealthStatusSchema: GenEnum<HealthStatus> = /*@__PURE__*/
   enumDesc(file_schema_v1alpha1_system, 0);
 
 /**
- * HostHealth represents the health status of a host
- *
- * @generated from enum schema.v1alpha1.HostHealth
+ * @generated from enum schema.v1alpha1.SystemState
  */
-export enum HostHealth {
+export enum SystemState {
   /**
-   * @generated from enum value: HOST_HEALTH_UNSPECIFIED = 0;
+   * @generated from enum value: SYSTEM_STATE_UNSPECIFIED = 0;
    */
   UNSPECIFIED = 0,
 
   /**
-   * @generated from enum value: HOST_HEALTH_OK = 1;
+   * @generated from enum value: SYSTEM_STATE_STARTING = 1;
    */
-  OK = 1,
+  STARTING = 1,
 
   /**
-   * @generated from enum value: HOST_HEALTH_WARNING = 2;
+   * @generated from enum value: SYSTEM_STATE_ENABLED = 2;
    */
-  WARNING = 2,
+  ENABLED = 2,
 
   /**
-   * @generated from enum value: HOST_HEALTH_CRITICAL = 3;
+   * @generated from enum value: SYSTEM_STATE_DISABLED = 3;
    */
-  CRITICAL = 3,
+  DISABLED = 3,
 
   /**
-   * @generated from enum value: HOST_HEALTH_UNKNOWN = 4;
+   * @generated from enum value: SYSTEM_STATE_STANDBY = 4;
    */
-  UNKNOWN = 4,
+  STANDBY = 4,
+
+  /**
+   * @generated from enum value: SYSTEM_STATE_QUIESCED = 5;
+   */
+  QUIESCED = 5,
+
+  /**
+   * @generated from enum value: SYSTEM_STATE_IN_TEST = 6;
+   */
+  IN_TEST = 6,
+
+  /**
+   * @generated from enum value: SYSTEM_STATE_UPDATING = 7;
+   */
+  UPDATING = 7,
 }
 
 /**
- * Describes the enum schema.v1alpha1.HostHealth.
+ * Describes the enum schema.v1alpha1.SystemState.
  */
-export const HostHealthSchema: GenEnum<HostHealth> = /*@__PURE__*/
+export const SystemStateSchema: GenEnum<SystemState> = /*@__PURE__*/
   enumDesc(file_schema_v1alpha1_system, 1);
 
 /**
- * PowerState represents the power state of a component
- *
- * @generated from enum schema.v1alpha1.PowerState
+ * @generated from service schema.v1alpha1.BMCService
  */
-export enum PowerState {
+export const BMCService: GenService<{
   /**
-   * @generated from enum value: POWER_STATE_UNSPECIFIED = 0;
+   * @generated from rpc schema.v1alpha1.BMCService.GetSystemInfo
    */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: POWER_STATE_ON = 1;
-   */
-  ON = 1,
-
-  /**
-   * @generated from enum value: POWER_STATE_OFF = 2;
-   */
-  OFF = 2,
-
-  /**
-   * @generated from enum value: POWER_STATE_UNKNOWN = 3;
-   */
-  UNKNOWN = 3,
-}
-
-/**
- * Describes the enum schema.v1alpha1.PowerState.
- */
-export const PowerStateSchema: GenEnum<PowerState> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_system, 2);
-
-/**
- * ChassisType represents the type of chassis
- *
- * @generated from enum schema.v1alpha1.ChassisType
- */
-export enum ChassisType {
-  /**
-   * @generated from enum value: CHASSIS_TYPE_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: CHASSIS_TYPE_RACK = 1;
-   */
-  RACK = 1,
-
-  /**
-   * @generated from enum value: CHASSIS_TYPE_BLADE = 2;
-   */
-  BLADE = 2,
-
-  /**
-   * @generated from enum value: CHASSIS_TYPE_STANDALONE = 3;
-   */
-  STANDALONE = 3,
-
-  /**
-   * @generated from enum value: CHASSIS_TYPE_CARD = 4;
-   */
-  CARD = 4,
-}
-
-/**
- * Describes the enum schema.v1alpha1.ChassisType.
- */
-export const ChassisTypeSchema: GenEnum<ChassisType> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_system, 3);
-
-/**
- * ChassisStatus represents the operational status of a chassis
- *
- * @generated from enum schema.v1alpha1.ChassisStatus
- */
-export enum ChassisStatus {
-  /**
-   * @generated from enum value: CHASSIS_STATUS_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: CHASSIS_STATUS_OK = 1;
-   */
-  OK = 1,
-
-  /**
-   * @generated from enum value: CHASSIS_STATUS_WARNING = 2;
-   */
-  WARNING = 2,
-
-  /**
-   * @generated from enum value: CHASSIS_STATUS_CRITICAL = 3;
-   */
-  CRITICAL = 3,
-
-  /**
-   * @generated from enum value: CHASSIS_STATUS_UNKNOWN = 4;
-   */
-  UNKNOWN = 4,
-}
-
-/**
- * Describes the enum schema.v1alpha1.ChassisStatus.
- */
-export const ChassisStatusSchema: GenEnum<ChassisStatus> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_system, 4);
-
-/**
- * ManagementControllerType represents the type of management controller
- *
- * @generated from enum schema.v1alpha1.ManagementControllerType
- */
-export enum ManagementControllerType {
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_TYPE_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_TYPE_SATELLITE = 1;
-   */
-  SATELLITE = 1,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_TYPE_BMC = 2;
-   */
-  BMC = 2,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_TYPE_CHASSIS_CONTROLLER = 3;
-   */
-  CHASSIS_CONTROLLER = 3,
-}
-
-/**
- * Describes the enum schema.v1alpha1.ManagementControllerType.
- */
-export const ManagementControllerTypeSchema: GenEnum<ManagementControllerType> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_system, 5);
-
-/**
- * ManagementControllerStatus represents the operational status of a management controller
- *
- * @generated from enum schema.v1alpha1.ManagementControllerStatus
- */
-export enum ManagementControllerStatus {
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_OK = 1;
-   */
-  OK = 1,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_WARNING = 2;
-   */
-  WARNING = 2,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_ERROR = 3;
-   */
-  ERROR = 3,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_UNKNOWN = 4;
-   */
-  UNKNOWN = 4,
-}
-
-/**
- * Describes the enum schema.v1alpha1.ManagementControllerStatus.
- */
-export const ManagementControllerStatusSchema: GenEnum<ManagementControllerStatus> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_system, 6);
-
-/**
- * Service definition for host management operations
- *
- * @generated from service schema.v1alpha1.HostManagementService
- */
-export const HostManagementService: GenService<{
-  /**
-   * Get a host management configuration by ID
-   *
-   * @generated from rpc schema.v1alpha1.HostManagementService.GetHostManagement
-   */
-  getHostManagement: {
+  getSystemInfo: {
     methodKind: "unary";
-    input: typeof GetHostManagementRequestSchema;
-    output: typeof GetHostManagementResponseSchema;
+    input: typeof GetSystemInfoRequestSchema;
+    output: typeof GetSystemInfoResponseSchema;
   },
   /**
-   * List all host management configurations
-   *
-   * @generated from rpc schema.v1alpha1.HostManagementService.ListHostManagement
+   * @generated from rpc schema.v1alpha1.BMCService.GetHealth
    */
-  listHostManagement: {
+  getHealth: {
     methodKind: "unary";
-    input: typeof ListHostManagementRequestSchema;
-    output: typeof ListHostManagementResponseSchema;
+    input: typeof GetHealthRequestSchema;
+    output: typeof GetHealthResponseSchema;
   },
-}> = /*@__PURE__*/
-  serviceDesc(file_schema_v1alpha1_system, 0);
-
-/**
- * Service definition for chassis operations
- *
- * @generated from service schema.v1alpha1.ChassisService
- */
-export const ChassisService: GenService<{
   /**
-   * Get a chassis by ID
-   *
-   * @generated from rpc schema.v1alpha1.ChassisService.GetChassis
+   * @generated from rpc schema.v1alpha1.BMCService.GetAssetInfo
+   */
+  getAssetInfo: {
+    methodKind: "unary";
+    input: typeof GetAssetInfoRequestSchema;
+    output: typeof GetAssetInfoResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.SetAssetInfo
+   */
+  setAssetInfo: {
+    methodKind: "unary";
+    input: typeof SetAssetInfoRequestSchema;
+    output: typeof SetAssetInfoResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.GetChassis
    */
   getChassis: {
     methodKind: "unary";
@@ -969,28 +359,39 @@ export const ChassisService: GenService<{
     output: typeof GetChassisResponseSchema;
   },
   /**
-   * List all chassis with optional filtering
-   *
-   * @generated from rpc schema.v1alpha1.ChassisService.ListChassis
+   * @generated from rpc schema.v1alpha1.BMCService.ListChassis
    */
   listChassis: {
     methodKind: "unary";
     input: typeof ListChassisRequestSchema;
     output: typeof ListChassisResponseSchema;
   },
-}> = /*@__PURE__*/
-  serviceDesc(file_schema_v1alpha1_system, 1);
-
-/**
- * Service definition for host operations
- *
- * @generated from service schema.v1alpha1.HostService
- */
-export const HostService: GenService<{
   /**
-   * Get a host by ID
-   *
-   * @generated from rpc schema.v1alpha1.HostService.GetHost
+   * @generated from rpc schema.v1alpha1.BMCService.UpdateChassis
+   */
+  updateChassis: {
+    methodKind: "unary";
+    input: typeof UpdateChassisRequestSchema;
+    output: typeof UpdateChassisResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.ChassisChangeState
+   */
+  chassisChangeState: {
+    methodKind: "unary";
+    input: typeof ChassisChangeStateRequestSchema;
+    output: typeof ChassisChangeStateResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.ChassisControl
+   */
+  chassisControl: {
+    methodKind: "unary";
+    input: typeof ChassisControlRequestSchema;
+    output: typeof ChassisControlResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.GetHost
    */
   getHost: {
     methodKind: "unary";
@@ -998,28 +399,31 @@ export const HostService: GenService<{
     output: typeof GetHostResponseSchema;
   },
   /**
-   * List all hosts with optional filtering
-   *
-   * @generated from rpc schema.v1alpha1.HostService.ListHosts
+   * @generated from rpc schema.v1alpha1.BMCService.ListHosts
    */
   listHosts: {
     methodKind: "unary";
     input: typeof ListHostsRequestSchema;
     output: typeof ListHostsResponseSchema;
   },
-}> = /*@__PURE__*/
-  serviceDesc(file_schema_v1alpha1_system, 2);
-
-/**
- * Service definition for management controller operations
- *
- * @generated from service schema.v1alpha1.ManagementControllerService
- */
-export const ManagementControllerService: GenService<{
   /**
-   * Get a management controller by ID
-   *
-   * @generated from rpc schema.v1alpha1.ManagementControllerService.GetManagementController
+   * @generated from rpc schema.v1alpha1.BMCService.UpdateHost
+   */
+  updateHost: {
+    methodKind: "unary";
+    input: typeof UpdateHostRequestSchema;
+    output: typeof UpdateHostResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.HostChangeState
+   */
+  hostChangeState: {
+    methodKind: "unary";
+    input: typeof HostChangeStateRequestSchema;
+    output: typeof HostChangeStateResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.GetManagementController
    */
   getManagementController: {
     methodKind: "unary";
@@ -1027,15 +431,133 @@ export const ManagementControllerService: GenService<{
     output: typeof GetManagementControllerResponseSchema;
   },
   /**
-   * List all management controllers with optional filtering
-   *
-   * @generated from rpc schema.v1alpha1.ManagementControllerService.ListManagementControllers
+   * @generated from rpc schema.v1alpha1.BMCService.ListManagementControllers
    */
   listManagementControllers: {
     methodKind: "unary";
     input: typeof ListManagementControllersRequestSchema;
     output: typeof ListManagementControllersResponseSchema;
   },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.UpdateManagementController
+   */
+  updateManagementController: {
+    methodKind: "unary";
+    input: typeof UpdateManagementControllerRequestSchema;
+    output: typeof UpdateManagementControllerResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.ManagementControllerControl
+   */
+  managementControllerControl: {
+    methodKind: "unary";
+    input: typeof ManagementControllerControlRequestSchema;
+    output: typeof ManagementControllerControlResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.ListSensors
+   */
+  listSensors: {
+    methodKind: "unary";
+    input: typeof ListSensorsRequestSchema;
+    output: typeof ListSensorsResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.GetSensor
+   */
+  getSensor: {
+    methodKind: "unary";
+    input: typeof GetSensorRequestSchema;
+    output: typeof GetSensorResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.GetThermalZone
+   */
+  getThermalZone: {
+    methodKind: "unary";
+    input: typeof GetThermalZoneRequestSchema;
+    output: typeof GetThermalZoneResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.SetThermalZone
+   */
+  setThermalZone: {
+    methodKind: "unary";
+    input: typeof SetThermalZoneRequestSchema;
+    output: typeof SetThermalZoneResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.ListThermalZones
+   */
+  listThermalZones: {
+    methodKind: "unary";
+    input: typeof ListThermalZonesRequestSchema;
+    output: typeof ListThermalZonesResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.CreateUser
+   */
+  createUser: {
+    methodKind: "unary";
+    input: typeof CreateUserRequestSchema;
+    output: typeof CreateUserResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.GetUser
+   */
+  getUser: {
+    methodKind: "unary";
+    input: typeof GetUserRequestSchema;
+    output: typeof GetUserResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.UpdateUser
+   */
+  updateUser: {
+    methodKind: "unary";
+    input: typeof UpdateUserRequestSchema;
+    output: typeof UpdateUserResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.DeleteUser
+   */
+  deleteUser: {
+    methodKind: "unary";
+    input: typeof DeleteUserRequestSchema;
+    output: typeof DeleteUserResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.ListUsers
+   */
+  listUsers: {
+    methodKind: "unary";
+    input: typeof ListUsersRequestSchema;
+    output: typeof ListUsersResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.ChangePassword
+   */
+  changePassword: {
+    methodKind: "unary";
+    input: typeof ChangePasswordRequestSchema;
+    output: typeof ChangePasswordResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.ResetPassword
+   */
+  resetPassword: {
+    methodKind: "unary";
+    input: typeof ResetPasswordRequestSchema;
+    output: typeof ResetPasswordResponseSchema;
+  },
+  /**
+   * @generated from rpc schema.v1alpha1.BMCService.AuthenticateUser
+   */
+  authenticateUser: {
+    methodKind: "unary";
+    input: typeof AuthenticateUserRequestSchema;
+    output: typeof AuthenticateUserResponseSchema;
+  },
 }> = /*@__PURE__*/
-  serviceDesc(file_schema_v1alpha1_system, 3);
+  serviceDesc(file_schema_v1alpha1_system, 0);
 

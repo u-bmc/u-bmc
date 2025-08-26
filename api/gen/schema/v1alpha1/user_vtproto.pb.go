@@ -5,14 +5,14 @@
 package schemav1alpha1
 
 import (
-	context "context"
 	fmt "fmt"
 	protohelpers "github.com/planetscale/vtprotobuf/protohelpers"
-	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
+	fieldmaskpb1 "github.com/planetscale/vtprotobuf/types/known/fieldmaskpb"
+	timestamppb1 "github.com/planetscale/vtprotobuf/types/known/timestamppb"
 	proto "google.golang.org/protobuf/proto"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	fieldmaskpb "google.golang.org/protobuf/types/known/fieldmaskpb"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	io "io"
 	unsafe "unsafe"
 )
@@ -31,19 +31,32 @@ func (m *User) CloneVT() *User {
 	r := new(User)
 	r.Id = m.Id
 	r.Username = m.Username
-	r.FullName = m.FullName
-	r.Email = m.Email
 	r.Enabled = m.Enabled
-	r.CreatedAt = m.CreatedAt
-	r.UpdatedAt = m.UpdatedAt
-	r.LastLogin = m.LastLogin
+	r.CreatedAt = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.CreatedAt).CloneVT())
+	r.UpdatedAt = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.UpdatedAt).CloneVT())
+	r.LastLogin = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.LastLogin).CloneVT())
 	r.SourceSystem = m.SourceSystem
+	r.CreationInterface = m.CreationInterface
 	r.AuthData = m.AuthData.CloneVT()
 	r.UnixInfo = m.UnixInfo.CloneVT()
 	r.LdapInfo = m.LdapInfo.CloneVT()
 	r.RedfishInfo = m.RedfishInfo.CloneVT()
 	r.NatsInfo = m.NatsInfo.CloneVT()
-	r.SelinuxInfo = m.SelinuxInfo.CloneVT()
+	if rhs := m.FullName; rhs != nil {
+		tmpVal := *rhs
+		r.FullName = &tmpVal
+	}
+	if rhs := m.Email; rhs != nil {
+		tmpVal := *rhs
+		r.Email = &tmpVal
+	}
+	if rhs := m.CustomAttributes; rhs != nil {
+		tmpContainer := make(map[string]string, len(rhs))
+		for k, v := range rhs {
+			tmpContainer[k] = v
+		}
+		r.CustomAttributes = tmpContainer
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -61,12 +74,15 @@ func (m *AuthenticationData) CloneVT() *AuthenticationData {
 	}
 	r := new(AuthenticationData)
 	r.PasswordHash = m.PasswordHash
-	r.PasswordSalt = m.PasswordSalt
 	r.HashAlgorithm = m.HashAlgorithm
 	r.Iterations = m.Iterations
-	r.PasswordLastChanged = m.PasswordLastChanged
-	r.PasswordExpiresAt = m.PasswordExpiresAt
+	r.PasswordLastChanged = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.PasswordLastChanged).CloneVT())
+	r.PasswordExpiresAt = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.PasswordExpiresAt).CloneVT())
 	r.LockoutInfo = m.LockoutInfo.CloneVT()
+	if rhs := m.PasswordSalt; rhs != nil {
+		tmpVal := *rhs
+		r.PasswordSalt = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -84,10 +100,17 @@ func (m *AccountLockoutInfo) CloneVT() *AccountLockoutInfo {
 	}
 	r := new(AccountLockoutInfo)
 	r.Locked = m.Locked
-	r.Reason = m.Reason
-	r.LockoutTime = m.LockoutTime
+	r.LockoutTime = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.LockoutTime).CloneVT())
 	r.FailedAttempts = m.FailedAttempts
-	r.AttemptsResetTime = m.AttemptsResetTime
+	r.AttemptsResetTime = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.AttemptsResetTime).CloneVT())
+	if rhs := m.Reason; rhs != nil {
+		tmpVal := *rhs
+		r.Reason = &tmpVal
+	}
+	if rhs := m.MaxFailedAttempts; rhs != nil {
+		tmpVal := *rhs
+		r.MaxFailedAttempts = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -107,8 +130,19 @@ func (m *UnixUserInfo) CloneVT() *UnixUserInfo {
 	r.Uid = m.Uid
 	r.Gid = m.Gid
 	r.HomeDirectory = m.HomeDirectory
-	r.Shell = m.Shell
-	r.Gecos = m.Gecos
+	if rhs := m.Shell; rhs != nil {
+		tmpVal := *rhs
+		r.Shell = &tmpVal
+	}
+	if rhs := m.Gecos; rhs != nil {
+		tmpVal := *rhs
+		r.Gecos = &tmpVal
+	}
+	if rhs := m.SupplementaryGroups; rhs != nil {
+		tmpContainer := make([]int32, len(rhs))
+		copy(tmpContainer, rhs)
+		r.SupplementaryGroups = tmpContainer
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -126,15 +160,32 @@ func (m *LdapUserInfo) CloneVT() *LdapUserInfo {
 	}
 	r := new(LdapUserInfo)
 	r.LdapDn = m.LdapDn
-	r.ObjectGuid = m.ObjectGuid
-	r.SamAccountName = m.SamAccountName
-	r.UserPrincipalName = m.UserPrincipalName
-	r.AccountExpires = m.AccountExpires
-	r.PwdLastSet = m.PwdLastSet
+	r.AccountExpires = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.AccountExpires).CloneVT())
+	r.PwdLastSet = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.PwdLastSet).CloneVT())
+	if rhs := m.ObjectGuid; rhs != nil {
+		tmpVal := *rhs
+		r.ObjectGuid = &tmpVal
+	}
+	if rhs := m.SamAccountName; rhs != nil {
+		tmpVal := *rhs
+		r.SamAccountName = &tmpVal
+	}
+	if rhs := m.UserPrincipalName; rhs != nil {
+		tmpVal := *rhs
+		r.UserPrincipalName = &tmpVal
+	}
 	if rhs := m.MemberOf; rhs != nil {
 		tmpContainer := make([]string, len(rhs))
 		copy(tmpContainer, rhs)
 		r.MemberOf = tmpContainer
+	}
+	if rhs := m.Domain; rhs != nil {
+		tmpVal := *rhs
+		r.Domain = &tmpVal
+	}
+	if rhs := m.OrganizationalUnit; rhs != nil {
+		tmpVal := *rhs
+		r.OrganizationalUnit = &tmpVal
 	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
@@ -152,9 +203,21 @@ func (m *RedfishAccountInfo) CloneVT() *RedfishAccountInfo {
 		return (*RedfishAccountInfo)(nil)
 	}
 	r := new(RedfishAccountInfo)
-	r.AccountId = m.AccountId
 	r.RoleId = m.RoleId
 	r.LockoutPolicy = m.LockoutPolicy.CloneVT()
+	if rhs := m.AccountId; rhs != nil {
+		tmpVal := *rhs
+		r.AccountId = &tmpVal
+	}
+	if rhs := m.OemAccountTypes; rhs != nil {
+		tmpContainer := make([]string, len(rhs))
+		copy(tmpContainer, rhs)
+		r.OemAccountTypes = tmpContainer
+	}
+	if rhs := m.PasswordChangeRequired; rhs != nil {
+		tmpVal := *rhs
+		r.PasswordChangeRequired = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -172,8 +235,14 @@ func (m *RedfishLockoutPolicy) CloneVT() *RedfishLockoutPolicy {
 	}
 	r := new(RedfishLockoutPolicy)
 	r.Threshold = m.Threshold
-	r.Duration = m.Duration
-	r.ResetAfter = m.ResetAfter
+	if rhs := m.Duration; rhs != nil {
+		tmpVal := *rhs
+		r.Duration = &tmpVal
+	}
+	if rhs := m.ResetAfter; rhs != nil {
+		tmpVal := *rhs
+		r.ResetAfter = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -193,9 +262,19 @@ func (m *NatsAccountInfo) CloneVT() *NatsAccountInfo {
 	r.Account = m.Account
 	r.Permissions = m.Permissions.CloneVT()
 	r.Limits = m.Limits.CloneVT()
-	r.UserJwt = m.UserJwt
-	r.UserKey = m.UserKey
-	r.UserCred = m.UserCred
+	r.JwtExpiresAt = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.JwtExpiresAt).CloneVT())
+	if rhs := m.UserJwt; rhs != nil {
+		tmpVal := *rhs
+		r.UserJwt = &tmpVal
+	}
+	if rhs := m.UserKey; rhs != nil {
+		tmpVal := *rhs
+		r.UserKey = &tmpVal
+	}
+	if rhs := m.UserCred; rhs != nil {
+		tmpVal := *rhs
+		r.UserCred = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -227,6 +306,11 @@ func (m *NatsPermissions) CloneVT() *NatsPermissions {
 		copy(tmpContainer, rhs)
 		r.AllowResponses = tmpContainer
 	}
+	if rhs := m.Deny; rhs != nil {
+		tmpContainer := make([]string, len(rhs))
+		copy(tmpContainer, rhs)
+		r.Deny = tmpContainer
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -246,6 +330,14 @@ func (m *NatsLimits) CloneVT() *NatsLimits {
 	r.Data = m.Data
 	r.Payload = m.Payload
 	r.Subs = m.Subs
+	if rhs := m.Conn; rhs != nil {
+		tmpVal := *rhs
+		r.Conn = &tmpVal
+	}
+	if rhs := m.Leaf; rhs != nil {
+		tmpVal := *rhs
+		r.Leaf = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -257,15 +349,31 @@ func (m *NatsLimits) CloneMessageVT() proto.Message {
 	return m.CloneVT()
 }
 
-func (m *SelinuxUserInfo) CloneVT() *SelinuxUserInfo {
+func (m *UserLinkingOptions) CloneVT() *UserLinkingOptions {
 	if m == nil {
-		return (*SelinuxUserInfo)(nil)
+		return (*UserLinkingOptions)(nil)
 	}
-	r := new(SelinuxUserInfo)
-	r.User = m.User
-	r.Role = m.Role
-	r.Type = m.Type
-	r.Level = m.Level
+	r := new(UserLinkingOptions)
+	r.UnixAction = m.UnixAction
+	r.LdapAction = m.LdapAction
+	r.RedfishAction = m.RedfishAction
+	r.NatsAction = m.NatsAction
+	if rhs := m.ExistingUnixUsername; rhs != nil {
+		tmpVal := *rhs
+		r.ExistingUnixUsername = &tmpVal
+	}
+	if rhs := m.ExistingLdapDn; rhs != nil {
+		tmpVal := *rhs
+		r.ExistingLdapDn = &tmpVal
+	}
+	if rhs := m.ExistingRedfishAccountId; rhs != nil {
+		tmpVal := *rhs
+		r.ExistingRedfishAccountId = &tmpVal
+	}
+	if rhs := m.ExistingNatsAccount; rhs != nil {
+		tmpVal := *rhs
+		r.ExistingNatsAccount = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -273,7 +381,7 @@ func (m *SelinuxUserInfo) CloneVT() *SelinuxUserInfo {
 	return r
 }
 
-func (m *SelinuxUserInfo) CloneMessageVT() proto.Message {
+func (m *UserLinkingOptions) CloneMessageVT() proto.Message {
 	return m.CloneVT()
 }
 
@@ -283,7 +391,15 @@ func (m *CreateUserRequest) CloneVT() *CreateUserRequest {
 	}
 	r := new(CreateUserRequest)
 	r.User = m.User.CloneVT()
-	r.Password = m.Password
+	r.LinkingOptions = m.LinkingOptions.CloneVT()
+	if rhs := m.Password; rhs != nil {
+		tmpVal := *rhs
+		r.Password = &tmpVal
+	}
+	if rhs := m.DryRun; rhs != nil {
+		tmpVal := *rhs
+		r.DryRun = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -301,6 +417,16 @@ func (m *CreateUserResponse) CloneVT() *CreateUserResponse {
 	}
 	r := new(CreateUserResponse)
 	r.User = m.User.CloneVT()
+	if rhs := m.Warnings; rhs != nil {
+		tmpContainer := make([]string, len(rhs))
+		copy(tmpContainer, rhs)
+		r.Warnings = tmpContainer
+	}
+	if rhs := m.CreatedAccounts; rhs != nil {
+		tmpContainer := make([]string, len(rhs))
+		copy(tmpContainer, rhs)
+		r.CreatedAccounts = tmpContainer
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -317,7 +443,12 @@ func (m *GetUserRequest) CloneVT() *GetUserRequest {
 		return (*GetUserRequest)(nil)
 	}
 	r := new(GetUserRequest)
-	r.Id = m.Id
+	r.FieldMask = (*fieldmaskpb.FieldMask)((*fieldmaskpb1.FieldMask)(m.FieldMask).CloneVT())
+	if m.Identifier != nil {
+		r.Identifier = m.Identifier.(interface {
+			CloneVT() isGetUserRequest_Identifier
+		}).CloneVT()
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -327,6 +458,33 @@ func (m *GetUserRequest) CloneVT() *GetUserRequest {
 
 func (m *GetUserRequest) CloneMessageVT() proto.Message {
 	return m.CloneVT()
+}
+
+func (m *GetUserRequest_Id) CloneVT() isGetUserRequest_Identifier {
+	if m == nil {
+		return (*GetUserRequest_Id)(nil)
+	}
+	r := new(GetUserRequest_Id)
+	r.Id = m.Id
+	return r
+}
+
+func (m *GetUserRequest_Username) CloneVT() isGetUserRequest_Identifier {
+	if m == nil {
+		return (*GetUserRequest_Username)(nil)
+	}
+	r := new(GetUserRequest_Username)
+	r.Username = m.Username
+	return r
+}
+
+func (m *GetUserRequest_Email) CloneVT() isGetUserRequest_Identifier {
+	if m == nil {
+		return (*GetUserRequest_Email)(nil)
+	}
+	r := new(GetUserRequest_Email)
+	r.Email = m.Email
+	return r
 }
 
 func (m *GetUserResponse) CloneVT() *GetUserResponse {
@@ -352,6 +510,8 @@ func (m *UpdateUserRequest) CloneVT() *UpdateUserRequest {
 	}
 	r := new(UpdateUserRequest)
 	r.User = m.User.CloneVT()
+	r.FieldMask = (*fieldmaskpb.FieldMask)((*fieldmaskpb1.FieldMask)(m.FieldMask).CloneVT())
+	r.LinkingOptions = m.LinkingOptions.CloneVT()
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -369,6 +529,11 @@ func (m *UpdateUserResponse) CloneVT() *UpdateUserResponse {
 	}
 	r := new(UpdateUserResponse)
 	r.User = m.User.CloneVT()
+	if rhs := m.Warnings; rhs != nil {
+		tmpContainer := make([]string, len(rhs))
+		copy(tmpContainer, rhs)
+		r.Warnings = tmpContainer
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -386,6 +551,14 @@ func (m *DeleteUserRequest) CloneVT() *DeleteUserRequest {
 	}
 	r := new(DeleteUserRequest)
 	r.Id = m.Id
+	if rhs := m.CascadeDelete; rhs != nil {
+		tmpVal := *rhs
+		r.CascadeDelete = &tmpVal
+	}
+	if rhs := m.BackupData; rhs != nil {
+		tmpVal := *rhs
+		r.BackupData = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -403,6 +576,15 @@ func (m *DeleteUserResponse) CloneVT() *DeleteUserResponse {
 	}
 	r := new(DeleteUserResponse)
 	r.Success = m.Success
+	if rhs := m.DeletedAccounts; rhs != nil {
+		tmpContainer := make([]string, len(rhs))
+		copy(tmpContainer, rhs)
+		r.DeletedAccounts = tmpContainer
+	}
+	if rhs := m.BackupLocation; rhs != nil {
+		tmpVal := *rhs
+		r.BackupLocation = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -419,9 +601,27 @@ func (m *ListUsersRequest) CloneVT() *ListUsersRequest {
 		return (*ListUsersRequest)(nil)
 	}
 	r := new(ListUsersRequest)
-	r.Source = m.Source
-	r.Enabled = m.Enabled
-	r.UsernamePrefix = m.UsernamePrefix
+	r.FieldMask = (*fieldmaskpb.FieldMask)((*fieldmaskpb1.FieldMask)(m.FieldMask).CloneVT())
+	if rhs := m.Source; rhs != nil {
+		tmpVal := *rhs
+		r.Source = &tmpVal
+	}
+	if rhs := m.Enabled; rhs != nil {
+		tmpVal := *rhs
+		r.Enabled = &tmpVal
+	}
+	if rhs := m.UsernamePrefix; rhs != nil {
+		tmpVal := *rhs
+		r.UsernamePrefix = &tmpVal
+	}
+	if rhs := m.PageSize; rhs != nil {
+		tmpVal := *rhs
+		r.PageSize = &tmpVal
+	}
+	if rhs := m.PageToken; rhs != nil {
+		tmpVal := *rhs
+		r.PageToken = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -444,6 +644,10 @@ func (m *ListUsersResponse) CloneVT() *ListUsersResponse {
 			tmpContainer[k] = v.CloneVT()
 		}
 		r.Users = tmpContainer
+	}
+	if rhs := m.NextPageToken; rhs != nil {
+		tmpVal := *rhs
+		r.NextPageToken = &tmpVal
 	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
@@ -481,6 +685,10 @@ func (m *ChangePasswordResponse) CloneVT() *ChangePasswordResponse {
 	}
 	r := new(ChangePasswordResponse)
 	r.Success = m.Success
+	if rhs := m.FailureReason; rhs != nil {
+		tmpVal := *rhs
+		r.FailureReason = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -498,8 +706,18 @@ func (m *ResetPasswordRequest) CloneVT() *ResetPasswordRequest {
 	}
 	r := new(ResetPasswordRequest)
 	r.Id = m.Id
-	r.NewPassword = m.NewPassword
-	r.Force = m.Force
+	if rhs := m.NewPassword; rhs != nil {
+		tmpVal := *rhs
+		r.NewPassword = &tmpVal
+	}
+	if rhs := m.Force; rhs != nil {
+		tmpVal := *rhs
+		r.Force = &tmpVal
+	}
+	if rhs := m.GeneratePassword; rhs != nil {
+		tmpVal := *rhs
+		r.GeneratePassword = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -518,6 +736,10 @@ func (m *ResetPasswordResponse) CloneVT() *ResetPasswordResponse {
 	r := new(ResetPasswordResponse)
 	r.NewPassword = m.NewPassword
 	r.Success = m.Success
+	if rhs := m.FailureReason; rhs != nil {
+		tmpVal := *rhs
+		r.FailureReason = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -536,6 +758,14 @@ func (m *AuthenticateUserRequest) CloneVT() *AuthenticateUserRequest {
 	r := new(AuthenticateUserRequest)
 	r.Username = m.Username
 	r.Password = m.Password
+	if rhs := m.SourceIp; rhs != nil {
+		tmpVal := *rhs
+		r.SourceIp = &tmpVal
+	}
+	if rhs := m.UserAgent; rhs != nil {
+		tmpVal := *rhs
+		r.UserAgent = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -553,9 +783,19 @@ func (m *AuthenticateUserResponse) CloneVT() *AuthenticateUserResponse {
 	}
 	r := new(AuthenticateUserResponse)
 	r.Success = m.Success
-	r.UserId = m.UserId
-	r.Token = m.Token
-	r.FailureReason = m.FailureReason
+	r.TokenExpiresAt = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.TokenExpiresAt).CloneVT())
+	if rhs := m.UserId; rhs != nil {
+		tmpVal := *rhs
+		r.UserId = &tmpVal
+	}
+	if rhs := m.Token; rhs != nil {
+		tmpVal := *rhs
+		r.Token = &tmpVal
+	}
+	if rhs := m.FailureReason; rhs != nil {
+		tmpVal := *rhs
+		r.FailureReason = &tmpVal
+	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -579,25 +819,28 @@ func (this *User) EqualVT(that *User) bool {
 	if this.Username != that.Username {
 		return false
 	}
-	if this.FullName != that.FullName {
+	if p, q := this.FullName, that.FullName; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if this.Email != that.Email {
+	if p, q := this.Email, that.Email; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	if this.Enabled != that.Enabled {
 		return false
 	}
-	if this.CreatedAt != that.CreatedAt {
+	if !(*timestamppb1.Timestamp)(this.CreatedAt).EqualVT((*timestamppb1.Timestamp)(that.CreatedAt)) {
 		return false
 	}
-	if this.UpdatedAt != that.UpdatedAt {
+	if !(*timestamppb1.Timestamp)(this.UpdatedAt).EqualVT((*timestamppb1.Timestamp)(that.UpdatedAt)) {
 		return false
 	}
-	if this.LastLogin != that.LastLogin {
+	if !(*timestamppb1.Timestamp)(this.LastLogin).EqualVT((*timestamppb1.Timestamp)(that.LastLogin)) {
 		return false
 	}
 	if this.SourceSystem != that.SourceSystem {
+		return false
+	}
+	if this.CreationInterface != that.CreationInterface {
 		return false
 	}
 	if !this.AuthData.EqualVT(that.AuthData) {
@@ -615,8 +858,17 @@ func (this *User) EqualVT(that *User) bool {
 	if !this.NatsInfo.EqualVT(that.NatsInfo) {
 		return false
 	}
-	if !this.SelinuxInfo.EqualVT(that.SelinuxInfo) {
+	if len(this.CustomAttributes) != len(that.CustomAttributes) {
 		return false
+	}
+	for i, vx := range this.CustomAttributes {
+		vy, ok := that.CustomAttributes[i]
+		if !ok {
+			return false
+		}
+		if vx != vy {
+			return false
+		}
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
@@ -637,7 +889,7 @@ func (this *AuthenticationData) EqualVT(that *AuthenticationData) bool {
 	if this.PasswordHash != that.PasswordHash {
 		return false
 	}
-	if this.PasswordSalt != that.PasswordSalt {
+	if p, q := this.PasswordSalt, that.PasswordSalt; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	if this.HashAlgorithm != that.HashAlgorithm {
@@ -646,10 +898,10 @@ func (this *AuthenticationData) EqualVT(that *AuthenticationData) bool {
 	if this.Iterations != that.Iterations {
 		return false
 	}
-	if this.PasswordLastChanged != that.PasswordLastChanged {
+	if !(*timestamppb1.Timestamp)(this.PasswordLastChanged).EqualVT((*timestamppb1.Timestamp)(that.PasswordLastChanged)) {
 		return false
 	}
-	if this.PasswordExpiresAt != that.PasswordExpiresAt {
+	if !(*timestamppb1.Timestamp)(this.PasswordExpiresAt).EqualVT((*timestamppb1.Timestamp)(that.PasswordExpiresAt)) {
 		return false
 	}
 	if !this.LockoutInfo.EqualVT(that.LockoutInfo) {
@@ -674,16 +926,19 @@ func (this *AccountLockoutInfo) EqualVT(that *AccountLockoutInfo) bool {
 	if this.Locked != that.Locked {
 		return false
 	}
-	if this.Reason != that.Reason {
+	if p, q := this.Reason, that.Reason; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if this.LockoutTime != that.LockoutTime {
+	if !(*timestamppb1.Timestamp)(this.LockoutTime).EqualVT((*timestamppb1.Timestamp)(that.LockoutTime)) {
 		return false
 	}
 	if this.FailedAttempts != that.FailedAttempts {
 		return false
 	}
-	if this.AttemptsResetTime != that.AttemptsResetTime {
+	if !(*timestamppb1.Timestamp)(this.AttemptsResetTime).EqualVT((*timestamppb1.Timestamp)(that.AttemptsResetTime)) {
+		return false
+	}
+	if p, q := this.MaxFailedAttempts, that.MaxFailedAttempts; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -711,11 +966,20 @@ func (this *UnixUserInfo) EqualVT(that *UnixUserInfo) bool {
 	if this.HomeDirectory != that.HomeDirectory {
 		return false
 	}
-	if this.Shell != that.Shell {
+	if p, q := this.Shell, that.Shell; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if this.Gecos != that.Gecos {
+	if p, q := this.Gecos, that.Gecos; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
+	}
+	if len(this.SupplementaryGroups) != len(that.SupplementaryGroups) {
+		return false
+	}
+	for i, vx := range this.SupplementaryGroups {
+		vy := that.SupplementaryGroups[i]
+		if vx != vy {
+			return false
+		}
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
@@ -736,13 +1000,13 @@ func (this *LdapUserInfo) EqualVT(that *LdapUserInfo) bool {
 	if this.LdapDn != that.LdapDn {
 		return false
 	}
-	if this.ObjectGuid != that.ObjectGuid {
+	if p, q := this.ObjectGuid, that.ObjectGuid; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if this.SamAccountName != that.SamAccountName {
+	if p, q := this.SamAccountName, that.SamAccountName; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if this.UserPrincipalName != that.UserPrincipalName {
+	if p, q := this.UserPrincipalName, that.UserPrincipalName; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	if len(this.MemberOf) != len(that.MemberOf) {
@@ -754,10 +1018,16 @@ func (this *LdapUserInfo) EqualVT(that *LdapUserInfo) bool {
 			return false
 		}
 	}
-	if this.AccountExpires != that.AccountExpires {
+	if !(*timestamppb1.Timestamp)(this.AccountExpires).EqualVT((*timestamppb1.Timestamp)(that.AccountExpires)) {
 		return false
 	}
-	if this.PwdLastSet != that.PwdLastSet {
+	if !(*timestamppb1.Timestamp)(this.PwdLastSet).EqualVT((*timestamppb1.Timestamp)(that.PwdLastSet)) {
+		return false
+	}
+	if p, q := this.Domain, that.Domain; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
+	if p, q := this.OrganizationalUnit, that.OrganizationalUnit; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -776,13 +1046,25 @@ func (this *RedfishAccountInfo) EqualVT(that *RedfishAccountInfo) bool {
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.AccountId != that.AccountId {
+	if p, q := this.AccountId, that.AccountId; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	if this.RoleId != that.RoleId {
 		return false
 	}
 	if !this.LockoutPolicy.EqualVT(that.LockoutPolicy) {
+		return false
+	}
+	if len(this.OemAccountTypes) != len(that.OemAccountTypes) {
+		return false
+	}
+	for i, vx := range this.OemAccountTypes {
+		vy := that.OemAccountTypes[i]
+		if vx != vy {
+			return false
+		}
+	}
+	if p, q := this.PasswordChangeRequired, that.PasswordChangeRequired; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -804,10 +1086,10 @@ func (this *RedfishLockoutPolicy) EqualVT(that *RedfishLockoutPolicy) bool {
 	if this.Threshold != that.Threshold {
 		return false
 	}
-	if this.Duration != that.Duration {
+	if p, q := this.Duration, that.Duration; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if this.ResetAfter != that.ResetAfter {
+	if p, q := this.ResetAfter, that.ResetAfter; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -835,13 +1117,16 @@ func (this *NatsAccountInfo) EqualVT(that *NatsAccountInfo) bool {
 	if !this.Limits.EqualVT(that.Limits) {
 		return false
 	}
-	if this.UserJwt != that.UserJwt {
+	if p, q := this.UserJwt, that.UserJwt; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if this.UserKey != that.UserKey {
+	if p, q := this.UserKey, that.UserKey; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if this.UserCred != that.UserCred {
+	if p, q := this.UserCred, that.UserCred; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
+	if !(*timestamppb1.Timestamp)(this.JwtExpiresAt).EqualVT((*timestamppb1.Timestamp)(that.JwtExpiresAt)) {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -887,6 +1172,15 @@ func (this *NatsPermissions) EqualVT(that *NatsPermissions) bool {
 			return false
 		}
 	}
+	if len(this.Deny) != len(that.Deny) {
+		return false
+	}
+	for i, vx := range this.Deny {
+		vy := that.Deny[i]
+		if vx != vy {
+			return false
+		}
+	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
@@ -912,6 +1206,12 @@ func (this *NatsLimits) EqualVT(that *NatsLimits) bool {
 	if this.Subs != that.Subs {
 		return false
 	}
+	if p, q := this.Conn, that.Conn; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
+	if p, q := this.Leaf, that.Leaf; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
@@ -922,29 +1222,41 @@ func (this *NatsLimits) EqualMessageVT(thatMsg proto.Message) bool {
 	}
 	return this.EqualVT(that)
 }
-func (this *SelinuxUserInfo) EqualVT(that *SelinuxUserInfo) bool {
+func (this *UserLinkingOptions) EqualVT(that *UserLinkingOptions) bool {
 	if this == that {
 		return true
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.User != that.User {
+	if this.UnixAction != that.UnixAction {
 		return false
 	}
-	if this.Role != that.Role {
+	if this.LdapAction != that.LdapAction {
 		return false
 	}
-	if this.Type != that.Type {
+	if this.RedfishAction != that.RedfishAction {
 		return false
 	}
-	if this.Level != that.Level {
+	if this.NatsAction != that.NatsAction {
+		return false
+	}
+	if p, q := this.ExistingUnixUsername, that.ExistingUnixUsername; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
+	if p, q := this.ExistingLdapDn, that.ExistingLdapDn; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
+	if p, q := this.ExistingRedfishAccountId, that.ExistingRedfishAccountId; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
+	if p, q := this.ExistingNatsAccount, that.ExistingNatsAccount; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
-func (this *SelinuxUserInfo) EqualMessageVT(thatMsg proto.Message) bool {
-	that, ok := thatMsg.(*SelinuxUserInfo)
+func (this *UserLinkingOptions) EqualMessageVT(thatMsg proto.Message) bool {
+	that, ok := thatMsg.(*UserLinkingOptions)
 	if !ok {
 		return false
 	}
@@ -959,7 +1271,13 @@ func (this *CreateUserRequest) EqualVT(that *CreateUserRequest) bool {
 	if !this.User.EqualVT(that.User) {
 		return false
 	}
-	if this.Password != that.Password {
+	if p, q := this.Password, that.Password; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
+	if !this.LinkingOptions.EqualVT(that.LinkingOptions) {
+		return false
+	}
+	if p, q := this.DryRun, that.DryRun; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -981,6 +1299,24 @@ func (this *CreateUserResponse) EqualVT(that *CreateUserResponse) bool {
 	if !this.User.EqualVT(that.User) {
 		return false
 	}
+	if len(this.Warnings) != len(that.Warnings) {
+		return false
+	}
+	for i, vx := range this.Warnings {
+		vy := that.Warnings[i]
+		if vx != vy {
+			return false
+		}
+	}
+	if len(this.CreatedAccounts) != len(that.CreatedAccounts) {
+		return false
+	}
+	for i, vx := range this.CreatedAccounts {
+		vy := that.CreatedAccounts[i]
+		if vx != vy {
+			return false
+		}
+	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
@@ -997,7 +1333,19 @@ func (this *GetUserRequest) EqualVT(that *GetUserRequest) bool {
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.Id != that.Id {
+	if this.Identifier == nil && that.Identifier != nil {
+		return false
+	} else if this.Identifier != nil {
+		if that.Identifier == nil {
+			return false
+		}
+		if !this.Identifier.(interface {
+			EqualVT(isGetUserRequest_Identifier) bool
+		}).EqualVT(that.Identifier) {
+			return false
+		}
+	}
+	if !(*fieldmaskpb1.FieldMask)(this.FieldMask).EqualVT((*fieldmaskpb1.FieldMask)(that.FieldMask)) {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -1010,6 +1358,57 @@ func (this *GetUserRequest) EqualMessageVT(thatMsg proto.Message) bool {
 	}
 	return this.EqualVT(that)
 }
+func (this *GetUserRequest_Id) EqualVT(thatIface isGetUserRequest_Identifier) bool {
+	that, ok := thatIface.(*GetUserRequest_Id)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if this.Id != that.Id {
+		return false
+	}
+	return true
+}
+
+func (this *GetUserRequest_Username) EqualVT(thatIface isGetUserRequest_Identifier) bool {
+	that, ok := thatIface.(*GetUserRequest_Username)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if this.Username != that.Username {
+		return false
+	}
+	return true
+}
+
+func (this *GetUserRequest_Email) EqualVT(thatIface isGetUserRequest_Identifier) bool {
+	that, ok := thatIface.(*GetUserRequest_Email)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if this.Email != that.Email {
+		return false
+	}
+	return true
+}
+
 func (this *GetUserResponse) EqualVT(that *GetUserResponse) bool {
 	if this == that {
 		return true
@@ -1038,6 +1437,12 @@ func (this *UpdateUserRequest) EqualVT(that *UpdateUserRequest) bool {
 	if !this.User.EqualVT(that.User) {
 		return false
 	}
+	if !(*fieldmaskpb1.FieldMask)(this.FieldMask).EqualVT((*fieldmaskpb1.FieldMask)(that.FieldMask)) {
+		return false
+	}
+	if !this.LinkingOptions.EqualVT(that.LinkingOptions) {
+		return false
+	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
@@ -1057,6 +1462,15 @@ func (this *UpdateUserResponse) EqualVT(that *UpdateUserResponse) bool {
 	if !this.User.EqualVT(that.User) {
 		return false
 	}
+	if len(this.Warnings) != len(that.Warnings) {
+		return false
+	}
+	for i, vx := range this.Warnings {
+		vy := that.Warnings[i]
+		if vx != vy {
+			return false
+		}
+	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
@@ -1074,6 +1488,12 @@ func (this *DeleteUserRequest) EqualVT(that *DeleteUserRequest) bool {
 		return false
 	}
 	if this.Id != that.Id {
+		return false
+	}
+	if p, q := this.CascadeDelete, that.CascadeDelete; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
+	if p, q := this.BackupData, that.BackupData; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -1095,6 +1515,18 @@ func (this *DeleteUserResponse) EqualVT(that *DeleteUserResponse) bool {
 	if this.Success != that.Success {
 		return false
 	}
+	if len(this.DeletedAccounts) != len(that.DeletedAccounts) {
+		return false
+	}
+	for i, vx := range this.DeletedAccounts {
+		vy := that.DeletedAccounts[i]
+		if vx != vy {
+			return false
+		}
+	}
+	if p, q := this.BackupLocation, that.BackupLocation; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
@@ -1111,13 +1543,22 @@ func (this *ListUsersRequest) EqualVT(that *ListUsersRequest) bool {
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.Source != that.Source {
+	if p, q := this.Source, that.Source; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if this.Enabled != that.Enabled {
+	if p, q := this.Enabled, that.Enabled; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if this.UsernamePrefix != that.UsernamePrefix {
+	if p, q := this.UsernamePrefix, that.UsernamePrefix; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
+	if !(*fieldmaskpb1.FieldMask)(this.FieldMask).EqualVT((*fieldmaskpb1.FieldMask)(that.FieldMask)) {
+		return false
+	}
+	if p, q := this.PageSize, that.PageSize; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
+	if p, q := this.PageToken, that.PageToken; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -1152,6 +1593,9 @@ func (this *ListUsersResponse) EqualVT(that *ListUsersResponse) bool {
 				return false
 			}
 		}
+	}
+	if p, q := this.NextPageToken, that.NextPageToken; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
@@ -1197,6 +1641,9 @@ func (this *ChangePasswordResponse) EqualVT(that *ChangePasswordResponse) bool {
 	if this.Success != that.Success {
 		return false
 	}
+	if p, q := this.FailureReason, that.FailureReason; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
@@ -1216,10 +1663,13 @@ func (this *ResetPasswordRequest) EqualVT(that *ResetPasswordRequest) bool {
 	if this.Id != that.Id {
 		return false
 	}
-	if this.NewPassword != that.NewPassword {
+	if p, q := this.NewPassword, that.NewPassword; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if this.Force != that.Force {
+	if p, q := this.Force, that.Force; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
+	if p, q := this.GeneratePassword, that.GeneratePassword; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -1244,6 +1694,9 @@ func (this *ResetPasswordResponse) EqualVT(that *ResetPasswordResponse) bool {
 	if this.Success != that.Success {
 		return false
 	}
+	if p, q := this.FailureReason, that.FailureReason; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
@@ -1266,6 +1719,12 @@ func (this *AuthenticateUserRequest) EqualVT(that *AuthenticateUserRequest) bool
 	if this.Password != that.Password {
 		return false
 	}
+	if p, q := this.SourceIp, that.SourceIp; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
+	if p, q := this.UserAgent, that.UserAgent; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
@@ -1285,13 +1744,16 @@ func (this *AuthenticateUserResponse) EqualVT(that *AuthenticateUserResponse) bo
 	if this.Success != that.Success {
 		return false
 	}
-	if this.UserId != that.UserId {
+	if p, q := this.UserId, that.UserId; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if this.Token != that.Token {
+	if p, q := this.Token, that.Token; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if this.FailureReason != that.FailureReason {
+	if p, q := this.FailureReason, that.FailureReason; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
+	if !(*timestamppb1.Timestamp)(this.TokenExpiresAt).EqualVT((*timestamppb1.Timestamp)(that.TokenExpiresAt)) {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -1304,366 +1766,6 @@ func (this *AuthenticateUserResponse) EqualMessageVT(thatMsg proto.Message) bool
 	}
 	return this.EqualVT(that)
 }
-
-// This is a compile-time assertion to ensure that this generated file
-// is compatible with the grpc package it is being compiled against.
-// Requires gRPC-Go v1.32.0 or later.
-const _ = grpc.SupportPackageIsVersion7
-
-// UserServiceClient is the client API for UserService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type UserServiceClient interface {
-	// Create a new user
-	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
-	// Get a user by ID
-	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
-	// Update an existing user
-	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
-	// Delete a user
-	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
-	// List users with optional filtering
-	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
-	// Change a user's password
-	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
-	// Reset a user's password
-	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
-	// Authenticate a user
-	AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, opts ...grpc.CallOption) (*AuthenticateUserResponse, error)
-}
-
-type userServiceClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
-	return &userServiceClient{cc}
-}
-
-func (c *userServiceClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error) {
-	out := new(CreateUserResponse)
-	err := c.cc.Invoke(ctx, "/schema.v1alpha1.UserService/CreateUser", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
-	out := new(GetUserResponse)
-	err := c.cc.Invoke(ctx, "/schema.v1alpha1.UserService/GetUser", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
-	out := new(UpdateUserResponse)
-	err := c.cc.Invoke(ctx, "/schema.v1alpha1.UserService/UpdateUser", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error) {
-	out := new(DeleteUserResponse)
-	err := c.cc.Invoke(ctx, "/schema.v1alpha1.UserService/DeleteUser", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error) {
-	out := new(ListUsersResponse)
-	err := c.cc.Invoke(ctx, "/schema.v1alpha1.UserService/ListUsers", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error) {
-	out := new(ChangePasswordResponse)
-	err := c.cc.Invoke(ctx, "/schema.v1alpha1.UserService/ChangePassword", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error) {
-	out := new(ResetPasswordResponse)
-	err := c.cc.Invoke(ctx, "/schema.v1alpha1.UserService/ResetPassword", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, opts ...grpc.CallOption) (*AuthenticateUserResponse, error) {
-	out := new(AuthenticateUserResponse)
-	err := c.cc.Invoke(ctx, "/schema.v1alpha1.UserService/AuthenticateUser", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// UserServiceServer is the server API for UserService service.
-// All implementations must embed UnimplementedUserServiceServer
-// for forward compatibility
-type UserServiceServer interface {
-	// Create a new user
-	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
-	// Get a user by ID
-	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
-	// Update an existing user
-	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
-	// Delete a user
-	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
-	// List users with optional filtering
-	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
-	// Change a user's password
-	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
-	// Reset a user's password
-	ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error)
-	// Authenticate a user
-	AuthenticateUser(context.Context, *AuthenticateUserRequest) (*AuthenticateUserResponse, error)
-	mustEmbedUnimplementedUserServiceServer()
-}
-
-// UnimplementedUserServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedUserServiceServer struct {
-}
-
-func (UnimplementedUserServiceServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
-}
-func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
-}
-func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
-}
-func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
-}
-func (UnimplementedUserServiceServer) ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUsers not implemented")
-}
-func (UnimplementedUserServiceServer) ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
-}
-func (UnimplementedUserServiceServer) ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ResetPassword not implemented")
-}
-func (UnimplementedUserServiceServer) AuthenticateUser(context.Context, *AuthenticateUserRequest) (*AuthenticateUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AuthenticateUser not implemented")
-}
-func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
-
-// UnsafeUserServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to UserServiceServer will
-// result in compilation errors.
-type UnsafeUserServiceServer interface {
-	mustEmbedUnimplementedUserServiceServer()
-}
-
-func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
-	s.RegisterService(&UserService_ServiceDesc, srv)
-}
-
-func _UserService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).CreateUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/schema.v1alpha1.UserService/CreateUser",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).CreateUser(ctx, req.(*CreateUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).GetUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/schema.v1alpha1.UserService/GetUser",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetUser(ctx, req.(*GetUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).UpdateUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/schema.v1alpha1.UserService/UpdateUser",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).UpdateUser(ctx, req.(*UpdateUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).DeleteUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/schema.v1alpha1.UserService/DeleteUser",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).DeleteUser(ctx, req.(*DeleteUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_ListUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUsersRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).ListUsers(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/schema.v1alpha1.UserService/ListUsers",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ListUsers(ctx, req.(*ListUsersRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_ChangePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ChangePasswordRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).ChangePassword(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/schema.v1alpha1.UserService/ChangePassword",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ChangePassword(ctx, req.(*ChangePasswordRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_ResetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ResetPasswordRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).ResetPassword(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/schema.v1alpha1.UserService/ResetPassword",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ResetPassword(ctx, req.(*ResetPasswordRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_AuthenticateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AuthenticateUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).AuthenticateUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/schema.v1alpha1.UserService/AuthenticateUser",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).AuthenticateUser(ctx, req.(*AuthenticateUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var UserService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "schema.v1alpha1.UserService",
-	HandlerType: (*UserServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "CreateUser",
-			Handler:    _UserService_CreateUser_Handler,
-		},
-		{
-			MethodName: "GetUser",
-			Handler:    _UserService_GetUser_Handler,
-		},
-		{
-			MethodName: "UpdateUser",
-			Handler:    _UserService_UpdateUser_Handler,
-		},
-		{
-			MethodName: "DeleteUser",
-			Handler:    _UserService_DeleteUser_Handler,
-		},
-		{
-			MethodName: "ListUsers",
-			Handler:    _UserService_ListUsers_Handler,
-		},
-		{
-			MethodName: "ChangePassword",
-			Handler:    _UserService_ChangePassword_Handler,
-		},
-		{
-			MethodName: "ResetPassword",
-			Handler:    _UserService_ResetPassword_Handler,
-		},
-		{
-			MethodName: "AuthenticateUser",
-			Handler:    _UserService_AuthenticateUser_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "schema/v1alpha1/user.proto",
-}
-
 func (m *User) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
@@ -1694,15 +1796,26 @@ func (m *User) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if m.SelinuxInfo != nil {
-		size, err := m.SelinuxInfo.MarshalToSizedBufferVT(dAtA[:i])
-		if err != nil {
-			return 0, err
+	if len(m.CustomAttributes) > 0 {
+		for k := range m.CustomAttributes {
+			v := m.CustomAttributes[k]
+			baseI := i
+			i -= len(v)
+			copy(dAtA[i:], v)
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(v)))
+			i--
+			dAtA[i] = 0x12
+			i -= len(k)
+			copy(dAtA[i:], k)
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(k)))
+			i--
+			dAtA[i] = 0xa
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(baseI-i))
+			i--
+			dAtA[i] = 0x1
+			i--
+			dAtA[i] = 0x82
 		}
-		i -= size
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
-		i--
-		dAtA[i] = 0x7a
 	}
 	if m.NatsInfo != nil {
 		size, err := m.NatsInfo.MarshalToSizedBufferVT(dAtA[:i])
@@ -1712,7 +1825,7 @@ func (m *User) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x72
+		dAtA[i] = 0x7a
 	}
 	if m.RedfishInfo != nil {
 		size, err := m.RedfishInfo.MarshalToSizedBufferVT(dAtA[:i])
@@ -1722,7 +1835,7 @@ func (m *User) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x6a
+		dAtA[i] = 0x72
 	}
 	if m.LdapInfo != nil {
 		size, err := m.LdapInfo.MarshalToSizedBufferVT(dAtA[:i])
@@ -1732,7 +1845,7 @@ func (m *User) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x62
+		dAtA[i] = 0x6a
 	}
 	if m.UnixInfo != nil {
 		size, err := m.UnixInfo.MarshalToSizedBufferVT(dAtA[:i])
@@ -1742,7 +1855,7 @@ func (m *User) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x5a
+		dAtA[i] = 0x62
 	}
 	if m.AuthData != nil {
 		size, err := m.AuthData.MarshalToSizedBufferVT(dAtA[:i])
@@ -1752,27 +1865,47 @@ func (m *User) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x52
+		dAtA[i] = 0x5a
+	}
+	if m.CreationInterface != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.CreationInterface))
+		i--
+		dAtA[i] = 0x50
 	}
 	if m.SourceSystem != 0 {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.SourceSystem))
 		i--
 		dAtA[i] = 0x48
 	}
-	if m.LastLogin != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.LastLogin))
+	if m.LastLogin != nil {
+		size, err := (*timestamppb1.Timestamp)(m.LastLogin).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x40
+		dAtA[i] = 0x42
 	}
-	if m.UpdatedAt != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.UpdatedAt))
+	if m.UpdatedAt != nil {
+		size, err := (*timestamppb1.Timestamp)(m.UpdatedAt).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x38
+		dAtA[i] = 0x3a
 	}
-	if m.CreatedAt != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.CreatedAt))
+	if m.CreatedAt != nil {
+		size, err := (*timestamppb1.Timestamp)(m.CreatedAt).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x30
+		dAtA[i] = 0x32
 	}
 	if m.Enabled {
 		i--
@@ -1784,17 +1917,17 @@ func (m *User) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x28
 	}
-	if len(m.Email) > 0 {
-		i -= len(m.Email)
-		copy(dAtA[i:], m.Email)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Email)))
+	if m.Email != nil {
+		i -= len(*m.Email)
+		copy(dAtA[i:], *m.Email)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Email)))
 		i--
 		dAtA[i] = 0x22
 	}
-	if len(m.FullName) > 0 {
-		i -= len(m.FullName)
-		copy(dAtA[i:], m.FullName)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.FullName)))
+	if m.FullName != nil {
+		i -= len(*m.FullName)
+		copy(dAtA[i:], *m.FullName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.FullName)))
 		i--
 		dAtA[i] = 0x1a
 	}
@@ -1855,15 +1988,25 @@ func (m *AuthenticationData) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x3a
 	}
-	if m.PasswordExpiresAt != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.PasswordExpiresAt))
+	if m.PasswordExpiresAt != nil {
+		size, err := (*timestamppb1.Timestamp)(m.PasswordExpiresAt).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x30
+		dAtA[i] = 0x32
 	}
-	if m.PasswordLastChanged != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.PasswordLastChanged))
+	if m.PasswordLastChanged != nil {
+		size, err := (*timestamppb1.Timestamp)(m.PasswordLastChanged).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x28
+		dAtA[i] = 0x2a
 	}
 	if m.Iterations != 0 {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Iterations))
@@ -1875,10 +2018,10 @@ func (m *AuthenticationData) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x18
 	}
-	if len(m.PasswordSalt) > 0 {
-		i -= len(m.PasswordSalt)
-		copy(dAtA[i:], m.PasswordSalt)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.PasswordSalt)))
+	if m.PasswordSalt != nil {
+		i -= len(*m.PasswordSalt)
+		copy(dAtA[i:], *m.PasswordSalt)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.PasswordSalt)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -1922,23 +2065,38 @@ func (m *AccountLockoutInfo) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if m.AttemptsResetTime != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.AttemptsResetTime))
+	if m.MaxFailedAttempts != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.MaxFailedAttempts))
 		i--
-		dAtA[i] = 0x28
+		dAtA[i] = 0x30
+	}
+	if m.AttemptsResetTime != nil {
+		size, err := (*timestamppb1.Timestamp)(m.AttemptsResetTime).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x2a
 	}
 	if m.FailedAttempts != 0 {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.FailedAttempts))
 		i--
 		dAtA[i] = 0x20
 	}
-	if m.LockoutTime != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.LockoutTime))
+	if m.LockoutTime != nil {
+		size, err := (*timestamppb1.Timestamp)(m.LockoutTime).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x18
+		dAtA[i] = 0x1a
 	}
-	if m.Reason != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Reason))
+	if m.Reason != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Reason))
 		i--
 		dAtA[i] = 0x10
 	}
@@ -1985,17 +2143,38 @@ func (m *UnixUserInfo) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Gecos) > 0 {
-		i -= len(m.Gecos)
-		copy(dAtA[i:], m.Gecos)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Gecos)))
+	if len(m.SupplementaryGroups) > 0 {
+		var pksize2 int
+		for _, num := range m.SupplementaryGroups {
+			pksize2 += protohelpers.SizeOfVarint(uint64(num))
+		}
+		i -= pksize2
+		j1 := i
+		for _, num1 := range m.SupplementaryGroups {
+			num := uint64(num1)
+			for num >= 1<<7 {
+				dAtA[j1] = uint8(uint64(num)&0x7f | 0x80)
+				num >>= 7
+				j1++
+			}
+			dAtA[j1] = uint8(num)
+			j1++
+		}
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(pksize2))
+		i--
+		dAtA[i] = 0x32
+	}
+	if m.Gecos != nil {
+		i -= len(*m.Gecos)
+		copy(dAtA[i:], *m.Gecos)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Gecos)))
 		i--
 		dAtA[i] = 0x2a
 	}
-	if len(m.Shell) > 0 {
-		i -= len(m.Shell)
-		copy(dAtA[i:], m.Shell)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Shell)))
+	if m.Shell != nil {
+		i -= len(*m.Shell)
+		copy(dAtA[i:], *m.Shell)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Shell)))
 		i--
 		dAtA[i] = 0x22
 	}
@@ -2049,15 +2228,39 @@ func (m *LdapUserInfo) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if m.PwdLastSet != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.PwdLastSet))
+	if m.OrganizationalUnit != nil {
+		i -= len(*m.OrganizationalUnit)
+		copy(dAtA[i:], *m.OrganizationalUnit)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.OrganizationalUnit)))
 		i--
-		dAtA[i] = 0x38
+		dAtA[i] = 0x4a
 	}
-	if m.AccountExpires != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.AccountExpires))
+	if m.Domain != nil {
+		i -= len(*m.Domain)
+		copy(dAtA[i:], *m.Domain)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Domain)))
 		i--
-		dAtA[i] = 0x30
+		dAtA[i] = 0x42
+	}
+	if m.PwdLastSet != nil {
+		size, err := (*timestamppb1.Timestamp)(m.PwdLastSet).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x3a
+	}
+	if m.AccountExpires != nil {
+		size, err := (*timestamppb1.Timestamp)(m.AccountExpires).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x32
 	}
 	if len(m.MemberOf) > 0 {
 		for iNdEx := len(m.MemberOf) - 1; iNdEx >= 0; iNdEx-- {
@@ -2068,24 +2271,24 @@ func (m *LdapUserInfo) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 			dAtA[i] = 0x2a
 		}
 	}
-	if len(m.UserPrincipalName) > 0 {
-		i -= len(m.UserPrincipalName)
-		copy(dAtA[i:], m.UserPrincipalName)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.UserPrincipalName)))
+	if m.UserPrincipalName != nil {
+		i -= len(*m.UserPrincipalName)
+		copy(dAtA[i:], *m.UserPrincipalName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.UserPrincipalName)))
 		i--
 		dAtA[i] = 0x22
 	}
-	if len(m.SamAccountName) > 0 {
-		i -= len(m.SamAccountName)
-		copy(dAtA[i:], m.SamAccountName)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.SamAccountName)))
+	if m.SamAccountName != nil {
+		i -= len(*m.SamAccountName)
+		copy(dAtA[i:], *m.SamAccountName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.SamAccountName)))
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.ObjectGuid) > 0 {
-		i -= len(m.ObjectGuid)
-		copy(dAtA[i:], m.ObjectGuid)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ObjectGuid)))
+	if m.ObjectGuid != nil {
+		i -= len(*m.ObjectGuid)
+		copy(dAtA[i:], *m.ObjectGuid)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ObjectGuid)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -2129,6 +2332,25 @@ func (m *RedfishAccountInfo) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if m.PasswordChangeRequired != nil {
+		i--
+		if *m.PasswordChangeRequired {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x28
+	}
+	if len(m.OemAccountTypes) > 0 {
+		for iNdEx := len(m.OemAccountTypes) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.OemAccountTypes[iNdEx])
+			copy(dAtA[i:], m.OemAccountTypes[iNdEx])
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.OemAccountTypes[iNdEx])))
+			i--
+			dAtA[i] = 0x22
+		}
+	}
 	if m.LockoutPolicy != nil {
 		size, err := m.LockoutPolicy.MarshalToSizedBufferVT(dAtA[:i])
 		if err != nil {
@@ -2146,10 +2368,10 @@ func (m *RedfishAccountInfo) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.AccountId) > 0 {
-		i -= len(m.AccountId)
-		copy(dAtA[i:], m.AccountId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.AccountId)))
+	if m.AccountId != nil {
+		i -= len(*m.AccountId)
+		copy(dAtA[i:], *m.AccountId)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.AccountId)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2186,17 +2408,17 @@ func (m *RedfishLockoutPolicy) MarshalToSizedBufferVT(dAtA []byte) (int, error) 
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.ResetAfter) > 0 {
-		i -= len(m.ResetAfter)
-		copy(dAtA[i:], m.ResetAfter)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ResetAfter)))
+	if m.ResetAfter != nil {
+		i -= len(*m.ResetAfter)
+		copy(dAtA[i:], *m.ResetAfter)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ResetAfter)))
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.Duration) > 0 {
-		i -= len(m.Duration)
-		copy(dAtA[i:], m.Duration)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Duration)))
+	if m.Duration != nil {
+		i -= len(*m.Duration)
+		copy(dAtA[i:], *m.Duration)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Duration)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -2238,24 +2460,34 @@ func (m *NatsAccountInfo) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.UserCred) > 0 {
-		i -= len(m.UserCred)
-		copy(dAtA[i:], m.UserCred)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.UserCred)))
+	if m.JwtExpiresAt != nil {
+		size, err := (*timestamppb1.Timestamp)(m.JwtExpiresAt).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x3a
+	}
+	if m.UserCred != nil {
+		i -= len(*m.UserCred)
+		copy(dAtA[i:], *m.UserCred)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.UserCred)))
 		i--
 		dAtA[i] = 0x32
 	}
-	if len(m.UserKey) > 0 {
-		i -= len(m.UserKey)
-		copy(dAtA[i:], m.UserKey)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.UserKey)))
+	if m.UserKey != nil {
+		i -= len(*m.UserKey)
+		copy(dAtA[i:], *m.UserKey)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.UserKey)))
 		i--
 		dAtA[i] = 0x2a
 	}
-	if len(m.UserJwt) > 0 {
-		i -= len(m.UserJwt)
-		copy(dAtA[i:], m.UserJwt)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.UserJwt)))
+	if m.UserJwt != nil {
+		i -= len(*m.UserJwt)
+		copy(dAtA[i:], *m.UserJwt)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.UserJwt)))
 		i--
 		dAtA[i] = 0x22
 	}
@@ -2319,6 +2551,15 @@ func (m *NatsPermissions) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if len(m.Deny) > 0 {
+		for iNdEx := len(m.Deny) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Deny[iNdEx])
+			copy(dAtA[i:], m.Deny[iNdEx])
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Deny[iNdEx])))
+			i--
+			dAtA[i] = 0x22
+		}
+	}
 	if len(m.AllowResponses) > 0 {
 		for iNdEx := len(m.AllowResponses) - 1; iNdEx >= 0; iNdEx-- {
 			i -= len(m.AllowResponses[iNdEx])
@@ -2379,6 +2620,16 @@ func (m *NatsLimits) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if m.Leaf != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Leaf))
+		i--
+		dAtA[i] = 0x28
+	}
+	if m.Conn != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Conn))
+		i--
+		dAtA[i] = 0x20
+	}
 	if m.Subs != 0 {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Subs))
 		i--
@@ -2397,7 +2648,7 @@ func (m *NatsLimits) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *SelinuxUserInfo) MarshalVT() (dAtA []byte, err error) {
+func (m *UserLinkingOptions) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -2410,12 +2661,12 @@ func (m *SelinuxUserInfo) MarshalVT() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *SelinuxUserInfo) MarshalToVT(dAtA []byte) (int, error) {
+func (m *UserLinkingOptions) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *SelinuxUserInfo) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *UserLinkingOptions) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -2427,33 +2678,53 @@ func (m *SelinuxUserInfo) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Level) > 0 {
-		i -= len(m.Level)
-		copy(dAtA[i:], m.Level)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Level)))
+	if m.ExistingNatsAccount != nil {
+		i -= len(*m.ExistingNatsAccount)
+		copy(dAtA[i:], *m.ExistingNatsAccount)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ExistingNatsAccount)))
 		i--
-		dAtA[i] = 0x22
+		dAtA[i] = 0x42
 	}
-	if len(m.Type) > 0 {
-		i -= len(m.Type)
-		copy(dAtA[i:], m.Type)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Type)))
+	if m.ExistingRedfishAccountId != nil {
+		i -= len(*m.ExistingRedfishAccountId)
+		copy(dAtA[i:], *m.ExistingRedfishAccountId)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ExistingRedfishAccountId)))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x3a
 	}
-	if len(m.Role) > 0 {
-		i -= len(m.Role)
-		copy(dAtA[i:], m.Role)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Role)))
+	if m.ExistingLdapDn != nil {
+		i -= len(*m.ExistingLdapDn)
+		copy(dAtA[i:], *m.ExistingLdapDn)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ExistingLdapDn)))
 		i--
-		dAtA[i] = 0x12
+		dAtA[i] = 0x32
 	}
-	if len(m.User) > 0 {
-		i -= len(m.User)
-		copy(dAtA[i:], m.User)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.User)))
+	if m.ExistingUnixUsername != nil {
+		i -= len(*m.ExistingUnixUsername)
+		copy(dAtA[i:], *m.ExistingUnixUsername)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ExistingUnixUsername)))
 		i--
-		dAtA[i] = 0xa
+		dAtA[i] = 0x2a
+	}
+	if m.NatsAction != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.NatsAction))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.RedfishAction != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.RedfishAction))
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.LdapAction != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.LdapAction))
+		i--
+		dAtA[i] = 0x10
+	}
+	if m.UnixAction != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.UnixAction))
+		i--
+		dAtA[i] = 0x8
 	}
 	return len(dAtA) - i, nil
 }
@@ -2488,10 +2759,30 @@ func (m *CreateUserRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Password) > 0 {
-		i -= len(m.Password)
-		copy(dAtA[i:], m.Password)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Password)))
+	if m.DryRun != nil {
+		i--
+		if *m.DryRun {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.LinkingOptions != nil {
+		size, err := m.LinkingOptions.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if m.Password != nil {
+		i -= len(*m.Password)
+		copy(dAtA[i:], *m.Password)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Password)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -2538,6 +2829,24 @@ func (m *CreateUserResponse) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if len(m.CreatedAccounts) > 0 {
+		for iNdEx := len(m.CreatedAccounts) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.CreatedAccounts[iNdEx])
+			copy(dAtA[i:], m.CreatedAccounts[iNdEx])
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.CreatedAccounts[iNdEx])))
+			i--
+			dAtA[i] = 0x1a
+		}
+	}
+	if len(m.Warnings) > 0 {
+		for iNdEx := len(m.Warnings) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Warnings[iNdEx])
+			copy(dAtA[i:], m.Warnings[iNdEx])
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Warnings[iNdEx])))
+			i--
+			dAtA[i] = 0x12
+		}
+	}
 	if m.User != nil {
 		size, err := m.User.MarshalToSizedBufferVT(dAtA[:i])
 		if err != nil {
@@ -2581,16 +2890,70 @@ func (m *GetUserRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Id) > 0 {
-		i -= len(m.Id)
-		copy(dAtA[i:], m.Id)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Id)))
+	if vtmsg, ok := m.Identifier.(interface {
+		MarshalToSizedBufferVT([]byte) (int, error)
+	}); ok {
+		size, err := vtmsg.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+	}
+	if m.FieldMask != nil {
+		size, err := (*fieldmaskpb1.FieldMask)(m.FieldMask).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0xa
+		dAtA[i] = 0x22
 	}
 	return len(dAtA) - i, nil
 }
 
+func (m *GetUserRequest_Id) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *GetUserRequest_Id) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i -= len(m.Id)
+	copy(dAtA[i:], m.Id)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Id)))
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+func (m *GetUserRequest_Username) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *GetUserRequest_Username) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i -= len(m.Username)
+	copy(dAtA[i:], m.Username)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Username)))
+	i--
+	dAtA[i] = 0x12
+	return len(dAtA) - i, nil
+}
+func (m *GetUserRequest_Email) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *GetUserRequest_Email) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i -= len(m.Email)
+	copy(dAtA[i:], m.Email)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Email)))
+	i--
+	dAtA[i] = 0x1a
+	return len(dAtA) - i, nil
+}
 func (m *GetUserResponse) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
@@ -2664,6 +3027,26 @@ func (m *UpdateUserRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if m.LinkingOptions != nil {
+		size, err := m.LinkingOptions.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if m.FieldMask != nil {
+		size, err := (*fieldmaskpb1.FieldMask)(m.FieldMask).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x12
+	}
 	if m.User != nil {
 		size, err := m.User.MarshalToSizedBufferVT(dAtA[:i])
 		if err != nil {
@@ -2706,6 +3089,15 @@ func (m *UpdateUserResponse) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m.unknownFields != nil {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
+	}
+	if len(m.Warnings) > 0 {
+		for iNdEx := len(m.Warnings) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Warnings[iNdEx])
+			copy(dAtA[i:], m.Warnings[iNdEx])
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Warnings[iNdEx])))
+			i--
+			dAtA[i] = 0x12
+		}
 	}
 	if m.User != nil {
 		size, err := m.User.MarshalToSizedBufferVT(dAtA[:i])
@@ -2750,6 +3142,26 @@ func (m *DeleteUserRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if m.BackupData != nil {
+		i--
+		if *m.BackupData {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.CascadeDelete != nil {
+		i--
+		if *m.CascadeDelete {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x10
+	}
 	if len(m.Id) > 0 {
 		i -= len(m.Id)
 		copy(dAtA[i:], m.Id)
@@ -2789,6 +3201,22 @@ func (m *DeleteUserResponse) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m.unknownFields != nil {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
+	}
+	if m.BackupLocation != nil {
+		i -= len(*m.BackupLocation)
+		copy(dAtA[i:], *m.BackupLocation)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.BackupLocation)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.DeletedAccounts) > 0 {
+		for iNdEx := len(m.DeletedAccounts) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.DeletedAccounts[iNdEx])
+			copy(dAtA[i:], m.DeletedAccounts[iNdEx])
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.DeletedAccounts[iNdEx])))
+			i--
+			dAtA[i] = 0x12
+		}
 	}
 	if m.Success {
 		i--
@@ -2833,16 +3261,38 @@ func (m *ListUsersRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.UsernamePrefix) > 0 {
-		i -= len(m.UsernamePrefix)
-		copy(dAtA[i:], m.UsernamePrefix)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.UsernamePrefix)))
+	if m.PageToken != nil {
+		i -= len(*m.PageToken)
+		copy(dAtA[i:], *m.PageToken)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.PageToken)))
+		i--
+		dAtA[i] = 0x32
+	}
+	if m.PageSize != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.PageSize))
+		i--
+		dAtA[i] = 0x28
+	}
+	if m.FieldMask != nil {
+		size, err := (*fieldmaskpb1.FieldMask)(m.FieldMask).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x22
+	}
+	if m.UsernamePrefix != nil {
+		i -= len(*m.UsernamePrefix)
+		copy(dAtA[i:], *m.UsernamePrefix)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.UsernamePrefix)))
 		i--
 		dAtA[i] = 0x1a
 	}
-	if m.Enabled {
+	if m.Enabled != nil {
 		i--
-		if m.Enabled {
+		if *m.Enabled {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
@@ -2850,8 +3300,8 @@ func (m *ListUsersRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x10
 	}
-	if m.Source != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Source))
+	if m.Source != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Source))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -2887,6 +3337,13 @@ func (m *ListUsersResponse) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m.unknownFields != nil {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
+	}
+	if m.NextPageToken != nil {
+		i -= len(*m.NextPageToken)
+		copy(dAtA[i:], *m.NextPageToken)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.NextPageToken)))
+		i--
+		dAtA[i] = 0x12
 	}
 	if len(m.Users) > 0 {
 		for iNdEx := len(m.Users) - 1; iNdEx >= 0; iNdEx-- {
@@ -2987,6 +3444,13 @@ func (m *ChangePasswordResponse) MarshalToSizedBufferVT(dAtA []byte) (int, error
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if m.FailureReason != nil {
+		i -= len(*m.FailureReason)
+		copy(dAtA[i:], *m.FailureReason)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.FailureReason)))
+		i--
+		dAtA[i] = 0x12
+	}
 	if m.Success {
 		i--
 		if m.Success {
@@ -3030,9 +3494,19 @@ func (m *ResetPasswordRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) 
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if m.Force {
+	if m.GeneratePassword != nil {
 		i--
-		if m.Force {
+		if *m.GeneratePassword {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.Force != nil {
+		i--
+		if *m.Force {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
@@ -3040,10 +3514,10 @@ func (m *ResetPasswordRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) 
 		i--
 		dAtA[i] = 0x18
 	}
-	if len(m.NewPassword) > 0 {
-		i -= len(m.NewPassword)
-		copy(dAtA[i:], m.NewPassword)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.NewPassword)))
+	if m.NewPassword != nil {
+		i -= len(*m.NewPassword)
+		copy(dAtA[i:], *m.NewPassword)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.NewPassword)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -3086,6 +3560,13 @@ func (m *ResetPasswordResponse) MarshalToSizedBufferVT(dAtA []byte) (int, error)
 	if m.unknownFields != nil {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
+	}
+	if m.FailureReason != nil {
+		i -= len(*m.FailureReason)
+		copy(dAtA[i:], *m.FailureReason)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.FailureReason)))
+		i--
+		dAtA[i] = 0x1a
 	}
 	if m.Success {
 		i--
@@ -3137,6 +3618,20 @@ func (m *AuthenticateUserRequest) MarshalToSizedBufferVT(dAtA []byte) (int, erro
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if m.UserAgent != nil {
+		i -= len(*m.UserAgent)
+		copy(dAtA[i:], *m.UserAgent)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.UserAgent)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if m.SourceIp != nil {
+		i -= len(*m.SourceIp)
+		copy(dAtA[i:], *m.SourceIp)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.SourceIp)))
+		i--
+		dAtA[i] = 0x1a
+	}
 	if len(m.Password) > 0 {
 		i -= len(m.Password)
 		copy(dAtA[i:], m.Password)
@@ -3184,24 +3679,34 @@ func (m *AuthenticateUserResponse) MarshalToSizedBufferVT(dAtA []byte) (int, err
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.FailureReason) > 0 {
-		i -= len(m.FailureReason)
-		copy(dAtA[i:], m.FailureReason)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.FailureReason)))
+	if m.TokenExpiresAt != nil {
+		size, err := (*timestamppb1.Timestamp)(m.TokenExpiresAt).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if m.FailureReason != nil {
+		i -= len(*m.FailureReason)
+		copy(dAtA[i:], *m.FailureReason)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.FailureReason)))
 		i--
 		dAtA[i] = 0x22
 	}
-	if len(m.Token) > 0 {
-		i -= len(m.Token)
-		copy(dAtA[i:], m.Token)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Token)))
+	if m.Token != nil {
+		i -= len(*m.Token)
+		copy(dAtA[i:], *m.Token)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Token)))
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.UserId) > 0 {
-		i -= len(m.UserId)
-		copy(dAtA[i:], m.UserId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.UserId)))
+	if m.UserId != nil {
+		i -= len(*m.UserId)
+		copy(dAtA[i:], *m.UserId)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.UserId)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -3248,15 +3753,26 @@ func (m *User) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if m.SelinuxInfo != nil {
-		size, err := m.SelinuxInfo.MarshalToSizedBufferVTStrict(dAtA[:i])
-		if err != nil {
-			return 0, err
+	if len(m.CustomAttributes) > 0 {
+		for k := range m.CustomAttributes {
+			v := m.CustomAttributes[k]
+			baseI := i
+			i -= len(v)
+			copy(dAtA[i:], v)
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(v)))
+			i--
+			dAtA[i] = 0x12
+			i -= len(k)
+			copy(dAtA[i:], k)
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(k)))
+			i--
+			dAtA[i] = 0xa
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(baseI-i))
+			i--
+			dAtA[i] = 0x1
+			i--
+			dAtA[i] = 0x82
 		}
-		i -= size
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
-		i--
-		dAtA[i] = 0x7a
 	}
 	if m.NatsInfo != nil {
 		size, err := m.NatsInfo.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -3266,7 +3782,7 @@ func (m *User) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x72
+		dAtA[i] = 0x7a
 	}
 	if m.RedfishInfo != nil {
 		size, err := m.RedfishInfo.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -3276,7 +3792,7 @@ func (m *User) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x6a
+		dAtA[i] = 0x72
 	}
 	if m.LdapInfo != nil {
 		size, err := m.LdapInfo.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -3286,7 +3802,7 @@ func (m *User) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x62
+		dAtA[i] = 0x6a
 	}
 	if m.UnixInfo != nil {
 		size, err := m.UnixInfo.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -3296,7 +3812,7 @@ func (m *User) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x5a
+		dAtA[i] = 0x62
 	}
 	if m.AuthData != nil {
 		size, err := m.AuthData.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -3306,27 +3822,47 @@ func (m *User) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x52
+		dAtA[i] = 0x5a
+	}
+	if m.CreationInterface != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.CreationInterface))
+		i--
+		dAtA[i] = 0x50
 	}
 	if m.SourceSystem != 0 {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.SourceSystem))
 		i--
 		dAtA[i] = 0x48
 	}
-	if m.LastLogin != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.LastLogin))
+	if m.LastLogin != nil {
+		size, err := (*timestamppb1.Timestamp)(m.LastLogin).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x40
+		dAtA[i] = 0x42
 	}
-	if m.UpdatedAt != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.UpdatedAt))
+	if m.UpdatedAt != nil {
+		size, err := (*timestamppb1.Timestamp)(m.UpdatedAt).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x38
+		dAtA[i] = 0x3a
 	}
-	if m.CreatedAt != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.CreatedAt))
+	if m.CreatedAt != nil {
+		size, err := (*timestamppb1.Timestamp)(m.CreatedAt).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x30
+		dAtA[i] = 0x32
 	}
 	if m.Enabled {
 		i--
@@ -3338,17 +3874,17 @@ func (m *User) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x28
 	}
-	if len(m.Email) > 0 {
-		i -= len(m.Email)
-		copy(dAtA[i:], m.Email)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Email)))
+	if m.Email != nil {
+		i -= len(*m.Email)
+		copy(dAtA[i:], *m.Email)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Email)))
 		i--
 		dAtA[i] = 0x22
 	}
-	if len(m.FullName) > 0 {
-		i -= len(m.FullName)
-		copy(dAtA[i:], m.FullName)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.FullName)))
+	if m.FullName != nil {
+		i -= len(*m.FullName)
+		copy(dAtA[i:], *m.FullName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.FullName)))
 		i--
 		dAtA[i] = 0x1a
 	}
@@ -3409,15 +3945,25 @@ func (m *AuthenticationData) MarshalToSizedBufferVTStrict(dAtA []byte) (int, err
 		i--
 		dAtA[i] = 0x3a
 	}
-	if m.PasswordExpiresAt != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.PasswordExpiresAt))
+	if m.PasswordExpiresAt != nil {
+		size, err := (*timestamppb1.Timestamp)(m.PasswordExpiresAt).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x30
+		dAtA[i] = 0x32
 	}
-	if m.PasswordLastChanged != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.PasswordLastChanged))
+	if m.PasswordLastChanged != nil {
+		size, err := (*timestamppb1.Timestamp)(m.PasswordLastChanged).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x28
+		dAtA[i] = 0x2a
 	}
 	if m.Iterations != 0 {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Iterations))
@@ -3429,10 +3975,10 @@ func (m *AuthenticationData) MarshalToSizedBufferVTStrict(dAtA []byte) (int, err
 		i--
 		dAtA[i] = 0x18
 	}
-	if len(m.PasswordSalt) > 0 {
-		i -= len(m.PasswordSalt)
-		copy(dAtA[i:], m.PasswordSalt)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.PasswordSalt)))
+	if m.PasswordSalt != nil {
+		i -= len(*m.PasswordSalt)
+		copy(dAtA[i:], *m.PasswordSalt)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.PasswordSalt)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -3476,23 +4022,38 @@ func (m *AccountLockoutInfo) MarshalToSizedBufferVTStrict(dAtA []byte) (int, err
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if m.AttemptsResetTime != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.AttemptsResetTime))
+	if m.MaxFailedAttempts != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.MaxFailedAttempts))
 		i--
-		dAtA[i] = 0x28
+		dAtA[i] = 0x30
+	}
+	if m.AttemptsResetTime != nil {
+		size, err := (*timestamppb1.Timestamp)(m.AttemptsResetTime).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x2a
 	}
 	if m.FailedAttempts != 0 {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.FailedAttempts))
 		i--
 		dAtA[i] = 0x20
 	}
-	if m.LockoutTime != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.LockoutTime))
+	if m.LockoutTime != nil {
+		size, err := (*timestamppb1.Timestamp)(m.LockoutTime).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x18
+		dAtA[i] = 0x1a
 	}
-	if m.Reason != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Reason))
+	if m.Reason != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Reason))
 		i--
 		dAtA[i] = 0x10
 	}
@@ -3539,17 +4100,38 @@ func (m *UnixUserInfo) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Gecos) > 0 {
-		i -= len(m.Gecos)
-		copy(dAtA[i:], m.Gecos)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Gecos)))
+	if len(m.SupplementaryGroups) > 0 {
+		var pksize2 int
+		for _, num := range m.SupplementaryGroups {
+			pksize2 += protohelpers.SizeOfVarint(uint64(num))
+		}
+		i -= pksize2
+		j1 := i
+		for _, num1 := range m.SupplementaryGroups {
+			num := uint64(num1)
+			for num >= 1<<7 {
+				dAtA[j1] = uint8(uint64(num)&0x7f | 0x80)
+				num >>= 7
+				j1++
+			}
+			dAtA[j1] = uint8(num)
+			j1++
+		}
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(pksize2))
+		i--
+		dAtA[i] = 0x32
+	}
+	if m.Gecos != nil {
+		i -= len(*m.Gecos)
+		copy(dAtA[i:], *m.Gecos)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Gecos)))
 		i--
 		dAtA[i] = 0x2a
 	}
-	if len(m.Shell) > 0 {
-		i -= len(m.Shell)
-		copy(dAtA[i:], m.Shell)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Shell)))
+	if m.Shell != nil {
+		i -= len(*m.Shell)
+		copy(dAtA[i:], *m.Shell)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Shell)))
 		i--
 		dAtA[i] = 0x22
 	}
@@ -3603,15 +4185,39 @@ func (m *LdapUserInfo) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if m.PwdLastSet != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.PwdLastSet))
+	if m.OrganizationalUnit != nil {
+		i -= len(*m.OrganizationalUnit)
+		copy(dAtA[i:], *m.OrganizationalUnit)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.OrganizationalUnit)))
 		i--
-		dAtA[i] = 0x38
+		dAtA[i] = 0x4a
 	}
-	if m.AccountExpires != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.AccountExpires))
+	if m.Domain != nil {
+		i -= len(*m.Domain)
+		copy(dAtA[i:], *m.Domain)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Domain)))
 		i--
-		dAtA[i] = 0x30
+		dAtA[i] = 0x42
+	}
+	if m.PwdLastSet != nil {
+		size, err := (*timestamppb1.Timestamp)(m.PwdLastSet).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x3a
+	}
+	if m.AccountExpires != nil {
+		size, err := (*timestamppb1.Timestamp)(m.AccountExpires).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x32
 	}
 	if len(m.MemberOf) > 0 {
 		for iNdEx := len(m.MemberOf) - 1; iNdEx >= 0; iNdEx-- {
@@ -3622,24 +4228,24 @@ func (m *LdapUserInfo) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 			dAtA[i] = 0x2a
 		}
 	}
-	if len(m.UserPrincipalName) > 0 {
-		i -= len(m.UserPrincipalName)
-		copy(dAtA[i:], m.UserPrincipalName)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.UserPrincipalName)))
+	if m.UserPrincipalName != nil {
+		i -= len(*m.UserPrincipalName)
+		copy(dAtA[i:], *m.UserPrincipalName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.UserPrincipalName)))
 		i--
 		dAtA[i] = 0x22
 	}
-	if len(m.SamAccountName) > 0 {
-		i -= len(m.SamAccountName)
-		copy(dAtA[i:], m.SamAccountName)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.SamAccountName)))
+	if m.SamAccountName != nil {
+		i -= len(*m.SamAccountName)
+		copy(dAtA[i:], *m.SamAccountName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.SamAccountName)))
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.ObjectGuid) > 0 {
-		i -= len(m.ObjectGuid)
-		copy(dAtA[i:], m.ObjectGuid)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ObjectGuid)))
+	if m.ObjectGuid != nil {
+		i -= len(*m.ObjectGuid)
+		copy(dAtA[i:], *m.ObjectGuid)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ObjectGuid)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -3683,6 +4289,25 @@ func (m *RedfishAccountInfo) MarshalToSizedBufferVTStrict(dAtA []byte) (int, err
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if m.PasswordChangeRequired != nil {
+		i--
+		if *m.PasswordChangeRequired {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x28
+	}
+	if len(m.OemAccountTypes) > 0 {
+		for iNdEx := len(m.OemAccountTypes) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.OemAccountTypes[iNdEx])
+			copy(dAtA[i:], m.OemAccountTypes[iNdEx])
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.OemAccountTypes[iNdEx])))
+			i--
+			dAtA[i] = 0x22
+		}
+	}
 	if m.LockoutPolicy != nil {
 		size, err := m.LockoutPolicy.MarshalToSizedBufferVTStrict(dAtA[:i])
 		if err != nil {
@@ -3700,10 +4325,10 @@ func (m *RedfishAccountInfo) MarshalToSizedBufferVTStrict(dAtA []byte) (int, err
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.AccountId) > 0 {
-		i -= len(m.AccountId)
-		copy(dAtA[i:], m.AccountId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.AccountId)))
+	if m.AccountId != nil {
+		i -= len(*m.AccountId)
+		copy(dAtA[i:], *m.AccountId)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.AccountId)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -3740,17 +4365,17 @@ func (m *RedfishLockoutPolicy) MarshalToSizedBufferVTStrict(dAtA []byte) (int, e
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.ResetAfter) > 0 {
-		i -= len(m.ResetAfter)
-		copy(dAtA[i:], m.ResetAfter)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ResetAfter)))
+	if m.ResetAfter != nil {
+		i -= len(*m.ResetAfter)
+		copy(dAtA[i:], *m.ResetAfter)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ResetAfter)))
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.Duration) > 0 {
-		i -= len(m.Duration)
-		copy(dAtA[i:], m.Duration)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Duration)))
+	if m.Duration != nil {
+		i -= len(*m.Duration)
+		copy(dAtA[i:], *m.Duration)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Duration)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -3792,24 +4417,34 @@ func (m *NatsAccountInfo) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error)
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.UserCred) > 0 {
-		i -= len(m.UserCred)
-		copy(dAtA[i:], m.UserCred)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.UserCred)))
+	if m.JwtExpiresAt != nil {
+		size, err := (*timestamppb1.Timestamp)(m.JwtExpiresAt).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x3a
+	}
+	if m.UserCred != nil {
+		i -= len(*m.UserCred)
+		copy(dAtA[i:], *m.UserCred)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.UserCred)))
 		i--
 		dAtA[i] = 0x32
 	}
-	if len(m.UserKey) > 0 {
-		i -= len(m.UserKey)
-		copy(dAtA[i:], m.UserKey)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.UserKey)))
+	if m.UserKey != nil {
+		i -= len(*m.UserKey)
+		copy(dAtA[i:], *m.UserKey)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.UserKey)))
 		i--
 		dAtA[i] = 0x2a
 	}
-	if len(m.UserJwt) > 0 {
-		i -= len(m.UserJwt)
-		copy(dAtA[i:], m.UserJwt)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.UserJwt)))
+	if m.UserJwt != nil {
+		i -= len(*m.UserJwt)
+		copy(dAtA[i:], *m.UserJwt)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.UserJwt)))
 		i--
 		dAtA[i] = 0x22
 	}
@@ -3873,6 +4508,15 @@ func (m *NatsPermissions) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error)
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if len(m.Deny) > 0 {
+		for iNdEx := len(m.Deny) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Deny[iNdEx])
+			copy(dAtA[i:], m.Deny[iNdEx])
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Deny[iNdEx])))
+			i--
+			dAtA[i] = 0x22
+		}
+	}
 	if len(m.AllowResponses) > 0 {
 		for iNdEx := len(m.AllowResponses) - 1; iNdEx >= 0; iNdEx-- {
 			i -= len(m.AllowResponses[iNdEx])
@@ -3933,6 +4577,16 @@ func (m *NatsLimits) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if m.Leaf != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Leaf))
+		i--
+		dAtA[i] = 0x28
+	}
+	if m.Conn != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Conn))
+		i--
+		dAtA[i] = 0x20
+	}
 	if m.Subs != 0 {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Subs))
 		i--
@@ -3951,7 +4605,7 @@ func (m *NatsLimits) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *SelinuxUserInfo) MarshalVTStrict() (dAtA []byte, err error) {
+func (m *UserLinkingOptions) MarshalVTStrict() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -3964,12 +4618,12 @@ func (m *SelinuxUserInfo) MarshalVTStrict() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *SelinuxUserInfo) MarshalToVTStrict(dAtA []byte) (int, error) {
+func (m *UserLinkingOptions) MarshalToVTStrict(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
 }
 
-func (m *SelinuxUserInfo) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+func (m *UserLinkingOptions) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -3981,33 +4635,53 @@ func (m *SelinuxUserInfo) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error)
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Level) > 0 {
-		i -= len(m.Level)
-		copy(dAtA[i:], m.Level)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Level)))
+	if m.ExistingNatsAccount != nil {
+		i -= len(*m.ExistingNatsAccount)
+		copy(dAtA[i:], *m.ExistingNatsAccount)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ExistingNatsAccount)))
 		i--
-		dAtA[i] = 0x22
+		dAtA[i] = 0x42
 	}
-	if len(m.Type) > 0 {
-		i -= len(m.Type)
-		copy(dAtA[i:], m.Type)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Type)))
+	if m.ExistingRedfishAccountId != nil {
+		i -= len(*m.ExistingRedfishAccountId)
+		copy(dAtA[i:], *m.ExistingRedfishAccountId)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ExistingRedfishAccountId)))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x3a
 	}
-	if len(m.Role) > 0 {
-		i -= len(m.Role)
-		copy(dAtA[i:], m.Role)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Role)))
+	if m.ExistingLdapDn != nil {
+		i -= len(*m.ExistingLdapDn)
+		copy(dAtA[i:], *m.ExistingLdapDn)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ExistingLdapDn)))
 		i--
-		dAtA[i] = 0x12
+		dAtA[i] = 0x32
 	}
-	if len(m.User) > 0 {
-		i -= len(m.User)
-		copy(dAtA[i:], m.User)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.User)))
+	if m.ExistingUnixUsername != nil {
+		i -= len(*m.ExistingUnixUsername)
+		copy(dAtA[i:], *m.ExistingUnixUsername)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ExistingUnixUsername)))
 		i--
-		dAtA[i] = 0xa
+		dAtA[i] = 0x2a
+	}
+	if m.NatsAction != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.NatsAction))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.RedfishAction != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.RedfishAction))
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.LdapAction != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.LdapAction))
+		i--
+		dAtA[i] = 0x10
+	}
+	if m.UnixAction != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.UnixAction))
+		i--
+		dAtA[i] = 0x8
 	}
 	return len(dAtA) - i, nil
 }
@@ -4042,10 +4716,30 @@ func (m *CreateUserRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, erro
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Password) > 0 {
-		i -= len(m.Password)
-		copy(dAtA[i:], m.Password)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Password)))
+	if m.DryRun != nil {
+		i--
+		if *m.DryRun {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.LinkingOptions != nil {
+		size, err := m.LinkingOptions.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if m.Password != nil {
+		i -= len(*m.Password)
+		copy(dAtA[i:], *m.Password)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Password)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -4092,6 +4786,24 @@ func (m *CreateUserResponse) MarshalToSizedBufferVTStrict(dAtA []byte) (int, err
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if len(m.CreatedAccounts) > 0 {
+		for iNdEx := len(m.CreatedAccounts) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.CreatedAccounts[iNdEx])
+			copy(dAtA[i:], m.CreatedAccounts[iNdEx])
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.CreatedAccounts[iNdEx])))
+			i--
+			dAtA[i] = 0x1a
+		}
+	}
+	if len(m.Warnings) > 0 {
+		for iNdEx := len(m.Warnings) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Warnings[iNdEx])
+			copy(dAtA[i:], m.Warnings[iNdEx])
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Warnings[iNdEx])))
+			i--
+			dAtA[i] = 0x12
+		}
+	}
 	if m.User != nil {
 		size, err := m.User.MarshalToSizedBufferVTStrict(dAtA[:i])
 		if err != nil {
@@ -4135,16 +4847,82 @@ func (m *GetUserRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) 
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Id) > 0 {
-		i -= len(m.Id)
-		copy(dAtA[i:], m.Id)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Id)))
+	if m.FieldMask != nil {
+		size, err := (*fieldmaskpb1.FieldMask)(m.FieldMask).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0xa
+		dAtA[i] = 0x22
+	}
+	if msg, ok := m.Identifier.(*GetUserRequest_Email); ok {
+		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+	}
+	if msg, ok := m.Identifier.(*GetUserRequest_Username); ok {
+		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+	}
+	if msg, ok := m.Identifier.(*GetUserRequest_Id); ok {
+		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
 	}
 	return len(dAtA) - i, nil
 }
 
+func (m *GetUserRequest_Id) MarshalToVTStrict(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
+}
+
+func (m *GetUserRequest_Id) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i -= len(m.Id)
+	copy(dAtA[i:], m.Id)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Id)))
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+func (m *GetUserRequest_Username) MarshalToVTStrict(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
+}
+
+func (m *GetUserRequest_Username) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i -= len(m.Username)
+	copy(dAtA[i:], m.Username)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Username)))
+	i--
+	dAtA[i] = 0x12
+	return len(dAtA) - i, nil
+}
+func (m *GetUserRequest_Email) MarshalToVTStrict(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
+}
+
+func (m *GetUserRequest_Email) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i -= len(m.Email)
+	copy(dAtA[i:], m.Email)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Email)))
+	i--
+	dAtA[i] = 0x1a
+	return len(dAtA) - i, nil
+}
 func (m *GetUserResponse) MarshalVTStrict() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
@@ -4218,6 +4996,26 @@ func (m *UpdateUserRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, erro
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if m.LinkingOptions != nil {
+		size, err := m.LinkingOptions.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if m.FieldMask != nil {
+		size, err := (*fieldmaskpb1.FieldMask)(m.FieldMask).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x12
+	}
 	if m.User != nil {
 		size, err := m.User.MarshalToSizedBufferVTStrict(dAtA[:i])
 		if err != nil {
@@ -4260,6 +5058,15 @@ func (m *UpdateUserResponse) MarshalToSizedBufferVTStrict(dAtA []byte) (int, err
 	if m.unknownFields != nil {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
+	}
+	if len(m.Warnings) > 0 {
+		for iNdEx := len(m.Warnings) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Warnings[iNdEx])
+			copy(dAtA[i:], m.Warnings[iNdEx])
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Warnings[iNdEx])))
+			i--
+			dAtA[i] = 0x12
+		}
 	}
 	if m.User != nil {
 		size, err := m.User.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -4304,6 +5111,26 @@ func (m *DeleteUserRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, erro
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if m.BackupData != nil {
+		i--
+		if *m.BackupData {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.CascadeDelete != nil {
+		i--
+		if *m.CascadeDelete {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x10
+	}
 	if len(m.Id) > 0 {
 		i -= len(m.Id)
 		copy(dAtA[i:], m.Id)
@@ -4343,6 +5170,22 @@ func (m *DeleteUserResponse) MarshalToSizedBufferVTStrict(dAtA []byte) (int, err
 	if m.unknownFields != nil {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
+	}
+	if m.BackupLocation != nil {
+		i -= len(*m.BackupLocation)
+		copy(dAtA[i:], *m.BackupLocation)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.BackupLocation)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.DeletedAccounts) > 0 {
+		for iNdEx := len(m.DeletedAccounts) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.DeletedAccounts[iNdEx])
+			copy(dAtA[i:], m.DeletedAccounts[iNdEx])
+			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.DeletedAccounts[iNdEx])))
+			i--
+			dAtA[i] = 0x12
+		}
 	}
 	if m.Success {
 		i--
@@ -4387,16 +5230,38 @@ func (m *ListUsersRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.UsernamePrefix) > 0 {
-		i -= len(m.UsernamePrefix)
-		copy(dAtA[i:], m.UsernamePrefix)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.UsernamePrefix)))
+	if m.PageToken != nil {
+		i -= len(*m.PageToken)
+		copy(dAtA[i:], *m.PageToken)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.PageToken)))
+		i--
+		dAtA[i] = 0x32
+	}
+	if m.PageSize != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.PageSize))
+		i--
+		dAtA[i] = 0x28
+	}
+	if m.FieldMask != nil {
+		size, err := (*fieldmaskpb1.FieldMask)(m.FieldMask).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x22
+	}
+	if m.UsernamePrefix != nil {
+		i -= len(*m.UsernamePrefix)
+		copy(dAtA[i:], *m.UsernamePrefix)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.UsernamePrefix)))
 		i--
 		dAtA[i] = 0x1a
 	}
-	if m.Enabled {
+	if m.Enabled != nil {
 		i--
-		if m.Enabled {
+		if *m.Enabled {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
@@ -4404,8 +5269,8 @@ func (m *ListUsersRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error
 		i--
 		dAtA[i] = 0x10
 	}
-	if m.Source != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Source))
+	if m.Source != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Source))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -4441,6 +5306,13 @@ func (m *ListUsersResponse) MarshalToSizedBufferVTStrict(dAtA []byte) (int, erro
 	if m.unknownFields != nil {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
+	}
+	if m.NextPageToken != nil {
+		i -= len(*m.NextPageToken)
+		copy(dAtA[i:], *m.NextPageToken)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.NextPageToken)))
+		i--
+		dAtA[i] = 0x12
 	}
 	if len(m.Users) > 0 {
 		for iNdEx := len(m.Users) - 1; iNdEx >= 0; iNdEx-- {
@@ -4541,6 +5413,13 @@ func (m *ChangePasswordResponse) MarshalToSizedBufferVTStrict(dAtA []byte) (int,
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if m.FailureReason != nil {
+		i -= len(*m.FailureReason)
+		copy(dAtA[i:], *m.FailureReason)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.FailureReason)))
+		i--
+		dAtA[i] = 0x12
+	}
 	if m.Success {
 		i--
 		if m.Success {
@@ -4584,9 +5463,19 @@ func (m *ResetPasswordRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, e
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if m.Force {
+	if m.GeneratePassword != nil {
 		i--
-		if m.Force {
+		if *m.GeneratePassword {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.Force != nil {
+		i--
+		if *m.Force {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
@@ -4594,10 +5483,10 @@ func (m *ResetPasswordRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, e
 		i--
 		dAtA[i] = 0x18
 	}
-	if len(m.NewPassword) > 0 {
-		i -= len(m.NewPassword)
-		copy(dAtA[i:], m.NewPassword)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.NewPassword)))
+	if m.NewPassword != nil {
+		i -= len(*m.NewPassword)
+		copy(dAtA[i:], *m.NewPassword)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.NewPassword)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -4640,6 +5529,13 @@ func (m *ResetPasswordResponse) MarshalToSizedBufferVTStrict(dAtA []byte) (int, 
 	if m.unknownFields != nil {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
+	}
+	if m.FailureReason != nil {
+		i -= len(*m.FailureReason)
+		copy(dAtA[i:], *m.FailureReason)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.FailureReason)))
+		i--
+		dAtA[i] = 0x1a
 	}
 	if m.Success {
 		i--
@@ -4691,6 +5587,20 @@ func (m *AuthenticateUserRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if m.UserAgent != nil {
+		i -= len(*m.UserAgent)
+		copy(dAtA[i:], *m.UserAgent)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.UserAgent)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if m.SourceIp != nil {
+		i -= len(*m.SourceIp)
+		copy(dAtA[i:], *m.SourceIp)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.SourceIp)))
+		i--
+		dAtA[i] = 0x1a
+	}
 	if len(m.Password) > 0 {
 		i -= len(m.Password)
 		copy(dAtA[i:], m.Password)
@@ -4738,24 +5648,34 @@ func (m *AuthenticateUserResponse) MarshalToSizedBufferVTStrict(dAtA []byte) (in
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.FailureReason) > 0 {
-		i -= len(m.FailureReason)
-		copy(dAtA[i:], m.FailureReason)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.FailureReason)))
+	if m.TokenExpiresAt != nil {
+		size, err := (*timestamppb1.Timestamp)(m.TokenExpiresAt).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if m.FailureReason != nil {
+		i -= len(*m.FailureReason)
+		copy(dAtA[i:], *m.FailureReason)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.FailureReason)))
 		i--
 		dAtA[i] = 0x22
 	}
-	if len(m.Token) > 0 {
-		i -= len(m.Token)
-		copy(dAtA[i:], m.Token)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Token)))
+	if m.Token != nil {
+		i -= len(*m.Token)
+		copy(dAtA[i:], *m.Token)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Token)))
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.UserId) > 0 {
-		i -= len(m.UserId)
-		copy(dAtA[i:], m.UserId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.UserId)))
+	if m.UserId != nil {
+		i -= len(*m.UserId)
+		copy(dAtA[i:], *m.UserId)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.UserId)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -4786,28 +5706,34 @@ func (m *User) SizeVT() (n int) {
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.FullName)
-	if l > 0 {
+	if m.FullName != nil {
+		l = len(*m.FullName)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.Email)
-	if l > 0 {
+	if m.Email != nil {
+		l = len(*m.Email)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	if m.Enabled {
 		n += 2
 	}
-	if m.CreatedAt != 0 {
-		n += 1 + protohelpers.SizeOfVarint(uint64(m.CreatedAt))
+	if m.CreatedAt != nil {
+		l = (*timestamppb1.Timestamp)(m.CreatedAt).SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	if m.UpdatedAt != 0 {
-		n += 1 + protohelpers.SizeOfVarint(uint64(m.UpdatedAt))
+	if m.UpdatedAt != nil {
+		l = (*timestamppb1.Timestamp)(m.UpdatedAt).SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	if m.LastLogin != 0 {
-		n += 1 + protohelpers.SizeOfVarint(uint64(m.LastLogin))
+	if m.LastLogin != nil {
+		l = (*timestamppb1.Timestamp)(m.LastLogin).SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	if m.SourceSystem != 0 {
 		n += 1 + protohelpers.SizeOfVarint(uint64(m.SourceSystem))
+	}
+	if m.CreationInterface != 0 {
+		n += 1 + protohelpers.SizeOfVarint(uint64(m.CreationInterface))
 	}
 	if m.AuthData != nil {
 		l = m.AuthData.SizeVT()
@@ -4829,9 +5755,13 @@ func (m *User) SizeVT() (n int) {
 		l = m.NatsInfo.SizeVT()
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	if m.SelinuxInfo != nil {
-		l = m.SelinuxInfo.SizeVT()
-		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	if len(m.CustomAttributes) > 0 {
+		for k, v := range m.CustomAttributes {
+			_ = k
+			_ = v
+			mapEntrySize := 1 + len(k) + protohelpers.SizeOfVarint(uint64(len(k))) + 1 + len(v) + protohelpers.SizeOfVarint(uint64(len(v)))
+			n += mapEntrySize + 2 + protohelpers.SizeOfVarint(uint64(mapEntrySize))
+		}
 	}
 	n += len(m.unknownFields)
 	return n
@@ -4847,8 +5777,8 @@ func (m *AuthenticationData) SizeVT() (n int) {
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.PasswordSalt)
-	if l > 0 {
+	if m.PasswordSalt != nil {
+		l = len(*m.PasswordSalt)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	if m.HashAlgorithm != 0 {
@@ -4857,11 +5787,13 @@ func (m *AuthenticationData) SizeVT() (n int) {
 	if m.Iterations != 0 {
 		n += 1 + protohelpers.SizeOfVarint(uint64(m.Iterations))
 	}
-	if m.PasswordLastChanged != 0 {
-		n += 1 + protohelpers.SizeOfVarint(uint64(m.PasswordLastChanged))
+	if m.PasswordLastChanged != nil {
+		l = (*timestamppb1.Timestamp)(m.PasswordLastChanged).SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	if m.PasswordExpiresAt != 0 {
-		n += 1 + protohelpers.SizeOfVarint(uint64(m.PasswordExpiresAt))
+	if m.PasswordExpiresAt != nil {
+		l = (*timestamppb1.Timestamp)(m.PasswordExpiresAt).SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	if m.LockoutInfo != nil {
 		l = m.LockoutInfo.SizeVT()
@@ -4880,17 +5812,22 @@ func (m *AccountLockoutInfo) SizeVT() (n int) {
 	if m.Locked {
 		n += 2
 	}
-	if m.Reason != 0 {
-		n += 1 + protohelpers.SizeOfVarint(uint64(m.Reason))
+	if m.Reason != nil {
+		n += 1 + protohelpers.SizeOfVarint(uint64(*m.Reason))
 	}
-	if m.LockoutTime != 0 {
-		n += 1 + protohelpers.SizeOfVarint(uint64(m.LockoutTime))
+	if m.LockoutTime != nil {
+		l = (*timestamppb1.Timestamp)(m.LockoutTime).SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	if m.FailedAttempts != 0 {
 		n += 1 + protohelpers.SizeOfVarint(uint64(m.FailedAttempts))
 	}
-	if m.AttemptsResetTime != 0 {
-		n += 1 + protohelpers.SizeOfVarint(uint64(m.AttemptsResetTime))
+	if m.AttemptsResetTime != nil {
+		l = (*timestamppb1.Timestamp)(m.AttemptsResetTime).SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if m.MaxFailedAttempts != nil {
+		n += 1 + protohelpers.SizeOfVarint(uint64(*m.MaxFailedAttempts))
 	}
 	n += len(m.unknownFields)
 	return n
@@ -4912,13 +5849,20 @@ func (m *UnixUserInfo) SizeVT() (n int) {
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.Shell)
-	if l > 0 {
+	if m.Shell != nil {
+		l = len(*m.Shell)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.Gecos)
-	if l > 0 {
+	if m.Gecos != nil {
+		l = len(*m.Gecos)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if len(m.SupplementaryGroups) > 0 {
+		l = 0
+		for _, e := range m.SupplementaryGroups {
+			l += protohelpers.SizeOfVarint(uint64(e))
+		}
+		n += 1 + protohelpers.SizeOfVarint(uint64(l)) + l
 	}
 	n += len(m.unknownFields)
 	return n
@@ -4934,16 +5878,16 @@ func (m *LdapUserInfo) SizeVT() (n int) {
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.ObjectGuid)
-	if l > 0 {
+	if m.ObjectGuid != nil {
+		l = len(*m.ObjectGuid)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.SamAccountName)
-	if l > 0 {
+	if m.SamAccountName != nil {
+		l = len(*m.SamAccountName)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.UserPrincipalName)
-	if l > 0 {
+	if m.UserPrincipalName != nil {
+		l = len(*m.UserPrincipalName)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	if len(m.MemberOf) > 0 {
@@ -4952,11 +5896,21 @@ func (m *LdapUserInfo) SizeVT() (n int) {
 			n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 		}
 	}
-	if m.AccountExpires != 0 {
-		n += 1 + protohelpers.SizeOfVarint(uint64(m.AccountExpires))
+	if m.AccountExpires != nil {
+		l = (*timestamppb1.Timestamp)(m.AccountExpires).SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	if m.PwdLastSet != 0 {
-		n += 1 + protohelpers.SizeOfVarint(uint64(m.PwdLastSet))
+	if m.PwdLastSet != nil {
+		l = (*timestamppb1.Timestamp)(m.PwdLastSet).SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if m.Domain != nil {
+		l = len(*m.Domain)
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if m.OrganizationalUnit != nil {
+		l = len(*m.OrganizationalUnit)
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	n += len(m.unknownFields)
 	return n
@@ -4968,8 +5922,8 @@ func (m *RedfishAccountInfo) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.AccountId)
-	if l > 0 {
+	if m.AccountId != nil {
+		l = len(*m.AccountId)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	l = len(m.RoleId)
@@ -4979,6 +5933,15 @@ func (m *RedfishAccountInfo) SizeVT() (n int) {
 	if m.LockoutPolicy != nil {
 		l = m.LockoutPolicy.SizeVT()
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if len(m.OemAccountTypes) > 0 {
+		for _, s := range m.OemAccountTypes {
+			l = len(s)
+			n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+		}
+	}
+	if m.PasswordChangeRequired != nil {
+		n += 2
 	}
 	n += len(m.unknownFields)
 	return n
@@ -4993,12 +5956,12 @@ func (m *RedfishLockoutPolicy) SizeVT() (n int) {
 	if m.Threshold != 0 {
 		n += 1 + protohelpers.SizeOfVarint(uint64(m.Threshold))
 	}
-	l = len(m.Duration)
-	if l > 0 {
+	if m.Duration != nil {
+		l = len(*m.Duration)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.ResetAfter)
-	if l > 0 {
+	if m.ResetAfter != nil {
+		l = len(*m.ResetAfter)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	n += len(m.unknownFields)
@@ -5023,16 +5986,20 @@ func (m *NatsAccountInfo) SizeVT() (n int) {
 		l = m.Limits.SizeVT()
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.UserJwt)
-	if l > 0 {
+	if m.UserJwt != nil {
+		l = len(*m.UserJwt)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.UserKey)
-	if l > 0 {
+	if m.UserKey != nil {
+		l = len(*m.UserKey)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.UserCred)
-	if l > 0 {
+	if m.UserCred != nil {
+		l = len(*m.UserCred)
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if m.JwtExpiresAt != nil {
+		l = (*timestamppb1.Timestamp)(m.JwtExpiresAt).SizeVT()
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	n += len(m.unknownFields)
@@ -5063,6 +6030,12 @@ func (m *NatsPermissions) SizeVT() (n int) {
 			n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 		}
 	}
+	if len(m.Deny) > 0 {
+		for _, s := range m.Deny {
+			l = len(s)
+			n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+		}
+	}
 	n += len(m.unknownFields)
 	return n
 }
@@ -5082,30 +6055,48 @@ func (m *NatsLimits) SizeVT() (n int) {
 	if m.Subs != 0 {
 		n += 1 + protohelpers.SizeOfVarint(uint64(m.Subs))
 	}
+	if m.Conn != nil {
+		n += 1 + protohelpers.SizeOfVarint(uint64(*m.Conn))
+	}
+	if m.Leaf != nil {
+		n += 1 + protohelpers.SizeOfVarint(uint64(*m.Leaf))
+	}
 	n += len(m.unknownFields)
 	return n
 }
 
-func (m *SelinuxUserInfo) SizeVT() (n int) {
+func (m *UserLinkingOptions) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.User)
-	if l > 0 {
+	if m.UnixAction != 0 {
+		n += 1 + protohelpers.SizeOfVarint(uint64(m.UnixAction))
+	}
+	if m.LdapAction != 0 {
+		n += 1 + protohelpers.SizeOfVarint(uint64(m.LdapAction))
+	}
+	if m.RedfishAction != 0 {
+		n += 1 + protohelpers.SizeOfVarint(uint64(m.RedfishAction))
+	}
+	if m.NatsAction != 0 {
+		n += 1 + protohelpers.SizeOfVarint(uint64(m.NatsAction))
+	}
+	if m.ExistingUnixUsername != nil {
+		l = len(*m.ExistingUnixUsername)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.Role)
-	if l > 0 {
+	if m.ExistingLdapDn != nil {
+		l = len(*m.ExistingLdapDn)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.Type)
-	if l > 0 {
+	if m.ExistingRedfishAccountId != nil {
+		l = len(*m.ExistingRedfishAccountId)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.Level)
-	if l > 0 {
+	if m.ExistingNatsAccount != nil {
+		l = len(*m.ExistingNatsAccount)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	n += len(m.unknownFields)
@@ -5122,9 +6113,16 @@ func (m *CreateUserRequest) SizeVT() (n int) {
 		l = m.User.SizeVT()
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.Password)
-	if l > 0 {
+	if m.Password != nil {
+		l = len(*m.Password)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if m.LinkingOptions != nil {
+		l = m.LinkingOptions.SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if m.DryRun != nil {
+		n += 2
 	}
 	n += len(m.unknownFields)
 	return n
@@ -5140,6 +6138,18 @@ func (m *CreateUserResponse) SizeVT() (n int) {
 		l = m.User.SizeVT()
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
+	if len(m.Warnings) > 0 {
+		for _, s := range m.Warnings {
+			l = len(s)
+			n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+		}
+	}
+	if len(m.CreatedAccounts) > 0 {
+		for _, s := range m.CreatedAccounts {
+			l = len(s)
+			n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+		}
+	}
 	n += len(m.unknownFields)
 	return n
 }
@@ -5150,14 +6160,47 @@ func (m *GetUserRequest) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.Id)
-	if l > 0 {
+	if vtmsg, ok := m.Identifier.(interface{ SizeVT() int }); ok {
+		n += vtmsg.SizeVT()
+	}
+	if m.FieldMask != nil {
+		l = (*fieldmaskpb1.FieldMask)(m.FieldMask).SizeVT()
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	n += len(m.unknownFields)
 	return n
 }
 
+func (m *GetUserRequest_Id) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Id)
+	n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	return n
+}
+func (m *GetUserRequest_Username) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Username)
+	n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	return n
+}
+func (m *GetUserRequest_Email) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Email)
+	n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	return n
+}
 func (m *GetUserResponse) SizeVT() (n int) {
 	if m == nil {
 		return 0
@@ -5182,6 +6225,14 @@ func (m *UpdateUserRequest) SizeVT() (n int) {
 		l = m.User.SizeVT()
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
+	if m.FieldMask != nil {
+		l = (*fieldmaskpb1.FieldMask)(m.FieldMask).SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if m.LinkingOptions != nil {
+		l = m.LinkingOptions.SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
 	n += len(m.unknownFields)
 	return n
 }
@@ -5195,6 +6246,12 @@ func (m *UpdateUserResponse) SizeVT() (n int) {
 	if m.User != nil {
 		l = m.User.SizeVT()
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if len(m.Warnings) > 0 {
+		for _, s := range m.Warnings {
+			l = len(s)
+			n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+		}
 	}
 	n += len(m.unknownFields)
 	return n
@@ -5210,6 +6267,12 @@ func (m *DeleteUserRequest) SizeVT() (n int) {
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
+	if m.CascadeDelete != nil {
+		n += 2
+	}
+	if m.BackupData != nil {
+		n += 2
+	}
 	n += len(m.unknownFields)
 	return n
 }
@@ -5223,6 +6286,16 @@ func (m *DeleteUserResponse) SizeVT() (n int) {
 	if m.Success {
 		n += 2
 	}
+	if len(m.DeletedAccounts) > 0 {
+		for _, s := range m.DeletedAccounts {
+			l = len(s)
+			n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+		}
+	}
+	if m.BackupLocation != nil {
+		l = len(*m.BackupLocation)
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
 	n += len(m.unknownFields)
 	return n
 }
@@ -5233,14 +6306,25 @@ func (m *ListUsersRequest) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Source != 0 {
-		n += 1 + protohelpers.SizeOfVarint(uint64(m.Source))
+	if m.Source != nil {
+		n += 1 + protohelpers.SizeOfVarint(uint64(*m.Source))
 	}
-	if m.Enabled {
+	if m.Enabled != nil {
 		n += 2
 	}
-	l = len(m.UsernamePrefix)
-	if l > 0 {
+	if m.UsernamePrefix != nil {
+		l = len(*m.UsernamePrefix)
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if m.FieldMask != nil {
+		l = (*fieldmaskpb1.FieldMask)(m.FieldMask).SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if m.PageSize != nil {
+		n += 1 + protohelpers.SizeOfVarint(uint64(*m.PageSize))
+	}
+	if m.PageToken != nil {
+		l = len(*m.PageToken)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	n += len(m.unknownFields)
@@ -5258,6 +6342,10 @@ func (m *ListUsersResponse) SizeVT() (n int) {
 			l = e.SizeVT()
 			n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 		}
+	}
+	if m.NextPageToken != nil {
+		l = len(*m.NextPageToken)
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	n += len(m.unknownFields)
 	return n
@@ -5294,6 +6382,10 @@ func (m *ChangePasswordResponse) SizeVT() (n int) {
 	if m.Success {
 		n += 2
 	}
+	if m.FailureReason != nil {
+		l = len(*m.FailureReason)
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
 	n += len(m.unknownFields)
 	return n
 }
@@ -5308,11 +6400,14 @@ func (m *ResetPasswordRequest) SizeVT() (n int) {
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.NewPassword)
-	if l > 0 {
+	if m.NewPassword != nil {
+		l = len(*m.NewPassword)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	if m.Force {
+	if m.Force != nil {
+		n += 2
+	}
+	if m.GeneratePassword != nil {
 		n += 2
 	}
 	n += len(m.unknownFields)
@@ -5332,6 +6427,10 @@ func (m *ResetPasswordResponse) SizeVT() (n int) {
 	if m.Success {
 		n += 2
 	}
+	if m.FailureReason != nil {
+		l = len(*m.FailureReason)
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
 	n += len(m.unknownFields)
 	return n
 }
@@ -5350,6 +6449,14 @@ func (m *AuthenticateUserRequest) SizeVT() (n int) {
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
+	if m.SourceIp != nil {
+		l = len(*m.SourceIp)
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if m.UserAgent != nil {
+		l = len(*m.UserAgent)
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
 	n += len(m.unknownFields)
 	return n
 }
@@ -5363,16 +6470,20 @@ func (m *AuthenticateUserResponse) SizeVT() (n int) {
 	if m.Success {
 		n += 2
 	}
-	l = len(m.UserId)
-	if l > 0 {
+	if m.UserId != nil {
+		l = len(*m.UserId)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.Token)
-	if l > 0 {
+	if m.Token != nil {
+		l = len(*m.Token)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.FailureReason)
-	if l > 0 {
+	if m.FailureReason != nil {
+		l = len(*m.FailureReason)
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if m.TokenExpiresAt != nil {
+		l = (*timestamppb1.Timestamp)(m.TokenExpiresAt).SizeVT()
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	n += len(m.unknownFields)
@@ -5502,7 +6613,8 @@ func (m *User) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.FullName = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.FullName = &s
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -5534,7 +6646,8 @@ func (m *User) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Email = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.Email = &s
 			iNdEx = postIndex
 		case 5:
 			if wireType != 0 {
@@ -5557,10 +6670,10 @@ func (m *User) UnmarshalVT(dAtA []byte) error {
 			}
 			m.Enabled = bool(v != 0)
 		case 6:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CreatedAt", wireType)
 			}
-			m.CreatedAt = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -5570,16 +6683,33 @@ func (m *User) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.CreatedAt |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.CreatedAt == nil {
+				m.CreatedAt = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.CreatedAt).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 7:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UpdatedAt", wireType)
 			}
-			m.UpdatedAt = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -5589,16 +6719,33 @@ func (m *User) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.UpdatedAt |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.UpdatedAt == nil {
+				m.UpdatedAt = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.UpdatedAt).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 8:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LastLogin", wireType)
 			}
-			m.LastLogin = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -5608,11 +6755,28 @@ func (m *User) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.LastLogin |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.LastLogin == nil {
+				m.LastLogin = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.LastLogin).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 9:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SourceSystem", wireType)
@@ -5633,6 +6797,25 @@ func (m *User) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 		case 10:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CreationInterface", wireType)
+			}
+			m.CreationInterface = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CreationInterface |= UserCreationInterface(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 11:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field AuthData", wireType)
 			}
@@ -5668,7 +6851,7 @@ func (m *User) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 11:
+		case 12:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UnixInfo", wireType)
 			}
@@ -5704,7 +6887,7 @@ func (m *User) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 12:
+		case 13:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LdapInfo", wireType)
 			}
@@ -5740,7 +6923,7 @@ func (m *User) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 13:
+		case 14:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field RedfishInfo", wireType)
 			}
@@ -5776,7 +6959,7 @@ func (m *User) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 14:
+		case 15:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field NatsInfo", wireType)
 			}
@@ -5812,9 +6995,9 @@ func (m *User) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 15:
+		case 16:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SelinuxInfo", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CustomAttributes", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -5841,12 +7024,103 @@ func (m *User) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.SelinuxInfo == nil {
-				m.SelinuxInfo = &SelinuxUserInfo{}
+			if m.CustomAttributes == nil {
+				m.CustomAttributes = make(map[string]string)
 			}
-			if err := m.SelinuxInfo.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
-				return err
+			var mapkey string
+			var mapvalue string
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protohelpers.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					wire |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					var stringLenmapkey uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return protohelpers.ErrIntOverflow
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						stringLenmapkey |= uint64(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					intStringLenmapkey := int(stringLenmapkey)
+					if intStringLenmapkey < 0 {
+						return protohelpers.ErrInvalidLength
+					}
+					postStringIndexmapkey := iNdEx + intStringLenmapkey
+					if postStringIndexmapkey < 0 {
+						return protohelpers.ErrInvalidLength
+					}
+					if postStringIndexmapkey > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapkey = string(dAtA[iNdEx:postStringIndexmapkey])
+					iNdEx = postStringIndexmapkey
+				} else if fieldNum == 2 {
+					var stringLenmapvalue uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return protohelpers.ErrIntOverflow
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						stringLenmapvalue |= uint64(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					intStringLenmapvalue := int(stringLenmapvalue)
+					if intStringLenmapvalue < 0 {
+						return protohelpers.ErrInvalidLength
+					}
+					postStringIndexmapvalue := iNdEx + intStringLenmapvalue
+					if postStringIndexmapvalue < 0 {
+						return protohelpers.ErrInvalidLength
+					}
+					if postStringIndexmapvalue > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapvalue = string(dAtA[iNdEx:postStringIndexmapvalue])
+					iNdEx = postStringIndexmapvalue
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := protohelpers.Skip(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if (skippy < 0) || (iNdEx+skippy) < 0 {
+						return protohelpers.ErrInvalidLength
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
+				}
 			}
+			m.CustomAttributes[mapkey] = mapvalue
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -5961,7 +7235,8 @@ func (m *AuthenticationData) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.PasswordSalt = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.PasswordSalt = &s
 			iNdEx = postIndex
 		case 3:
 			if wireType != 0 {
@@ -6002,10 +7277,10 @@ func (m *AuthenticationData) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 		case 5:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field PasswordLastChanged", wireType)
 			}
-			m.PasswordLastChanged = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -6015,16 +7290,33 @@ func (m *AuthenticationData) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.PasswordLastChanged |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.PasswordLastChanged == nil {
+				m.PasswordLastChanged = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.PasswordLastChanged).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 6:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field PasswordExpiresAt", wireType)
 			}
-			m.PasswordExpiresAt = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -6034,11 +7326,28 @@ func (m *AuthenticationData) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.PasswordExpiresAt |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.PasswordExpiresAt == nil {
+				m.PasswordExpiresAt = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.PasswordExpiresAt).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LockoutInfo", wireType)
@@ -6150,7 +7459,7 @@ func (m *AccountLockoutInfo) UnmarshalVT(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Reason", wireType)
 			}
-			m.Reason = 0
+			var v LockoutReason
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -6160,16 +7469,17 @@ func (m *AccountLockoutInfo) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Reason |= LockoutReason(b&0x7F) << shift
+				v |= LockoutReason(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			m.Reason = &v
 		case 3:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LockoutTime", wireType)
 			}
-			m.LockoutTime = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -6179,11 +7489,28 @@ func (m *AccountLockoutInfo) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.LockoutTime |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.LockoutTime == nil {
+				m.LockoutTime = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.LockoutTime).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 4:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FailedAttempts", wireType)
@@ -6204,10 +7531,10 @@ func (m *AccountLockoutInfo) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 		case 5:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field AttemptsResetTime", wireType)
 			}
-			m.AttemptsResetTime = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -6217,11 +7544,48 @@ func (m *AccountLockoutInfo) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.AttemptsResetTime |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.AttemptsResetTime == nil {
+				m.AttemptsResetTime = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.AttemptsResetTime).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MaxFailedAttempts", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.MaxFailedAttempts = &v
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -6373,7 +7737,8 @@ func (m *UnixUserInfo) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Shell = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.Shell = &s
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -6405,8 +7770,85 @@ func (m *UnixUserInfo) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Gecos = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.Gecos = &s
 			iNdEx = postIndex
+		case 6:
+			if wireType == 0 {
+				var v int32
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protohelpers.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					v |= int32(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				m.SupplementaryGroups = append(m.SupplementaryGroups, v)
+			} else if wireType == 2 {
+				var packedLen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protohelpers.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					packedLen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if packedLen < 0 {
+					return protohelpers.ErrInvalidLength
+				}
+				postIndex := iNdEx + packedLen
+				if postIndex < 0 {
+					return protohelpers.ErrInvalidLength
+				}
+				if postIndex > l {
+					return io.ErrUnexpectedEOF
+				}
+				var elementCount int
+				var count int
+				for _, integer := range dAtA[iNdEx:postIndex] {
+					if integer < 128 {
+						count++
+					}
+				}
+				elementCount = count
+				if elementCount != 0 && len(m.SupplementaryGroups) == 0 {
+					m.SupplementaryGroups = make([]int32, 0, elementCount)
+				}
+				for iNdEx < postIndex {
+					var v int32
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return protohelpers.ErrIntOverflow
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						v |= int32(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					m.SupplementaryGroups = append(m.SupplementaryGroups, v)
+				}
+			} else {
+				return fmt.Errorf("proto: wrong wireType = %d for field SupplementaryGroups", wireType)
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -6520,7 +7962,8 @@ func (m *LdapUserInfo) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ObjectGuid = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.ObjectGuid = &s
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -6552,7 +7995,8 @@ func (m *LdapUserInfo) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.SamAccountName = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.SamAccountName = &s
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -6584,7 +8028,8 @@ func (m *LdapUserInfo) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.UserPrincipalName = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.UserPrincipalName = &s
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -6619,10 +8064,10 @@ func (m *LdapUserInfo) UnmarshalVT(dAtA []byte) error {
 			m.MemberOf = append(m.MemberOf, string(dAtA[iNdEx:postIndex]))
 			iNdEx = postIndex
 		case 6:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field AccountExpires", wireType)
 			}
-			m.AccountExpires = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -6632,16 +8077,33 @@ func (m *LdapUserInfo) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.AccountExpires |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.AccountExpires == nil {
+				m.AccountExpires = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.AccountExpires).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 7:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field PwdLastSet", wireType)
 			}
-			m.PwdLastSet = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -6651,11 +8113,94 @@ func (m *LdapUserInfo) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.PwdLastSet |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.PwdLastSet == nil {
+				m.PwdLastSet = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.PwdLastSet).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Domain", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(dAtA[iNdEx:postIndex])
+			m.Domain = &s
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OrganizationalUnit", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(dAtA[iNdEx:postIndex])
+			m.OrganizationalUnit = &s
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -6737,7 +8282,8 @@ func (m *RedfishAccountInfo) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.AccountId = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.AccountId = &s
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -6807,6 +8353,59 @@ func (m *RedfishAccountInfo) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OemAccountTypes", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.OemAccountTypes = append(m.OemAccountTypes, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PasswordChangeRequired", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.PasswordChangeRequired = &b
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -6907,7 +8506,8 @@ func (m *RedfishLockoutPolicy) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Duration = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.Duration = &s
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -6939,7 +8539,8 @@ func (m *RedfishLockoutPolicy) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ResetAfter = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.ResetAfter = &s
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -7126,7 +8727,8 @@ func (m *NatsAccountInfo) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.UserJwt = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.UserJwt = &s
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -7158,7 +8760,8 @@ func (m *NatsAccountInfo) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.UserKey = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.UserKey = &s
 			iNdEx = postIndex
 		case 6:
 			if wireType != 2 {
@@ -7190,7 +8793,44 @@ func (m *NatsAccountInfo) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.UserCred = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.UserCred = &s
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field JwtExpiresAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.JwtExpiresAt == nil {
+				m.JwtExpiresAt = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.JwtExpiresAt).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -7339,6 +8979,38 @@ func (m *NatsPermissions) UnmarshalVT(dAtA []byte) error {
 			}
 			m.AllowResponses = append(m.AllowResponses, string(dAtA[iNdEx:postIndex]))
 			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Deny", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Deny = append(m.Deny, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -7447,6 +9119,46 @@ func (m *NatsLimits) UnmarshalVT(dAtA []byte) error {
 					break
 				}
 			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Conn", wireType)
+			}
+			var v int64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Conn = &v
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Leaf", wireType)
+			}
+			var v int64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Leaf = &v
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -7469,7 +9181,7 @@ func (m *NatsLimits) UnmarshalVT(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *SelinuxUserInfo) UnmarshalVT(dAtA []byte) error {
+func (m *UserLinkingOptions) UnmarshalVT(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -7492,17 +9204,17 @@ func (m *SelinuxUserInfo) UnmarshalVT(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: SelinuxUserInfo: wiretype end group for non-group")
+			return fmt.Errorf("proto: UserLinkingOptions: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: SelinuxUserInfo: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: UserLinkingOptions: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field User", wireType)
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UnixAction", wireType)
 			}
-			var stringLen uint64
+			m.UnixAction = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -7512,29 +9224,16 @@ func (m *SelinuxUserInfo) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				m.UnixAction |= UserLinkAction(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.User = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
 		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Role", wireType)
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LdapAction", wireType)
 			}
-			var stringLen uint64
+			m.LdapAction = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -7544,29 +9243,16 @@ func (m *SelinuxUserInfo) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				m.LdapAction |= UserLinkAction(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Role = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
 		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RedfishAction", wireType)
 			}
-			var stringLen uint64
+			m.RedfishAction = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -7576,27 +9262,33 @@ func (m *SelinuxUserInfo) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				m.RedfishAction |= UserLinkAction(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Type = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
 		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NatsAction", wireType)
+			}
+			m.NatsAction = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.NatsAction |= UserLinkAction(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Level", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ExistingUnixUsername", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -7624,7 +9316,107 @@ func (m *SelinuxUserInfo) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Level = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.ExistingUnixUsername = &s
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExistingLdapDn", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(dAtA[iNdEx:postIndex])
+			m.ExistingLdapDn = &s
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExistingRedfishAccountId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(dAtA[iNdEx:postIndex])
+			m.ExistingRedfishAccountId = &s
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExistingNatsAccount", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(dAtA[iNdEx:postIndex])
+			m.ExistingNatsAccount = &s
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -7743,8 +9535,66 @@ func (m *CreateUserRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Password = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.Password = &s
 			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LinkingOptions", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.LinkingOptions == nil {
+				m.LinkingOptions = &UserLinkingOptions{}
+			}
+			if err := m.LinkingOptions.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DryRun", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.DryRun = &b
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -7832,6 +9682,70 @@ func (m *CreateUserResponse) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Warnings", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Warnings = append(m.Warnings, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CreatedAccounts", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CreatedAccounts = append(m.CreatedAccounts, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -7913,7 +9827,107 @@ func (m *GetUserRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Id = string(dAtA[iNdEx:postIndex])
+			m.Identifier = &GetUserRequest_Id{Id: string(dAtA[iNdEx:postIndex])}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Username", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Identifier = &GetUserRequest_Username{Username: string(dAtA[iNdEx:postIndex])}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Email", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Identifier = &GetUserRequest_Email{Email: string(dAtA[iNdEx:postIndex])}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.FieldMask == nil {
+				m.FieldMask = &fieldmaskpb.FieldMask{}
+			}
+			if err := (*fieldmaskpb1.FieldMask)(m.FieldMask).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -8089,6 +10103,78 @@ func (m *UpdateUserRequest) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.FieldMask == nil {
+				m.FieldMask = &fieldmaskpb.FieldMask{}
+			}
+			if err := (*fieldmaskpb1.FieldMask)(m.FieldMask).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LinkingOptions", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.LinkingOptions == nil {
+				m.LinkingOptions = &UserLinkingOptions{}
+			}
+			if err := m.LinkingOptions.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -8176,6 +10262,38 @@ func (m *UpdateUserResponse) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Warnings", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Warnings = append(m.Warnings, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -8259,6 +10377,48 @@ func (m *DeleteUserRequest) UnmarshalVT(dAtA []byte) error {
 			}
 			m.Id = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CascadeDelete", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.CascadeDelete = &b
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BackupData", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.BackupData = &b
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -8330,6 +10490,71 @@ func (m *DeleteUserResponse) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.Success = bool(v != 0)
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DeletedAccounts", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DeletedAccounts = append(m.DeletedAccounts, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BackupLocation", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(dAtA[iNdEx:postIndex])
+			m.BackupLocation = &s
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -8385,7 +10610,7 @@ func (m *ListUsersRequest) UnmarshalVT(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Source", wireType)
 			}
-			m.Source = 0
+			var v UserSource
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -8395,11 +10620,12 @@ func (m *ListUsersRequest) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Source |= UserSource(b&0x7F) << shift
+				v |= UserSource(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			m.Source = &v
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Enabled", wireType)
@@ -8419,7 +10645,8 @@ func (m *ListUsersRequest) UnmarshalVT(dAtA []byte) error {
 					break
 				}
 			}
-			m.Enabled = bool(v != 0)
+			b := bool(v != 0)
+			m.Enabled = &b
 		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UsernamePrefix", wireType)
@@ -8450,7 +10677,97 @@ func (m *ListUsersRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.UsernamePrefix = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.UsernamePrefix = &s
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.FieldMask == nil {
+				m.FieldMask = &fieldmaskpb.FieldMask{}
+			}
+			if err := (*fieldmaskpb1.FieldMask)(m.FieldMask).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PageSize", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.PageSize = &v
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PageToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(dAtA[iNdEx:postIndex])
+			m.PageToken = &s
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -8536,6 +10853,39 @@ func (m *ListUsersResponse) UnmarshalVT(dAtA []byte) error {
 			if err := m.Users[len(m.Users)-1].UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NextPageToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(dAtA[iNdEx:postIndex])
+			m.NextPageToken = &s
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -8755,6 +11105,39 @@ func (m *ChangePasswordResponse) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.Success = bool(v != 0)
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FailureReason", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(dAtA[iNdEx:postIndex])
+			m.FailureReason = &s
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -8868,7 +11251,8 @@ func (m *ResetPasswordRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.NewPassword = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.NewPassword = &s
 			iNdEx = postIndex
 		case 3:
 			if wireType != 0 {
@@ -8889,7 +11273,29 @@ func (m *ResetPasswordRequest) UnmarshalVT(dAtA []byte) error {
 					break
 				}
 			}
-			m.Force = bool(v != 0)
+			b := bool(v != 0)
+			m.Force = &b
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GeneratePassword", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.GeneratePassword = &b
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -8993,6 +11399,39 @@ func (m *ResetPasswordResponse) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.Success = bool(v != 0)
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FailureReason", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(dAtA[iNdEx:postIndex])
+			m.FailureReason = &s
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -9108,6 +11547,72 @@ func (m *AuthenticateUserRequest) UnmarshalVT(dAtA []byte) error {
 			}
 			m.Password = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SourceIp", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(dAtA[iNdEx:postIndex])
+			m.SourceIp = &s
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UserAgent", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(dAtA[iNdEx:postIndex])
+			m.UserAgent = &s
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -9209,7 +11714,8 @@ func (m *AuthenticateUserResponse) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.UserId = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.UserId = &s
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -9241,7 +11747,8 @@ func (m *AuthenticateUserResponse) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Token = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.Token = &s
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -9273,7 +11780,44 @@ func (m *AuthenticateUserResponse) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.FailureReason = string(dAtA[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
+			m.FailureReason = &s
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenExpiresAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.TokenExpiresAt == nil {
+				m.TokenExpiresAt = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.TokenExpiresAt).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -9432,7 +11976,8 @@ func (m *User) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.FullName = stringValue
+			s := stringValue
+			m.FullName = &s
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -9468,7 +12013,8 @@ func (m *User) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.Email = stringValue
+			s := stringValue
+			m.Email = &s
 			iNdEx = postIndex
 		case 5:
 			if wireType != 0 {
@@ -9491,10 +12037,10 @@ func (m *User) UnmarshalVTUnsafe(dAtA []byte) error {
 			}
 			m.Enabled = bool(v != 0)
 		case 6:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CreatedAt", wireType)
 			}
-			m.CreatedAt = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -9504,16 +12050,33 @@ func (m *User) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.CreatedAt |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.CreatedAt == nil {
+				m.CreatedAt = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.CreatedAt).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 7:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UpdatedAt", wireType)
 			}
-			m.UpdatedAt = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -9523,16 +12086,33 @@ func (m *User) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.UpdatedAt |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.UpdatedAt == nil {
+				m.UpdatedAt = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.UpdatedAt).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 8:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LastLogin", wireType)
 			}
-			m.LastLogin = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -9542,11 +12122,28 @@ func (m *User) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.LastLogin |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.LastLogin == nil {
+				m.LastLogin = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.LastLogin).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 9:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SourceSystem", wireType)
@@ -9567,6 +12164,25 @@ func (m *User) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 		case 10:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CreationInterface", wireType)
+			}
+			m.CreationInterface = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CreationInterface |= UserCreationInterface(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 11:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field AuthData", wireType)
 			}
@@ -9602,7 +12218,7 @@ func (m *User) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 11:
+		case 12:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UnixInfo", wireType)
 			}
@@ -9638,7 +12254,7 @@ func (m *User) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 12:
+		case 13:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LdapInfo", wireType)
 			}
@@ -9674,7 +12290,7 @@ func (m *User) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 13:
+		case 14:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field RedfishInfo", wireType)
 			}
@@ -9710,7 +12326,7 @@ func (m *User) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 14:
+		case 15:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field NatsInfo", wireType)
 			}
@@ -9746,9 +12362,9 @@ func (m *User) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 15:
+		case 16:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SelinuxInfo", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CustomAttributes", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -9775,12 +12391,111 @@ func (m *User) UnmarshalVTUnsafe(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.SelinuxInfo == nil {
-				m.SelinuxInfo = &SelinuxUserInfo{}
+			if m.CustomAttributes == nil {
+				m.CustomAttributes = make(map[string]string)
 			}
-			if err := m.SelinuxInfo.UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
-				return err
+			var mapkey string
+			var mapvalue string
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protohelpers.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					wire |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					var stringLenmapkey uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return protohelpers.ErrIntOverflow
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						stringLenmapkey |= uint64(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					intStringLenmapkey := int(stringLenmapkey)
+					if intStringLenmapkey < 0 {
+						return protohelpers.ErrInvalidLength
+					}
+					postStringIndexmapkey := iNdEx + intStringLenmapkey
+					if postStringIndexmapkey < 0 {
+						return protohelpers.ErrInvalidLength
+					}
+					if postStringIndexmapkey > l {
+						return io.ErrUnexpectedEOF
+					}
+					if intStringLenmapkey == 0 {
+						mapkey = ""
+					} else {
+						mapkey = unsafe.String(&dAtA[iNdEx], intStringLenmapkey)
+					}
+					iNdEx = postStringIndexmapkey
+				} else if fieldNum == 2 {
+					var stringLenmapvalue uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return protohelpers.ErrIntOverflow
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						stringLenmapvalue |= uint64(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					intStringLenmapvalue := int(stringLenmapvalue)
+					if intStringLenmapvalue < 0 {
+						return protohelpers.ErrInvalidLength
+					}
+					postStringIndexmapvalue := iNdEx + intStringLenmapvalue
+					if postStringIndexmapvalue < 0 {
+						return protohelpers.ErrInvalidLength
+					}
+					if postStringIndexmapvalue > l {
+						return io.ErrUnexpectedEOF
+					}
+					if intStringLenmapvalue == 0 {
+						mapvalue = ""
+					} else {
+						mapvalue = unsafe.String(&dAtA[iNdEx], intStringLenmapvalue)
+					}
+					iNdEx = postStringIndexmapvalue
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := protohelpers.Skip(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if (skippy < 0) || (iNdEx+skippy) < 0 {
+						return protohelpers.ErrInvalidLength
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
+				}
 			}
+			m.CustomAttributes[mapkey] = mapvalue
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -9903,7 +12618,8 @@ func (m *AuthenticationData) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.PasswordSalt = stringValue
+			s := stringValue
+			m.PasswordSalt = &s
 			iNdEx = postIndex
 		case 3:
 			if wireType != 0 {
@@ -9944,10 +12660,10 @@ func (m *AuthenticationData) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 		case 5:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field PasswordLastChanged", wireType)
 			}
-			m.PasswordLastChanged = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -9957,16 +12673,33 @@ func (m *AuthenticationData) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.PasswordLastChanged |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.PasswordLastChanged == nil {
+				m.PasswordLastChanged = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.PasswordLastChanged).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 6:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field PasswordExpiresAt", wireType)
 			}
-			m.PasswordExpiresAt = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -9976,11 +12709,28 @@ func (m *AuthenticationData) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.PasswordExpiresAt |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.PasswordExpiresAt == nil {
+				m.PasswordExpiresAt = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.PasswordExpiresAt).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LockoutInfo", wireType)
@@ -10092,7 +12842,7 @@ func (m *AccountLockoutInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Reason", wireType)
 			}
-			m.Reason = 0
+			var v LockoutReason
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -10102,16 +12852,17 @@ func (m *AccountLockoutInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Reason |= LockoutReason(b&0x7F) << shift
+				v |= LockoutReason(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			m.Reason = &v
 		case 3:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LockoutTime", wireType)
 			}
-			m.LockoutTime = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -10121,11 +12872,28 @@ func (m *AccountLockoutInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.LockoutTime |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.LockoutTime == nil {
+				m.LockoutTime = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.LockoutTime).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 4:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FailedAttempts", wireType)
@@ -10146,10 +12914,10 @@ func (m *AccountLockoutInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 		case 5:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field AttemptsResetTime", wireType)
 			}
-			m.AttemptsResetTime = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -10159,11 +12927,48 @@ func (m *AccountLockoutInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.AttemptsResetTime |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.AttemptsResetTime == nil {
+				m.AttemptsResetTime = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.AttemptsResetTime).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MaxFailedAttempts", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.MaxFailedAttempts = &v
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -10323,7 +13128,8 @@ func (m *UnixUserInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.Shell = stringValue
+			s := stringValue
+			m.Shell = &s
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -10359,8 +13165,85 @@ func (m *UnixUserInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.Gecos = stringValue
+			s := stringValue
+			m.Gecos = &s
 			iNdEx = postIndex
+		case 6:
+			if wireType == 0 {
+				var v int32
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protohelpers.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					v |= int32(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				m.SupplementaryGroups = append(m.SupplementaryGroups, v)
+			} else if wireType == 2 {
+				var packedLen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protohelpers.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					packedLen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if packedLen < 0 {
+					return protohelpers.ErrInvalidLength
+				}
+				postIndex := iNdEx + packedLen
+				if postIndex < 0 {
+					return protohelpers.ErrInvalidLength
+				}
+				if postIndex > l {
+					return io.ErrUnexpectedEOF
+				}
+				var elementCount int
+				var count int
+				for _, integer := range dAtA[iNdEx:postIndex] {
+					if integer < 128 {
+						count++
+					}
+				}
+				elementCount = count
+				if elementCount != 0 && len(m.SupplementaryGroups) == 0 {
+					m.SupplementaryGroups = make([]int32, 0, elementCount)
+				}
+				for iNdEx < postIndex {
+					var v int32
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return protohelpers.ErrIntOverflow
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						v |= int32(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					m.SupplementaryGroups = append(m.SupplementaryGroups, v)
+				}
+			} else {
+				return fmt.Errorf("proto: wrong wireType = %d for field SupplementaryGroups", wireType)
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -10482,7 +13365,8 @@ func (m *LdapUserInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.ObjectGuid = stringValue
+			s := stringValue
+			m.ObjectGuid = &s
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -10518,7 +13402,8 @@ func (m *LdapUserInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.SamAccountName = stringValue
+			s := stringValue
+			m.SamAccountName = &s
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -10554,7 +13439,8 @@ func (m *LdapUserInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.UserPrincipalName = stringValue
+			s := stringValue
+			m.UserPrincipalName = &s
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -10593,10 +13479,10 @@ func (m *LdapUserInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 			m.MemberOf = append(m.MemberOf, stringValue)
 			iNdEx = postIndex
 		case 6:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field AccountExpires", wireType)
 			}
-			m.AccountExpires = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -10606,16 +13492,33 @@ func (m *LdapUserInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.AccountExpires |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.AccountExpires == nil {
+				m.AccountExpires = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.AccountExpires).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 7:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field PwdLastSet", wireType)
 			}
-			m.PwdLastSet = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -10625,11 +13528,102 @@ func (m *LdapUserInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.PwdLastSet |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.PwdLastSet == nil {
+				m.PwdLastSet = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.PwdLastSet).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Domain", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			s := stringValue
+			m.Domain = &s
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OrganizationalUnit", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			s := stringValue
+			m.OrganizationalUnit = &s
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -10715,7 +13709,8 @@ func (m *RedfishAccountInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.AccountId = stringValue
+			s := stringValue
+			m.AccountId = &s
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -10789,6 +13784,63 @@ func (m *RedfishAccountInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OemAccountTypes", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			m.OemAccountTypes = append(m.OemAccountTypes, stringValue)
+			iNdEx = postIndex
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PasswordChangeRequired", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.PasswordChangeRequired = &b
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -10893,7 +13945,8 @@ func (m *RedfishLockoutPolicy) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.Duration = stringValue
+			s := stringValue
+			m.Duration = &s
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -10929,7 +13982,8 @@ func (m *RedfishLockoutPolicy) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.ResetAfter = stringValue
+			s := stringValue
+			m.ResetAfter = &s
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -11124,7 +14178,8 @@ func (m *NatsAccountInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.UserJwt = stringValue
+			s := stringValue
+			m.UserJwt = &s
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -11160,7 +14215,8 @@ func (m *NatsAccountInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.UserKey = stringValue
+			s := stringValue
+			m.UserKey = &s
 			iNdEx = postIndex
 		case 6:
 			if wireType != 2 {
@@ -11196,7 +14252,44 @@ func (m *NatsAccountInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.UserCred = stringValue
+			s := stringValue
+			m.UserCred = &s
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field JwtExpiresAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.JwtExpiresAt == nil {
+				m.JwtExpiresAt = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.JwtExpiresAt).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -11357,6 +14450,42 @@ func (m *NatsPermissions) UnmarshalVTUnsafe(dAtA []byte) error {
 			}
 			m.AllowResponses = append(m.AllowResponses, stringValue)
 			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Deny", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			m.Deny = append(m.Deny, stringValue)
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -11465,6 +14594,46 @@ func (m *NatsLimits) UnmarshalVTUnsafe(dAtA []byte) error {
 					break
 				}
 			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Conn", wireType)
+			}
+			var v int64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Conn = &v
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Leaf", wireType)
+			}
+			var v int64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Leaf = &v
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -11487,7 +14656,7 @@ func (m *NatsLimits) UnmarshalVTUnsafe(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *SelinuxUserInfo) UnmarshalVTUnsafe(dAtA []byte) error {
+func (m *UserLinkingOptions) UnmarshalVTUnsafe(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -11510,17 +14679,17 @@ func (m *SelinuxUserInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: SelinuxUserInfo: wiretype end group for non-group")
+			return fmt.Errorf("proto: UserLinkingOptions: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: SelinuxUserInfo: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: UserLinkingOptions: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field User", wireType)
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UnixAction", wireType)
 			}
-			var stringLen uint64
+			m.UnixAction = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -11530,33 +14699,16 @@ func (m *SelinuxUserInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				m.UnixAction |= UserLinkAction(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			var stringValue string
-			if intStringLen > 0 {
-				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
-			}
-			m.User = stringValue
-			iNdEx = postIndex
 		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Role", wireType)
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LdapAction", wireType)
 			}
-			var stringLen uint64
+			m.LdapAction = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -11566,33 +14718,16 @@ func (m *SelinuxUserInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				m.LdapAction |= UserLinkAction(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			var stringValue string
-			if intStringLen > 0 {
-				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
-			}
-			m.Role = stringValue
-			iNdEx = postIndex
 		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RedfishAction", wireType)
 			}
-			var stringLen uint64
+			m.RedfishAction = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -11602,31 +14737,33 @@ func (m *SelinuxUserInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				m.RedfishAction |= UserLinkAction(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			var stringValue string
-			if intStringLen > 0 {
-				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
-			}
-			m.Type = stringValue
-			iNdEx = postIndex
 		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NatsAction", wireType)
+			}
+			m.NatsAction = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.NatsAction |= UserLinkAction(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Level", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ExistingUnixUsername", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -11658,7 +14795,119 @@ func (m *SelinuxUserInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.Level = stringValue
+			s := stringValue
+			m.ExistingUnixUsername = &s
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExistingLdapDn", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			s := stringValue
+			m.ExistingLdapDn = &s
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExistingRedfishAccountId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			s := stringValue
+			m.ExistingRedfishAccountId = &s
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExistingNatsAccount", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			s := stringValue
+			m.ExistingNatsAccount = &s
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -11781,8 +15030,66 @@ func (m *CreateUserRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.Password = stringValue
+			s := stringValue
+			m.Password = &s
 			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LinkingOptions", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.LinkingOptions == nil {
+				m.LinkingOptions = &UserLinkingOptions{}
+			}
+			if err := m.LinkingOptions.UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DryRun", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.DryRun = &b
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -11870,6 +15177,78 @@ func (m *CreateUserResponse) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Warnings", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			m.Warnings = append(m.Warnings, stringValue)
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CreatedAccounts", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			m.CreatedAccounts = append(m.CreatedAccounts, stringValue)
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -11955,7 +15334,115 @@ func (m *GetUserRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.Id = stringValue
+			m.Identifier = &GetUserRequest_Id{Id: stringValue}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Username", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			m.Identifier = &GetUserRequest_Username{Username: stringValue}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Email", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			m.Identifier = &GetUserRequest_Email{Email: stringValue}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.FieldMask == nil {
+				m.FieldMask = &fieldmaskpb.FieldMask{}
+			}
+			if err := (*fieldmaskpb1.FieldMask)(m.FieldMask).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -12131,6 +15618,78 @@ func (m *UpdateUserRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.FieldMask == nil {
+				m.FieldMask = &fieldmaskpb.FieldMask{}
+			}
+			if err := (*fieldmaskpb1.FieldMask)(m.FieldMask).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LinkingOptions", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.LinkingOptions == nil {
+				m.LinkingOptions = &UserLinkingOptions{}
+			}
+			if err := m.LinkingOptions.UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -12217,6 +15776,42 @@ func (m *UpdateUserResponse) UnmarshalVTUnsafe(dAtA []byte) error {
 			if err := m.User.UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Warnings", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			m.Warnings = append(m.Warnings, stringValue)
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -12305,6 +15900,48 @@ func (m *DeleteUserRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			}
 			m.Id = stringValue
 			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CascadeDelete", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.CascadeDelete = &b
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BackupData", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.BackupData = &b
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -12376,6 +16013,79 @@ func (m *DeleteUserResponse) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.Success = bool(v != 0)
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DeletedAccounts", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			m.DeletedAccounts = append(m.DeletedAccounts, stringValue)
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BackupLocation", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			s := stringValue
+			m.BackupLocation = &s
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -12431,7 +16141,7 @@ func (m *ListUsersRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Source", wireType)
 			}
-			m.Source = 0
+			var v UserSource
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -12441,11 +16151,12 @@ func (m *ListUsersRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Source |= UserSource(b&0x7F) << shift
+				v |= UserSource(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			m.Source = &v
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Enabled", wireType)
@@ -12465,7 +16176,8 @@ func (m *ListUsersRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 					break
 				}
 			}
-			m.Enabled = bool(v != 0)
+			b := bool(v != 0)
+			m.Enabled = &b
 		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UsernamePrefix", wireType)
@@ -12500,7 +16212,101 @@ func (m *ListUsersRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.UsernamePrefix = stringValue
+			s := stringValue
+			m.UsernamePrefix = &s
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.FieldMask == nil {
+				m.FieldMask = &fieldmaskpb.FieldMask{}
+			}
+			if err := (*fieldmaskpb1.FieldMask)(m.FieldMask).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PageSize", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.PageSize = &v
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PageToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			s := stringValue
+			m.PageToken = &s
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -12586,6 +16392,43 @@ func (m *ListUsersResponse) UnmarshalVTUnsafe(dAtA []byte) error {
 			if err := m.Users[len(m.Users)-1].UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NextPageToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			s := stringValue
+			m.NextPageToken = &s
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -12817,6 +16660,43 @@ func (m *ChangePasswordResponse) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.Success = bool(v != 0)
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FailureReason", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			s := stringValue
+			m.FailureReason = &s
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -12938,7 +16818,8 @@ func (m *ResetPasswordRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.NewPassword = stringValue
+			s := stringValue
+			m.NewPassword = &s
 			iNdEx = postIndex
 		case 3:
 			if wireType != 0 {
@@ -12959,7 +16840,29 @@ func (m *ResetPasswordRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 					break
 				}
 			}
-			m.Force = bool(v != 0)
+			b := bool(v != 0)
+			m.Force = &b
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GeneratePassword", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.GeneratePassword = &b
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -13067,6 +16970,43 @@ func (m *ResetPasswordResponse) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.Success = bool(v != 0)
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FailureReason", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			s := stringValue
+			m.FailureReason = &s
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -13190,6 +17130,80 @@ func (m *AuthenticateUserRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			}
 			m.Password = stringValue
 			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SourceIp", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			s := stringValue
+			m.SourceIp = &s
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UserAgent", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			s := stringValue
+			m.UserAgent = &s
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -13295,7 +17309,8 @@ func (m *AuthenticateUserResponse) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.UserId = stringValue
+			s := stringValue
+			m.UserId = &s
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -13331,7 +17346,8 @@ func (m *AuthenticateUserResponse) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.Token = stringValue
+			s := stringValue
+			m.Token = &s
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -13367,7 +17383,44 @@ func (m *AuthenticateUserResponse) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.FailureReason = stringValue
+			s := stringValue
+			m.FailureReason = &s
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenExpiresAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.TokenExpiresAt == nil {
+				m.TokenExpiresAt = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.TokenExpiresAt).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

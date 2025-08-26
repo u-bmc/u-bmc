@@ -5,224 +5,9 @@ syntax = "proto3";
 package schema.v1alpha1;
 
 import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
 
-// User represents a user account in the system
-message User {
-  // Unique identifier for the user
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-
-  // Username for login
-  string username = 2 [(buf.validate.field).string.min_len = 1];
-
-  // Full name of the user
-  string full_name = 3 [(buf.validate.field).string.min_len = 1];
-
-  // Email address
-  string email = 4 [(buf.validate.field).string.email = true];
-
-  // Whether the user account is enabled
-  bool enabled = 5;
-
-  // Timestamp when the user was created
-  int64 created_at = 6;
-
-  // Timestamp when the user was last updated
-  int64 updated_at = 7;
-
-  // Timestamp of last successful login
-  int64 last_login = 8;
-
-  // Source system where the user is managed
-  UserSource source_system = 9;
-
-  // Authentication data
-  AuthenticationData auth_data = 10;
-
-  // Unix-specific user information (if mapped)
-  UnixUserInfo unix_info = 11;
-
-  // LDAP-specific user information (if mapped)
-  LdapUserInfo ldap_info = 12;
-
-  // Redfish-specific account information
-  RedfishAccountInfo redfish_info = 13;
-
-  // NATS-specific account information
-  NatsAccountInfo nats_info = 14;
-
-  // SELinux-specific user mapping
-  SelinuxUserInfo selinux_info = 15;
-}
-
-// AuthenticationData contains password and authentication-related information
-message AuthenticationData {
-  // Hashed password
-  string password_hash = 1;
-
-  // Salt used for hashing
-  string password_salt = 2;
-
-  // Hashing algorithm used
-  PasswordHashAlgorithm hash_algorithm = 3;
-
-  // Number of iterations for key derivation (if applicable)
-  int32 iterations = 4;
-
-  // Timestamp of last password change
-  int64 password_last_changed = 5;
-
-  // Password expiration timestamp
-  int64 password_expires_at = 6;
-
-  // Account lockout information
-  AccountLockoutInfo lockout_info = 7;
-}
-
-// AccountLockoutInfo contains information about account lockout status
-message AccountLockoutInfo {
-  // Whether the account is currently locked
-  bool locked = 1;
-
-  // Reason for lockout
-  LockoutReason reason = 2;
-
-  // Timestamp when lockout occurred
-  int64 lockout_time = 3;
-
-  // Number of failed login attempts
-  int32 failed_attempts = 4;
-
-  // Timestamp when failed attempts counter was last reset
-  int64 attempts_reset_time = 5;
-}
-
-// UnixUserInfo contains Unix-specific user information
-message UnixUserInfo {
-  // Unix user ID
-  int32 uid = 1 [(buf.validate.field).int32.gte = 0];
-
-  // Unix group ID
-  int32 gid = 2 [(buf.validate.field).int32.gte = 0];
-
-  // Home directory path
-  string home_directory = 3 [(buf.validate.field).string.min_len = 1];
-
-  // Login shell
-  string shell = 4;
-
-  // GECOS field (user information)
-  string gecos = 5;
-}
-
-// LdapUserInfo contains LDAP-specific user information
-message LdapUserInfo {
-  // LDAP Distinguished Name
-  string ldap_dn = 1 [(buf.validate.field).string.min_len = 1];
-
-  // Object GUID
-  string object_guid = 2;
-
-  // SAM Account Name
-  string sam_account_name = 3;
-
-  // User Principal Name
-  string user_principal_name = 4;
-
-  // Groups the user is a member of
-  repeated string member_of = 5;
-
-  // Account expiration timestamp
-  int64 account_expires = 6;
-
-  // Timestamp when password was last set
-  int64 pwd_last_set = 7;
-}
-
-// RedfishAccountInfo contains Redfish-specific account information
-message RedfishAccountInfo {
-  // Redfish account ID
-  string account_id = 1;
-
-  // Redfish role ID
-  string role_id = 2 [(buf.validate.field).string.min_len = 1];
-
-  // Account lockout policy information
-  RedfishLockoutPolicy lockout_policy = 3;
-}
-
-// RedfishLockoutPolicy contains Redfish-specific lockout policy settings
-message RedfishLockoutPolicy {
-  // Number of failed login attempts before lockout
-  int32 threshold = 1 [(buf.validate.field).int32.gte = 0];
-
-  // Duration of lockout
-  string duration = 2;
-
-  // Time after which failed attempts counter is reset
-  string reset_after = 3;
-}
-
-// NatsAccountInfo contains NATS-specific account information
-message NatsAccountInfo {
-  // NATS account identifier
-  string account = 1;
-
-  // NATS permissions
-  NatsPermissions permissions = 2;
-
-  // NATS limits
-  NatsLimits limits = 3;
-
-  // NATS user JWT
-  string user_jwt = 4;
-
-  // NATS user public key
-  string user_key = 5;
-
-  // NATS user credentials
-  string user_cred = 6;
-}
-
-// NatsPermissions contains NATS publish/subscribe permissions
-message NatsPermissions {
-  // Subjects the user can publish to
-  repeated string publish = 1;
-
-  // Subjects the user can subscribe to
-  repeated string subscribe = 2;
-
-  // Subjects for allowing responses
-  repeated string allow_responses = 3;
-}
-
-// NatsLimits contains NATS resource limits for the user
-message NatsLimits {
-  // Maximum data limit in bytes
-  int64 data = 1;
-
-  // Maximum payload size in bytes
-  int64 payload = 2;
-
-  // Maximum number of subscriptions
-  int64 subs = 3;
-}
-
-// SelinuxUserInfo contains SELinux-specific user mapping information
-message SelinuxUserInfo {
-  // SELinux user
-  string user = 1;
-
-  // SELinux role
-  string role = 2;
-
-  // SELinux type
-  string type = 3;
-
-  // SELinux level
-  string level = 4;
-}
-
-// UserSource represents the source system for a user account
 enum UserSource {
   USER_SOURCE_UNSPECIFIED = 0;
   USER_SOURCE_LOCAL = 1;
@@ -231,180 +16,363 @@ enum UserSource {
   USER_SOURCE_IPMI = 4;
   USER_SOURCE_REDFISH = 5;
   USER_SOURCE_NATS = 6;
+  USER_SOURCE_UNIX = 7;
+  USER_SOURCE_EXTERNAL_API = 8;
 }
 
-// PasswordHashAlgorithm represents the algorithm used for password hashing
+enum UserCreationInterface {
+  USER_CREATION_INTERFACE_UNSPECIFIED = 0;
+  USER_CREATION_INTERFACE_SCHEMA_API = 1;
+  USER_CREATION_INTERFACE_UNIX_USERADD = 2;
+  USER_CREATION_INTERFACE_LDAP_ADMIN = 3;
+  USER_CREATION_INTERFACE_AD_ADMIN = 4;
+  USER_CREATION_INTERFACE_REDFISH_API = 5;
+  USER_CREATION_INTERFACE_NATS_CONFIG = 6;
+  USER_CREATION_INTERFACE_IPMI_USER_MGMT = 7;
+}
+
 enum PasswordHashAlgorithm {
   PASSWORD_HASH_ALGORITHM_UNSPECIFIED = 0;
   PASSWORD_HASH_ALGORITHM_BCRYPT = 1;
-  PASSWORD_HASH_ALGORITHM_ARGON2 = 2;
-  PASSWORD_HASH_ALGORITHM_SHA256 = 3;
-  PASSWORD_HASH_ALGORITHM_SHA512 = 4;
+  PASSWORD_HASH_ALGORITHM_ARGON2ID = 2;
+  PASSWORD_HASH_ALGORITHM_SCRYPT = 3;
+  PASSWORD_HASH_ALGORITHM_PBKDF2_SHA256 = 4;
+  PASSWORD_HASH_ALGORITHM_PBKDF2_SHA512 = 5;
 }
 
-// LockoutReason represents the reason for account lockout
 enum LockoutReason {
   LOCKOUT_REASON_UNSPECIFIED = 0;
   LOCKOUT_REASON_FAILED_LOGIN_ATTEMPTS = 1;
   LOCKOUT_REASON_ADMINISTRATIVE = 2;
   LOCKOUT_REASON_PASSWORD_EXPIRED = 3;
+  LOCKOUT_REASON_ACCOUNT_EXPIRED = 4;
+  LOCKOUT_REASON_SECURITY_POLICY = 5;
 }
 
-// Request message for creating a new user
+enum UserLinkAction {
+  USER_LINK_ACTION_UNSPECIFIED = 0;
+  USER_LINK_ACTION_LINK_EXISTING = 1;
+  USER_LINK_ACTION_CREATE_NEW = 2;
+  USER_LINK_ACTION_NO_ACTION = 3;
+}
+
+message User {
+  option (buf.validate.message).cel = {
+    id : "user_source_system_info_consistency",
+    message : "user must have corresponding info for source system",
+    expression : "(this.source_system == 1 && has(this.auth_data)) || "
+                 "(this.source_system == 2 && has(this.ldap_info)) || "
+                 "(this.source_system == 3 && has(this.ldap_info)) || "
+                 "(this.source_system == 4) || "
+                 "(this.source_system == 5 && has(this.redfish_info)) || "
+                 "(this.source_system == 6 && has(this.nats_info)) || "
+                 "(this.source_system == 7 && has(this.unix_info)) || "
+                 "this.source_system == 0"
+  };
+  option (buf.validate.message).cel = {
+    id : "user_timestamps_ordering",
+    message : "created_at must be before or equal to updated_at",
+    expression : "!has(this.created_at) || !has(this.updated_at) || "
+                 "this.created_at <= this.updated_at"
+  };
+  option (buf.validate.message).cel = {
+    id : "user_last_login_after_creation",
+    message : "last_login must be after created_at",
+    expression : "!has(this.created_at) || !has(this.last_login) || "
+                 "this.created_at <= this.last_login"
+  };
+
+  string id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  string username = 2 [
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 64,
+    (buf.validate.field).string.pattern = "^[a-zA-Z0-9._-]+$"
+  ];
+  optional string full_name = 3 [
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 256
+  ];
+  optional string email = 4 [
+    (buf.validate.field).string.email = true,
+    (buf.validate.field).string.max_len = 320
+  ];
+  bool enabled = 5 [ (buf.validate.field).required = true ];
+  google.protobuf.Timestamp created_at = 6
+      [ (buf.validate.field).required = true ];
+  google.protobuf.Timestamp updated_at = 7
+      [ (buf.validate.field).required = true ];
+  optional google.protobuf.Timestamp last_login = 8;
+  UserSource source_system = 9
+      [ (buf.validate.field).enum.defined_only = true ];
+  UserCreationInterface creation_interface = 10
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional AuthenticationData auth_data = 11;
+  optional UnixUserInfo unix_info = 12;
+  optional LdapUserInfo ldap_info = 13;
+  optional RedfishAccountInfo redfish_info = 14;
+  optional NatsAccountInfo nats_info = 15;
+  map<string, string> custom_attributes = 16;
+}
+
+message AuthenticationData {
+  option (buf.validate.message).cel = {
+    id : "auth_data_password_expiry_after_change",
+    message : "password_expires_at must be after password_last_changed",
+    expression : "!has(this.password_last_changed) || "
+                 "!has(this.password_expires_at) || "
+                 "this.password_last_changed < this.password_expires_at"
+  };
+  option (buf.validate.message).cel = {
+    id : "auth_data_iterations_for_algorithm",
+    message : "iterations must be appropriate for hash algorithm",
+    expression : "(this.hash_algorithm == 1 && this.iterations >= 10 && "
+                 "this.iterations <= 15) || "
+                 "(this.hash_algorithm == 2 && this.iterations >= 1 && "
+                 "this.iterations <= 10) || "
+                 "(this.hash_algorithm == 3 && this.iterations >= 14 && "
+                 "this.iterations <= 20) || "
+                 "(this.hash_algorithm == 4 && this.iterations >= 100000) || "
+                 "(this.hash_algorithm == 5 && this.iterations >= 100000) || "
+                 "this.hash_algorithm == 0"
+  };
+
+  string password_hash = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string password_salt = 2 [ (buf.validate.field).string.min_len = 1 ];
+  PasswordHashAlgorithm hash_algorithm = 3
+      [ (buf.validate.field).enum.defined_only = true ];
+  int32 iterations = 4 [ (buf.validate.field).int32.gte = 1 ];
+  optional google.protobuf.Timestamp password_last_changed = 5;
+  optional google.protobuf.Timestamp password_expires_at = 6;
+  optional AccountLockoutInfo lockout_info = 7;
+}
+
+message AccountLockoutInfo {
+  option (buf.validate.message).cel = {
+    id : "lockout_info_consistency",
+    message : "lockout_time must be set when locked is true",
+    expression : "!this.locked || has(this.lockout_time)"
+  };
+  option (buf.validate.message).cel = {
+    id : "lockout_failed_attempts_reset_time",
+    message : "attempts_reset_time should be after lockout_time when both are "
+              "set",
+    expression : "!has(this.lockout_time) || !has(this.attempts_reset_time) || "
+                 "this.lockout_time <= this.attempts_reset_time"
+  };
+
+  bool locked = 1;
+  optional LockoutReason reason = 2
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional google.protobuf.Timestamp lockout_time = 3;
+  int32 failed_attempts = 4 [ (buf.validate.field).int32.gte = 0 ];
+  optional google.protobuf.Timestamp attempts_reset_time = 5;
+  optional int32 max_failed_attempts = 6 [ (buf.validate.field).int32.gte = 1 ];
+}
+
+message UnixUserInfo {
+  int32 uid = 1 [
+    (buf.validate.field).int32.gte = 0,
+    (buf.validate.field).int32.lte = 65535
+  ];
+  int32 gid = 2 [
+    (buf.validate.field).int32.gte = 0,
+    (buf.validate.field).int32.lte = 65535
+  ];
+  string home_directory = 3 [
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.pattern = "^/.*"
+  ];
+  optional string shell = 4 [ (buf.validate.field).string.pattern = "^/.*" ];
+  optional string gecos = 5 [ (buf.validate.field).string.max_len = 256 ];
+  repeated int32 supplementary_groups = 6
+      [ (buf.validate.field).repeated.items.int32.gte = 0 ];
+}
+
+message LdapUserInfo {
+  string ldap_dn = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string object_guid = 2 [ (buf.validate.field).string.min_len = 1 ];
+  optional string sam_account_name = 3 [
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 20
+  ];
+  optional string user_principal_name = 4
+      [ (buf.validate.field).string.min_len = 1 ];
+  repeated string member_of = 5;
+  optional google.protobuf.Timestamp account_expires = 6;
+  optional google.protobuf.Timestamp pwd_last_set = 7;
+  optional string domain = 8 [ (buf.validate.field).string.min_len = 1 ];
+  optional string organizational_unit = 9;
+}
+
+message RedfishAccountInfo {
+  optional string account_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  string role_id = 2 [ (buf.validate.field).string.min_len = 1 ];
+  optional RedfishLockoutPolicy lockout_policy = 3;
+  repeated string oem_account_types = 4;
+  optional bool password_change_required = 5;
+}
+
+message RedfishLockoutPolicy {
+  int32 threshold = 1 [
+    (buf.validate.field).int32.gte = 0,
+    (buf.validate.field).int32.lte = 999
+  ];
+  optional string duration = 2
+      [ (buf.validate.field).string.pattern = "^PT[0-9]+[HMS]$" ];
+  optional string reset_after = 3
+      [ (buf.validate.field).string.pattern = "^PT[0-9]+[HMS]$" ];
+}
+
+message NatsAccountInfo {
+  string account = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional NatsPermissions permissions = 2;
+  optional NatsLimits limits = 3;
+  optional string user_jwt = 4 [ (buf.validate.field).string.min_len = 1 ];
+  optional string user_key = 5 [ (buf.validate.field).string.min_len = 1 ];
+  optional string user_cred = 6 [ (buf.validate.field).string.min_len = 1 ];
+  optional google.protobuf.Timestamp jwt_expires_at = 7;
+}
+
+message NatsPermissions {
+  repeated string publish = 1;
+  repeated string subscribe = 2;
+  repeated string allow_responses = 3;
+  repeated string deny = 4;
+}
+
+message NatsLimits {
+  int64 data = 1 [ (buf.validate.field).int64.gte = -1 ];
+  int64 payload = 2 [ (buf.validate.field).int64.gte = -1 ];
+  int64 subs = 3 [ (buf.validate.field).int64.gte = -1 ];
+  optional int64 conn = 4 [ (buf.validate.field).int64.gte = -1 ];
+  optional int64 leaf = 5 [ (buf.validate.field).int64.gte = -1 ];
+}
+
+message UserLinkingOptions {
+  UserLinkAction unix_action = 1
+      [ (buf.validate.field).enum.defined_only = true ];
+  UserLinkAction ldap_action = 2
+      [ (buf.validate.field).enum.defined_only = true ];
+  UserLinkAction redfish_action = 3
+      [ (buf.validate.field).enum.defined_only = true ];
+  UserLinkAction nats_action = 4
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional string existing_unix_username = 5;
+  optional string existing_ldap_dn = 6;
+  optional string existing_redfish_account_id = 7;
+  optional string existing_nats_account = 8;
+}
+
 message CreateUserRequest {
-  // User to create
-  User user = 1 [(buf.validate.field).required = true];
+  option (buf.validate.message).cel = {
+    id : "create_user_password_requirement",
+    message : "password is required for local users",
+    expression : "this.user.source_system != 1 || size(this.password) >= 8"
+  };
 
-  // Plain text password (will be hashed server-side)
-  string password = 2 [(buf.validate.field).string.min_len = 8];
+  User user = 1 [ (buf.validate.field).required = true ];
+  optional string password = 2 [ (buf.validate.field).string.min_len = 8 ];
+  optional UserLinkingOptions linking_options = 3;
+  optional bool dry_run = 4;
 }
 
-// Response message for creating a new user
 message CreateUserResponse {
-  // Created user with server-generated fields
   User user = 1;
+  repeated string warnings = 2;
+  repeated string created_accounts = 3;
 }
 
-// Request message for getting a user by ID
 message GetUserRequest {
-  // User ID
-  string id = 1 [(buf.validate.field).string.min_len = 1];
+  oneof identifier {
+    option (buf.validate.oneof).required = true;
+    string id = 1;
+    string username = 2;
+    string email = 3;
+  }
+  optional google.protobuf.FieldMask field_mask = 4;
 }
 
-// Response message for getting a user
-message GetUserResponse {
-  // Retrieved user
-  User user = 1;
-}
+message GetUserResponse { User user = 1; }
 
-// Request message for updating a user
 message UpdateUserRequest {
-  // Updated user information
-  User user = 1 [(buf.validate.field).required = true];
+  User user = 1 [ (buf.validate.field).required = true ];
+  google.protobuf.FieldMask field_mask = 2;
+  optional UserLinkingOptions linking_options = 3;
 }
 
-// Response message for updating a user
 message UpdateUserResponse {
-  // Updated user
   User user = 1;
+  repeated string warnings = 2;
 }
 
-// Request message for deleting a user
 message DeleteUserRequest {
-  // User ID to delete
-  string id = 1 [(buf.validate.field).string.min_len = 1];
+  string id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional bool cascade_delete = 2;
+  optional bool backup_data = 3;
 }
 
-// Response message for deleting a user
 message DeleteUserResponse {
-  // Success indicator
   bool success = 1;
+  repeated string deleted_accounts = 2;
+  optional string backup_location = 3;
 }
 
-// Request message for listing users with optional filtering
 message ListUsersRequest {
-  // Optional filter by user source
-  UserSource source = 1;
-
-  // Optional filter by enabled status
-  bool enabled = 2;
-
-  // Optional filter by username (prefix match)
-  string username_prefix = 3;
+  optional UserSource source = 1
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional bool enabled = 2;
+  optional string username_prefix = 3;
+  optional google.protobuf.FieldMask field_mask = 4;
+  optional int32 page_size = 5 [ (buf.validate.field).int32.gte = 1 ];
+  optional string page_token = 6;
 }
 
-// Response message for listing users
 message ListUsersResponse {
-  // List of users matching the criteria
   repeated User users = 1;
+  optional string next_page_token = 2;
 }
 
-// Request message for changing a user's password
 message ChangePasswordRequest {
-  // User ID
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-
-  // Current password (for verification)
-  string current_password = 2 [(buf.validate.field).string.min_len = 1];
-
-  // New password
-  string new_password = 3 [(buf.validate.field).string.min_len = 8];
+  string id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  string current_password = 2 [ (buf.validate.field).string.min_len = 1 ];
+  string new_password = 3 [
+    (buf.validate.field).string.min_len = 8,
+    (buf.validate.field).string.max_len = 128
+  ];
 }
 
-// Response message for changing a user's password
 message ChangePasswordResponse {
-  // Success indicator
   bool success = 1;
+  optional string failure_reason = 2;
 }
 
-// Request message for resetting a user's password
 message ResetPasswordRequest {
-  // User ID
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-
-  // New password (if not provided, system generates one)
-  string new_password = 2 [(buf.validate.field).string.min_len = 8];
-
-  // Whether to force reset regardless of current state
-  bool force = 3;
+  string id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string new_password = 2 [
+    (buf.validate.field).string.min_len = 8,
+    (buf.validate.field).string.max_len = 128
+  ];
+  optional bool force = 3;
+  optional bool generate_password = 4;
 }
 
-// Response message for resetting a user's password
 message ResetPasswordResponse {
-  // The new password (if system-generated)
   string new_password = 1;
-
-  // Success indicator
   bool success = 2;
+  optional string failure_reason = 3;
 }
 
-// Request message for authenticating a user
 message AuthenticateUserRequest {
-  // Username
-  string username = 1 [(buf.validate.field).string.min_len = 1];
-
-  // Password
-  string password = 2 [(buf.validate.field).string.min_len = 1];
+  string username = 1 [ (buf.validate.field).string.min_len = 1 ];
+  string password = 2 [ (buf.validate.field).string.min_len = 1 ];
+  optional string source_ip = 3;
+  optional string user_agent = 4;
 }
 
-// Response message for authenticating a user
 message AuthenticateUserResponse {
-  // Authentication success
   bool success = 1;
-
-  // User ID if authentication successful
-  string user_id = 2;
-
-  // Authentication token (if successful)
-  string token = 3;
-
-  // Reason for authentication failure (if unsuccessful)
-  string failure_reason = 4;
-}
-
-// Service definition for user management operations
-service UserService {
-  // Create a new user
-  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
-
-  // Get a user by ID
-  rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
-
-  // Update an existing user
-  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {}
-
-  // Delete a user
-  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {}
-
-  // List users with optional filtering
-  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {}
-
-  // Change a user's password
-  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse) {}
-
-  // Reset a user's password
-  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse) {}
-
-  // Authenticate a user
-  rpc AuthenticateUser(AuthenticateUserRequest) returns (AuthenticateUserResponse) {}
+  optional string user_id = 2;
+  optional string token = 3;
+  optional string failure_reason = 4;
+  optional google.protobuf.Timestamp token_expires_at = 5;
 }

@@ -12,6 +12,8 @@ import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	fieldmaskpb "google.golang.org/protobuf/types/known/fieldmaskpb"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -24,7 +26,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Enumerations
 type ThermalZoneStatus int32
 
 const (
@@ -87,6 +88,8 @@ const (
 	CoolingDeviceType_COOLING_DEVICE_TYPE_FAN            CoolingDeviceType = 1
 	CoolingDeviceType_COOLING_DEVICE_TYPE_WATER_PUMP     CoolingDeviceType = 2
 	CoolingDeviceType_COOLING_DEVICE_TYPE_HEAT_EXCHANGER CoolingDeviceType = 3
+	CoolingDeviceType_COOLING_DEVICE_TYPE_LIQUID_COOLER  CoolingDeviceType = 4
+	CoolingDeviceType_COOLING_DEVICE_TYPE_BLOWER         CoolingDeviceType = 5
 )
 
 // Enum value maps for CoolingDeviceType.
@@ -96,12 +99,16 @@ var (
 		1: "COOLING_DEVICE_TYPE_FAN",
 		2: "COOLING_DEVICE_TYPE_WATER_PUMP",
 		3: "COOLING_DEVICE_TYPE_HEAT_EXCHANGER",
+		4: "COOLING_DEVICE_TYPE_LIQUID_COOLER",
+		5: "COOLING_DEVICE_TYPE_BLOWER",
 	}
 	CoolingDeviceType_value = map[string]int32{
 		"COOLING_DEVICE_TYPE_UNSPECIFIED":    0,
 		"COOLING_DEVICE_TYPE_FAN":            1,
 		"COOLING_DEVICE_TYPE_WATER_PUMP":     2,
 		"COOLING_DEVICE_TYPE_HEAT_EXCHANGER": 3,
+		"COOLING_DEVICE_TYPE_LIQUID_COOLER":  4,
+		"COOLING_DEVICE_TYPE_BLOWER":         5,
 	}
 )
 
@@ -138,8 +145,9 @@ const (
 	CoolingDeviceStatus_COOLING_DEVICE_STATUS_UNSPECIFIED CoolingDeviceStatus = 0
 	CoolingDeviceStatus_COOLING_DEVICE_STATUS_ENABLED     CoolingDeviceStatus = 1
 	CoolingDeviceStatus_COOLING_DEVICE_STATUS_DISABLED    CoolingDeviceStatus = 2
-	CoolingDeviceStatus_COOLING_DEVICE_STATUS_ERROR       CoolingDeviceStatus = 3
-	CoolingDeviceStatus_COOLING_DEVICE_STATUS_NOT_PRESENT CoolingDeviceStatus = 4
+	CoolingDeviceStatus_COOLING_DEVICE_STATUS_NOT_PRESENT CoolingDeviceStatus = 3
+	CoolingDeviceStatus_COOLING_DEVICE_STATUS_ERROR       CoolingDeviceStatus = 4
+	CoolingDeviceStatus_COOLING_DEVICE_STATUS_UNKNOWN     CoolingDeviceStatus = 5
 )
 
 // Enum value maps for CoolingDeviceStatus.
@@ -148,15 +156,17 @@ var (
 		0: "COOLING_DEVICE_STATUS_UNSPECIFIED",
 		1: "COOLING_DEVICE_STATUS_ENABLED",
 		2: "COOLING_DEVICE_STATUS_DISABLED",
-		3: "COOLING_DEVICE_STATUS_ERROR",
-		4: "COOLING_DEVICE_STATUS_NOT_PRESENT",
+		3: "COOLING_DEVICE_STATUS_NOT_PRESENT",
+		4: "COOLING_DEVICE_STATUS_ERROR",
+		5: "COOLING_DEVICE_STATUS_UNKNOWN",
 	}
 	CoolingDeviceStatus_value = map[string]int32{
 		"COOLING_DEVICE_STATUS_UNSPECIFIED": 0,
 		"COOLING_DEVICE_STATUS_ENABLED":     1,
 		"COOLING_DEVICE_STATUS_DISABLED":    2,
-		"COOLING_DEVICE_STATUS_ERROR":       3,
-		"COOLING_DEVICE_STATUS_NOT_PRESENT": 4,
+		"COOLING_DEVICE_STATUS_NOT_PRESENT": 3,
+		"COOLING_DEVICE_STATUS_ERROR":       4,
+		"COOLING_DEVICE_STATUS_UNKNOWN":     5,
 	}
 )
 
@@ -187,171 +197,132 @@ func (CoolingDeviceStatus) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{2}
 }
 
-type ThermalProfileType int32
+type CoolingDeviceControlMode int32
 
 const (
-	ThermalProfileType_THERMAL_PROFILE_TYPE_UNSPECIFIED ThermalProfileType = 0
-	ThermalProfileType_THERMAL_PROFILE_TYPE_QUIET       ThermalProfileType = 1
-	ThermalProfileType_THERMAL_PROFILE_TYPE_BALANCED    ThermalProfileType = 2
-	ThermalProfileType_THERMAL_PROFILE_TYPE_AGGRESSIVE  ThermalProfileType = 3
-	ThermalProfileType_THERMAL_PROFILE_TYPE_CUSTOM      ThermalProfileType = 4
+	CoolingDeviceControlMode_COOLING_DEVICE_CONTROL_MODE_UNSPECIFIED CoolingDeviceControlMode = 0
+	CoolingDeviceControlMode_COOLING_DEVICE_CONTROL_MODE_AUTOMATIC   CoolingDeviceControlMode = 1
+	CoolingDeviceControlMode_COOLING_DEVICE_CONTROL_MODE_MANUAL      CoolingDeviceControlMode = 2
+	CoolingDeviceControlMode_COOLING_DEVICE_CONTROL_MODE_PID         CoolingDeviceControlMode = 3
 )
 
-// Enum value maps for ThermalProfileType.
+// Enum value maps for CoolingDeviceControlMode.
 var (
-	ThermalProfileType_name = map[int32]string{
-		0: "THERMAL_PROFILE_TYPE_UNSPECIFIED",
-		1: "THERMAL_PROFILE_TYPE_QUIET",
-		2: "THERMAL_PROFILE_TYPE_BALANCED",
-		3: "THERMAL_PROFILE_TYPE_AGGRESSIVE",
-		4: "THERMAL_PROFILE_TYPE_CUSTOM",
+	CoolingDeviceControlMode_name = map[int32]string{
+		0: "COOLING_DEVICE_CONTROL_MODE_UNSPECIFIED",
+		1: "COOLING_DEVICE_CONTROL_MODE_AUTOMATIC",
+		2: "COOLING_DEVICE_CONTROL_MODE_MANUAL",
+		3: "COOLING_DEVICE_CONTROL_MODE_PID",
 	}
-	ThermalProfileType_value = map[string]int32{
-		"THERMAL_PROFILE_TYPE_UNSPECIFIED": 0,
-		"THERMAL_PROFILE_TYPE_QUIET":       1,
-		"THERMAL_PROFILE_TYPE_BALANCED":    2,
-		"THERMAL_PROFILE_TYPE_AGGRESSIVE":  3,
-		"THERMAL_PROFILE_TYPE_CUSTOM":      4,
+	CoolingDeviceControlMode_value = map[string]int32{
+		"COOLING_DEVICE_CONTROL_MODE_UNSPECIFIED": 0,
+		"COOLING_DEVICE_CONTROL_MODE_AUTOMATIC":   1,
+		"COOLING_DEVICE_CONTROL_MODE_MANUAL":      2,
+		"COOLING_DEVICE_CONTROL_MODE_PID":         3,
 	}
 )
 
-func (x ThermalProfileType) Enum() *ThermalProfileType {
-	p := new(ThermalProfileType)
+func (x CoolingDeviceControlMode) Enum() *CoolingDeviceControlMode {
+	p := new(CoolingDeviceControlMode)
 	*p = x
 	return p
 }
 
-func (x ThermalProfileType) String() string {
+func (x CoolingDeviceControlMode) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (ThermalProfileType) Descriptor() protoreflect.EnumDescriptor {
+func (CoolingDeviceControlMode) Descriptor() protoreflect.EnumDescriptor {
 	return file_schema_v1alpha1_thermal_proto_enumTypes[3].Descriptor()
 }
 
-func (ThermalProfileType) Type() protoreflect.EnumType {
+func (CoolingDeviceControlMode) Type() protoreflect.EnumType {
 	return &file_schema_v1alpha1_thermal_proto_enumTypes[3]
 }
 
-func (x ThermalProfileType) Number() protoreflect.EnumNumber {
+func (x CoolingDeviceControlMode) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use ThermalProfileType.Descriptor instead.
-func (ThermalProfileType) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use CoolingDeviceControlMode.Descriptor instead.
+func (CoolingDeviceControlMode) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{3}
 }
 
-// ThermalManagement represents the overall thermal management configuration for a server chassis
-type ThermalManagement struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Unique identifier for the thermal management instance
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Human-readable name for the thermal management instance
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// List of thermal zones within the chassis
-	Zones []*ThermalZone `protobuf:"bytes,3,rep,name=zones,proto3" json:"zones,omitempty"`
-	// Global thermal profile settings
-	Profile *ThermalProfile `protobuf:"bytes,4,opt,name=profile,proto3" json:"profile,omitempty"`
-	// Timestamp of the last update
-	LastUpdateTimestamp int64 `protobuf:"varint,5,opt,name=last_update_timestamp,json=lastUpdateTimestamp,proto3" json:"last_update_timestamp,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
-}
+type CoolingDeviceProfileType int32
 
-func (x *ThermalManagement) Reset() {
-	*x = ThermalManagement{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+const (
+	CoolingDeviceProfileType_COOLING_DEVICE_PROFILE_TYPE_UNSPECIFIED CoolingDeviceProfileType = 0
+	CoolingDeviceProfileType_COOLING_DEVICE_PROFILE_TYPE_QUIET       CoolingDeviceProfileType = 1
+	CoolingDeviceProfileType_COOLING_DEVICE_PROFILE_TYPE_BALANCED    CoolingDeviceProfileType = 2
+	CoolingDeviceProfileType_COOLING_DEVICE_PROFILE_TYPE_AGGRESSIVE  CoolingDeviceProfileType = 3
+	CoolingDeviceProfileType_COOLING_DEVICE_PROFILE_TYPE_CUSTOM      CoolingDeviceProfileType = 4
+)
 
-func (x *ThermalManagement) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ThermalManagement) ProtoMessage() {}
-
-func (x *ThermalManagement) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
+// Enum value maps for CoolingDeviceProfileType.
+var (
+	CoolingDeviceProfileType_name = map[int32]string{
+		0: "COOLING_DEVICE_PROFILE_TYPE_UNSPECIFIED",
+		1: "COOLING_DEVICE_PROFILE_TYPE_QUIET",
+		2: "COOLING_DEVICE_PROFILE_TYPE_BALANCED",
+		3: "COOLING_DEVICE_PROFILE_TYPE_AGGRESSIVE",
+		4: "COOLING_DEVICE_PROFILE_TYPE_CUSTOM",
 	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ThermalManagement.ProtoReflect.Descriptor instead.
-func (*ThermalManagement) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *ThermalManagement) GetId() string {
-	if x != nil {
-		return x.Id
+	CoolingDeviceProfileType_value = map[string]int32{
+		"COOLING_DEVICE_PROFILE_TYPE_UNSPECIFIED": 0,
+		"COOLING_DEVICE_PROFILE_TYPE_QUIET":       1,
+		"COOLING_DEVICE_PROFILE_TYPE_BALANCED":    2,
+		"COOLING_DEVICE_PROFILE_TYPE_AGGRESSIVE":  3,
+		"COOLING_DEVICE_PROFILE_TYPE_CUSTOM":      4,
 	}
-	return ""
+)
+
+func (x CoolingDeviceProfileType) Enum() *CoolingDeviceProfileType {
+	p := new(CoolingDeviceProfileType)
+	*p = x
+	return p
 }
 
-func (x *ThermalManagement) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
+func (x CoolingDeviceProfileType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (x *ThermalManagement) GetZones() []*ThermalZone {
-	if x != nil {
-		return x.Zones
-	}
-	return nil
+func (CoolingDeviceProfileType) Descriptor() protoreflect.EnumDescriptor {
+	return file_schema_v1alpha1_thermal_proto_enumTypes[4].Descriptor()
 }
 
-func (x *ThermalManagement) GetProfile() *ThermalProfile {
-	if x != nil {
-		return x.Profile
-	}
-	return nil
+func (CoolingDeviceProfileType) Type() protoreflect.EnumType {
+	return &file_schema_v1alpha1_thermal_proto_enumTypes[4]
 }
 
-func (x *ThermalManagement) GetLastUpdateTimestamp() int64 {
-	if x != nil {
-		return x.LastUpdateTimestamp
-	}
-	return 0
+func (x CoolingDeviceProfileType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
 }
 
-// ThermalZone represents a specific zone within the chassis that has its own thermal control
+// Deprecated: Use CoolingDeviceProfileType.Descriptor instead.
+func (CoolingDeviceProfileType) EnumDescriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{4}
+}
+
 type ThermalZone struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Unique identifier for the thermal zone
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Human-readable name for the thermal zone
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// List of sensors associated with this zone
-	SensorIds []string `protobuf:"bytes,3,rep,name=sensor_ids,json=sensorIds,proto3" json:"sensor_ids,omitempty"`
-	// List of cooling devices (fans, pumps) associated with this zone
-	CoolingDeviceIds []string `protobuf:"bytes,4,rep,name=cooling_device_ids,json=coolingDeviceIds,proto3" json:"cooling_device_ids,omitempty"`
-	// Current temperature in the zone (aggregated from sensors)
-	CurrentTemperature float64 `protobuf:"fixed64,5,opt,name=current_temperature,json=currentTemperature,proto3" json:"current_temperature,omitempty"`
-	// Target temperature for the zone
-	TargetTemperature float64 `protobuf:"fixed64,6,opt,name=target_temperature,json=targetTemperature,proto3" json:"target_temperature,omitempty"`
-	// PID controller settings for this zone
-	PidSettings *PIDSettings `protobuf:"bytes,7,opt,name=pid_settings,json=pidSettings,proto3" json:"pid_settings,omitempty"`
-	// Status of the thermal zone
-	Status ThermalZoneStatus `protobuf:"varint,8,opt,name=status,proto3,enum=schema.v1alpha1.ThermalZoneStatus" json:"status,omitempty"`
-	// Timestamp of the last update
-	LastUpdateTimestamp int64 `protobuf:"varint,9,opt,name=last_update_timestamp,json=lastUpdateTimestamp,proto3" json:"last_update_timestamp,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	Name               string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	SensorNames        []string               `protobuf:"bytes,2,rep,name=sensor_names,json=sensorNames,proto3" json:"sensor_names,omitempty"`
+	CoolingDeviceNames []string               `protobuf:"bytes,3,rep,name=cooling_device_names,json=coolingDeviceNames,proto3" json:"cooling_device_names,omitempty"`
+	CurrentTemperature float64                `protobuf:"fixed64,4,opt,name=current_temperature,json=currentTemperature,proto3" json:"current_temperature,omitempty"`
+	TargetTemperature  *float64               `protobuf:"fixed64,5,opt,name=target_temperature,json=targetTemperature,proto3,oneof" json:"target_temperature,omitempty"`
+	PidSettings        *PIDSettings           `protobuf:"bytes,6,opt,name=pid_settings,json=pidSettings,proto3,oneof" json:"pid_settings,omitempty"`
+	Status             ThermalZoneStatus      `protobuf:"varint,7,opt,name=status,proto3,enum=schema.v1alpha1.ThermalZoneStatus" json:"status,omitempty"`
+	Location           *Location              `protobuf:"bytes,8,opt,name=location,proto3,oneof" json:"location,omitempty"`
+	LastUpdated        *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=last_updated,json=lastUpdated,proto3,oneof" json:"last_updated,omitempty"`
+	CustomAttributes   map[string]string      `protobuf:"bytes,10,rep,name=custom_attributes,json=customAttributes,proto3" json:"custom_attributes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *ThermalZone) Reset() {
 	*x = ThermalZone{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[1]
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -363,7 +334,7 @@ func (x *ThermalZone) String() string {
 func (*ThermalZone) ProtoMessage() {}
 
 func (x *ThermalZone) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[1]
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -376,14 +347,7 @@ func (x *ThermalZone) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ThermalZone.ProtoReflect.Descriptor instead.
 func (*ThermalZone) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *ThermalZone) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
+	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *ThermalZone) GetName() string {
@@ -393,16 +357,16 @@ func (x *ThermalZone) GetName() string {
 	return ""
 }
 
-func (x *ThermalZone) GetSensorIds() []string {
+func (x *ThermalZone) GetSensorNames() []string {
 	if x != nil {
-		return x.SensorIds
+		return x.SensorNames
 	}
 	return nil
 }
 
-func (x *ThermalZone) GetCoolingDeviceIds() []string {
+func (x *ThermalZone) GetCoolingDeviceNames() []string {
 	if x != nil {
-		return x.CoolingDeviceIds
+		return x.CoolingDeviceNames
 	}
 	return nil
 }
@@ -415,8 +379,8 @@ func (x *ThermalZone) GetCurrentTemperature() float64 {
 }
 
 func (x *ThermalZone) GetTargetTemperature() float64 {
-	if x != nil {
-		return x.TargetTemperature
+	if x != nil && x.TargetTemperature != nil {
+		return *x.TargetTemperature
 	}
 	return 0
 }
@@ -435,41 +399,47 @@ func (x *ThermalZone) GetStatus() ThermalZoneStatus {
 	return ThermalZoneStatus_THERMAL_ZONE_STATUS_UNSPECIFIED
 }
 
-func (x *ThermalZone) GetLastUpdateTimestamp() int64 {
+func (x *ThermalZone) GetLocation() *Location {
 	if x != nil {
-		return x.LastUpdateTimestamp
+		return x.Location
 	}
-	return 0
+	return nil
 }
 
-// CoolingDevice represents a physical device used for thermal management
+func (x *ThermalZone) GetLastUpdated() *timestamppb.Timestamp {
+	if x != nil {
+		return x.LastUpdated
+	}
+	return nil
+}
+
+func (x *ThermalZone) GetCustomAttributes() map[string]string {
+	if x != nil {
+		return x.CustomAttributes
+	}
+	return nil
+}
+
 type CoolingDevice struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Unique identifier for the cooling device
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Human-readable name for the cooling device
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// Type of cooling device
-	Type CoolingDeviceType `protobuf:"varint,3,opt,name=type,proto3,enum=schema.v1alpha1.CoolingDeviceType" json:"type,omitempty"`
-	// Current speed or power level (0-100%)
-	SpeedPercent float64 `protobuf:"fixed64,4,opt,name=speed_percent,json=speedPercent,proto3" json:"speed_percent,omitempty"`
-	// Minimum allowed speed
-	MinSpeedPercent float64 `protobuf:"fixed64,5,opt,name=min_speed_percent,json=minSpeedPercent,proto3" json:"min_speed_percent,omitempty"`
-	// Maximum allowed speed
-	MaxSpeedPercent float64 `protobuf:"fixed64,6,opt,name=max_speed_percent,json=maxSpeedPercent,proto3" json:"max_speed_percent,omitempty"`
-	// Status of the cooling device
-	Status CoolingDeviceStatus `protobuf:"varint,7,opt,name=status,proto3,enum=schema.v1alpha1.CoolingDeviceStatus" json:"status,omitempty"`
-	// Physical location of the device
-	PhysicalLocation string `protobuf:"bytes,8,opt,name=physical_location,json=physicalLocation,proto3" json:"physical_location,omitempty"`
-	// Timestamp of the last update
-	LastUpdateTimestamp int64 `protobuf:"varint,9,opt,name=last_update_timestamp,json=lastUpdateTimestamp,proto3" json:"last_update_timestamp,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+	state                  protoimpl.MessageState    `protogen:"open.v1"`
+	Name                   string                    `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Type                   *CoolingDeviceType        `protobuf:"varint,2,opt,name=type,proto3,enum=schema.v1alpha1.CoolingDeviceType,oneof" json:"type,omitempty"`
+	CoolingPowerPercent    *float64                  `protobuf:"fixed64,3,opt,name=cooling_power_percent,json=coolingPowerPercent,proto3,oneof" json:"cooling_power_percent,omitempty"`
+	MinCoolingPowerPercent *float64                  `protobuf:"fixed64,4,opt,name=min_cooling_power_percent,json=minCoolingPowerPercent,proto3,oneof" json:"min_cooling_power_percent,omitempty"`
+	MaxCoolingPowerPercent *float64                  `protobuf:"fixed64,5,opt,name=max_cooling_power_percent,json=maxCoolingPowerPercent,proto3,oneof" json:"max_cooling_power_percent,omitempty"`
+	Sensors                []*Sensor                 `protobuf:"bytes,6,rep,name=sensors,proto3" json:"sensors,omitempty"`
+	Status                 *CoolingDeviceStatus      `protobuf:"varint,7,opt,name=status,proto3,enum=schema.v1alpha1.CoolingDeviceStatus,oneof" json:"status,omitempty"`
+	ControlMode            *CoolingDeviceControlMode `protobuf:"varint,8,opt,name=control_mode,json=controlMode,proto3,enum=schema.v1alpha1.CoolingDeviceControlMode,oneof" json:"control_mode,omitempty"`
+	Location               *Location                 `protobuf:"bytes,9,opt,name=location,proto3,oneof" json:"location,omitempty"`
+	LastUpdated            *timestamppb.Timestamp    `protobuf:"bytes,10,opt,name=last_updated,json=lastUpdated,proto3,oneof" json:"last_updated,omitempty"`
+	CustomAttributes       map[string]string         `protobuf:"bytes,11,rep,name=custom_attributes,json=customAttributes,proto3" json:"custom_attributes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *CoolingDevice) Reset() {
 	*x = CoolingDevice{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[2]
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -481,7 +451,7 @@ func (x *CoolingDevice) String() string {
 func (*CoolingDevice) ProtoMessage() {}
 
 func (x *CoolingDevice) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[2]
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -494,14 +464,7 @@ func (x *CoolingDevice) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CoolingDevice.ProtoReflect.Descriptor instead.
 func (*CoolingDevice) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *CoolingDevice) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
+	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *CoolingDevice) GetName() string {
@@ -512,68 +475,143 @@ func (x *CoolingDevice) GetName() string {
 }
 
 func (x *CoolingDevice) GetType() CoolingDeviceType {
-	if x != nil {
-		return x.Type
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return CoolingDeviceType_COOLING_DEVICE_TYPE_UNSPECIFIED
 }
 
-func (x *CoolingDevice) GetSpeedPercent() float64 {
-	if x != nil {
-		return x.SpeedPercent
+func (x *CoolingDevice) GetCoolingPowerPercent() float64 {
+	if x != nil && x.CoolingPowerPercent != nil {
+		return *x.CoolingPowerPercent
 	}
 	return 0
 }
 
-func (x *CoolingDevice) GetMinSpeedPercent() float64 {
-	if x != nil {
-		return x.MinSpeedPercent
+func (x *CoolingDevice) GetMinCoolingPowerPercent() float64 {
+	if x != nil && x.MinCoolingPowerPercent != nil {
+		return *x.MinCoolingPowerPercent
 	}
 	return 0
 }
 
-func (x *CoolingDevice) GetMaxSpeedPercent() float64 {
-	if x != nil {
-		return x.MaxSpeedPercent
+func (x *CoolingDevice) GetMaxCoolingPowerPercent() float64 {
+	if x != nil && x.MaxCoolingPowerPercent != nil {
+		return *x.MaxCoolingPowerPercent
 	}
 	return 0
+}
+
+func (x *CoolingDevice) GetSensors() []*Sensor {
+	if x != nil {
+		return x.Sensors
+	}
+	return nil
 }
 
 func (x *CoolingDevice) GetStatus() CoolingDeviceStatus {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return CoolingDeviceStatus_COOLING_DEVICE_STATUS_UNSPECIFIED
 }
 
-func (x *CoolingDevice) GetPhysicalLocation() string {
+func (x *CoolingDevice) GetControlMode() CoolingDeviceControlMode {
+	if x != nil && x.ControlMode != nil {
+		return *x.ControlMode
+	}
+	return CoolingDeviceControlMode_COOLING_DEVICE_CONTROL_MODE_UNSPECIFIED
+}
+
+func (x *CoolingDevice) GetLocation() *Location {
 	if x != nil {
-		return x.PhysicalLocation
+		return x.Location
+	}
+	return nil
+}
+
+func (x *CoolingDevice) GetLastUpdated() *timestamppb.Timestamp {
+	if x != nil {
+		return x.LastUpdated
+	}
+	return nil
+}
+
+func (x *CoolingDevice) GetCustomAttributes() map[string]string {
+	if x != nil {
+		return x.CustomAttributes
+	}
+	return nil
+}
+
+type ThermalProfile struct {
+	state          protoimpl.MessageState   `protogen:"open.v1"`
+	Type           CoolingDeviceProfileType `protobuf:"varint,1,opt,name=type,proto3,enum=schema.v1alpha1.CoolingDeviceProfileType" json:"type,omitempty"`
+	CustomSettings *PIDSettings             `protobuf:"bytes,2,opt,name=custom_settings,json=customSettings,proto3,oneof" json:"custom_settings,omitempty"`
+	Description    *string                  `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *ThermalProfile) Reset() {
+	*x = ThermalProfile{}
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ThermalProfile) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ThermalProfile) ProtoMessage() {}
+
+func (x *ThermalProfile) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ThermalProfile.ProtoReflect.Descriptor instead.
+func (*ThermalProfile) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ThermalProfile) GetType() CoolingDeviceProfileType {
+	if x != nil {
+		return x.Type
+	}
+	return CoolingDeviceProfileType_COOLING_DEVICE_PROFILE_TYPE_UNSPECIFIED
+}
+
+func (x *ThermalProfile) GetCustomSettings() *PIDSettings {
+	if x != nil {
+		return x.CustomSettings
+	}
+	return nil
+}
+
+func (x *ThermalProfile) GetDescription() string {
+	if x != nil && x.Description != nil {
+		return *x.Description
 	}
 	return ""
 }
 
-func (x *CoolingDevice) GetLastUpdateTimestamp() int64 {
-	if x != nil {
-		return x.LastUpdateTimestamp
-	}
-	return 0
-}
-
-// PIDSettings represents the parameters for PID control
 type PIDSettings struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Proportional gain
-	Kp float64 `protobuf:"fixed64,1,opt,name=kp,proto3" json:"kp,omitempty"`
-	// Integral gain
-	Ki float64 `protobuf:"fixed64,2,opt,name=ki,proto3" json:"ki,omitempty"`
-	// Derivative gain
-	Kd float64 `protobuf:"fixed64,3,opt,name=kd,proto3" json:"kd,omitempty"`
-	// Sample time in seconds
-	SampleTime float64 `protobuf:"fixed64,4,opt,name=sample_time,json=sampleTime,proto3" json:"sample_time,omitempty"`
-	// Output limits (0-100% for fan speeds)
-	OutputMin     float64 `protobuf:"fixed64,5,opt,name=output_min,json=outputMin,proto3" json:"output_min,omitempty"`
-	OutputMax     float64 `protobuf:"fixed64,6,opt,name=output_max,json=outputMax,proto3" json:"output_max,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Kp            float64                `protobuf:"fixed64,1,opt,name=kp,proto3" json:"kp,omitempty"`
+	Ki            float64                `protobuf:"fixed64,2,opt,name=ki,proto3" json:"ki,omitempty"`
+	Kd            float64                `protobuf:"fixed64,3,opt,name=kd,proto3" json:"kd,omitempty"`
+	SampleTime    float64                `protobuf:"fixed64,4,opt,name=sample_time,json=sampleTime,proto3" json:"sample_time,omitempty"`
+	OutputMin     *float64               `protobuf:"fixed64,5,opt,name=output_min,json=outputMin,proto3,oneof" json:"output_min,omitempty"`
+	OutputMax     *float64               `protobuf:"fixed64,6,opt,name=output_max,json=outputMax,proto3,oneof" json:"output_max,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -637,266 +675,35 @@ func (x *PIDSettings) GetSampleTime() float64 {
 }
 
 func (x *PIDSettings) GetOutputMin() float64 {
-	if x != nil {
-		return x.OutputMin
+	if x != nil && x.OutputMin != nil {
+		return *x.OutputMin
 	}
 	return 0
 }
 
 func (x *PIDSettings) GetOutputMax() float64 {
-	if x != nil {
-		return x.OutputMax
+	if x != nil && x.OutputMax != nil {
+		return *x.OutputMax
 	}
 	return 0
 }
 
-// ThermalProfile represents predefined thermal management profiles
-type ThermalProfile struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Profile type
-	Type ThermalProfileType `protobuf:"varint,1,opt,name=type,proto3,enum=schema.v1alpha1.ThermalProfileType" json:"type,omitempty"`
-	// Custom PID settings (only used when type is CUSTOM)
-	CustomSettings *PIDSettings `protobuf:"bytes,2,opt,name=custom_settings,json=customSettings,proto3" json:"custom_settings,omitempty"`
-	// Description of the profile
-	Description   string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ThermalProfile) Reset() {
-	*x = ThermalProfile{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ThermalProfile) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ThermalProfile) ProtoMessage() {}
-
-func (x *ThermalProfile) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ThermalProfile.ProtoReflect.Descriptor instead.
-func (*ThermalProfile) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *ThermalProfile) GetType() ThermalProfileType {
-	if x != nil {
-		return x.Type
-	}
-	return ThermalProfileType_THERMAL_PROFILE_TYPE_UNSPECIFIED
-}
-
-func (x *ThermalProfile) GetCustomSettings() *PIDSettings {
-	if x != nil {
-		return x.CustomSettings
-	}
-	return nil
-}
-
-func (x *ThermalProfile) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-// Request message for getting a thermal management configuration by ID
-type GetThermalManagementRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetThermalManagementRequest) Reset() {
-	*x = GetThermalManagementRequest{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetThermalManagementRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetThermalManagementRequest) ProtoMessage() {}
-
-func (x *GetThermalManagementRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetThermalManagementRequest.ProtoReflect.Descriptor instead.
-func (*GetThermalManagementRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *GetThermalManagementRequest) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-// Response message for getting a thermal management configuration
-type GetThermalManagementResponse struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	ThermalManagement *ThermalManagement     `protobuf:"bytes,1,opt,name=thermal_management,json=thermalManagement,proto3" json:"thermal_management,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
-}
-
-func (x *GetThermalManagementResponse) Reset() {
-	*x = GetThermalManagementResponse{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetThermalManagementResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetThermalManagementResponse) ProtoMessage() {}
-
-func (x *GetThermalManagementResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetThermalManagementResponse.ProtoReflect.Descriptor instead.
-func (*GetThermalManagementResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *GetThermalManagementResponse) GetThermalManagement() *ThermalManagement {
-	if x != nil {
-		return x.ThermalManagement
-	}
-	return nil
-}
-
-// Request message for listing thermal management configurations
-type ListThermalManagementRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListThermalManagementRequest) Reset() {
-	*x = ListThermalManagementRequest{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListThermalManagementRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListThermalManagementRequest) ProtoMessage() {}
-
-func (x *ListThermalManagementRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListThermalManagementRequest.ProtoReflect.Descriptor instead.
-func (*ListThermalManagementRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{7}
-}
-
-// Response message for listing thermal management configurations
-type ListThermalManagementResponse struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	ThermalManagements []*ThermalManagement   `protobuf:"bytes,1,rep,name=thermal_managements,json=thermalManagements,proto3" json:"thermal_managements,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
-}
-
-func (x *ListThermalManagementResponse) Reset() {
-	*x = ListThermalManagementResponse{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListThermalManagementResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListThermalManagementResponse) ProtoMessage() {}
-
-func (x *ListThermalManagementResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListThermalManagementResponse.ProtoReflect.Descriptor instead.
-func (*ListThermalManagementResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *ListThermalManagementResponse) GetThermalManagements() []*ThermalManagement {
-	if x != nil {
-		return x.ThermalManagements
-	}
-	return nil
-}
-
-// Request message for getting a thermal zone by ID
 type GetThermalZoneRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Identifier:
+	//
+	//	*GetThermalZoneRequest_Name
+	//	*GetThermalZoneRequest_Status
+	//	*GetThermalZoneRequest_Location
+	Identifier    isGetThermalZoneRequest_Identifier `protobuf_oneof:"identifier"`
+	FieldMask     *fieldmaskpb.FieldMask             `protobuf:"bytes,4,opt,name=field_mask,json=fieldMask,proto3" json:"field_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetThermalZoneRequest) Reset() {
 	*x = GetThermalZoneRequest{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[9]
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -908,7 +715,7 @@ func (x *GetThermalZoneRequest) String() string {
 func (*GetThermalZoneRequest) ProtoMessage() {}
 
 func (x *GetThermalZoneRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[9]
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -921,27 +728,82 @@ func (x *GetThermalZoneRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetThermalZoneRequest.ProtoReflect.Descriptor instead.
 func (*GetThermalZoneRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{9}
+	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetThermalZoneRequest) GetId() string {
+func (x *GetThermalZoneRequest) GetIdentifier() isGetThermalZoneRequest_Identifier {
 	if x != nil {
-		return x.Id
+		return x.Identifier
+	}
+	return nil
+}
+
+func (x *GetThermalZoneRequest) GetName() string {
+	if x != nil {
+		if x, ok := x.Identifier.(*GetThermalZoneRequest_Name); ok {
+			return x.Name
+		}
 	}
 	return ""
 }
 
-// Response message for getting a thermal zone
+func (x *GetThermalZoneRequest) GetStatus() ThermalZoneStatus {
+	if x != nil {
+		if x, ok := x.Identifier.(*GetThermalZoneRequest_Status); ok {
+			return x.Status
+		}
+	}
+	return ThermalZoneStatus_THERMAL_ZONE_STATUS_UNSPECIFIED
+}
+
+func (x *GetThermalZoneRequest) GetLocation() *Location {
+	if x != nil {
+		if x, ok := x.Identifier.(*GetThermalZoneRequest_Location); ok {
+			return x.Location
+		}
+	}
+	return nil
+}
+
+func (x *GetThermalZoneRequest) GetFieldMask() *fieldmaskpb.FieldMask {
+	if x != nil {
+		return x.FieldMask
+	}
+	return nil
+}
+
+type isGetThermalZoneRequest_Identifier interface {
+	isGetThermalZoneRequest_Identifier()
+}
+
+type GetThermalZoneRequest_Name struct {
+	Name string `protobuf:"bytes,1,opt,name=name,proto3,oneof"`
+}
+
+type GetThermalZoneRequest_Status struct {
+	Status ThermalZoneStatus `protobuf:"varint,2,opt,name=status,proto3,enum=schema.v1alpha1.ThermalZoneStatus,oneof"`
+}
+
+type GetThermalZoneRequest_Location struct {
+	Location *Location `protobuf:"bytes,3,opt,name=location,proto3,oneof"`
+}
+
+func (*GetThermalZoneRequest_Name) isGetThermalZoneRequest_Identifier() {}
+
+func (*GetThermalZoneRequest_Status) isGetThermalZoneRequest_Identifier() {}
+
+func (*GetThermalZoneRequest_Location) isGetThermalZoneRequest_Identifier() {}
+
 type GetThermalZoneResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ThermalZone   *ThermalZone           `protobuf:"bytes,1,opt,name=thermal_zone,json=thermalZone,proto3" json:"thermal_zone,omitempty"`
+	ThermalZones  []*ThermalZone         `protobuf:"bytes,1,rep,name=thermal_zones,json=thermalZones,proto3" json:"thermal_zones,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetThermalZoneResponse) Reset() {
 	*x = GetThermalZoneResponse{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[10]
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -953,7 +815,7 @@ func (x *GetThermalZoneResponse) String() string {
 func (*GetThermalZoneResponse) ProtoMessage() {}
 
 func (x *GetThermalZoneResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[10]
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -966,27 +828,146 @@ func (x *GetThermalZoneResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetThermalZoneResponse.ProtoReflect.Descriptor instead.
 func (*GetThermalZoneResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{10}
+	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetThermalZoneResponse) GetThermalZone() *ThermalZone {
+func (x *GetThermalZoneResponse) GetThermalZones() []*ThermalZone {
+	if x != nil {
+		return x.ThermalZones
+	}
+	return nil
+}
+
+type SetThermalZoneRequest struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Name              string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	TargetTemperature *float64               `protobuf:"fixed64,2,opt,name=target_temperature,json=targetTemperature,proto3,oneof" json:"target_temperature,omitempty"`
+	PidSettings       *PIDSettings           `protobuf:"bytes,3,opt,name=pid_settings,json=pidSettings,proto3,oneof" json:"pid_settings,omitempty"`
+	Status            *ThermalZoneStatus     `protobuf:"varint,4,opt,name=status,proto3,enum=schema.v1alpha1.ThermalZoneStatus,oneof" json:"status,omitempty"`
+	FieldMask         *fieldmaskpb.FieldMask `protobuf:"bytes,5,opt,name=field_mask,json=fieldMask,proto3" json:"field_mask,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *SetThermalZoneRequest) Reset() {
+	*x = SetThermalZoneRequest{}
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetThermalZoneRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetThermalZoneRequest) ProtoMessage() {}
+
+func (x *SetThermalZoneRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetThermalZoneRequest.ProtoReflect.Descriptor instead.
+func (*SetThermalZoneRequest) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *SetThermalZoneRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *SetThermalZoneRequest) GetTargetTemperature() float64 {
+	if x != nil && x.TargetTemperature != nil {
+		return *x.TargetTemperature
+	}
+	return 0
+}
+
+func (x *SetThermalZoneRequest) GetPidSettings() *PIDSettings {
+	if x != nil {
+		return x.PidSettings
+	}
+	return nil
+}
+
+func (x *SetThermalZoneRequest) GetStatus() ThermalZoneStatus {
+	if x != nil && x.Status != nil {
+		return *x.Status
+	}
+	return ThermalZoneStatus_THERMAL_ZONE_STATUS_UNSPECIFIED
+}
+
+func (x *SetThermalZoneRequest) GetFieldMask() *fieldmaskpb.FieldMask {
+	if x != nil {
+		return x.FieldMask
+	}
+	return nil
+}
+
+type SetThermalZoneResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ThermalZone   *ThermalZone           `protobuf:"bytes,1,opt,name=thermal_zone,json=thermalZone,proto3" json:"thermal_zone,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetThermalZoneResponse) Reset() {
+	*x = SetThermalZoneResponse{}
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetThermalZoneResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetThermalZoneResponse) ProtoMessage() {}
+
+func (x *SetThermalZoneResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetThermalZoneResponse.ProtoReflect.Descriptor instead.
+func (*SetThermalZoneResponse) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *SetThermalZoneResponse) GetThermalZone() *ThermalZone {
 	if x != nil {
 		return x.ThermalZone
 	}
 	return nil
 }
 
-// Request message for listing thermal zones with optional filtering
 type ListThermalZonesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        ThermalZoneStatus      `protobuf:"varint,1,opt,name=status,proto3,enum=schema.v1alpha1.ThermalZoneStatus" json:"status,omitempty"`
+	FieldMask     *fieldmaskpb.FieldMask `protobuf:"bytes,1,opt,name=field_mask,json=fieldMask,proto3" json:"field_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListThermalZonesRequest) Reset() {
 	*x = ListThermalZonesRequest{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[11]
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -998,7 +979,7 @@ func (x *ListThermalZonesRequest) String() string {
 func (*ListThermalZonesRequest) ProtoMessage() {}
 
 func (x *ListThermalZonesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[11]
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1011,17 +992,16 @@ func (x *ListThermalZonesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListThermalZonesRequest.ProtoReflect.Descriptor instead.
 func (*ListThermalZonesRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{11}
+	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *ListThermalZonesRequest) GetStatus() ThermalZoneStatus {
+func (x *ListThermalZonesRequest) GetFieldMask() *fieldmaskpb.FieldMask {
 	if x != nil {
-		return x.Status
+		return x.FieldMask
 	}
-	return ThermalZoneStatus_THERMAL_ZONE_STATUS_UNSPECIFIED
+	return nil
 }
 
-// Response message for listing thermal zones
 type ListThermalZonesResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ThermalZones  []*ThermalZone         `protobuf:"bytes,1,rep,name=thermal_zones,json=thermalZones,proto3" json:"thermal_zones,omitempty"`
@@ -1031,7 +1011,7 @@ type ListThermalZonesResponse struct {
 
 func (x *ListThermalZonesResponse) Reset() {
 	*x = ListThermalZonesResponse{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[12]
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1043,7 +1023,7 @@ func (x *ListThermalZonesResponse) String() string {
 func (*ListThermalZonesResponse) ProtoMessage() {}
 
 func (x *ListThermalZonesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[12]
+	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1056,7 +1036,7 @@ func (x *ListThermalZonesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListThermalZonesResponse.ProtoReflect.Descriptor instead.
 func (*ListThermalZonesResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{12}
+	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ListThermalZonesResponse) GetThermalZones() []*ThermalZone {
@@ -1066,296 +1046,134 @@ func (x *ListThermalZonesResponse) GetThermalZones() []*ThermalZone {
 	return nil
 }
 
-// Request message for getting a cooling device by ID
-type GetCoolingDeviceRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetCoolingDeviceRequest) Reset() {
-	*x = GetCoolingDeviceRequest{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetCoolingDeviceRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetCoolingDeviceRequest) ProtoMessage() {}
-
-func (x *GetCoolingDeviceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[13]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetCoolingDeviceRequest.ProtoReflect.Descriptor instead.
-func (*GetCoolingDeviceRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *GetCoolingDeviceRequest) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-// Response message for getting a cooling device
-type GetCoolingDeviceResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	CoolingDevice *CoolingDevice         `protobuf:"bytes,1,opt,name=cooling_device,json=coolingDevice,proto3" json:"cooling_device,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetCoolingDeviceResponse) Reset() {
-	*x = GetCoolingDeviceResponse{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[14]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetCoolingDeviceResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetCoolingDeviceResponse) ProtoMessage() {}
-
-func (x *GetCoolingDeviceResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[14]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetCoolingDeviceResponse.ProtoReflect.Descriptor instead.
-func (*GetCoolingDeviceResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *GetCoolingDeviceResponse) GetCoolingDevice() *CoolingDevice {
-	if x != nil {
-		return x.CoolingDevice
-	}
-	return nil
-}
-
-// Request message for listing cooling devices with optional filtering
-type ListCoolingDevicesRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          CoolingDeviceType      `protobuf:"varint,1,opt,name=type,proto3,enum=schema.v1alpha1.CoolingDeviceType" json:"type,omitempty"`
-	Status        CoolingDeviceStatus    `protobuf:"varint,2,opt,name=status,proto3,enum=schema.v1alpha1.CoolingDeviceStatus" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListCoolingDevicesRequest) Reset() {
-	*x = ListCoolingDevicesRequest{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[15]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListCoolingDevicesRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListCoolingDevicesRequest) ProtoMessage() {}
-
-func (x *ListCoolingDevicesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[15]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListCoolingDevicesRequest.ProtoReflect.Descriptor instead.
-func (*ListCoolingDevicesRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *ListCoolingDevicesRequest) GetType() CoolingDeviceType {
-	if x != nil {
-		return x.Type
-	}
-	return CoolingDeviceType_COOLING_DEVICE_TYPE_UNSPECIFIED
-}
-
-func (x *ListCoolingDevicesRequest) GetStatus() CoolingDeviceStatus {
-	if x != nil {
-		return x.Status
-	}
-	return CoolingDeviceStatus_COOLING_DEVICE_STATUS_UNSPECIFIED
-}
-
-// Response message for listing cooling devices
-type ListCoolingDevicesResponse struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	CoolingDevices []*CoolingDevice       `protobuf:"bytes,1,rep,name=cooling_devices,json=coolingDevices,proto3" json:"cooling_devices,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *ListCoolingDevicesResponse) Reset() {
-	*x = ListCoolingDevicesResponse{}
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[16]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListCoolingDevicesResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListCoolingDevicesResponse) ProtoMessage() {}
-
-func (x *ListCoolingDevicesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_thermal_proto_msgTypes[16]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListCoolingDevicesResponse.ProtoReflect.Descriptor instead.
-func (*ListCoolingDevicesResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_thermal_proto_rawDescGZIP(), []int{16}
-}
-
-func (x *ListCoolingDevicesResponse) GetCoolingDevices() []*CoolingDevice {
-	if x != nil {
-		return x.CoolingDevices
-	}
-	return nil
-}
-
 var File_schema_v1alpha1_thermal_proto protoreflect.FileDescriptor
 
 const file_schema_v1alpha1_thermal_proto_rawDesc = "" +
 	"\n" +
-	"\x1dschema/v1alpha1/thermal.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\"\xf6\x01\n" +
-	"\x11ThermalManagement\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12<\n" +
-	"\x05zones\x18\x03 \x03(\v2\x1c.schema.v1alpha1.ThermalZoneB\b\xbaH\x05\x92\x01\x02\b\x01R\x05zones\x129\n" +
-	"\aprofile\x18\x04 \x01(\v2\x1f.schema.v1alpha1.ThermalProfileR\aprofile\x122\n" +
-	"\x15last_update_timestamp\x18\x05 \x01(\x03R\x13lastUpdateTimestamp\"\xc5\x03\n" +
-	"\vThermalZone\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12'\n" +
-	"\n" +
-	"sensor_ids\x18\x03 \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x01R\tsensorIds\x126\n" +
-	"\x12cooling_device_ids\x18\x04 \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x01R\x10coolingDeviceIds\x12/\n" +
-	"\x13current_temperature\x18\x05 \x01(\x01R\x12currentTemperature\x12=\n" +
-	"\x12target_temperature\x18\x06 \x01(\x01B\x0e\xbaH\v\x12\t!\x00\x00\x00\x00\x00\x00\x00\x00R\x11targetTemperature\x12?\n" +
-	"\fpid_settings\x18\a \x01(\v2\x1c.schema.v1alpha1.PIDSettingsR\vpidSettings\x12:\n" +
-	"\x06status\x18\b \x01(\x0e2\".schema.v1alpha1.ThermalZoneStatusR\x06status\x122\n" +
-	"\x15last_update_timestamp\x18\t \x01(\x03R\x13lastUpdateTimestamp\"\xe4\x03\n" +
-	"\rCoolingDevice\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12\x1b\n" +
-	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x126\n" +
-	"\x04type\x18\x03 \x01(\x0e2\".schema.v1alpha1.CoolingDeviceTypeR\x04type\x12<\n" +
-	"\rspeed_percent\x18\x04 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00R\fspeedPercent\x12C\n" +
-	"\x11min_speed_percent\x18\x05 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00R\x0fminSpeedPercent\x12C\n" +
-	"\x11max_speed_percent\x18\x06 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00R\x0fmaxSpeedPercent\x12<\n" +
-	"\x06status\x18\a \x01(\x0e2$.schema.v1alpha1.CoolingDeviceStatusR\x06status\x12+\n" +
-	"\x11physical_location\x18\b \x01(\tR\x10physicalLocation\x122\n" +
-	"\x15last_update_timestamp\x18\t \x01(\x03R\x13lastUpdateTimestamp\"\x8e\x02\n" +
+	"\x1dschema/v1alpha1/thermal.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1eschema/v1alpha1/location.proto\x1a\x1cschema/v1alpha1/sensor.proto\"\xe6\x05\n" +
+	"\vThermalZone\x12\x1b\n" +
+	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12+\n" +
+	"\fsensor_names\x18\x02 \x03(\tB\b\xbaH\x05\x92\x01\x02\b\x01R\vsensorNames\x120\n" +
+	"\x14cooling_device_names\x18\x03 \x03(\tR\x12coolingDeviceNames\x12/\n" +
+	"\x13current_temperature\x18\x04 \x01(\x01R\x12currentTemperature\x122\n" +
+	"\x12target_temperature\x18\x05 \x01(\x01H\x00R\x11targetTemperature\x88\x01\x01\x12D\n" +
+	"\fpid_settings\x18\x06 \x01(\v2\x1c.schema.v1alpha1.PIDSettingsH\x01R\vpidSettings\x88\x01\x01\x12D\n" +
+	"\x06status\x18\a \x01(\x0e2\".schema.v1alpha1.ThermalZoneStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06status\x12:\n" +
+	"\blocation\x18\b \x01(\v2\x19.schema.v1alpha1.LocationH\x02R\blocation\x88\x01\x01\x12B\n" +
+	"\flast_updated\x18\t \x01(\v2\x1a.google.protobuf.TimestampH\x03R\vlastUpdated\x88\x01\x01\x12_\n" +
+	"\x11custom_attributes\x18\n" +
+	" \x03(\v22.schema.v1alpha1.ThermalZone.CustomAttributesEntryR\x10customAttributes\x1aC\n" +
+	"\x15CustomAttributesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\x15\n" +
+	"\x13_target_temperatureB\x0f\n" +
+	"\r_pid_settingsB\v\n" +
+	"\t_locationB\x0f\n" +
+	"\r_last_updated\"\x82\r\n" +
+	"\rCoolingDevice\x12\x1b\n" +
+	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12E\n" +
+	"\x04type\x18\x02 \x01(\x0e2\".schema.v1alpha1.CoolingDeviceTypeB\b\xbaH\x05\x82\x01\x02\x10\x01H\x00R\x04type\x88\x01\x01\x12P\n" +
+	"\x15cooling_power_percent\x18\x03 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00H\x01R\x13coolingPowerPercent\x88\x01\x01\x12W\n" +
+	"\x19min_cooling_power_percent\x18\x04 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00H\x02R\x16minCoolingPowerPercent\x88\x01\x01\x12W\n" +
+	"\x19max_cooling_power_percent\x18\x05 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00H\x03R\x16maxCoolingPowerPercent\x88\x01\x01\x121\n" +
+	"\asensors\x18\x06 \x03(\v2\x17.schema.v1alpha1.SensorR\asensors\x12K\n" +
+	"\x06status\x18\a \x01(\x0e2$.schema.v1alpha1.CoolingDeviceStatusB\b\xbaH\x05\x82\x01\x02\x10\x01H\x04R\x06status\x88\x01\x01\x12[\n" +
+	"\fcontrol_mode\x18\b \x01(\x0e2).schema.v1alpha1.CoolingDeviceControlModeB\b\xbaH\x05\x82\x01\x02\x10\x01H\x05R\vcontrolMode\x88\x01\x01\x12:\n" +
+	"\blocation\x18\t \x01(\v2\x19.schema.v1alpha1.LocationH\x06R\blocation\x88\x01\x01\x12B\n" +
+	"\flast_updated\x18\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampH\aR\vlastUpdated\x88\x01\x01\x12a\n" +
+	"\x11custom_attributes\x18\v \x03(\v24.schema.v1alpha1.CoolingDevice.CustomAttributesEntryR\x10customAttributes\x1aC\n" +
+	"\x15CustomAttributesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:\xea\x04\xbaH\xe6\x04\x1a\xea\x01\n" +
+	"\x15cooling_device_bounds\x12>max_cooling_power_percent must be >= min_cooling_power_percent\x1a\x90\x01!has(this.max_cooling_power_percent) || !has(this.min_cooling_power_percent) || this.max_cooling_power_percent >= this.min_cooling_power_percent\x1a\xf6\x02\n" +
+	"!cooling_device_power_within_range\x12\\cooling_power_percent must be within min_cooling_power_percent and max_cooling_power_percent\x1a\xf2\x01!has(this.cooling_power_percent) || !has(this.min_cooling_power_percent) || !has(this.max_cooling_power_percent) || (this.cooling_power_percent >= this.min_cooling_power_percent && this.cooling_power_percent <= this.max_cooling_power_percent)B\a\n" +
+	"\x05_typeB\x18\n" +
+	"\x16_cooling_power_percentB\x1c\n" +
+	"\x1a_min_cooling_power_percentB\x1c\n" +
+	"\x1a_max_cooling_power_percentB\t\n" +
+	"\a_statusB\x0f\n" +
+	"\r_control_modeB\v\n" +
+	"\t_locationB\x0f\n" +
+	"\r_last_updated\"\xfe\x02\n" +
+	"\x0eThermalProfile\x12G\n" +
+	"\x04type\x18\x01 \x01(\x0e2).schema.v1alpha1.CoolingDeviceProfileTypeB\b\xbaH\x05\x82\x01\x02\x10\x01R\x04type\x12J\n" +
+	"\x0fcustom_settings\x18\x02 \x01(\v2\x1c.schema.v1alpha1.PIDSettingsH\x00R\x0ecustomSettings\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x03 \x01(\tH\x01R\vdescription\x88\x01\x01:\x8b\x01\xbaH\x87\x01\x1a\x84\x01\n" +
+	"\x1fthermal_profile_custom_settings\x124custom_settings must be provided when type is CUSTOM\x1a+this.type != 4 || has(this.custom_settings)B\x12\n" +
+	"\x10_custom_settingsB\x0e\n" +
+	"\f_description\"\x99\x03\n" +
 	"\vPIDSettings\x12\x1e\n" +
 	"\x02kp\x18\x01 \x01(\x01B\x0e\xbaH\v\x12\t)\x00\x00\x00\x00\x00\x00\x00\x00R\x02kp\x12\x1e\n" +
 	"\x02ki\x18\x02 \x01(\x01B\x0e\xbaH\v\x12\t)\x00\x00\x00\x00\x00\x00\x00\x00R\x02ki\x12\x1e\n" +
 	"\x02kd\x18\x03 \x01(\x01B\x0e\xbaH\v\x12\t)\x00\x00\x00\x00\x00\x00\x00\x00R\x02kd\x12/\n" +
 	"\vsample_time\x18\x04 \x01(\x01B\x0e\xbaH\v\x12\t!\x00\x00\x00\x00\x00\x00\x00\x00R\n" +
-	"sampleTime\x126\n" +
+	"sampleTime\x12\"\n" +
 	"\n" +
-	"output_min\x18\x05 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00R\toutputMin\x126\n" +
+	"output_min\x18\x05 \x01(\x01H\x00R\toutputMin\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"output_max\x18\x06 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x00Y@)\x00\x00\x00\x00\x00\x00\x00\x00R\toutputMax\"\xb2\x01\n" +
-	"\x0eThermalProfile\x127\n" +
-	"\x04type\x18\x01 \x01(\x0e2#.schema.v1alpha1.ThermalProfileTypeR\x04type\x12E\n" +
-	"\x0fcustom_settings\x18\x02 \x01(\v2\x1c.schema.v1alpha1.PIDSettingsR\x0ecustomSettings\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\"6\n" +
-	"\x1bGetThermalManagementRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"q\n" +
-	"\x1cGetThermalManagementResponse\x12Q\n" +
-	"\x12thermal_management\x18\x01 \x01(\v2\".schema.v1alpha1.ThermalManagementR\x11thermalManagement\"\x1e\n" +
-	"\x1cListThermalManagementRequest\"t\n" +
-	"\x1dListThermalManagementResponse\x12S\n" +
-	"\x13thermal_managements\x18\x01 \x03(\v2\".schema.v1alpha1.ThermalManagementR\x12thermalManagements\"0\n" +
-	"\x15GetThermalZoneRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"Y\n" +
-	"\x16GetThermalZoneResponse\x12?\n" +
-	"\fthermal_zone\x18\x01 \x01(\v2\x1c.schema.v1alpha1.ThermalZoneR\vthermalZone\"U\n" +
-	"\x17ListThermalZonesRequest\x12:\n" +
-	"\x06status\x18\x01 \x01(\x0e2\".schema.v1alpha1.ThermalZoneStatusR\x06status\"]\n" +
+	"output_max\x18\x06 \x01(\x01H\x01R\toutputMax\x88\x01\x01:\x92\x01\xbaH\x8e\x01\x1a\x8b\x01\n" +
+	"\x11pid_output_bounds\x12 output_min must be <= output_max\x1aT!has(this.output_min) || !has(this.output_max) || this.output_min <= this.output_maxB\r\n" +
+	"\v_output_minB\r\n" +
+	"\v_output_max\"\xf4\x01\n" +
+	"\x15GetThermalZoneRequest\x12\x14\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x12<\n" +
+	"\x06status\x18\x02 \x01(\x0e2\".schema.v1alpha1.ThermalZoneStatusH\x00R\x06status\x127\n" +
+	"\blocation\x18\x03 \x01(\v2\x19.schema.v1alpha1.LocationH\x00R\blocation\x129\n" +
+	"\n" +
+	"field_mask\x18\x04 \x01(\v2\x1a.google.protobuf.FieldMaskR\tfieldMaskB\x13\n" +
+	"\n" +
+	"identifier\x12\x05\xbaH\x02\b\x01\"[\n" +
+	"\x16GetThermalZoneResponse\x12A\n" +
+	"\rthermal_zones\x18\x01 \x03(\v2\x1c.schema.v1alpha1.ThermalZoneR\fthermalZones\"\xe7\x02\n" +
+	"\x15SetThermalZoneRequest\x12\x1b\n" +
+	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x122\n" +
+	"\x12target_temperature\x18\x02 \x01(\x01H\x00R\x11targetTemperature\x88\x01\x01\x12D\n" +
+	"\fpid_settings\x18\x03 \x01(\v2\x1c.schema.v1alpha1.PIDSettingsH\x01R\vpidSettings\x88\x01\x01\x12I\n" +
+	"\x06status\x18\x04 \x01(\x0e2\".schema.v1alpha1.ThermalZoneStatusB\b\xbaH\x05\x82\x01\x02\x10\x01H\x02R\x06status\x88\x01\x01\x129\n" +
+	"\n" +
+	"field_mask\x18\x05 \x01(\v2\x1a.google.protobuf.FieldMaskR\tfieldMaskB\x15\n" +
+	"\x13_target_temperatureB\x0f\n" +
+	"\r_pid_settingsB\t\n" +
+	"\a_status\"Y\n" +
+	"\x16SetThermalZoneResponse\x12?\n" +
+	"\fthermal_zone\x18\x01 \x01(\v2\x1c.schema.v1alpha1.ThermalZoneR\vthermalZone\"T\n" +
+	"\x17ListThermalZonesRequest\x129\n" +
+	"\n" +
+	"field_mask\x18\x01 \x01(\v2\x1a.google.protobuf.FieldMaskR\tfieldMask\"]\n" +
 	"\x18ListThermalZonesResponse\x12A\n" +
-	"\rthermal_zones\x18\x01 \x03(\v2\x1c.schema.v1alpha1.ThermalZoneR\fthermalZones\"2\n" +
-	"\x17GetCoolingDeviceRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\"a\n" +
-	"\x18GetCoolingDeviceResponse\x12E\n" +
-	"\x0ecooling_device\x18\x01 \x01(\v2\x1e.schema.v1alpha1.CoolingDeviceR\rcoolingDevice\"\x91\x01\n" +
-	"\x19ListCoolingDevicesRequest\x126\n" +
-	"\x04type\x18\x01 \x01(\x0e2\".schema.v1alpha1.CoolingDeviceTypeR\x04type\x12<\n" +
-	"\x06status\x18\x02 \x01(\x0e2$.schema.v1alpha1.CoolingDeviceStatusR\x06status\"e\n" +
-	"\x1aListCoolingDevicesResponse\x12G\n" +
-	"\x0fcooling_devices\x18\x01 \x03(\v2\x1e.schema.v1alpha1.CoolingDeviceR\x0ecoolingDevices*\xba\x01\n" +
+	"\rthermal_zones\x18\x01 \x03(\v2\x1c.schema.v1alpha1.ThermalZoneR\fthermalZones*\xba\x01\n" +
 	"\x11ThermalZoneStatus\x12#\n" +
 	"\x1fTHERMAL_ZONE_STATUS_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aTHERMAL_ZONE_STATUS_NORMAL\x10\x01\x12\x1f\n" +
 	"\x1bTHERMAL_ZONE_STATUS_WARNING\x10\x02\x12 \n" +
 	"\x1cTHERMAL_ZONE_STATUS_CRITICAL\x10\x03\x12\x1d\n" +
-	"\x19THERMAL_ZONE_STATUS_ERROR\x10\x04*\xa1\x01\n" +
+	"\x19THERMAL_ZONE_STATUS_ERROR\x10\x04*\xe8\x01\n" +
 	"\x11CoolingDeviceType\x12#\n" +
 	"\x1fCOOLING_DEVICE_TYPE_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17COOLING_DEVICE_TYPE_FAN\x10\x01\x12\"\n" +
 	"\x1eCOOLING_DEVICE_TYPE_WATER_PUMP\x10\x02\x12&\n" +
-	"\"COOLING_DEVICE_TYPE_HEAT_EXCHANGER\x10\x03*\xcb\x01\n" +
+	"\"COOLING_DEVICE_TYPE_HEAT_EXCHANGER\x10\x03\x12%\n" +
+	"!COOLING_DEVICE_TYPE_LIQUID_COOLER\x10\x04\x12\x1e\n" +
+	"\x1aCOOLING_DEVICE_TYPE_BLOWER\x10\x05*\xee\x01\n" +
 	"\x13CoolingDeviceStatus\x12%\n" +
 	"!COOLING_DEVICE_STATUS_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dCOOLING_DEVICE_STATUS_ENABLED\x10\x01\x12\"\n" +
-	"\x1eCOOLING_DEVICE_STATUS_DISABLED\x10\x02\x12\x1f\n" +
-	"\x1bCOOLING_DEVICE_STATUS_ERROR\x10\x03\x12%\n" +
-	"!COOLING_DEVICE_STATUS_NOT_PRESENT\x10\x04*\xc3\x01\n" +
-	"\x12ThermalProfileType\x12$\n" +
-	" THERMAL_PROFILE_TYPE_UNSPECIFIED\x10\x00\x12\x1e\n" +
-	"\x1aTHERMAL_PROFILE_TYPE_QUIET\x10\x01\x12!\n" +
-	"\x1dTHERMAL_PROFILE_TYPE_BALANCED\x10\x02\x12#\n" +
-	"\x1fTHERMAL_PROFILE_TYPE_AGGRESSIVE\x10\x03\x12\x1f\n" +
-	"\x1bTHERMAL_PROFILE_TYPE_CUSTOM\x10\x042\x8b\x02\n" +
-	"\x18ThermalManagementService\x12u\n" +
-	"\x14GetThermalManagement\x12,.schema.v1alpha1.GetThermalManagementRequest\x1a-.schema.v1alpha1.GetThermalManagementResponse\"\x00\x12x\n" +
-	"\x15ListThermalManagement\x12-.schema.v1alpha1.ListThermalManagementRequest\x1a..schema.v1alpha1.ListThermalManagementResponse\"\x002\xe4\x01\n" +
-	"\x12ThermalZoneService\x12c\n" +
-	"\x0eGetThermalZone\x12&.schema.v1alpha1.GetThermalZoneRequest\x1a'.schema.v1alpha1.GetThermalZoneResponse\"\x00\x12i\n" +
-	"\x10ListThermalZones\x12(.schema.v1alpha1.ListThermalZonesRequest\x1a).schema.v1alpha1.ListThermalZonesResponse\"\x002\xf2\x01\n" +
-	"\x14CoolingDeviceService\x12i\n" +
-	"\x10GetCoolingDevice\x12(.schema.v1alpha1.GetCoolingDeviceRequest\x1a).schema.v1alpha1.GetCoolingDeviceResponse\"\x00\x12o\n" +
-	"\x12ListCoolingDevices\x12*.schema.v1alpha1.ListCoolingDevicesRequest\x1a+.schema.v1alpha1.ListCoolingDevicesResponse\"\x00B\xbf\x01\n" +
+	"\x1eCOOLING_DEVICE_STATUS_DISABLED\x10\x02\x12%\n" +
+	"!COOLING_DEVICE_STATUS_NOT_PRESENT\x10\x03\x12\x1f\n" +
+	"\x1bCOOLING_DEVICE_STATUS_ERROR\x10\x04\x12!\n" +
+	"\x1dCOOLING_DEVICE_STATUS_UNKNOWN\x10\x05*\xbf\x01\n" +
+	"\x18CoolingDeviceControlMode\x12+\n" +
+	"'COOLING_DEVICE_CONTROL_MODE_UNSPECIFIED\x10\x00\x12)\n" +
+	"%COOLING_DEVICE_CONTROL_MODE_AUTOMATIC\x10\x01\x12&\n" +
+	"\"COOLING_DEVICE_CONTROL_MODE_MANUAL\x10\x02\x12#\n" +
+	"\x1fCOOLING_DEVICE_CONTROL_MODE_PID\x10\x03*\xec\x01\n" +
+	"\x18CoolingDeviceProfileType\x12+\n" +
+	"'COOLING_DEVICE_PROFILE_TYPE_UNSPECIFIED\x10\x00\x12%\n" +
+	"!COOLING_DEVICE_PROFILE_TYPE_QUIET\x10\x01\x12(\n" +
+	"$COOLING_DEVICE_PROFILE_TYPE_BALANCED\x10\x02\x12*\n" +
+	"&COOLING_DEVICE_PROFILE_TYPE_AGGRESSIVE\x10\x03\x12&\n" +
+	"\"COOLING_DEVICE_PROFILE_TYPE_CUSTOM\x10\x04B\xbf\x01\n" +
 	"\x13com.schema.v1alpha1B\fThermalProtoP\x01Z=github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;schemav1alpha1\xa2\x02\x03SXX\xaa\x02\x0fSchema.V1alpha1\xca\x02\x0fSchema\\V1alpha1\xe2\x02\x1bSchema\\V1alpha1\\GPBMetadata\xea\x02\x10Schema::V1alpha1b\x06proto3"
 
 var (
@@ -1370,66 +1188,61 @@ func file_schema_v1alpha1_thermal_proto_rawDescGZIP() []byte {
 	return file_schema_v1alpha1_thermal_proto_rawDescData
 }
 
-var file_schema_v1alpha1_thermal_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_schema_v1alpha1_thermal_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_schema_v1alpha1_thermal_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
+var file_schema_v1alpha1_thermal_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_schema_v1alpha1_thermal_proto_goTypes = []any{
-	(ThermalZoneStatus)(0),                // 0: schema.v1alpha1.ThermalZoneStatus
-	(CoolingDeviceType)(0),                // 1: schema.v1alpha1.CoolingDeviceType
-	(CoolingDeviceStatus)(0),              // 2: schema.v1alpha1.CoolingDeviceStatus
-	(ThermalProfileType)(0),               // 3: schema.v1alpha1.ThermalProfileType
-	(*ThermalManagement)(nil),             // 4: schema.v1alpha1.ThermalManagement
-	(*ThermalZone)(nil),                   // 5: schema.v1alpha1.ThermalZone
-	(*CoolingDevice)(nil),                 // 6: schema.v1alpha1.CoolingDevice
-	(*PIDSettings)(nil),                   // 7: schema.v1alpha1.PIDSettings
-	(*ThermalProfile)(nil),                // 8: schema.v1alpha1.ThermalProfile
-	(*GetThermalManagementRequest)(nil),   // 9: schema.v1alpha1.GetThermalManagementRequest
-	(*GetThermalManagementResponse)(nil),  // 10: schema.v1alpha1.GetThermalManagementResponse
-	(*ListThermalManagementRequest)(nil),  // 11: schema.v1alpha1.ListThermalManagementRequest
-	(*ListThermalManagementResponse)(nil), // 12: schema.v1alpha1.ListThermalManagementResponse
-	(*GetThermalZoneRequest)(nil),         // 13: schema.v1alpha1.GetThermalZoneRequest
-	(*GetThermalZoneResponse)(nil),        // 14: schema.v1alpha1.GetThermalZoneResponse
-	(*ListThermalZonesRequest)(nil),       // 15: schema.v1alpha1.ListThermalZonesRequest
-	(*ListThermalZonesResponse)(nil),      // 16: schema.v1alpha1.ListThermalZonesResponse
-	(*GetCoolingDeviceRequest)(nil),       // 17: schema.v1alpha1.GetCoolingDeviceRequest
-	(*GetCoolingDeviceResponse)(nil),      // 18: schema.v1alpha1.GetCoolingDeviceResponse
-	(*ListCoolingDevicesRequest)(nil),     // 19: schema.v1alpha1.ListCoolingDevicesRequest
-	(*ListCoolingDevicesResponse)(nil),    // 20: schema.v1alpha1.ListCoolingDevicesResponse
+	(ThermalZoneStatus)(0),           // 0: schema.v1alpha1.ThermalZoneStatus
+	(CoolingDeviceType)(0),           // 1: schema.v1alpha1.CoolingDeviceType
+	(CoolingDeviceStatus)(0),         // 2: schema.v1alpha1.CoolingDeviceStatus
+	(CoolingDeviceControlMode)(0),    // 3: schema.v1alpha1.CoolingDeviceControlMode
+	(CoolingDeviceProfileType)(0),    // 4: schema.v1alpha1.CoolingDeviceProfileType
+	(*ThermalZone)(nil),              // 5: schema.v1alpha1.ThermalZone
+	(*CoolingDevice)(nil),            // 6: schema.v1alpha1.CoolingDevice
+	(*ThermalProfile)(nil),           // 7: schema.v1alpha1.ThermalProfile
+	(*PIDSettings)(nil),              // 8: schema.v1alpha1.PIDSettings
+	(*GetThermalZoneRequest)(nil),    // 9: schema.v1alpha1.GetThermalZoneRequest
+	(*GetThermalZoneResponse)(nil),   // 10: schema.v1alpha1.GetThermalZoneResponse
+	(*SetThermalZoneRequest)(nil),    // 11: schema.v1alpha1.SetThermalZoneRequest
+	(*SetThermalZoneResponse)(nil),   // 12: schema.v1alpha1.SetThermalZoneResponse
+	(*ListThermalZonesRequest)(nil),  // 13: schema.v1alpha1.ListThermalZonesRequest
+	(*ListThermalZonesResponse)(nil), // 14: schema.v1alpha1.ListThermalZonesResponse
+	nil,                              // 15: schema.v1alpha1.ThermalZone.CustomAttributesEntry
+	nil,                              // 16: schema.v1alpha1.CoolingDevice.CustomAttributesEntry
+	(*Location)(nil),                 // 17: schema.v1alpha1.Location
+	(*timestamppb.Timestamp)(nil),    // 18: google.protobuf.Timestamp
+	(*Sensor)(nil),                   // 19: schema.v1alpha1.Sensor
+	(*fieldmaskpb.FieldMask)(nil),    // 20: google.protobuf.FieldMask
 }
 var file_schema_v1alpha1_thermal_proto_depIdxs = []int32{
-	5,  // 0: schema.v1alpha1.ThermalManagement.zones:type_name -> schema.v1alpha1.ThermalZone
-	8,  // 1: schema.v1alpha1.ThermalManagement.profile:type_name -> schema.v1alpha1.ThermalProfile
-	7,  // 2: schema.v1alpha1.ThermalZone.pid_settings:type_name -> schema.v1alpha1.PIDSettings
-	0,  // 3: schema.v1alpha1.ThermalZone.status:type_name -> schema.v1alpha1.ThermalZoneStatus
-	1,  // 4: schema.v1alpha1.CoolingDevice.type:type_name -> schema.v1alpha1.CoolingDeviceType
-	2,  // 5: schema.v1alpha1.CoolingDevice.status:type_name -> schema.v1alpha1.CoolingDeviceStatus
-	3,  // 6: schema.v1alpha1.ThermalProfile.type:type_name -> schema.v1alpha1.ThermalProfileType
-	7,  // 7: schema.v1alpha1.ThermalProfile.custom_settings:type_name -> schema.v1alpha1.PIDSettings
-	4,  // 8: schema.v1alpha1.GetThermalManagementResponse.thermal_management:type_name -> schema.v1alpha1.ThermalManagement
-	4,  // 9: schema.v1alpha1.ListThermalManagementResponse.thermal_managements:type_name -> schema.v1alpha1.ThermalManagement
-	5,  // 10: schema.v1alpha1.GetThermalZoneResponse.thermal_zone:type_name -> schema.v1alpha1.ThermalZone
-	0,  // 11: schema.v1alpha1.ListThermalZonesRequest.status:type_name -> schema.v1alpha1.ThermalZoneStatus
-	5,  // 12: schema.v1alpha1.ListThermalZonesResponse.thermal_zones:type_name -> schema.v1alpha1.ThermalZone
-	6,  // 13: schema.v1alpha1.GetCoolingDeviceResponse.cooling_device:type_name -> schema.v1alpha1.CoolingDevice
-	1,  // 14: schema.v1alpha1.ListCoolingDevicesRequest.type:type_name -> schema.v1alpha1.CoolingDeviceType
-	2,  // 15: schema.v1alpha1.ListCoolingDevicesRequest.status:type_name -> schema.v1alpha1.CoolingDeviceStatus
-	6,  // 16: schema.v1alpha1.ListCoolingDevicesResponse.cooling_devices:type_name -> schema.v1alpha1.CoolingDevice
-	9,  // 17: schema.v1alpha1.ThermalManagementService.GetThermalManagement:input_type -> schema.v1alpha1.GetThermalManagementRequest
-	11, // 18: schema.v1alpha1.ThermalManagementService.ListThermalManagement:input_type -> schema.v1alpha1.ListThermalManagementRequest
-	13, // 19: schema.v1alpha1.ThermalZoneService.GetThermalZone:input_type -> schema.v1alpha1.GetThermalZoneRequest
-	15, // 20: schema.v1alpha1.ThermalZoneService.ListThermalZones:input_type -> schema.v1alpha1.ListThermalZonesRequest
-	17, // 21: schema.v1alpha1.CoolingDeviceService.GetCoolingDevice:input_type -> schema.v1alpha1.GetCoolingDeviceRequest
-	19, // 22: schema.v1alpha1.CoolingDeviceService.ListCoolingDevices:input_type -> schema.v1alpha1.ListCoolingDevicesRequest
-	10, // 23: schema.v1alpha1.ThermalManagementService.GetThermalManagement:output_type -> schema.v1alpha1.GetThermalManagementResponse
-	12, // 24: schema.v1alpha1.ThermalManagementService.ListThermalManagement:output_type -> schema.v1alpha1.ListThermalManagementResponse
-	14, // 25: schema.v1alpha1.ThermalZoneService.GetThermalZone:output_type -> schema.v1alpha1.GetThermalZoneResponse
-	16, // 26: schema.v1alpha1.ThermalZoneService.ListThermalZones:output_type -> schema.v1alpha1.ListThermalZonesResponse
-	18, // 27: schema.v1alpha1.CoolingDeviceService.GetCoolingDevice:output_type -> schema.v1alpha1.GetCoolingDeviceResponse
-	20, // 28: schema.v1alpha1.CoolingDeviceService.ListCoolingDevices:output_type -> schema.v1alpha1.ListCoolingDevicesResponse
-	23, // [23:29] is the sub-list for method output_type
-	17, // [17:23] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	8,  // 0: schema.v1alpha1.ThermalZone.pid_settings:type_name -> schema.v1alpha1.PIDSettings
+	0,  // 1: schema.v1alpha1.ThermalZone.status:type_name -> schema.v1alpha1.ThermalZoneStatus
+	17, // 2: schema.v1alpha1.ThermalZone.location:type_name -> schema.v1alpha1.Location
+	18, // 3: schema.v1alpha1.ThermalZone.last_updated:type_name -> google.protobuf.Timestamp
+	15, // 4: schema.v1alpha1.ThermalZone.custom_attributes:type_name -> schema.v1alpha1.ThermalZone.CustomAttributesEntry
+	1,  // 5: schema.v1alpha1.CoolingDevice.type:type_name -> schema.v1alpha1.CoolingDeviceType
+	19, // 6: schema.v1alpha1.CoolingDevice.sensors:type_name -> schema.v1alpha1.Sensor
+	2,  // 7: schema.v1alpha1.CoolingDevice.status:type_name -> schema.v1alpha1.CoolingDeviceStatus
+	3,  // 8: schema.v1alpha1.CoolingDevice.control_mode:type_name -> schema.v1alpha1.CoolingDeviceControlMode
+	17, // 9: schema.v1alpha1.CoolingDevice.location:type_name -> schema.v1alpha1.Location
+	18, // 10: schema.v1alpha1.CoolingDevice.last_updated:type_name -> google.protobuf.Timestamp
+	16, // 11: schema.v1alpha1.CoolingDevice.custom_attributes:type_name -> schema.v1alpha1.CoolingDevice.CustomAttributesEntry
+	4,  // 12: schema.v1alpha1.ThermalProfile.type:type_name -> schema.v1alpha1.CoolingDeviceProfileType
+	8,  // 13: schema.v1alpha1.ThermalProfile.custom_settings:type_name -> schema.v1alpha1.PIDSettings
+	0,  // 14: schema.v1alpha1.GetThermalZoneRequest.status:type_name -> schema.v1alpha1.ThermalZoneStatus
+	17, // 15: schema.v1alpha1.GetThermalZoneRequest.location:type_name -> schema.v1alpha1.Location
+	20, // 16: schema.v1alpha1.GetThermalZoneRequest.field_mask:type_name -> google.protobuf.FieldMask
+	5,  // 17: schema.v1alpha1.GetThermalZoneResponse.thermal_zones:type_name -> schema.v1alpha1.ThermalZone
+	8,  // 18: schema.v1alpha1.SetThermalZoneRequest.pid_settings:type_name -> schema.v1alpha1.PIDSettings
+	0,  // 19: schema.v1alpha1.SetThermalZoneRequest.status:type_name -> schema.v1alpha1.ThermalZoneStatus
+	20, // 20: schema.v1alpha1.SetThermalZoneRequest.field_mask:type_name -> google.protobuf.FieldMask
+	5,  // 21: schema.v1alpha1.SetThermalZoneResponse.thermal_zone:type_name -> schema.v1alpha1.ThermalZone
+	20, // 22: schema.v1alpha1.ListThermalZonesRequest.field_mask:type_name -> google.protobuf.FieldMask
+	5,  // 23: schema.v1alpha1.ListThermalZonesResponse.thermal_zones:type_name -> schema.v1alpha1.ThermalZone
+	24, // [24:24] is the sub-list for method output_type
+	24, // [24:24] is the sub-list for method input_type
+	24, // [24:24] is the sub-list for extension type_name
+	24, // [24:24] is the sub-list for extension extendee
+	0,  // [0:24] is the sub-list for field type_name
 }
 
 func init() { file_schema_v1alpha1_thermal_proto_init() }
@@ -1437,15 +1250,27 @@ func file_schema_v1alpha1_thermal_proto_init() {
 	if File_schema_v1alpha1_thermal_proto != nil {
 		return
 	}
+	file_schema_v1alpha1_location_proto_init()
+	file_schema_v1alpha1_sensor_proto_init()
+	file_schema_v1alpha1_thermal_proto_msgTypes[0].OneofWrappers = []any{}
+	file_schema_v1alpha1_thermal_proto_msgTypes[1].OneofWrappers = []any{}
+	file_schema_v1alpha1_thermal_proto_msgTypes[2].OneofWrappers = []any{}
+	file_schema_v1alpha1_thermal_proto_msgTypes[3].OneofWrappers = []any{}
+	file_schema_v1alpha1_thermal_proto_msgTypes[4].OneofWrappers = []any{
+		(*GetThermalZoneRequest_Name)(nil),
+		(*GetThermalZoneRequest_Status)(nil),
+		(*GetThermalZoneRequest_Location)(nil),
+	}
+	file_schema_v1alpha1_thermal_proto_msgTypes[6].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_schema_v1alpha1_thermal_proto_rawDesc), len(file_schema_v1alpha1_thermal_proto_rawDesc)),
-			NumEnums:      4,
-			NumMessages:   17,
+			NumEnums:      5,
+			NumMessages:   12,
 			NumExtensions: 0,
-			NumServices:   3,
+			NumServices:   0,
 		},
 		GoTypes:           file_schema_v1alpha1_thermal_proto_goTypes,
 		DependencyIndexes: file_schema_v1alpha1_thermal_proto_depIdxs,

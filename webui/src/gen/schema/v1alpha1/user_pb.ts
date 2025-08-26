@@ -4,127 +4,102 @@
 // @generated from file schema/v1alpha1/user.proto (package schema.v1alpha1, syntax proto3)
 /* eslint-disable */
 
-import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
-import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import { enumDesc, fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
 import { file_buf_validate_validate } from "../../buf/validate/validate_pb";
+import type { FieldMask, Timestamp } from "@bufbuild/protobuf/wkt";
+import { file_google_protobuf_field_mask, file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file schema/v1alpha1/user.proto.
  */
 export const file_schema_v1alpha1_user: GenFile = /*@__PURE__*/
-  fileDesc("ChpzY2hlbWEvdjFhbHBoYTEvdXNlci5wcm90bxIPc2NoZW1hLnYxYWxwaGExIq8ECgRVc2VyEhMKAmlkGAEgASgJQge6SARyAhABEhkKCHVzZXJuYW1lGAIgASgJQge6SARyAhABEhoKCWZ1bGxfbmFtZRgDIAEoCUIHukgEcgIQARIWCgVlbWFpbBgEIAEoCUIHukgEcgJgARIPCgdlbmFibGVkGAUgASgIEhIKCmNyZWF0ZWRfYXQYBiABKAMSEgoKdXBkYXRlZF9hdBgHIAEoAxISCgpsYXN0X2xvZ2luGAggASgDEjIKDXNvdXJjZV9zeXN0ZW0YCSABKA4yGy5zY2hlbWEudjFhbHBoYTEuVXNlclNvdXJjZRI2CglhdXRoX2RhdGEYCiABKAsyIy5zY2hlbWEudjFhbHBoYTEuQXV0aGVudGljYXRpb25EYXRhEjAKCXVuaXhfaW5mbxgLIAEoCzIdLnNjaGVtYS52MWFscGhhMS5Vbml4VXNlckluZm8SMAoJbGRhcF9pbmZvGAwgASgLMh0uc2NoZW1hLnYxYWxwaGExLkxkYXBVc2VySW5mbxI5CgxyZWRmaXNoX2luZm8YDSABKAsyIy5zY2hlbWEudjFhbHBoYTEuUmVkZmlzaEFjY291bnRJbmZvEjMKCW5hdHNfaW5mbxgOIAEoCzIgLnNjaGVtYS52MWFscGhhMS5OYXRzQWNjb3VudEluZm8SNgoMc2VsaW51eF9pbmZvGA8gASgLMiAuc2NoZW1hLnYxYWxwaGExLlNlbGludXhVc2VySW5mbyKNAgoSQXV0aGVudGljYXRpb25EYXRhEhUKDXBhc3N3b3JkX2hhc2gYASABKAkSFQoNcGFzc3dvcmRfc2FsdBgCIAEoCRI+Cg5oYXNoX2FsZ29yaXRobRgDIAEoDjImLnNjaGVtYS52MWFscGhhMS5QYXNzd29yZEhhc2hBbGdvcml0aG0SEgoKaXRlcmF0aW9ucxgEIAEoBRIdChVwYXNzd29yZF9sYXN0X2NoYW5nZWQYBSABKAMSGwoTcGFzc3dvcmRfZXhwaXJlc19hdBgGIAEoAxI5Cgxsb2Nrb3V0X2luZm8YByABKAsyIy5zY2hlbWEudjFhbHBoYTEuQWNjb3VudExvY2tvdXRJbmZvIqABChJBY2NvdW50TG9ja291dEluZm8SDgoGbG9ja2VkGAEgASgIEi4KBnJlYXNvbhgCIAEoDjIeLnNjaGVtYS52MWFscGhhMS5Mb2Nrb3V0UmVhc29uEhQKDGxvY2tvdXRfdGltZRgDIAEoAxIXCg9mYWlsZWRfYXR0ZW1wdHMYBCABKAUSGwoTYXR0ZW1wdHNfcmVzZXRfdGltZRgFIAEoAyJ5CgxVbml4VXNlckluZm8SFAoDdWlkGAEgASgFQge6SAQaAigAEhQKA2dpZBgCIAEoBUIHukgEGgIoABIfCg5ob21lX2RpcmVjdG9yeRgDIAEoCUIHukgEcgIQARINCgVzaGVsbBgEIAEoCRINCgVnZWNvcxgFIAEoCSK2AQoMTGRhcFVzZXJJbmZvEhgKB2xkYXBfZG4YASABKAlCB7pIBHICEAESEwoLb2JqZWN0X2d1aWQYAiABKAkSGAoQc2FtX2FjY291bnRfbmFtZRgDIAEoCRIbChN1c2VyX3ByaW5jaXBhbF9uYW1lGAQgASgJEhEKCW1lbWJlcl9vZhgFIAMoCRIXCg9hY2NvdW50X2V4cGlyZXMYBiABKAMSFAoMcHdkX2xhc3Rfc2V0GAcgASgDIoEBChJSZWRmaXNoQWNjb3VudEluZm8SEgoKYWNjb3VudF9pZBgBIAEoCRIYCgdyb2xlX2lkGAIgASgJQge6SARyAhABEj0KDmxvY2tvdXRfcG9saWN5GAMgASgLMiUuc2NoZW1hLnYxYWxwaGExLlJlZGZpc2hMb2Nrb3V0UG9saWN5IlkKFFJlZGZpc2hMb2Nrb3V0UG9saWN5EhoKCXRocmVzaG9sZBgBIAEoBUIHukgEGgIoABIQCghkdXJhdGlvbhgCIAEoCRITCgtyZXNldF9hZnRlchgDIAEoCSK9AQoPTmF0c0FjY291bnRJbmZvEg8KB2FjY291bnQYASABKAkSNQoLcGVybWlzc2lvbnMYAiABKAsyIC5zY2hlbWEudjFhbHBoYTEuTmF0c1Blcm1pc3Npb25zEisKBmxpbWl0cxgDIAEoCzIbLnNjaGVtYS52MWFscGhhMS5OYXRzTGltaXRzEhAKCHVzZXJfand0GAQgASgJEhAKCHVzZXJfa2V5GAUgASgJEhEKCXVzZXJfY3JlZBgGIAEoCSJOCg9OYXRzUGVybWlzc2lvbnMSDwoHcHVibGlzaBgBIAMoCRIRCglzdWJzY3JpYmUYAiADKAkSFwoPYWxsb3dfcmVzcG9uc2VzGAMgAygJIjkKCk5hdHNMaW1pdHMSDAoEZGF0YRgBIAEoAxIPCgdwYXlsb2FkGAIgASgDEgwKBHN1YnMYAyABKAMiSgoPU2VsaW51eFVzZXJJbmZvEgwKBHVzZXIYASABKAkSDAoEcm9sZRgCIAEoCRIMCgR0eXBlGAMgASgJEg0KBWxldmVsGAQgASgJIlsKEUNyZWF0ZVVzZXJSZXF1ZXN0EisKBHVzZXIYASABKAsyFS5zY2hlbWEudjFhbHBoYTEuVXNlckIGukgDyAEBEhkKCHBhc3N3b3JkGAIgASgJQge6SARyAhAIIjkKEkNyZWF0ZVVzZXJSZXNwb25zZRIjCgR1c2VyGAEgASgLMhUuc2NoZW1hLnYxYWxwaGExLlVzZXIiJQoOR2V0VXNlclJlcXVlc3QSEwoCaWQYASABKAlCB7pIBHICEAEiNgoPR2V0VXNlclJlc3BvbnNlEiMKBHVzZXIYASABKAsyFS5zY2hlbWEudjFhbHBoYTEuVXNlciJAChFVcGRhdGVVc2VyUmVxdWVzdBIrCgR1c2VyGAEgASgLMhUuc2NoZW1hLnYxYWxwaGExLlVzZXJCBrpIA8gBASI5ChJVcGRhdGVVc2VyUmVzcG9uc2USIwoEdXNlchgBIAEoCzIVLnNjaGVtYS52MWFscGhhMS5Vc2VyIigKEURlbGV0ZVVzZXJSZXF1ZXN0EhMKAmlkGAEgASgJQge6SARyAhABIiUKEkRlbGV0ZVVzZXJSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIImkKEExpc3RVc2Vyc1JlcXVlc3QSKwoGc291cmNlGAEgASgOMhsuc2NoZW1hLnYxYWxwaGExLlVzZXJTb3VyY2USDwoHZW5hYmxlZBgCIAEoCBIXCg91c2VybmFtZV9wcmVmaXgYAyABKAkiOQoRTGlzdFVzZXJzUmVzcG9uc2USJAoFdXNlcnMYASADKAsyFS5zY2hlbWEudjFhbHBoYTEuVXNlciJuChVDaGFuZ2VQYXNzd29yZFJlcXVlc3QSEwoCaWQYASABKAlCB7pIBHICEAESIQoQY3VycmVudF9wYXNzd29yZBgCIAEoCUIHukgEcgIQARIdCgxuZXdfcGFzc3dvcmQYAyABKAlCB7pIBHICEAgiKQoWQ2hhbmdlUGFzc3dvcmRSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIIlkKFFJlc2V0UGFzc3dvcmRSZXF1ZXN0EhMKAmlkGAEgASgJQge6SARyAhABEh0KDG5ld19wYXNzd29yZBgCIAEoCUIHukgEcgIQCBINCgVmb3JjZRgDIAEoCCI+ChVSZXNldFBhc3N3b3JkUmVzcG9uc2USFAoMbmV3X3Bhc3N3b3JkGAEgASgJEg8KB3N1Y2Nlc3MYAiABKAgiTwoXQXV0aGVudGljYXRlVXNlclJlcXVlc3QSGQoIdXNlcm5hbWUYASABKAlCB7pIBHICEAESGQoIcGFzc3dvcmQYAiABKAlCB7pIBHICEAEiYwoYQXV0aGVudGljYXRlVXNlclJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSDwoHdXNlcl9pZBgCIAEoCRINCgV0b2tlbhgDIAEoCRIWCg5mYWlsdXJlX3JlYXNvbhgEIAEoCSqvAQoKVXNlclNvdXJjZRIbChdVU0VSX1NPVVJDRV9VTlNQRUNJRklFRBAAEhUKEVVTRVJfU09VUkNFX0xPQ0FMEAESFAoQVVNFUl9TT1VSQ0VfTERBUBACEhIKDlVTRVJfU09VUkNFX0FEEAMSFAoQVVNFUl9TT1VSQ0VfSVBNSRAEEhcKE1VTRVJfU09VUkNFX1JFREZJU0gQBRIUChBVU0VSX1NPVVJDRV9OQVRTEAYq0AEKFVBhc3N3b3JkSGFzaEFsZ29yaXRobRInCiNQQVNTV09SRF9IQVNIX0FMR09SSVRITV9VTlNQRUNJRklFRBAAEiIKHlBBU1NXT1JEX0hBU0hfQUxHT1JJVEhNX0JDUllQVBABEiIKHlBBU1NXT1JEX0hBU0hfQUxHT1JJVEhNX0FSR09OMhACEiIKHlBBU1NXT1JEX0hBU0hfQUxHT1JJVEhNX1NIQTI1NhADEiIKHlBBU1NXT1JEX0hBU0hfQUxHT1JJVEhNX1NIQTUxMhAEKqEBCg1Mb2Nrb3V0UmVhc29uEh4KGkxPQ0tPVVRfUkVBU09OX1VOU1BFQ0lGSUVEEAASKAokTE9DS09VVF9SRUFTT05fRkFJTEVEX0xPR0lOX0FUVEVNUFRTEAESIQodTE9DS09VVF9SRUFTT05fQURNSU5JU1RSQVRJVkUQAhIjCh9MT0NLT1VUX1JFQVNPTl9QQVNTV09SRF9FWFBJUkVEEAMy8AUKC1VzZXJTZXJ2aWNlElcKCkNyZWF0ZVVzZXISIi5zY2hlbWEudjFhbHBoYTEuQ3JlYXRlVXNlclJlcXVlc3QaIy5zY2hlbWEudjFhbHBoYTEuQ3JlYXRlVXNlclJlc3BvbnNlIgASTgoHR2V0VXNlchIfLnNjaGVtYS52MWFscGhhMS5HZXRVc2VyUmVxdWVzdBogLnNjaGVtYS52MWFscGhhMS5HZXRVc2VyUmVzcG9uc2UiABJXCgpVcGRhdGVVc2VyEiIuc2NoZW1hLnYxYWxwaGExLlVwZGF0ZVVzZXJSZXF1ZXN0GiMuc2NoZW1hLnYxYWxwaGExLlVwZGF0ZVVzZXJSZXNwb25zZSIAElcKCkRlbGV0ZVVzZXISIi5zY2hlbWEudjFhbHBoYTEuRGVsZXRlVXNlclJlcXVlc3QaIy5zY2hlbWEudjFhbHBoYTEuRGVsZXRlVXNlclJlc3BvbnNlIgASVAoJTGlzdFVzZXJzEiEuc2NoZW1hLnYxYWxwaGExLkxpc3RVc2Vyc1JlcXVlc3QaIi5zY2hlbWEudjFhbHBoYTEuTGlzdFVzZXJzUmVzcG9uc2UiABJjCg5DaGFuZ2VQYXNzd29yZBImLnNjaGVtYS52MWFscGhhMS5DaGFuZ2VQYXNzd29yZFJlcXVlc3QaJy5zY2hlbWEudjFhbHBoYTEuQ2hhbmdlUGFzc3dvcmRSZXNwb25zZSIAEmAKDVJlc2V0UGFzc3dvcmQSJS5zY2hlbWEudjFhbHBoYTEuUmVzZXRQYXNzd29yZFJlcXVlc3QaJi5zY2hlbWEudjFhbHBoYTEuUmVzZXRQYXNzd29yZFJlc3BvbnNlIgASaQoQQXV0aGVudGljYXRlVXNlchIoLnNjaGVtYS52MWFscGhhMS5BdXRoZW50aWNhdGVVc2VyUmVxdWVzdBopLnNjaGVtYS52MWFscGhhMS5BdXRoZW50aWNhdGVVc2VyUmVzcG9uc2UiAEK8AQoTY29tLnNjaGVtYS52MWFscGhhMUIJVXNlclByb3RvUAFaPWdpdGh1Yi5jb20vdS1ibWMvdS1ibWMvYXBpL2dlbi9zY2hlbWEvdjFhbHBoYTE7c2NoZW1hdjFhbHBoYTGiAgNTWFiqAg9TY2hlbWEuVjFhbHBoYTHKAg9TY2hlbWFcVjFhbHBoYTHiAhtTY2hlbWFcVjFhbHBoYTFcR1BCTWV0YWRhdGHqAhBTY2hlbWE6OlYxYWxwaGExYgZwcm90bzM", [file_buf_validate_validate]);
+  fileDesc("ChpzY2hlbWEvdjFhbHBoYTEvdXNlci5wcm90bxIPc2NoZW1hLnYxYWxwaGExIogOCgRVc2VyEhMKAmlkGAEgASgJQge6SARyAhABEi4KCHVzZXJuYW1lGAIgASgJQhy6SBlyFxABGEAyEV5bYS16QS1aMC05Ll8tXSskEiIKCWZ1bGxfbmFtZRgDIAEoCUIKukgHcgUQARiAAkgAiAEBEh4KBWVtYWlsGAQgASgJQgq6SAdyBRjAAmABSAGIAQESFwoHZW5hYmxlZBgFIAEoCEIGukgDyAEBEjYKCmNyZWF0ZWRfYXQYBiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wQga6SAPIAQESNgoKdXBkYXRlZF9hdBgHIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBCBrpIA8gBARIzCgpsYXN0X2xvZ2luGAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgCiAEBEjwKDXNvdXJjZV9zeXN0ZW0YCSABKA4yGy5zY2hlbWEudjFhbHBoYTEuVXNlclNvdXJjZUIIukgFggECEAESTAoSY3JlYXRpb25faW50ZXJmYWNlGAogASgOMiYuc2NoZW1hLnYxYWxwaGExLlVzZXJDcmVhdGlvbkludGVyZmFjZUIIukgFggECEAESOwoJYXV0aF9kYXRhGAsgASgLMiMuc2NoZW1hLnYxYWxwaGExLkF1dGhlbnRpY2F0aW9uRGF0YUgDiAEBEjUKCXVuaXhfaW5mbxgMIAEoCzIdLnNjaGVtYS52MWFscGhhMS5Vbml4VXNlckluZm9IBIgBARI1CglsZGFwX2luZm8YDSABKAsyHS5zY2hlbWEudjFhbHBoYTEuTGRhcFVzZXJJbmZvSAWIAQESPgoMcmVkZmlzaF9pbmZvGA4gASgLMiMuc2NoZW1hLnYxYWxwaGExLlJlZGZpc2hBY2NvdW50SW5mb0gGiAEBEjgKCW5hdHNfaW5mbxgPIAEoCzIgLnNjaGVtYS52MWFscGhhMS5OYXRzQWNjb3VudEluZm9IB4gBARJGChFjdXN0b21fYXR0cmlidXRlcxgQIAMoCzIrLnNjaGVtYS52MWFscGhhMS5Vc2VyLkN1c3RvbUF0dHJpYnV0ZXNFbnRyeRo3ChVDdXN0b21BdHRyaWJ1dGVzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ATqWBrpIkgYazAMKI3VzZXJfc291cmNlX3N5c3RlbV9pbmZvX2NvbnNpc3RlbmN5EjN1c2VyIG11c3QgaGF2ZSBjb3JyZXNwb25kaW5nIGluZm8gZm9yIHNvdXJjZSBzeXN0ZW0a7wIodGhpcy5zb3VyY2Vfc3lzdGVtID09IDEgJiYgaGFzKHRoaXMuYXV0aF9kYXRhKSkgfHwgKHRoaXMuc291cmNlX3N5c3RlbSA9PSAyICYmIGhhcyh0aGlzLmxkYXBfaW5mbykpIHx8ICh0aGlzLnNvdXJjZV9zeXN0ZW0gPT0gMyAmJiBoYXModGhpcy5sZGFwX2luZm8pKSB8fCAodGhpcy5zb3VyY2Vfc3lzdGVtID09IDQpIHx8ICh0aGlzLnNvdXJjZV9zeXN0ZW0gPT0gNSAmJiBoYXModGhpcy5yZWRmaXNoX2luZm8pKSB8fCAodGhpcy5zb3VyY2Vfc3lzdGVtID09IDYgJiYgaGFzKHRoaXMubmF0c19pbmZvKSkgfHwgKHRoaXMuc291cmNlX3N5c3RlbSA9PSA3ICYmIGhhcyh0aGlzLnVuaXhfaW5mbykpIHx8IHRoaXMuc291cmNlX3N5c3RlbSA9PSAwGqIBChh1c2VyX3RpbWVzdGFtcHNfb3JkZXJpbmcSMGNyZWF0ZWRfYXQgbXVzdCBiZSBiZWZvcmUgb3IgZXF1YWwgdG8gdXBkYXRlZF9hdBpUIWhhcyh0aGlzLmNyZWF0ZWRfYXQpIHx8ICFoYXModGhpcy51cGRhdGVkX2F0KSB8fCB0aGlzLmNyZWF0ZWRfYXQgPD0gdGhpcy51cGRhdGVkX2F0GpsBCh51c2VyX2xhc3RfbG9naW5fYWZ0ZXJfY3JlYXRpb24SI2xhc3RfbG9naW4gbXVzdCBiZSBhZnRlciBjcmVhdGVkX2F0GlQhaGFzKHRoaXMuY3JlYXRlZF9hdCkgfHwgIWhhcyh0aGlzLmxhc3RfbG9naW4pIHx8IHRoaXMuY3JlYXRlZF9hdCA8PSB0aGlzLmxhc3RfbG9naW5CDAoKX2Z1bGxfbmFtZUIICgZfZW1haWxCDQoLX2xhc3RfbG9naW5CDAoKX2F1dGhfZGF0YUIMCgpfdW5peF9pbmZvQgwKCl9sZGFwX2luZm9CDwoNX3JlZGZpc2hfaW5mb0IMCgpfbmF0c19pbmZvIpUJChJBdXRoZW50aWNhdGlvbkRhdGESHgoNcGFzc3dvcmRfaGFzaBgBIAEoCUIHukgEcgIQARIjCg1wYXNzd29yZF9zYWx0GAIgASgJQge6SARyAhABSACIAQESSAoOaGFzaF9hbGdvcml0aG0YAyABKA4yJi5zY2hlbWEudjFhbHBoYTEuUGFzc3dvcmRIYXNoQWxnb3JpdGhtQgi6SAWCAQIQARIbCgppdGVyYXRpb25zGAQgASgFQge6SAQaAigBEj4KFXBhc3N3b3JkX2xhc3RfY2hhbmdlZBgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAYgBARI8ChNwYXNzd29yZF9leHBpcmVzX2F0GAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgCiAEBEj4KDGxvY2tvdXRfaW5mbxgHIAEoCzIjLnNjaGVtYS52MWFscGhhMS5BY2NvdW50TG9ja291dEluZm9IA4gBATq/BbpIuwUa3gEKJmF1dGhfZGF0YV9wYXNzd29yZF9leHBpcnlfYWZ0ZXJfY2hhbmdlEjdwYXNzd29yZF9leHBpcmVzX2F0IG11c3QgYmUgYWZ0ZXIgcGFzc3dvcmRfbGFzdF9jaGFuZ2VkGnshaGFzKHRoaXMucGFzc3dvcmRfbGFzdF9jaGFuZ2VkKSB8fCAhaGFzKHRoaXMucGFzc3dvcmRfZXhwaXJlc19hdCkgfHwgdGhpcy5wYXNzd29yZF9sYXN0X2NoYW5nZWQgPCB0aGlzLnBhc3N3b3JkX2V4cGlyZXNfYXQa1wMKImF1dGhfZGF0YV9pdGVyYXRpb25zX2Zvcl9hbGdvcml0aG0SMWl0ZXJhdGlvbnMgbXVzdCBiZSBhcHByb3ByaWF0ZSBmb3IgaGFzaCBhbGdvcml0aG0a/QIodGhpcy5oYXNoX2FsZ29yaXRobSA9PSAxICYmIHRoaXMuaXRlcmF0aW9ucyA+PSAxMCAmJiB0aGlzLml0ZXJhdGlvbnMgPD0gMTUpIHx8ICh0aGlzLmhhc2hfYWxnb3JpdGhtID09IDIgJiYgdGhpcy5pdGVyYXRpb25zID49IDEgJiYgdGhpcy5pdGVyYXRpb25zIDw9IDEwKSB8fCAodGhpcy5oYXNoX2FsZ29yaXRobSA9PSAzICYmIHRoaXMuaXRlcmF0aW9ucyA+PSAxNCAmJiB0aGlzLml0ZXJhdGlvbnMgPD0gMjApIHx8ICh0aGlzLmhhc2hfYWxnb3JpdGhtID09IDQgJiYgdGhpcy5pdGVyYXRpb25zID49IDEwMDAwMCkgfHwgKHRoaXMuaGFzaF9hbGdvcml0aG0gPT0gNSAmJiB0aGlzLml0ZXJhdGlvbnMgPj0gMTAwMDAwKSB8fCB0aGlzLmhhc2hfYWxnb3JpdGhtID09IDBCEAoOX3Bhc3N3b3JkX3NhbHRCGAoWX3Bhc3N3b3JkX2xhc3RfY2hhbmdlZEIWChRfcGFzc3dvcmRfZXhwaXJlc19hdEIPCg1fbG9ja291dF9pbmZvIsEFChJBY2NvdW50TG9ja291dEluZm8SDgoGbG9ja2VkGAEgASgIEj0KBnJlYXNvbhgCIAEoDjIeLnNjaGVtYS52MWFscGhhMS5Mb2Nrb3V0UmVhc29uQgi6SAWCAQIQAUgAiAEBEjUKDGxvY2tvdXRfdGltZRgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAYgBARIgCg9mYWlsZWRfYXR0ZW1wdHMYBCABKAVCB7pIBBoCKAASPAoTYXR0ZW1wdHNfcmVzZXRfdGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAogBARIpChNtYXhfZmFpbGVkX2F0dGVtcHRzGAYgASgFQge6SAQaAigBSAOIAQE6zQK6SMkCGnAKGGxvY2tvdXRfaW5mb19jb25zaXN0ZW5jeRIsbG9ja291dF90aW1lIG11c3QgYmUgc2V0IHdoZW4gbG9ja2VkIGlzIHRydWUaJiF0aGlzLmxvY2tlZCB8fCBoYXModGhpcy5sb2Nrb3V0X3RpbWUpGtQBCiJsb2Nrb3V0X2ZhaWxlZF9hdHRlbXB0c19yZXNldF90aW1lEkJhdHRlbXB0c19yZXNldF90aW1lIHNob3VsZCBiZSBhZnRlciBsb2Nrb3V0X3RpbWUgd2hlbiBib3RoIGFyZSBzZXQaaiFoYXModGhpcy5sb2Nrb3V0X3RpbWUpIHx8ICFoYXModGhpcy5hdHRlbXB0c19yZXNldF90aW1lKSB8fCB0aGlzLmxvY2tvdXRfdGltZSA8PSB0aGlzLmF0dGVtcHRzX3Jlc2V0X3RpbWVCCQoHX3JlYXNvbkIPCg1fbG9ja291dF90aW1lQhYKFF9hdHRlbXB0c19yZXNldF90aW1lQhYKFF9tYXhfZmFpbGVkX2F0dGVtcHRzIugBCgxVbml4VXNlckluZm8SGAoDdWlkGAEgASgFQgu6SAgaBhj//wMoABIYCgNnaWQYAiABKAVCC7pICBoGGP//AygAEiUKDmhvbWVfZGlyZWN0b3J5GAMgASgJQg26SApyCBABMgReLy4qEh8KBXNoZWxsGAQgASgJQgu6SAhyBjIEXi8uKkgAiAEBEhwKBWdlY29zGAUgASgJQgi6SAVyAxiAAkgBiAEBEioKFHN1cHBsZW1lbnRhcnlfZ3JvdXBzGAYgAygFQgy6SAmSAQYiBBoCKABCCAoGX3NoZWxsQggKBl9nZWNvcyLpAwoMTGRhcFVzZXJJbmZvEhgKB2xkYXBfZG4YASABKAlCB7pIBHICEAESIQoLb2JqZWN0X2d1aWQYAiABKAlCB7pIBHICEAFIAIgBARIoChBzYW1fYWNjb3VudF9uYW1lGAMgASgJQgm6SAZyBBABGBRIAYgBARIpChN1c2VyX3ByaW5jaXBhbF9uYW1lGAQgASgJQge6SARyAhABSAKIAQESEQoJbWVtYmVyX29mGAUgAygJEjgKD2FjY291bnRfZXhwaXJlcxgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIA4gBARI1Cgxwd2RfbGFzdF9zZXQYByABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSASIAQESHAoGZG9tYWluGAggASgJQge6SARyAhABSAWIAQESIAoTb3JnYW5pemF0aW9uYWxfdW5pdBgJIAEoCUgGiAEBQg4KDF9vYmplY3RfZ3VpZEITChFfc2FtX2FjY291bnRfbmFtZUIWChRfdXNlcl9wcmluY2lwYWxfbmFtZUISChBfYWNjb3VudF9leHBpcmVzQg8KDV9wd2RfbGFzdF9zZXRCCQoHX2RvbWFpbkIWChRfb3JnYW5pemF0aW9uYWxfdW5pdCKVAgoSUmVkZmlzaEFjY291bnRJbmZvEiAKCmFjY291bnRfaWQYASABKAlCB7pIBHICEAFIAIgBARIYCgdyb2xlX2lkGAIgASgJQge6SARyAhABEkIKDmxvY2tvdXRfcG9saWN5GAMgASgLMiUuc2NoZW1hLnYxYWxwaGExLlJlZGZpc2hMb2Nrb3V0UG9saWN5SAGIAQESGQoRb2VtX2FjY291bnRfdHlwZXMYBCADKAkSJQoYcGFzc3dvcmRfY2hhbmdlX3JlcXVpcmVkGAUgASgISAKIAQFCDQoLX2FjY291bnRfaWRCEQoPX2xvY2tvdXRfcG9saWN5QhsKGV9wYXNzd29yZF9jaGFuZ2VfcmVxdWlyZWQiswEKFFJlZGZpc2hMb2Nrb3V0UG9saWN5Eh0KCXRocmVzaG9sZBgBIAEoBUIKukgHGgUY5wcoABItCghkdXJhdGlvbhgCIAEoCUIWukgTchEyD15QVFswLTldK1tITVNdJEgAiAEBEjAKC3Jlc2V0X2FmdGVyGAMgASgJQha6SBNyETIPXlBUWzAtOV0rW0hNU10kSAGIAQFCCwoJX2R1cmF0aW9uQg4KDF9yZXNldF9hZnRlciKJAwoPTmF0c0FjY291bnRJbmZvEhgKB2FjY291bnQYASABKAlCB7pIBHICEAESOgoLcGVybWlzc2lvbnMYAiABKAsyIC5zY2hlbWEudjFhbHBoYTEuTmF0c1Blcm1pc3Npb25zSACIAQESMAoGbGltaXRzGAMgASgLMhsuc2NoZW1hLnYxYWxwaGExLk5hdHNMaW1pdHNIAYgBARIeCgh1c2VyX2p3dBgEIAEoCUIHukgEcgIQAUgCiAEBEh4KCHVzZXJfa2V5GAUgASgJQge6SARyAhABSAOIAQESHwoJdXNlcl9jcmVkGAYgASgJQge6SARyAhABSASIAQESNwoOand0X2V4cGlyZXNfYXQYByABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAWIAQFCDgoMX3Blcm1pc3Npb25zQgkKB19saW1pdHNCCwoJX3VzZXJfand0QgsKCV91c2VyX2tleUIMCgpfdXNlcl9jcmVkQhEKD19qd3RfZXhwaXJlc19hdCJcCg9OYXRzUGVybWlzc2lvbnMSDwoHcHVibGlzaBgBIAMoCRIRCglzdWJzY3JpYmUYAiADKAkSFwoPYWxsb3dfcmVzcG9uc2VzGAMgAygJEgwKBGRlbnkYBCADKAkiywEKCk5hdHNMaW1pdHMSHgoEZGF0YRgBIAEoA0IQukgNIgso////////////ARIhCgdwYXlsb2FkGAIgASgDQhC6SA0iCyj///////////8BEh4KBHN1YnMYAyABKANCELpIDSILKP///////////wESIwoEY29ubhgEIAEoA0IQukgNIgso////////////AUgAiAEBEiMKBGxlYWYYBSABKANCELpIDSILKP///////////wFIAYgBAUIHCgVfY29ubkIHCgVfbGVhZiKTBAoSVXNlckxpbmtpbmdPcHRpb25zEj4KC3VuaXhfYWN0aW9uGAEgASgOMh8uc2NoZW1hLnYxYWxwaGExLlVzZXJMaW5rQWN0aW9uQgi6SAWCAQIQARI+CgtsZGFwX2FjdGlvbhgCIAEoDjIfLnNjaGVtYS52MWFscGhhMS5Vc2VyTGlua0FjdGlvbkIIukgFggECEAESQQoOcmVkZmlzaF9hY3Rpb24YAyABKA4yHy5zY2hlbWEudjFhbHBoYTEuVXNlckxpbmtBY3Rpb25CCLpIBYIBAhABEj4KC25hdHNfYWN0aW9uGAQgASgOMh8uc2NoZW1hLnYxYWxwaGExLlVzZXJMaW5rQWN0aW9uQgi6SAWCAQIQARIjChZleGlzdGluZ191bml4X3VzZXJuYW1lGAUgASgJSACIAQESHQoQZXhpc3RpbmdfbGRhcF9kbhgGIAEoCUgBiAEBEigKG2V4aXN0aW5nX3JlZGZpc2hfYWNjb3VudF9pZBgHIAEoCUgCiAEBEiIKFWV4aXN0aW5nX25hdHNfYWNjb3VudBgIIAEoCUgDiAEBQhkKF19leGlzdGluZ191bml4X3VzZXJuYW1lQhMKEV9leGlzdGluZ19sZGFwX2RuQh4KHF9leGlzdGluZ19yZWRmaXNoX2FjY291bnRfaWRCGAoWX2V4aXN0aW5nX25hdHNfYWNjb3VudCLyAgoRQ3JlYXRlVXNlclJlcXVlc3QSKwoEdXNlchgBIAEoCzIVLnNjaGVtYS52MWFscGhhMS5Vc2VyQga6SAPIAQESHgoIcGFzc3dvcmQYAiABKAlCB7pIBHICEAhIAIgBARJBCg9saW5raW5nX29wdGlvbnMYAyABKAsyIy5zY2hlbWEudjFhbHBoYTEuVXNlckxpbmtpbmdPcHRpb25zSAGIAQESFAoHZHJ5X3J1bhgEIAEoCEgCiAEBOokBukiFARqCAQogY3JlYXRlX3VzZXJfcGFzc3dvcmRfcmVxdWlyZW1lbnQSJHBhc3N3b3JkIGlzIHJlcXVpcmVkIGZvciBsb2NhbCB1c2Vycxo4dGhpcy51c2VyLnNvdXJjZV9zeXN0ZW0gIT0gMSB8fCBzaXplKHRoaXMucGFzc3dvcmQpID49IDhCCwoJX3Bhc3N3b3JkQhIKEF9saW5raW5nX29wdGlvbnNCCgoIX2RyeV9ydW4iZQoSQ3JlYXRlVXNlclJlc3BvbnNlEiMKBHVzZXIYASABKAsyFS5zY2hlbWEudjFhbHBoYTEuVXNlchIQCgh3YXJuaW5ncxgCIAMoCRIYChBjcmVhdGVkX2FjY291bnRzGAMgAygJIpwBCg5HZXRVc2VyUmVxdWVzdBIMCgJpZBgBIAEoCUgAEhIKCHVzZXJuYW1lGAIgASgJSAASDwoFZW1haWwYAyABKAlIABIzCgpmaWVsZF9tYXNrGAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLkZpZWxkTWFza0gBiAEBQhMKCmlkZW50aWZpZXISBbpIAggBQg0KC19maWVsZF9tYXNrIjYKD0dldFVzZXJSZXNwb25zZRIjCgR1c2VyGAEgASgLMhUuc2NoZW1hLnYxYWxwaGExLlVzZXIixwEKEVVwZGF0ZVVzZXJSZXF1ZXN0EisKBHVzZXIYASABKAsyFS5zY2hlbWEudjFhbHBoYTEuVXNlckIGukgDyAEBEi4KCmZpZWxkX21hc2sYAiABKAsyGi5nb29nbGUucHJvdG9idWYuRmllbGRNYXNrEkEKD2xpbmtpbmdfb3B0aW9ucxgDIAEoCzIjLnNjaGVtYS52MWFscGhhMS5Vc2VyTGlua2luZ09wdGlvbnNIAIgBAUISChBfbGlua2luZ19vcHRpb25zIksKElVwZGF0ZVVzZXJSZXNwb25zZRIjCgR1c2VyGAEgASgLMhUuc2NoZW1hLnYxYWxwaGExLlVzZXISEAoId2FybmluZ3MYAiADKAkiggEKEURlbGV0ZVVzZXJSZXF1ZXN0EhMKAmlkGAEgASgJQge6SARyAhABEhsKDmNhc2NhZGVfZGVsZXRlGAIgASgISACIAQESGAoLYmFja3VwX2RhdGEYAyABKAhIAYgBAUIRCg9fY2FzY2FkZV9kZWxldGVCDgoMX2JhY2t1cF9kYXRhInEKEkRlbGV0ZVVzZXJSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEhgKEGRlbGV0ZWRfYWNjb3VudHMYAiADKAkSHAoPYmFja3VwX2xvY2F0aW9uGAMgASgJSACIAQFCEgoQX2JhY2t1cF9sb2NhdGlvbiLIAgoQTGlzdFVzZXJzUmVxdWVzdBI6CgZzb3VyY2UYASABKA4yGy5zY2hlbWEudjFhbHBoYTEuVXNlclNvdXJjZUIIukgFggECEAFIAIgBARIUCgdlbmFibGVkGAIgASgISAGIAQESHAoPdXNlcm5hbWVfcHJlZml4GAMgASgJSAKIAQESMwoKZmllbGRfbWFzaxgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2tIA4gBARIfCglwYWdlX3NpemUYBSABKAVCB7pIBBoCKAFIBIgBARIXCgpwYWdlX3Rva2VuGAYgASgJSAWIAQFCCQoHX3NvdXJjZUIKCghfZW5hYmxlZEISChBfdXNlcm5hbWVfcHJlZml4Qg0KC19maWVsZF9tYXNrQgwKCl9wYWdlX3NpemVCDQoLX3BhZ2VfdG9rZW4iawoRTGlzdFVzZXJzUmVzcG9uc2USJAoFdXNlcnMYASADKAsyFS5zY2hlbWEudjFhbHBoYTEuVXNlchIcCg9uZXh0X3BhZ2VfdG9rZW4YAiABKAlIAIgBAUISChBfbmV4dF9wYWdlX3Rva2VuInEKFUNoYW5nZVBhc3N3b3JkUmVxdWVzdBITCgJpZBgBIAEoCUIHukgEcgIQARIhChBjdXJyZW50X3Bhc3N3b3JkGAIgASgJQge6SARyAhABEiAKDG5ld19wYXNzd29yZBgDIAEoCUIKukgHcgUQCBiAASJZChZDaGFuZ2VQYXNzd29yZFJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSGwoOZmFpbHVyZV9yZWFzb24YAiABKAlIAIgBAUIRCg9fZmFpbHVyZV9yZWFzb24itwEKFFJlc2V0UGFzc3dvcmRSZXF1ZXN0EhMKAmlkGAEgASgJQge6SARyAhABEiUKDG5ld19wYXNzd29yZBgCIAEoCUIKukgHcgUQCBiAAUgAiAEBEhIKBWZvcmNlGAMgASgISAGIAQESHgoRZ2VuZXJhdGVfcGFzc3dvcmQYBCABKAhIAogBAUIPCg1fbmV3X3Bhc3N3b3JkQggKBl9mb3JjZUIUChJfZ2VuZXJhdGVfcGFzc3dvcmQibgoVUmVzZXRQYXNzd29yZFJlc3BvbnNlEhQKDG5ld19wYXNzd29yZBgBIAEoCRIPCgdzdWNjZXNzGAIgASgIEhsKDmZhaWx1cmVfcmVhc29uGAMgASgJSACIAQFCEQoPX2ZhaWx1cmVfcmVhc29uIp0BChdBdXRoZW50aWNhdGVVc2VyUmVxdWVzdBIZCgh1c2VybmFtZRgBIAEoCUIHukgEcgIQARIZCghwYXNzd29yZBgCIAEoCUIHukgEcgIQARIWCglzb3VyY2VfaXAYAyABKAlIAIgBARIXCgp1c2VyX2FnZW50GAQgASgJSAGIAQFCDAoKX3NvdXJjZV9pcEINCgtfdXNlcl9hZ2VudCLrAQoYQXV0aGVudGljYXRlVXNlclJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSFAoHdXNlcl9pZBgCIAEoCUgAiAEBEhIKBXRva2VuGAMgASgJSAGIAQESGwoOZmFpbHVyZV9yZWFzb24YBCABKAlIAogBARI5ChB0b2tlbl9leHBpcmVzX2F0GAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgDiAEBQgoKCF91c2VyX2lkQggKBl90b2tlbkIRCg9fZmFpbHVyZV9yZWFzb25CEwoRX3Rva2VuX2V4cGlyZXNfYXQq4wEKClVzZXJTb3VyY2USGwoXVVNFUl9TT1VSQ0VfVU5TUEVDSUZJRUQQABIVChFVU0VSX1NPVVJDRV9MT0NBTBABEhQKEFVTRVJfU09VUkNFX0xEQVAQAhISCg5VU0VSX1NPVVJDRV9BRBADEhQKEFVTRVJfU09VUkNFX0lQTUkQBBIXChNVU0VSX1NPVVJDRV9SRURGSVNIEAUSFAoQVVNFUl9TT1VSQ0VfTkFUUxAGEhQKEFVTRVJfU09VUkNFX1VOSVgQBxIcChhVU0VSX1NPVVJDRV9FWFRFUk5BTF9BUEkQCCreAgoVVXNlckNyZWF0aW9uSW50ZXJmYWNlEicKI1VTRVJfQ1JFQVRJT05fSU5URVJGQUNFX1VOU1BFQ0lGSUVEEAASJgoiVVNFUl9DUkVBVElPTl9JTlRFUkZBQ0VfU0NIRU1BX0FQSRABEigKJFVTRVJfQ1JFQVRJT05fSU5URVJGQUNFX1VOSVhfVVNFUkFERBACEiYKIlVTRVJfQ1JFQVRJT05fSU5URVJGQUNFX0xEQVBfQURNSU4QAxIkCiBVU0VSX0NSRUFUSU9OX0lOVEVSRkFDRV9BRF9BRE1JThAEEicKI1VTRVJfQ1JFQVRJT05fSU5URVJGQUNFX1JFREZJU0hfQVBJEAUSJwojVVNFUl9DUkVBVElPTl9JTlRFUkZBQ0VfTkFUU19DT05GSUcQBhIqCiZVU0VSX0NSRUFUSU9OX0lOVEVSRkFDRV9JUE1JX1VTRVJfTUdNVBAHKoQCChVQYXNzd29yZEhhc2hBbGdvcml0aG0SJwojUEFTU1dPUkRfSEFTSF9BTEdPUklUSE1fVU5TUEVDSUZJRUQQABIiCh5QQVNTV09SRF9IQVNIX0FMR09SSVRITV9CQ1JZUFQQARIkCiBQQVNTV09SRF9IQVNIX0FMR09SSVRITV9BUkdPTjJJRBACEiIKHlBBU1NXT1JEX0hBU0hfQUxHT1JJVEhNX1NDUllQVBADEikKJVBBU1NXT1JEX0hBU0hfQUxHT1JJVEhNX1BCS0RGMl9TSEEyNTYQBBIpCiVQQVNTV09SRF9IQVNIX0FMR09SSVRITV9QQktERjJfU0hBNTEyEAUq6QEKDUxvY2tvdXRSZWFzb24SHgoaTE9DS09VVF9SRUFTT05fVU5TUEVDSUZJRUQQABIoCiRMT0NLT1VUX1JFQVNPTl9GQUlMRURfTE9HSU5fQVRURU1QVFMQARIhCh1MT0NLT1VUX1JFQVNPTl9BRE1JTklTVFJBVElWRRACEiMKH0xPQ0tPVVRfUkVBU09OX1BBU1NXT1JEX0VYUElSRUQQAxIiCh5MT0NLT1VUX1JFQVNPTl9BQ0NPVU5UX0VYUElSRUQQBBIiCh5MT0NLT1VUX1JFQVNPTl9TRUNVUklUWV9QT0xJQ1kQBSqXAQoOVXNlckxpbmtBY3Rpb24SIAocVVNFUl9MSU5LX0FDVElPTl9VTlNQRUNJRklFRBAAEiIKHlVTRVJfTElOS19BQ1RJT05fTElOS19FWElTVElORxABEh8KG1VTRVJfTElOS19BQ1RJT05fQ1JFQVRFX05FVxACEh4KGlVTRVJfTElOS19BQ1RJT05fTk9fQUNUSU9OEANCvAEKE2NvbS5zY2hlbWEudjFhbHBoYTFCCVVzZXJQcm90b1ABWj1naXRodWIuY29tL3UtYm1jL3UtYm1jL2FwaS9nZW4vc2NoZW1hL3YxYWxwaGExO3NjaGVtYXYxYWxwaGExogIDU1hYqgIPU2NoZW1hLlYxYWxwaGExygIPU2NoZW1hXFYxYWxwaGEx4gIbU2NoZW1hXFYxYWxwaGExXEdQQk1ldGFkYXRh6gIQU2NoZW1hOjpWMWFscGhhMWIGcHJvdG8z", [file_buf_validate_validate, file_google_protobuf_timestamp, file_google_protobuf_field_mask]);
 
 /**
- * User represents a user account in the system
- *
  * @generated from message schema.v1alpha1.User
  */
 export type User = Message<"schema.v1alpha1.User"> & {
   /**
-   * Unique identifier for the user
-   *
    * @generated from field: string id = 1;
    */
   id: string;
 
   /**
-   * Username for login
-   *
    * @generated from field: string username = 2;
    */
   username: string;
 
   /**
-   * Full name of the user
-   *
-   * @generated from field: string full_name = 3;
+   * @generated from field: optional string full_name = 3;
    */
-  fullName: string;
+  fullName?: string;
 
   /**
-   * Email address
-   *
-   * @generated from field: string email = 4;
+   * @generated from field: optional string email = 4;
    */
-  email: string;
+  email?: string;
 
   /**
-   * Whether the user account is enabled
-   *
    * @generated from field: bool enabled = 5;
    */
   enabled: boolean;
 
   /**
-   * Timestamp when the user was created
-   *
-   * @generated from field: int64 created_at = 6;
+   * @generated from field: google.protobuf.Timestamp created_at = 6;
    */
-  createdAt: bigint;
+  createdAt?: Timestamp;
 
   /**
-   * Timestamp when the user was last updated
-   *
-   * @generated from field: int64 updated_at = 7;
+   * @generated from field: google.protobuf.Timestamp updated_at = 7;
    */
-  updatedAt: bigint;
+  updatedAt?: Timestamp;
 
   /**
-   * Timestamp of last successful login
-   *
-   * @generated from field: int64 last_login = 8;
+   * @generated from field: optional google.protobuf.Timestamp last_login = 8;
    */
-  lastLogin: bigint;
+  lastLogin?: Timestamp;
 
   /**
-   * Source system where the user is managed
-   *
    * @generated from field: schema.v1alpha1.UserSource source_system = 9;
    */
   sourceSystem: UserSource;
 
   /**
-   * Authentication data
-   *
-   * @generated from field: schema.v1alpha1.AuthenticationData auth_data = 10;
+   * @generated from field: schema.v1alpha1.UserCreationInterface creation_interface = 10;
+   */
+  creationInterface: UserCreationInterface;
+
+  /**
+   * @generated from field: optional schema.v1alpha1.AuthenticationData auth_data = 11;
    */
   authData?: AuthenticationData;
 
   /**
-   * Unix-specific user information (if mapped)
-   *
-   * @generated from field: schema.v1alpha1.UnixUserInfo unix_info = 11;
+   * @generated from field: optional schema.v1alpha1.UnixUserInfo unix_info = 12;
    */
   unixInfo?: UnixUserInfo;
 
   /**
-   * LDAP-specific user information (if mapped)
-   *
-   * @generated from field: schema.v1alpha1.LdapUserInfo ldap_info = 12;
+   * @generated from field: optional schema.v1alpha1.LdapUserInfo ldap_info = 13;
    */
   ldapInfo?: LdapUserInfo;
 
   /**
-   * Redfish-specific account information
-   *
-   * @generated from field: schema.v1alpha1.RedfishAccountInfo redfish_info = 13;
+   * @generated from field: optional schema.v1alpha1.RedfishAccountInfo redfish_info = 14;
    */
   redfishInfo?: RedfishAccountInfo;
 
   /**
-   * NATS-specific account information
-   *
-   * @generated from field: schema.v1alpha1.NatsAccountInfo nats_info = 14;
+   * @generated from field: optional schema.v1alpha1.NatsAccountInfo nats_info = 15;
    */
   natsInfo?: NatsAccountInfo;
 
   /**
-   * SELinux-specific user mapping
-   *
-   * @generated from field: schema.v1alpha1.SelinuxUserInfo selinux_info = 15;
+   * @generated from field: map<string, string> custom_attributes = 16;
    */
-  selinuxInfo?: SelinuxUserInfo;
+  customAttributes: { [key: string]: string };
 };
 
 /**
@@ -135,57 +110,41 @@ export const UserSchema: GenMessage<User> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_user, 0);
 
 /**
- * AuthenticationData contains password and authentication-related information
- *
  * @generated from message schema.v1alpha1.AuthenticationData
  */
 export type AuthenticationData = Message<"schema.v1alpha1.AuthenticationData"> & {
   /**
-   * Hashed password
-   *
    * @generated from field: string password_hash = 1;
    */
   passwordHash: string;
 
   /**
-   * Salt used for hashing
-   *
-   * @generated from field: string password_salt = 2;
+   * @generated from field: optional string password_salt = 2;
    */
-  passwordSalt: string;
+  passwordSalt?: string;
 
   /**
-   * Hashing algorithm used
-   *
    * @generated from field: schema.v1alpha1.PasswordHashAlgorithm hash_algorithm = 3;
    */
   hashAlgorithm: PasswordHashAlgorithm;
 
   /**
-   * Number of iterations for key derivation (if applicable)
-   *
    * @generated from field: int32 iterations = 4;
    */
   iterations: number;
 
   /**
-   * Timestamp of last password change
-   *
-   * @generated from field: int64 password_last_changed = 5;
+   * @generated from field: optional google.protobuf.Timestamp password_last_changed = 5;
    */
-  passwordLastChanged: bigint;
+  passwordLastChanged?: Timestamp;
 
   /**
-   * Password expiration timestamp
-   *
-   * @generated from field: int64 password_expires_at = 6;
+   * @generated from field: optional google.protobuf.Timestamp password_expires_at = 6;
    */
-  passwordExpiresAt: bigint;
+  passwordExpiresAt?: Timestamp;
 
   /**
-   * Account lockout information
-   *
-   * @generated from field: schema.v1alpha1.AccountLockoutInfo lockout_info = 7;
+   * @generated from field: optional schema.v1alpha1.AccountLockoutInfo lockout_info = 7;
    */
   lockoutInfo?: AccountLockoutInfo;
 };
@@ -198,45 +157,38 @@ export const AuthenticationDataSchema: GenMessage<AuthenticationData> = /*@__PUR
   messageDesc(file_schema_v1alpha1_user, 1);
 
 /**
- * AccountLockoutInfo contains information about account lockout status
- *
  * @generated from message schema.v1alpha1.AccountLockoutInfo
  */
 export type AccountLockoutInfo = Message<"schema.v1alpha1.AccountLockoutInfo"> & {
   /**
-   * Whether the account is currently locked
-   *
    * @generated from field: bool locked = 1;
    */
   locked: boolean;
 
   /**
-   * Reason for lockout
-   *
-   * @generated from field: schema.v1alpha1.LockoutReason reason = 2;
+   * @generated from field: optional schema.v1alpha1.LockoutReason reason = 2;
    */
-  reason: LockoutReason;
+  reason?: LockoutReason;
 
   /**
-   * Timestamp when lockout occurred
-   *
-   * @generated from field: int64 lockout_time = 3;
+   * @generated from field: optional google.protobuf.Timestamp lockout_time = 3;
    */
-  lockoutTime: bigint;
+  lockoutTime?: Timestamp;
 
   /**
-   * Number of failed login attempts
-   *
    * @generated from field: int32 failed_attempts = 4;
    */
   failedAttempts: number;
 
   /**
-   * Timestamp when failed attempts counter was last reset
-   *
-   * @generated from field: int64 attempts_reset_time = 5;
+   * @generated from field: optional google.protobuf.Timestamp attempts_reset_time = 5;
    */
-  attemptsResetTime: bigint;
+  attemptsResetTime?: Timestamp;
+
+  /**
+   * @generated from field: optional int32 max_failed_attempts = 6;
+   */
+  maxFailedAttempts?: number;
 };
 
 /**
@@ -247,45 +199,38 @@ export const AccountLockoutInfoSchema: GenMessage<AccountLockoutInfo> = /*@__PUR
   messageDesc(file_schema_v1alpha1_user, 2);
 
 /**
- * UnixUserInfo contains Unix-specific user information
- *
  * @generated from message schema.v1alpha1.UnixUserInfo
  */
 export type UnixUserInfo = Message<"schema.v1alpha1.UnixUserInfo"> & {
   /**
-   * Unix user ID
-   *
    * @generated from field: int32 uid = 1;
    */
   uid: number;
 
   /**
-   * Unix group ID
-   *
    * @generated from field: int32 gid = 2;
    */
   gid: number;
 
   /**
-   * Home directory path
-   *
    * @generated from field: string home_directory = 3;
    */
   homeDirectory: string;
 
   /**
-   * Login shell
-   *
-   * @generated from field: string shell = 4;
+   * @generated from field: optional string shell = 4;
    */
-  shell: string;
+  shell?: string;
 
   /**
-   * GECOS field (user information)
-   *
-   * @generated from field: string gecos = 5;
+   * @generated from field: optional string gecos = 5;
    */
-  gecos: string;
+  gecos?: string;
+
+  /**
+   * @generated from field: repeated int32 supplementary_groups = 6;
+   */
+  supplementaryGroups: number[];
 };
 
 /**
@@ -296,59 +241,53 @@ export const UnixUserInfoSchema: GenMessage<UnixUserInfo> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_user, 3);
 
 /**
- * LdapUserInfo contains LDAP-specific user information
- *
  * @generated from message schema.v1alpha1.LdapUserInfo
  */
 export type LdapUserInfo = Message<"schema.v1alpha1.LdapUserInfo"> & {
   /**
-   * LDAP Distinguished Name
-   *
    * @generated from field: string ldap_dn = 1;
    */
   ldapDn: string;
 
   /**
-   * Object GUID
-   *
-   * @generated from field: string object_guid = 2;
+   * @generated from field: optional string object_guid = 2;
    */
-  objectGuid: string;
+  objectGuid?: string;
 
   /**
-   * SAM Account Name
-   *
-   * @generated from field: string sam_account_name = 3;
+   * @generated from field: optional string sam_account_name = 3;
    */
-  samAccountName: string;
+  samAccountName?: string;
 
   /**
-   * User Principal Name
-   *
-   * @generated from field: string user_principal_name = 4;
+   * @generated from field: optional string user_principal_name = 4;
    */
-  userPrincipalName: string;
+  userPrincipalName?: string;
 
   /**
-   * Groups the user is a member of
-   *
    * @generated from field: repeated string member_of = 5;
    */
   memberOf: string[];
 
   /**
-   * Account expiration timestamp
-   *
-   * @generated from field: int64 account_expires = 6;
+   * @generated from field: optional google.protobuf.Timestamp account_expires = 6;
    */
-  accountExpires: bigint;
+  accountExpires?: Timestamp;
 
   /**
-   * Timestamp when password was last set
-   *
-   * @generated from field: int64 pwd_last_set = 7;
+   * @generated from field: optional google.protobuf.Timestamp pwd_last_set = 7;
    */
-  pwdLastSet: bigint;
+  pwdLastSet?: Timestamp;
+
+  /**
+   * @generated from field: optional string domain = 8;
+   */
+  domain?: string;
+
+  /**
+   * @generated from field: optional string organizational_unit = 9;
+   */
+  organizationalUnit?: string;
 };
 
 /**
@@ -359,31 +298,33 @@ export const LdapUserInfoSchema: GenMessage<LdapUserInfo> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_user, 4);
 
 /**
- * RedfishAccountInfo contains Redfish-specific account information
- *
  * @generated from message schema.v1alpha1.RedfishAccountInfo
  */
 export type RedfishAccountInfo = Message<"schema.v1alpha1.RedfishAccountInfo"> & {
   /**
-   * Redfish account ID
-   *
-   * @generated from field: string account_id = 1;
+   * @generated from field: optional string account_id = 1;
    */
-  accountId: string;
+  accountId?: string;
 
   /**
-   * Redfish role ID
-   *
    * @generated from field: string role_id = 2;
    */
   roleId: string;
 
   /**
-   * Account lockout policy information
-   *
-   * @generated from field: schema.v1alpha1.RedfishLockoutPolicy lockout_policy = 3;
+   * @generated from field: optional schema.v1alpha1.RedfishLockoutPolicy lockout_policy = 3;
    */
   lockoutPolicy?: RedfishLockoutPolicy;
+
+  /**
+   * @generated from field: repeated string oem_account_types = 4;
+   */
+  oemAccountTypes: string[];
+
+  /**
+   * @generated from field: optional bool password_change_required = 5;
+   */
+  passwordChangeRequired?: boolean;
 };
 
 /**
@@ -394,31 +335,23 @@ export const RedfishAccountInfoSchema: GenMessage<RedfishAccountInfo> = /*@__PUR
   messageDesc(file_schema_v1alpha1_user, 5);
 
 /**
- * RedfishLockoutPolicy contains Redfish-specific lockout policy settings
- *
  * @generated from message schema.v1alpha1.RedfishLockoutPolicy
  */
 export type RedfishLockoutPolicy = Message<"schema.v1alpha1.RedfishLockoutPolicy"> & {
   /**
-   * Number of failed login attempts before lockout
-   *
    * @generated from field: int32 threshold = 1;
    */
   threshold: number;
 
   /**
-   * Duration of lockout
-   *
-   * @generated from field: string duration = 2;
+   * @generated from field: optional string duration = 2;
    */
-  duration: string;
+  duration?: string;
 
   /**
-   * Time after which failed attempts counter is reset
-   *
-   * @generated from field: string reset_after = 3;
+   * @generated from field: optional string reset_after = 3;
    */
-  resetAfter: string;
+  resetAfter?: string;
 };
 
 /**
@@ -429,52 +362,43 @@ export const RedfishLockoutPolicySchema: GenMessage<RedfishLockoutPolicy> = /*@_
   messageDesc(file_schema_v1alpha1_user, 6);
 
 /**
- * NatsAccountInfo contains NATS-specific account information
- *
  * @generated from message schema.v1alpha1.NatsAccountInfo
  */
 export type NatsAccountInfo = Message<"schema.v1alpha1.NatsAccountInfo"> & {
   /**
-   * NATS account identifier
-   *
    * @generated from field: string account = 1;
    */
   account: string;
 
   /**
-   * NATS permissions
-   *
-   * @generated from field: schema.v1alpha1.NatsPermissions permissions = 2;
+   * @generated from field: optional schema.v1alpha1.NatsPermissions permissions = 2;
    */
   permissions?: NatsPermissions;
 
   /**
-   * NATS limits
-   *
-   * @generated from field: schema.v1alpha1.NatsLimits limits = 3;
+   * @generated from field: optional schema.v1alpha1.NatsLimits limits = 3;
    */
   limits?: NatsLimits;
 
   /**
-   * NATS user JWT
-   *
-   * @generated from field: string user_jwt = 4;
+   * @generated from field: optional string user_jwt = 4;
    */
-  userJwt: string;
+  userJwt?: string;
 
   /**
-   * NATS user public key
-   *
-   * @generated from field: string user_key = 5;
+   * @generated from field: optional string user_key = 5;
    */
-  userKey: string;
+  userKey?: string;
 
   /**
-   * NATS user credentials
-   *
-   * @generated from field: string user_cred = 6;
+   * @generated from field: optional string user_cred = 6;
    */
-  userCred: string;
+  userCred?: string;
+
+  /**
+   * @generated from field: optional google.protobuf.Timestamp jwt_expires_at = 7;
+   */
+  jwtExpiresAt?: Timestamp;
 };
 
 /**
@@ -485,31 +409,28 @@ export const NatsAccountInfoSchema: GenMessage<NatsAccountInfo> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_user, 7);
 
 /**
- * NatsPermissions contains NATS publish/subscribe permissions
- *
  * @generated from message schema.v1alpha1.NatsPermissions
  */
 export type NatsPermissions = Message<"schema.v1alpha1.NatsPermissions"> & {
   /**
-   * Subjects the user can publish to
-   *
    * @generated from field: repeated string publish = 1;
    */
   publish: string[];
 
   /**
-   * Subjects the user can subscribe to
-   *
    * @generated from field: repeated string subscribe = 2;
    */
   subscribe: string[];
 
   /**
-   * Subjects for allowing responses
-   *
    * @generated from field: repeated string allow_responses = 3;
    */
   allowResponses: string[];
+
+  /**
+   * @generated from field: repeated string deny = 4;
+   */
+  deny: string[];
 };
 
 /**
@@ -520,31 +441,33 @@ export const NatsPermissionsSchema: GenMessage<NatsPermissions> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_user, 8);
 
 /**
- * NatsLimits contains NATS resource limits for the user
- *
  * @generated from message schema.v1alpha1.NatsLimits
  */
 export type NatsLimits = Message<"schema.v1alpha1.NatsLimits"> & {
   /**
-   * Maximum data limit in bytes
-   *
    * @generated from field: int64 data = 1;
    */
   data: bigint;
 
   /**
-   * Maximum payload size in bytes
-   *
    * @generated from field: int64 payload = 2;
    */
   payload: bigint;
 
   /**
-   * Maximum number of subscriptions
-   *
    * @generated from field: int64 subs = 3;
    */
   subs: bigint;
+
+  /**
+   * @generated from field: optional int64 conn = 4;
+   */
+  conn?: bigint;
+
+  /**
+   * @generated from field: optional int64 leaf = 5;
+   */
+  leaf?: bigint;
 };
 
 /**
@@ -555,66 +478,80 @@ export const NatsLimitsSchema: GenMessage<NatsLimits> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_user, 9);
 
 /**
- * SelinuxUserInfo contains SELinux-specific user mapping information
- *
- * @generated from message schema.v1alpha1.SelinuxUserInfo
+ * @generated from message schema.v1alpha1.UserLinkingOptions
  */
-export type SelinuxUserInfo = Message<"schema.v1alpha1.SelinuxUserInfo"> & {
+export type UserLinkingOptions = Message<"schema.v1alpha1.UserLinkingOptions"> & {
   /**
-   * SELinux user
-   *
-   * @generated from field: string user = 1;
+   * @generated from field: schema.v1alpha1.UserLinkAction unix_action = 1;
    */
-  user: string;
+  unixAction: UserLinkAction;
 
   /**
-   * SELinux role
-   *
-   * @generated from field: string role = 2;
+   * @generated from field: schema.v1alpha1.UserLinkAction ldap_action = 2;
    */
-  role: string;
+  ldapAction: UserLinkAction;
 
   /**
-   * SELinux type
-   *
-   * @generated from field: string type = 3;
+   * @generated from field: schema.v1alpha1.UserLinkAction redfish_action = 3;
    */
-  type: string;
+  redfishAction: UserLinkAction;
 
   /**
-   * SELinux level
-   *
-   * @generated from field: string level = 4;
+   * @generated from field: schema.v1alpha1.UserLinkAction nats_action = 4;
    */
-  level: string;
+  natsAction: UserLinkAction;
+
+  /**
+   * @generated from field: optional string existing_unix_username = 5;
+   */
+  existingUnixUsername?: string;
+
+  /**
+   * @generated from field: optional string existing_ldap_dn = 6;
+   */
+  existingLdapDn?: string;
+
+  /**
+   * @generated from field: optional string existing_redfish_account_id = 7;
+   */
+  existingRedfishAccountId?: string;
+
+  /**
+   * @generated from field: optional string existing_nats_account = 8;
+   */
+  existingNatsAccount?: string;
 };
 
 /**
- * Describes the message schema.v1alpha1.SelinuxUserInfo.
- * Use `create(SelinuxUserInfoSchema)` to create a new message.
+ * Describes the message schema.v1alpha1.UserLinkingOptions.
+ * Use `create(UserLinkingOptionsSchema)` to create a new message.
  */
-export const SelinuxUserInfoSchema: GenMessage<SelinuxUserInfo> = /*@__PURE__*/
+export const UserLinkingOptionsSchema: GenMessage<UserLinkingOptions> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_user, 10);
 
 /**
- * Request message for creating a new user
- *
  * @generated from message schema.v1alpha1.CreateUserRequest
  */
 export type CreateUserRequest = Message<"schema.v1alpha1.CreateUserRequest"> & {
   /**
-   * User to create
-   *
    * @generated from field: schema.v1alpha1.User user = 1;
    */
   user?: User;
 
   /**
-   * Plain text password (will be hashed server-side)
-   *
-   * @generated from field: string password = 2;
+   * @generated from field: optional string password = 2;
    */
-  password: string;
+  password?: string;
+
+  /**
+   * @generated from field: optional schema.v1alpha1.UserLinkingOptions linking_options = 3;
+   */
+  linkingOptions?: UserLinkingOptions;
+
+  /**
+   * @generated from field: optional bool dry_run = 4;
+   */
+  dryRun?: boolean;
 };
 
 /**
@@ -625,17 +562,23 @@ export const CreateUserRequestSchema: GenMessage<CreateUserRequest> = /*@__PURE_
   messageDesc(file_schema_v1alpha1_user, 11);
 
 /**
- * Response message for creating a new user
- *
  * @generated from message schema.v1alpha1.CreateUserResponse
  */
 export type CreateUserResponse = Message<"schema.v1alpha1.CreateUserResponse"> & {
   /**
-   * Created user with server-generated fields
-   *
    * @generated from field: schema.v1alpha1.User user = 1;
    */
   user?: User;
+
+  /**
+   * @generated from field: repeated string warnings = 2;
+   */
+  warnings: string[];
+
+  /**
+   * @generated from field: repeated string created_accounts = 3;
+   */
+  createdAccounts: string[];
 };
 
 /**
@@ -646,17 +589,36 @@ export const CreateUserResponseSchema: GenMessage<CreateUserResponse> = /*@__PUR
   messageDesc(file_schema_v1alpha1_user, 12);
 
 /**
- * Request message for getting a user by ID
- *
  * @generated from message schema.v1alpha1.GetUserRequest
  */
 export type GetUserRequest = Message<"schema.v1alpha1.GetUserRequest"> & {
   /**
-   * User ID
-   *
-   * @generated from field: string id = 1;
+   * @generated from oneof schema.v1alpha1.GetUserRequest.identifier
    */
-  id: string;
+  identifier: {
+    /**
+     * @generated from field: string id = 1;
+     */
+    value: string;
+    case: "id";
+  } | {
+    /**
+     * @generated from field: string username = 2;
+     */
+    value: string;
+    case: "username";
+  } | {
+    /**
+     * @generated from field: string email = 3;
+     */
+    value: string;
+    case: "email";
+  } | { case: undefined; value?: undefined };
+
+  /**
+   * @generated from field: optional google.protobuf.FieldMask field_mask = 4;
+   */
+  fieldMask?: FieldMask;
 };
 
 /**
@@ -667,14 +629,10 @@ export const GetUserRequestSchema: GenMessage<GetUserRequest> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_user, 13);
 
 /**
- * Response message for getting a user
- *
  * @generated from message schema.v1alpha1.GetUserResponse
  */
 export type GetUserResponse = Message<"schema.v1alpha1.GetUserResponse"> & {
   /**
-   * Retrieved user
-   *
    * @generated from field: schema.v1alpha1.User user = 1;
    */
   user?: User;
@@ -688,17 +646,23 @@ export const GetUserResponseSchema: GenMessage<GetUserResponse> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_user, 14);
 
 /**
- * Request message for updating a user
- *
  * @generated from message schema.v1alpha1.UpdateUserRequest
  */
 export type UpdateUserRequest = Message<"schema.v1alpha1.UpdateUserRequest"> & {
   /**
-   * Updated user information
-   *
    * @generated from field: schema.v1alpha1.User user = 1;
    */
   user?: User;
+
+  /**
+   * @generated from field: google.protobuf.FieldMask field_mask = 2;
+   */
+  fieldMask?: FieldMask;
+
+  /**
+   * @generated from field: optional schema.v1alpha1.UserLinkingOptions linking_options = 3;
+   */
+  linkingOptions?: UserLinkingOptions;
 };
 
 /**
@@ -709,17 +673,18 @@ export const UpdateUserRequestSchema: GenMessage<UpdateUserRequest> = /*@__PURE_
   messageDesc(file_schema_v1alpha1_user, 15);
 
 /**
- * Response message for updating a user
- *
  * @generated from message schema.v1alpha1.UpdateUserResponse
  */
 export type UpdateUserResponse = Message<"schema.v1alpha1.UpdateUserResponse"> & {
   /**
-   * Updated user
-   *
    * @generated from field: schema.v1alpha1.User user = 1;
    */
   user?: User;
+
+  /**
+   * @generated from field: repeated string warnings = 2;
+   */
+  warnings: string[];
 };
 
 /**
@@ -730,17 +695,23 @@ export const UpdateUserResponseSchema: GenMessage<UpdateUserResponse> = /*@__PUR
   messageDesc(file_schema_v1alpha1_user, 16);
 
 /**
- * Request message for deleting a user
- *
  * @generated from message schema.v1alpha1.DeleteUserRequest
  */
 export type DeleteUserRequest = Message<"schema.v1alpha1.DeleteUserRequest"> & {
   /**
-   * User ID to delete
-   *
    * @generated from field: string id = 1;
    */
   id: string;
+
+  /**
+   * @generated from field: optional bool cascade_delete = 2;
+   */
+  cascadeDelete?: boolean;
+
+  /**
+   * @generated from field: optional bool backup_data = 3;
+   */
+  backupData?: boolean;
 };
 
 /**
@@ -751,17 +722,23 @@ export const DeleteUserRequestSchema: GenMessage<DeleteUserRequest> = /*@__PURE_
   messageDesc(file_schema_v1alpha1_user, 17);
 
 /**
- * Response message for deleting a user
- *
  * @generated from message schema.v1alpha1.DeleteUserResponse
  */
 export type DeleteUserResponse = Message<"schema.v1alpha1.DeleteUserResponse"> & {
   /**
-   * Success indicator
-   *
    * @generated from field: bool success = 1;
    */
   success: boolean;
+
+  /**
+   * @generated from field: repeated string deleted_accounts = 2;
+   */
+  deletedAccounts: string[];
+
+  /**
+   * @generated from field: optional string backup_location = 3;
+   */
+  backupLocation?: string;
 };
 
 /**
@@ -772,31 +749,38 @@ export const DeleteUserResponseSchema: GenMessage<DeleteUserResponse> = /*@__PUR
   messageDesc(file_schema_v1alpha1_user, 18);
 
 /**
- * Request message for listing users with optional filtering
- *
  * @generated from message schema.v1alpha1.ListUsersRequest
  */
 export type ListUsersRequest = Message<"schema.v1alpha1.ListUsersRequest"> & {
   /**
-   * Optional filter by user source
-   *
-   * @generated from field: schema.v1alpha1.UserSource source = 1;
+   * @generated from field: optional schema.v1alpha1.UserSource source = 1;
    */
-  source: UserSource;
+  source?: UserSource;
 
   /**
-   * Optional filter by enabled status
-   *
-   * @generated from field: bool enabled = 2;
+   * @generated from field: optional bool enabled = 2;
    */
-  enabled: boolean;
+  enabled?: boolean;
 
   /**
-   * Optional filter by username (prefix match)
-   *
-   * @generated from field: string username_prefix = 3;
+   * @generated from field: optional string username_prefix = 3;
    */
-  usernamePrefix: string;
+  usernamePrefix?: string;
+
+  /**
+   * @generated from field: optional google.protobuf.FieldMask field_mask = 4;
+   */
+  fieldMask?: FieldMask;
+
+  /**
+   * @generated from field: optional int32 page_size = 5;
+   */
+  pageSize?: number;
+
+  /**
+   * @generated from field: optional string page_token = 6;
+   */
+  pageToken?: string;
 };
 
 /**
@@ -807,17 +791,18 @@ export const ListUsersRequestSchema: GenMessage<ListUsersRequest> = /*@__PURE__*
   messageDesc(file_schema_v1alpha1_user, 19);
 
 /**
- * Response message for listing users
- *
  * @generated from message schema.v1alpha1.ListUsersResponse
  */
 export type ListUsersResponse = Message<"schema.v1alpha1.ListUsersResponse"> & {
   /**
-   * List of users matching the criteria
-   *
    * @generated from field: repeated schema.v1alpha1.User users = 1;
    */
   users: User[];
+
+  /**
+   * @generated from field: optional string next_page_token = 2;
+   */
+  nextPageToken?: string;
 };
 
 /**
@@ -828,28 +813,20 @@ export const ListUsersResponseSchema: GenMessage<ListUsersResponse> = /*@__PURE_
   messageDesc(file_schema_v1alpha1_user, 20);
 
 /**
- * Request message for changing a user's password
- *
  * @generated from message schema.v1alpha1.ChangePasswordRequest
  */
 export type ChangePasswordRequest = Message<"schema.v1alpha1.ChangePasswordRequest"> & {
   /**
-   * User ID
-   *
    * @generated from field: string id = 1;
    */
   id: string;
 
   /**
-   * Current password (for verification)
-   *
    * @generated from field: string current_password = 2;
    */
   currentPassword: string;
 
   /**
-   * New password
-   *
    * @generated from field: string new_password = 3;
    */
   newPassword: string;
@@ -863,17 +840,18 @@ export const ChangePasswordRequestSchema: GenMessage<ChangePasswordRequest> = /*
   messageDesc(file_schema_v1alpha1_user, 21);
 
 /**
- * Response message for changing a user's password
- *
  * @generated from message schema.v1alpha1.ChangePasswordResponse
  */
 export type ChangePasswordResponse = Message<"schema.v1alpha1.ChangePasswordResponse"> & {
   /**
-   * Success indicator
-   *
    * @generated from field: bool success = 1;
    */
   success: boolean;
+
+  /**
+   * @generated from field: optional string failure_reason = 2;
+   */
+  failureReason?: string;
 };
 
 /**
@@ -884,31 +862,28 @@ export const ChangePasswordResponseSchema: GenMessage<ChangePasswordResponse> = 
   messageDesc(file_schema_v1alpha1_user, 22);
 
 /**
- * Request message for resetting a user's password
- *
  * @generated from message schema.v1alpha1.ResetPasswordRequest
  */
 export type ResetPasswordRequest = Message<"schema.v1alpha1.ResetPasswordRequest"> & {
   /**
-   * User ID
-   *
    * @generated from field: string id = 1;
    */
   id: string;
 
   /**
-   * New password (if not provided, system generates one)
-   *
-   * @generated from field: string new_password = 2;
+   * @generated from field: optional string new_password = 2;
    */
-  newPassword: string;
+  newPassword?: string;
 
   /**
-   * Whether to force reset regardless of current state
-   *
-   * @generated from field: bool force = 3;
+   * @generated from field: optional bool force = 3;
    */
-  force: boolean;
+  force?: boolean;
+
+  /**
+   * @generated from field: optional bool generate_password = 4;
+   */
+  generatePassword?: boolean;
 };
 
 /**
@@ -919,24 +894,23 @@ export const ResetPasswordRequestSchema: GenMessage<ResetPasswordRequest> = /*@_
   messageDesc(file_schema_v1alpha1_user, 23);
 
 /**
- * Response message for resetting a user's password
- *
  * @generated from message schema.v1alpha1.ResetPasswordResponse
  */
 export type ResetPasswordResponse = Message<"schema.v1alpha1.ResetPasswordResponse"> & {
   /**
-   * The new password (if system-generated)
-   *
    * @generated from field: string new_password = 1;
    */
   newPassword: string;
 
   /**
-   * Success indicator
-   *
    * @generated from field: bool success = 2;
    */
   success: boolean;
+
+  /**
+   * @generated from field: optional string failure_reason = 3;
+   */
+  failureReason?: string;
 };
 
 /**
@@ -947,24 +921,28 @@ export const ResetPasswordResponseSchema: GenMessage<ResetPasswordResponse> = /*
   messageDesc(file_schema_v1alpha1_user, 24);
 
 /**
- * Request message for authenticating a user
- *
  * @generated from message schema.v1alpha1.AuthenticateUserRequest
  */
 export type AuthenticateUserRequest = Message<"schema.v1alpha1.AuthenticateUserRequest"> & {
   /**
-   * Username
-   *
    * @generated from field: string username = 1;
    */
   username: string;
 
   /**
-   * Password
-   *
    * @generated from field: string password = 2;
    */
   password: string;
+
+  /**
+   * @generated from field: optional string source_ip = 3;
+   */
+  sourceIp?: string;
+
+  /**
+   * @generated from field: optional string user_agent = 4;
+   */
+  userAgent?: string;
 };
 
 /**
@@ -975,38 +953,33 @@ export const AuthenticateUserRequestSchema: GenMessage<AuthenticateUserRequest> 
   messageDesc(file_schema_v1alpha1_user, 25);
 
 /**
- * Response message for authenticating a user
- *
  * @generated from message schema.v1alpha1.AuthenticateUserResponse
  */
 export type AuthenticateUserResponse = Message<"schema.v1alpha1.AuthenticateUserResponse"> & {
   /**
-   * Authentication success
-   *
    * @generated from field: bool success = 1;
    */
   success: boolean;
 
   /**
-   * User ID if authentication successful
-   *
-   * @generated from field: string user_id = 2;
+   * @generated from field: optional string user_id = 2;
    */
-  userId: string;
+  userId?: string;
 
   /**
-   * Authentication token (if successful)
-   *
-   * @generated from field: string token = 3;
+   * @generated from field: optional string token = 3;
    */
-  token: string;
+  token?: string;
 
   /**
-   * Reason for authentication failure (if unsuccessful)
-   *
-   * @generated from field: string failure_reason = 4;
+   * @generated from field: optional string failure_reason = 4;
    */
-  failureReason: string;
+  failureReason?: string;
+
+  /**
+   * @generated from field: optional google.protobuf.Timestamp token_expires_at = 5;
+   */
+  tokenExpiresAt?: Timestamp;
 };
 
 /**
@@ -1017,8 +990,6 @@ export const AuthenticateUserResponseSchema: GenMessage<AuthenticateUserResponse
   messageDesc(file_schema_v1alpha1_user, 26);
 
 /**
- * UserSource represents the source system for a user account
- *
  * @generated from enum schema.v1alpha1.UserSource
  */
 export enum UserSource {
@@ -1056,6 +1027,16 @@ export enum UserSource {
    * @generated from enum value: USER_SOURCE_NATS = 6;
    */
   NATS = 6,
+
+  /**
+   * @generated from enum value: USER_SOURCE_UNIX = 7;
+   */
+  UNIX = 7,
+
+  /**
+   * @generated from enum value: USER_SOURCE_EXTERNAL_API = 8;
+   */
+  EXTERNAL_API = 8,
 }
 
 /**
@@ -1065,8 +1046,57 @@ export const UserSourceSchema: GenEnum<UserSource> = /*@__PURE__*/
   enumDesc(file_schema_v1alpha1_user, 0);
 
 /**
- * PasswordHashAlgorithm represents the algorithm used for password hashing
- *
+ * @generated from enum schema.v1alpha1.UserCreationInterface
+ */
+export enum UserCreationInterface {
+  /**
+   * @generated from enum value: USER_CREATION_INTERFACE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: USER_CREATION_INTERFACE_SCHEMA_API = 1;
+   */
+  SCHEMA_API = 1,
+
+  /**
+   * @generated from enum value: USER_CREATION_INTERFACE_UNIX_USERADD = 2;
+   */
+  UNIX_USERADD = 2,
+
+  /**
+   * @generated from enum value: USER_CREATION_INTERFACE_LDAP_ADMIN = 3;
+   */
+  LDAP_ADMIN = 3,
+
+  /**
+   * @generated from enum value: USER_CREATION_INTERFACE_AD_ADMIN = 4;
+   */
+  AD_ADMIN = 4,
+
+  /**
+   * @generated from enum value: USER_CREATION_INTERFACE_REDFISH_API = 5;
+   */
+  REDFISH_API = 5,
+
+  /**
+   * @generated from enum value: USER_CREATION_INTERFACE_NATS_CONFIG = 6;
+   */
+  NATS_CONFIG = 6,
+
+  /**
+   * @generated from enum value: USER_CREATION_INTERFACE_IPMI_USER_MGMT = 7;
+   */
+  IPMI_USER_MGMT = 7,
+}
+
+/**
+ * Describes the enum schema.v1alpha1.UserCreationInterface.
+ */
+export const UserCreationInterfaceSchema: GenEnum<UserCreationInterface> = /*@__PURE__*/
+  enumDesc(file_schema_v1alpha1_user, 1);
+
+/**
  * @generated from enum schema.v1alpha1.PasswordHashAlgorithm
  */
 export enum PasswordHashAlgorithm {
@@ -1081,30 +1111,33 @@ export enum PasswordHashAlgorithm {
   BCRYPT = 1,
 
   /**
-   * @generated from enum value: PASSWORD_HASH_ALGORITHM_ARGON2 = 2;
+   * @generated from enum value: PASSWORD_HASH_ALGORITHM_ARGON2ID = 2;
    */
-  ARGON2 = 2,
+  ARGON2ID = 2,
 
   /**
-   * @generated from enum value: PASSWORD_HASH_ALGORITHM_SHA256 = 3;
+   * @generated from enum value: PASSWORD_HASH_ALGORITHM_SCRYPT = 3;
    */
-  SHA256 = 3,
+  SCRYPT = 3,
 
   /**
-   * @generated from enum value: PASSWORD_HASH_ALGORITHM_SHA512 = 4;
+   * @generated from enum value: PASSWORD_HASH_ALGORITHM_PBKDF2_SHA256 = 4;
    */
-  SHA512 = 4,
+  PBKDF2_SHA256 = 4,
+
+  /**
+   * @generated from enum value: PASSWORD_HASH_ALGORITHM_PBKDF2_SHA512 = 5;
+   */
+  PBKDF2_SHA512 = 5,
 }
 
 /**
  * Describes the enum schema.v1alpha1.PasswordHashAlgorithm.
  */
 export const PasswordHashAlgorithmSchema: GenEnum<PasswordHashAlgorithm> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_user, 1);
+  enumDesc(file_schema_v1alpha1_user, 2);
 
 /**
- * LockoutReason represents the reason for account lockout
- *
  * @generated from enum schema.v1alpha1.LockoutReason
  */
 export enum LockoutReason {
@@ -1127,100 +1160,52 @@ export enum LockoutReason {
    * @generated from enum value: LOCKOUT_REASON_PASSWORD_EXPIRED = 3;
    */
   PASSWORD_EXPIRED = 3,
+
+  /**
+   * @generated from enum value: LOCKOUT_REASON_ACCOUNT_EXPIRED = 4;
+   */
+  ACCOUNT_EXPIRED = 4,
+
+  /**
+   * @generated from enum value: LOCKOUT_REASON_SECURITY_POLICY = 5;
+   */
+  SECURITY_POLICY = 5,
 }
 
 /**
  * Describes the enum schema.v1alpha1.LockoutReason.
  */
 export const LockoutReasonSchema: GenEnum<LockoutReason> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_user, 2);
+  enumDesc(file_schema_v1alpha1_user, 3);
 
 /**
- * Service definition for user management operations
- *
- * @generated from service schema.v1alpha1.UserService
+ * @generated from enum schema.v1alpha1.UserLinkAction
  */
-export const UserService: GenService<{
+export enum UserLinkAction {
   /**
-   * Create a new user
-   *
-   * @generated from rpc schema.v1alpha1.UserService.CreateUser
+   * @generated from enum value: USER_LINK_ACTION_UNSPECIFIED = 0;
    */
-  createUser: {
-    methodKind: "unary";
-    input: typeof CreateUserRequestSchema;
-    output: typeof CreateUserResponseSchema;
-  },
+  UNSPECIFIED = 0,
+
   /**
-   * Get a user by ID
-   *
-   * @generated from rpc schema.v1alpha1.UserService.GetUser
+   * @generated from enum value: USER_LINK_ACTION_LINK_EXISTING = 1;
    */
-  getUser: {
-    methodKind: "unary";
-    input: typeof GetUserRequestSchema;
-    output: typeof GetUserResponseSchema;
-  },
+  LINK_EXISTING = 1,
+
   /**
-   * Update an existing user
-   *
-   * @generated from rpc schema.v1alpha1.UserService.UpdateUser
+   * @generated from enum value: USER_LINK_ACTION_CREATE_NEW = 2;
    */
-  updateUser: {
-    methodKind: "unary";
-    input: typeof UpdateUserRequestSchema;
-    output: typeof UpdateUserResponseSchema;
-  },
+  CREATE_NEW = 2,
+
   /**
-   * Delete a user
-   *
-   * @generated from rpc schema.v1alpha1.UserService.DeleteUser
+   * @generated from enum value: USER_LINK_ACTION_NO_ACTION = 3;
    */
-  deleteUser: {
-    methodKind: "unary";
-    input: typeof DeleteUserRequestSchema;
-    output: typeof DeleteUserResponseSchema;
-  },
-  /**
-   * List users with optional filtering
-   *
-   * @generated from rpc schema.v1alpha1.UserService.ListUsers
-   */
-  listUsers: {
-    methodKind: "unary";
-    input: typeof ListUsersRequestSchema;
-    output: typeof ListUsersResponseSchema;
-  },
-  /**
-   * Change a user's password
-   *
-   * @generated from rpc schema.v1alpha1.UserService.ChangePassword
-   */
-  changePassword: {
-    methodKind: "unary";
-    input: typeof ChangePasswordRequestSchema;
-    output: typeof ChangePasswordResponseSchema;
-  },
-  /**
-   * Reset a user's password
-   *
-   * @generated from rpc schema.v1alpha1.UserService.ResetPassword
-   */
-  resetPassword: {
-    methodKind: "unary";
-    input: typeof ResetPasswordRequestSchema;
-    output: typeof ResetPasswordResponseSchema;
-  },
-  /**
-   * Authenticate a user
-   *
-   * @generated from rpc schema.v1alpha1.UserService.AuthenticateUser
-   */
-  authenticateUser: {
-    methodKind: "unary";
-    input: typeof AuthenticateUserRequestSchema;
-    output: typeof AuthenticateUserResponseSchema;
-  },
-}> = /*@__PURE__*/
-  serviceDesc(file_schema_v1alpha1_user, 0);
+  NO_ACTION = 3,
+}
+
+/**
+ * Describes the enum schema.v1alpha1.UserLinkAction.
+ */
+export const UserLinkActionSchema: GenEnum<UserLinkAction> = /*@__PURE__*/
+  enumDesc(file_schema_v1alpha1_user, 4);
 

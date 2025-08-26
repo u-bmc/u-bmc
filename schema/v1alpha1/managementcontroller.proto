@@ -1,0 +1,212 @@
+// SPDX-License-Identifier: BSD-3-Clause
+
+syntax = "proto3";
+
+package schema.v1alpha1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "schema/v1alpha1/asset.proto";
+import "schema/v1alpha1/firmware.proto";
+import "schema/v1alpha1/location.proto";
+
+enum ManagementControllerType {
+  MANAGEMENT_CONTROLLER_TYPE_UNSPECIFIED = 0;
+  MANAGEMENT_CONTROLLER_TYPE_BMC = 1;
+  MANAGEMENT_CONTROLLER_TYPE_SATELLITE = 2;
+  MANAGEMENT_CONTROLLER_TYPE_CHASSIS_CONTROLLER = 3;
+  MANAGEMENT_CONTROLLER_TYPE_NODE_CONTROLLER = 4;
+  MANAGEMENT_CONTROLLER_TYPE_RACK_CONTROLLER = 5;
+}
+
+enum ManagementControllerStatus {
+  MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED = 0;
+  MANAGEMENT_CONTROLLER_STATUS_ENABLED = 1;
+  MANAGEMENT_CONTROLLER_STATUS_DISABLED = 2;
+  MANAGEMENT_CONTROLLER_STATUS_UNAVAILABLE_OFFLINE = 3;
+  MANAGEMENT_CONTROLLER_STATUS_IN_TEST = 4;
+  MANAGEMENT_CONTROLLER_STATUS_ERROR = 5;
+}
+
+enum ManagementControllerState {
+  MANAGEMENT_CONTROLLER_STATE_UNSPECIFIED = 0;
+  MANAGEMENT_CONTROLLER_STATE_READY = 1;
+  MANAGEMENT_CONTROLLER_STATE_NOT_READY = 2;
+}
+
+enum ManagementControllerTransition {
+  MANAGEMENT_CONTROLLER_TRANSITION_UNSPECIFIED = 0;
+  MANAGEMENT_CONTROLLER_TRANSITION_REBOOT = 1;
+  MANAGEMENT_CONTROLLER_TRANSITION_WARM_RESET = 2;
+  MANAGEMENT_CONTROLLER_TRANSITION_COLD_RESET = 3;
+}
+
+enum ManagementControllerRebootCause {
+  MANAGEMENT_CONTROLLER_REBOOT_CAUSE_UNSPECIFIED = 0;
+  MANAGEMENT_CONTROLLER_REBOOT_CAUSE_POWER_BUTTON = 1;
+  MANAGEMENT_CONTROLLER_REBOOT_CAUSE_RESET_BUTTON = 2;
+  MANAGEMENT_CONTROLLER_REBOOT_CAUSE_WATCHDOG = 3;
+  MANAGEMENT_CONTROLLER_REBOOT_CAUSE_SOFT_RESET = 4;
+  MANAGEMENT_CONTROLLER_REBOOT_CAUSE_OTHER = 5;
+}
+
+enum ManagementControllerRole {
+  MANAGEMENT_CONTROLLER_ROLE_UNSPECIFIED = 0;
+  MANAGEMENT_CONTROLLER_ROLE_PRIMARY = 1;
+  MANAGEMENT_CONTROLLER_ROLE_BACKUP = 2;
+  MANAGEMENT_CONTROLLER_ROLE_STANDBY = 3;
+}
+
+enum ManagementControllerAction {
+  MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED = 0;
+  MANAGEMENT_CONTROLLER_ACTION_REBOOT = 1;
+  MANAGEMENT_CONTROLLER_ACTION_HARD_RESET = 2;
+  MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET = 3;
+  MANAGEMENT_CONTROLLER_ACTION_CLEAR_LOGS = 4;
+  MANAGEMENT_CONTROLLER_ACTION_BACKUP_CONFIG = 5;
+  MANAGEMENT_CONTROLLER_ACTION_RESTORE_CONFIG = 6;
+  MANAGEMENT_CONTROLLER_ACTION_UPDATE_FIRMWARE = 7;
+}
+
+enum MemoryType {
+  MEMORY_TYPE_UNSPECIFIED = 0;
+  MEMORY_TYPE_DDR2 = 1;
+  MEMORY_TYPE_DDR3 = 2;
+  MEMORY_TYPE_DDR4 = 3;
+  MEMORY_TYPE_DDR5 = 4;
+  MEMORY_TYPE_LPDDR2 = 5;
+  MEMORY_TYPE_LPDDR3 = 6;
+  MEMORY_TYPE_LPDDR4 = 7;
+  MEMORY_TYPE_LPDDR5 = 8;
+}
+
+enum StorageType {
+  STORAGE_TYPE_UNSPECIFIED = 0;
+  STORAGE_TYPE_EMMC = 1;
+  STORAGE_TYPE_SSD = 2;
+  STORAGE_TYPE_FLASH = 3;
+}
+
+message ManagementController {
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  AssetInfo asset = 2;
+  optional string description = 3;
+  optional ManagementControllerType type = 4
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional ManagementControllerState current_state = 5
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional ManagementControllerTransition requested_transition = 6
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional ManagementControllerStatus status = 7
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional Location location = 8;
+  optional ManagementControllerHardware hardware = 9;
+  optional Firmware firmware = 10;
+  optional ManagementControllerRedundancy redundancy = 11;
+  optional ManagementControllerRebootInfo last_reboot = 12;
+  optional google.protobuf.Timestamp updated_at = 13;
+  map<string, string> metadata = 14;
+}
+
+message ManagementControllerHardware {
+  optional ManagementControllerCPU cpu = 1;
+  optional ManagementControllerMemory memory = 2;
+  optional ManagementControllerStorage storage = 3;
+}
+
+message ManagementControllerCPU {
+  optional string model = 1;
+  optional string manufacturer = 2;
+  optional uint32 cores = 3 [ (buf.validate.field).uint32.gte = 1 ];
+  optional uint32 max_frequency_mhz = 4 [ (buf.validate.field).uint32.gt = 0 ];
+  optional string architecture = 5;
+}
+
+message ManagementControllerMemory {
+  optional MemoryType memory_type = 1
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional uint64 capacity = 2 [ (buf.validate.field).uint64.gt = 0 ];
+  optional uint32 max_frequency_mhz = 3 [ (buf.validate.field).uint32.gt = 0 ];
+}
+
+message ManagementControllerStorage {
+  optional StorageType storage_type = 1
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional uint64 capacity = 2 [ (buf.validate.field).uint64.gt = 0 ];
+}
+
+message ManagementControllerRedundancy {
+  optional ManagementControllerRole role = 1
+      [ (buf.validate.field).enum.defined_only = true ];
+  bool redundancy_enabled = 2;
+  optional bool disable_redundancy_override = 3;
+  optional bool failovers_paused = 4;
+  optional string redundancy_mode = 5;
+  repeated string partner_controllers = 6;
+  optional string failover_status = 7;
+}
+
+message ManagementControllerRebootInfo {
+  optional google.protobuf.Timestamp last_reboot_time = 1;
+  optional ManagementControllerRebootCause reboot_cause = 2
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional uint32 reboot_count = 3;
+  optional google.protobuf.Duration uptime = 4;
+  optional google.protobuf.Duration boot_time = 5;
+}
+
+message GetManagementControllerRequest {
+  oneof identifier {
+    option (buf.validate.oneof).required = true;
+    string controller_id = 1;
+    string name = 2;
+    ManagementControllerType type = 3;
+    ManagementControllerStatus status = 4;
+    Location location = 5;
+  }
+  optional google.protobuf.FieldMask field_mask = 6;
+}
+
+message GetManagementControllerResponse {
+  repeated ManagementController controllers = 1;
+}
+
+message ListManagementControllersRequest {
+  optional ManagementControllerType type = 1
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional ManagementControllerStatus status = 2
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional google.protobuf.FieldMask field_mask = 3;
+}
+
+message ListManagementControllersResponse {
+  repeated ManagementController controllers = 1;
+}
+
+message UpdateManagementControllerRequest {
+  string controller_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  ManagementController controller = 2 [ (buf.validate.field).required = true ];
+  google.protobuf.FieldMask field_mask = 3;
+}
+
+message UpdateManagementControllerResponse {
+  ManagementController controller = 1;
+}
+
+message ManagementControllerControlRequest {
+  string controller_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  ManagementControllerAction action = 2
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional bool force = 3;
+  map<string, string> parameters = 4;
+}
+
+message ManagementControllerControlResponse {
+  bool success = 1;
+  optional ManagementControllerState current_state = 2
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional string error_message = 3;
+  optional google.protobuf.Timestamp estimated_completion = 4;
+}

@@ -1,0 +1,339 @@
+// SPDX-License-Identifier: BSD-3-Clause
+
+syntax = "proto3";
+
+package schema.v1alpha1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "schema/v1alpha1/asset.proto";
+import "schema/v1alpha1/location.proto";
+import "schema/v1alpha1/sensor.proto";
+import "schema/v1alpha1/specs.proto";
+import "schema/v1alpha1/thermal.proto";
+
+enum ChassisType {
+  CHASSIS_TYPE_UNSPECIFIED = 0;
+  CHASSIS_TYPE_RACK_MOUNT = 1;
+  CHASSIS_TYPE_BLADE = 2;
+  CHASSIS_TYPE_STANDALONE = 3;
+  CHASSIS_TYPE_CARD = 4;
+  CHASSIS_TYPE_TOWER = 5;
+  CHASSIS_TYPE_DESKTOP = 6;
+  CHASSIS_TYPE_ENCLOSURE = 7;
+}
+
+enum ChassisFormFactor {
+  CHASSIS_FORM_FACTOR_UNSPECIFIED = 0;
+  CHASSIS_FORM_FACTOR_1U = 1;
+  CHASSIS_FORM_FACTOR_2U = 2;
+  CHASSIS_FORM_FACTOR_3U = 3;
+  CHASSIS_FORM_FACTOR_4U = 4;
+  CHASSIS_FORM_FACTOR_5U = 5;
+  CHASSIS_FORM_FACTOR_6U = 6;
+  CHASSIS_FORM_FACTOR_HALF_WIDTH = 7;
+  CHASSIS_FORM_FACTOR_FULL_WIDTH = 8;
+  CHASSIS_FORM_FACTOR_CUSTOM = 9;
+}
+
+enum ChassisStatus {
+  CHASSIS_STATUS_UNSPECIFIED = 0;
+  CHASSIS_STATUS_ON = 1;
+  CHASSIS_STATUS_OFF = 2;
+  CHASSIS_STATUS_TRANSITIONING = 3;
+  CHASSIS_STATUS_WARNING = 4;
+  CHASSIS_STATUS_CRITICAL = 5;
+  CHASSIS_STATUS_FAILED = 6;
+  CHASSIS_STATUS_UNKNOWN = 7;
+}
+
+enum ChassisTransition {
+  CHASSIS_TRANSITION_UNSPECIFIED = 0;
+  CHASSIS_TRANSITION_ON = 1;
+  CHASSIS_TRANSITION_OFF = 2;
+  CHASSIS_TRANSITION_POWER_CYCLE = 3;
+}
+
+enum ChassisPowerSupplyType {
+  CHASSIS_POWER_SUPPLY_TYPE_UNSPECIFIED = 0;
+  CHASSIS_POWER_SUPPLY_TYPE_AC = 1;
+  CHASSIS_POWER_SUPPLY_TYPE_DC = 2;
+  CHASSIS_POWER_SUPPLY_TYPE_UPS = 3;
+  CHASSIS_POWER_SUPPLY_TYPE_REDUNDANT = 4;
+}
+
+enum ChassisPowerSupplyStatus {
+  CHASSIS_POWER_SUPPLY_STATUS_UNSPECIFIED = 0;
+  CHASSIS_POWER_SUPPLY_STATUS_OK = 1;
+  CHASSIS_POWER_SUPPLY_STATUS_WARNING = 2;
+  CHASSIS_POWER_SUPPLY_STATUS_CRITICAL = 3;
+  CHASSIS_POWER_SUPPLY_STATUS_FAILED = 4;
+  CHASSIS_POWER_SUPPLY_STATUS_NOT_PRESENT = 5;
+  CHASSIS_POWER_SUPPLY_STATUS_INPUT_LOST = 6;
+}
+
+enum ChassisLEDState {
+  CHASSIS_LED_STATE_UNSPECIFIED = 0;
+  CHASSIS_LED_STATE_OFF = 1;
+  CHASSIS_LED_STATE_ON = 2;
+  CHASSIS_LED_STATE_BLINKING = 3;
+  CHASSIS_LED_STATE_UNKNOWN = 4;
+}
+
+enum ChassisLEDType {
+  CHASSIS_LED_TYPE_UNSPECIFIED = 0;
+  CHASSIS_LED_TYPE_POWER = 1;
+  CHASSIS_LED_TYPE_FAULT = 2;
+  CHASSIS_LED_TYPE_IDENTIFY = 3;
+  CHASSIS_LED_TYPE_STATUS = 4;
+  CHASSIS_LED_TYPE_HEARTBEAT = 5;
+}
+
+enum ChassisControlAction {
+  CHASSIS_CONTROL_ACTION_UNSPECIFIED = 0;
+  CHASSIS_CONTROL_ACTION_POWER_ON = 1;
+  CHASSIS_CONTROL_ACTION_POWER_OFF = 2;
+  CHASSIS_CONTROL_ACTION_POWER_CYCLE = 3;
+  CHASSIS_CONTROL_ACTION_RESET = 4;
+  CHASSIS_CONTROL_ACTION_IDENTIFY_ON = 5;
+  CHASSIS_CONTROL_ACTION_IDENTIFY_OFF = 6;
+  CHASSIS_CONTROL_ACTION_EMERGENCY_SHUTDOWN = 7;
+}
+
+message Chassis {
+  option (buf.validate.message).cel = {
+    id : "chassis_power_consumption",
+    message : "power_consumed_watts must not exceed power_capacity_watts",
+    expression : "!has(this.power_info) || "
+                 "!has(this.power_info.power_consumed_watts) || "
+                 "!has(this.power_info.power_capacity_watts) || "
+                 "this.power_info.power_consumed_watts <= "
+                 "this.power_info.power_capacity_watts"
+  };
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  AssetInfo asset = 2 [ (buf.validate.field).required = true ];
+  optional string description = 3;
+  optional ChassisType type = 4
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional ChassisFormFactor form_factor = 5
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional ChassisStatus status = 6
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional ChassisTransition requested_transition = 7
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional Location location = 8;
+  optional PhysicalDimensions dimensions = 9;
+  optional ChassisPowerInfo power_info = 10;
+  repeated Sensor sensors = 11;
+  repeated ThermalZone thermal_zones = 12;
+  repeated CoolingDevice cooling_devices = 13;
+  repeated string host_names = 14;
+  repeated string management_controller_ids = 15;
+  repeated ChassisLED leds = 16;
+  optional ChassisIntrusion intrusion = 17;
+  repeated AssetInfo contained_assets = 18;
+  optional google.protobuf.Timestamp updated_at = 19;
+  map<string, string> metadata = 20;
+}
+
+message ChassisPowerInfo {
+  option (buf.validate.message).cel = {
+    id : "chassis_power_capacity",
+    message : "power_consumed_watts must not exceed power_capacity_watts",
+    expression : "!has(this.power_consumed_watts) || "
+                 "!has(this.power_capacity_watts) || "
+                 "this.power_consumed_watts <= this.power_capacity_watts"
+  };
+  optional uint32 power_capacity_watts = 1
+      [ (buf.validate.field).uint32.gt = 0 ];
+  optional uint32 power_consumed_watts = 2
+      [ (buf.validate.field).uint32.gte = 0 ];
+  repeated ChassisPowerSupply power_supplies = 3;
+  repeated ChassisPowerDistribution power_distribution = 4;
+  optional ChassisPowerRedundancy redundancy = 5;
+  repeated ChassisPowerBudget power_budgets = 6;
+}
+
+message ChassisPowerSupply {
+  string psu_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  AssetInfo asset = 2 [ (buf.validate.field).required = true ];
+  optional ChassisPowerSupplyType type = 3
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional ChassisPowerSupplyStatus status = 4
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional uint32 capacity_watts = 5 [ (buf.validate.field).uint32.gt = 0 ];
+  optional uint32 output_watts = 6 [ (buf.validate.field).uint32.gte = 0 ];
+  optional string efficiency_rating = 7;
+  optional double input_voltage = 8 [ (buf.validate.field).double.gte = 0 ];
+  optional double output_voltage = 9 [ (buf.validate.field).double.gte = 0 ];
+  optional double input_current = 10 [ (buf.validate.field).double.gte = 0 ];
+  optional double output_current = 11 [ (buf.validate.field).double.gte = 0 ];
+  optional double temperature_celsius = 12;
+  optional uint32 fan_speed_rpm = 13 [ (buf.validate.field).uint32.gte = 0 ];
+  optional bool hot_swappable = 14;
+  optional bool redundant = 15;
+  optional Location location = 16;
+}
+
+message ChassisPowerDistribution {
+  string pdu_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string name = 2;
+  optional uint32 capacity_watts = 3 [ (buf.validate.field).uint32.gt = 0 ];
+  optional uint32 load_watts = 4 [ (buf.validate.field).uint32.gte = 0 ];
+  repeated PowerCircuit circuits = 5;
+}
+
+message PowerCircuit {
+  string circuit_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string name = 2;
+  optional double voltage = 3 [ (buf.validate.field).double.gte = 0 ];
+  optional double current_amps = 4 [ (buf.validate.field).double.gte = 0 ];
+  optional double power_watts = 5 [ (buf.validate.field).double.gte = 0 ];
+  optional double breaker_rating_amps = 6
+      [ (buf.validate.field).double.gte = 0 ];
+  repeated string connected_loads = 7;
+}
+
+message ChassisPowerRedundancy {
+  bool enabled = 1;
+  optional string mode = 2;
+  optional uint32 required_supplies = 3 [ (buf.validate.field).uint32.gte = 1 ];
+  optional uint32 available_supplies = 4
+      [ (buf.validate.field).uint32.gte = 0 ];
+  optional string status = 5;
+}
+
+message ChassisPowerBudget {
+  option (buf.validate.message).cel = {
+    id : "power_budget_allocation",
+    message : "used_watts must not exceed allocated_watts",
+    expression : "!has(this.used_watts) || "
+                 "!has(this.allocated_watts) || "
+                 "this.used_watts <= this.allocated_watts"
+  };
+  option (buf.validate.message).cel = {
+    id : "power_budget_max",
+    message : "allocated_watts must not exceed max_watts",
+    expression : "!has(this.allocated_watts) || "
+                 "!has(this.max_watts) || "
+                 "this.allocated_watts <= this.max_watts"
+  };
+  string allocated_to = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional uint32 allocated_watts = 2 [ (buf.validate.field).uint32.gte = 0 ];
+  optional uint32 used_watts = 3 [ (buf.validate.field).uint32.gte = 0 ];
+  optional uint32 max_watts = 4 [ (buf.validate.field).uint32.gt = 0 ];
+  optional uint32 priority = 5;
+}
+
+message ChassisLED {
+  string led_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string name = 2;
+  optional ChassisLEDType type = 3
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional ChassisLEDState state = 4
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional string color = 5;
+  optional string blink_pattern = 6;
+  optional bool controllable = 7;
+}
+
+message ChassisIntrusion {
+  bool enabled = 1;
+  bool intrusion_detected = 2;
+  optional google.protobuf.Timestamp last_intrusion = 3;
+  optional uint32 intrusion_count = 4;
+  optional bool reset_count = 5;
+  optional string sensor_status = 6;
+}
+
+message ExpansionBay {
+  string bay_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string name = 2;
+  optional string bay_type = 3;
+  optional bool occupied = 4;
+  optional string installed_component = 5;
+  optional Location location = 6;
+}
+
+message Slot {
+  string slot_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string name = 2;
+  optional string slot_type = 3;
+  optional bool occupied = 4;
+  optional string installed_component = 5;
+  optional Location location = 6;
+}
+
+message GetChassisRequest {
+  oneof identifier {
+    option (buf.validate.oneof).required = true;
+    string chassis_id = 1;
+    string name = 2;
+    ChassisType type = 3;
+    ChassisStatus status = 4;
+    Location location = 5;
+  }
+  optional google.protobuf.FieldMask field_mask = 6;
+}
+
+message GetChassisResponse { repeated Chassis chassis = 1; }
+
+message ListChassisRequest {
+  optional ChassisType type = 1
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional ChassisStatus status = 2
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional google.protobuf.FieldMask field_mask = 3;
+  optional uint32 page_size = 4 [ (buf.validate.field).uint32.lte = 1000 ];
+  optional string page_token = 5;
+}
+
+message ListChassisResponse {
+  repeated Chassis chassis = 1;
+  optional string next_page_token = 2;
+  optional uint32 total_size = 3;
+}
+
+message UpdateChassisRequest {
+  string chassis_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  Chassis chassis = 2 [ (buf.validate.field).required = true ];
+  google.protobuf.FieldMask field_mask = 3;
+}
+
+message UpdateChassisResponse { Chassis chassis = 1; }
+
+message ChassisChangeStateRequest {
+  string chassis_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  ChassisTransition transition = 2
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional bool force = 3;
+  optional google.protobuf.FieldMask field_mask = 4;
+  map<string, string> metadata = 5;
+}
+
+message ChassisChangeStateResponse {
+  bool success = 1;
+  optional string error_message = 2;
+  optional ChassisStatus status = 3
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional string transition_id = 4;
+  optional google.protobuf.Timestamp estimated_completion = 5;
+  map<string, string> metadata = 6;
+}
+
+message ChassisControlRequest {
+  string chassis_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  ChassisControlAction action = 2
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional bool force = 3;
+  optional google.protobuf.FieldMask field_mask = 4;
+  map<string, string> parameters = 5;
+}
+
+message ChassisControlResponse {
+  bool success = 1;
+  optional string error_message = 2;
+  optional ChassisStatus status = 3
+      [ (buf.validate.field).enum.defined_only = true ];
+}

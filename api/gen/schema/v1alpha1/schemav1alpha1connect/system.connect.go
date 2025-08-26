@@ -23,15 +23,8 @@ import (
 const _ = connect.IsAtLeastVersion1_13_0
 
 const (
-	// HostManagementServiceName is the fully-qualified name of the HostManagementService service.
-	HostManagementServiceName = "schema.v1alpha1.HostManagementService"
-	// ChassisServiceName is the fully-qualified name of the ChassisService service.
-	ChassisServiceName = "schema.v1alpha1.ChassisService"
-	// HostServiceName is the fully-qualified name of the HostService service.
-	HostServiceName = "schema.v1alpha1.HostService"
-	// ManagementControllerServiceName is the fully-qualified name of the ManagementControllerService
-	// service.
-	ManagementControllerServiceName = "schema.v1alpha1.ManagementControllerService"
+	// BMCServiceName is the fully-qualified name of the BMCService service.
+	BMCServiceName = "schema.v1alpha1.BMCService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -42,432 +35,903 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
-	// HostManagementServiceGetHostManagementProcedure is the fully-qualified name of the
-	// HostManagementService's GetHostManagement RPC.
-	HostManagementServiceGetHostManagementProcedure = "/schema.v1alpha1.HostManagementService/GetHostManagement"
-	// HostManagementServiceListHostManagementProcedure is the fully-qualified name of the
-	// HostManagementService's ListHostManagement RPC.
-	HostManagementServiceListHostManagementProcedure = "/schema.v1alpha1.HostManagementService/ListHostManagement"
-	// ChassisServiceGetChassisProcedure is the fully-qualified name of the ChassisService's GetChassis
+	// BMCServiceGetSystemInfoProcedure is the fully-qualified name of the BMCService's GetSystemInfo
 	// RPC.
-	ChassisServiceGetChassisProcedure = "/schema.v1alpha1.ChassisService/GetChassis"
-	// ChassisServiceListChassisProcedure is the fully-qualified name of the ChassisService's
-	// ListChassis RPC.
-	ChassisServiceListChassisProcedure = "/schema.v1alpha1.ChassisService/ListChassis"
-	// HostServiceGetHostProcedure is the fully-qualified name of the HostService's GetHost RPC.
-	HostServiceGetHostProcedure = "/schema.v1alpha1.HostService/GetHost"
-	// HostServiceListHostsProcedure is the fully-qualified name of the HostService's ListHosts RPC.
-	HostServiceListHostsProcedure = "/schema.v1alpha1.HostService/ListHosts"
-	// ManagementControllerServiceGetManagementControllerProcedure is the fully-qualified name of the
-	// ManagementControllerService's GetManagementController RPC.
-	ManagementControllerServiceGetManagementControllerProcedure = "/schema.v1alpha1.ManagementControllerService/GetManagementController"
-	// ManagementControllerServiceListManagementControllersProcedure is the fully-qualified name of the
-	// ManagementControllerService's ListManagementControllers RPC.
-	ManagementControllerServiceListManagementControllersProcedure = "/schema.v1alpha1.ManagementControllerService/ListManagementControllers"
+	BMCServiceGetSystemInfoProcedure = "/schema.v1alpha1.BMCService/GetSystemInfo"
+	// BMCServiceGetHealthProcedure is the fully-qualified name of the BMCService's GetHealth RPC.
+	BMCServiceGetHealthProcedure = "/schema.v1alpha1.BMCService/GetHealth"
+	// BMCServiceGetAssetInfoProcedure is the fully-qualified name of the BMCService's GetAssetInfo RPC.
+	BMCServiceGetAssetInfoProcedure = "/schema.v1alpha1.BMCService/GetAssetInfo"
+	// BMCServiceSetAssetInfoProcedure is the fully-qualified name of the BMCService's SetAssetInfo RPC.
+	BMCServiceSetAssetInfoProcedure = "/schema.v1alpha1.BMCService/SetAssetInfo"
+	// BMCServiceGetChassisProcedure is the fully-qualified name of the BMCService's GetChassis RPC.
+	BMCServiceGetChassisProcedure = "/schema.v1alpha1.BMCService/GetChassis"
+	// BMCServiceListChassisProcedure is the fully-qualified name of the BMCService's ListChassis RPC.
+	BMCServiceListChassisProcedure = "/schema.v1alpha1.BMCService/ListChassis"
+	// BMCServiceUpdateChassisProcedure is the fully-qualified name of the BMCService's UpdateChassis
+	// RPC.
+	BMCServiceUpdateChassisProcedure = "/schema.v1alpha1.BMCService/UpdateChassis"
+	// BMCServiceChassisChangeStateProcedure is the fully-qualified name of the BMCService's
+	// ChassisChangeState RPC.
+	BMCServiceChassisChangeStateProcedure = "/schema.v1alpha1.BMCService/ChassisChangeState"
+	// BMCServiceChassisControlProcedure is the fully-qualified name of the BMCService's ChassisControl
+	// RPC.
+	BMCServiceChassisControlProcedure = "/schema.v1alpha1.BMCService/ChassisControl"
+	// BMCServiceGetHostProcedure is the fully-qualified name of the BMCService's GetHost RPC.
+	BMCServiceGetHostProcedure = "/schema.v1alpha1.BMCService/GetHost"
+	// BMCServiceListHostsProcedure is the fully-qualified name of the BMCService's ListHosts RPC.
+	BMCServiceListHostsProcedure = "/schema.v1alpha1.BMCService/ListHosts"
+	// BMCServiceUpdateHostProcedure is the fully-qualified name of the BMCService's UpdateHost RPC.
+	BMCServiceUpdateHostProcedure = "/schema.v1alpha1.BMCService/UpdateHost"
+	// BMCServiceHostChangeStateProcedure is the fully-qualified name of the BMCService's
+	// HostChangeState RPC.
+	BMCServiceHostChangeStateProcedure = "/schema.v1alpha1.BMCService/HostChangeState"
+	// BMCServiceGetManagementControllerProcedure is the fully-qualified name of the BMCService's
+	// GetManagementController RPC.
+	BMCServiceGetManagementControllerProcedure = "/schema.v1alpha1.BMCService/GetManagementController"
+	// BMCServiceListManagementControllersProcedure is the fully-qualified name of the BMCService's
+	// ListManagementControllers RPC.
+	BMCServiceListManagementControllersProcedure = "/schema.v1alpha1.BMCService/ListManagementControllers"
+	// BMCServiceUpdateManagementControllerProcedure is the fully-qualified name of the BMCService's
+	// UpdateManagementController RPC.
+	BMCServiceUpdateManagementControllerProcedure = "/schema.v1alpha1.BMCService/UpdateManagementController"
+	// BMCServiceManagementControllerControlProcedure is the fully-qualified name of the BMCService's
+	// ManagementControllerControl RPC.
+	BMCServiceManagementControllerControlProcedure = "/schema.v1alpha1.BMCService/ManagementControllerControl"
+	// BMCServiceListSensorsProcedure is the fully-qualified name of the BMCService's ListSensors RPC.
+	BMCServiceListSensorsProcedure = "/schema.v1alpha1.BMCService/ListSensors"
+	// BMCServiceGetSensorProcedure is the fully-qualified name of the BMCService's GetSensor RPC.
+	BMCServiceGetSensorProcedure = "/schema.v1alpha1.BMCService/GetSensor"
+	// BMCServiceGetThermalZoneProcedure is the fully-qualified name of the BMCService's GetThermalZone
+	// RPC.
+	BMCServiceGetThermalZoneProcedure = "/schema.v1alpha1.BMCService/GetThermalZone"
+	// BMCServiceSetThermalZoneProcedure is the fully-qualified name of the BMCService's SetThermalZone
+	// RPC.
+	BMCServiceSetThermalZoneProcedure = "/schema.v1alpha1.BMCService/SetThermalZone"
+	// BMCServiceListThermalZonesProcedure is the fully-qualified name of the BMCService's
+	// ListThermalZones RPC.
+	BMCServiceListThermalZonesProcedure = "/schema.v1alpha1.BMCService/ListThermalZones"
+	// BMCServiceCreateUserProcedure is the fully-qualified name of the BMCService's CreateUser RPC.
+	BMCServiceCreateUserProcedure = "/schema.v1alpha1.BMCService/CreateUser"
+	// BMCServiceGetUserProcedure is the fully-qualified name of the BMCService's GetUser RPC.
+	BMCServiceGetUserProcedure = "/schema.v1alpha1.BMCService/GetUser"
+	// BMCServiceUpdateUserProcedure is the fully-qualified name of the BMCService's UpdateUser RPC.
+	BMCServiceUpdateUserProcedure = "/schema.v1alpha1.BMCService/UpdateUser"
+	// BMCServiceDeleteUserProcedure is the fully-qualified name of the BMCService's DeleteUser RPC.
+	BMCServiceDeleteUserProcedure = "/schema.v1alpha1.BMCService/DeleteUser"
+	// BMCServiceListUsersProcedure is the fully-qualified name of the BMCService's ListUsers RPC.
+	BMCServiceListUsersProcedure = "/schema.v1alpha1.BMCService/ListUsers"
+	// BMCServiceChangePasswordProcedure is the fully-qualified name of the BMCService's ChangePassword
+	// RPC.
+	BMCServiceChangePasswordProcedure = "/schema.v1alpha1.BMCService/ChangePassword"
+	// BMCServiceResetPasswordProcedure is the fully-qualified name of the BMCService's ResetPassword
+	// RPC.
+	BMCServiceResetPasswordProcedure = "/schema.v1alpha1.BMCService/ResetPassword"
+	// BMCServiceAuthenticateUserProcedure is the fully-qualified name of the BMCService's
+	// AuthenticateUser RPC.
+	BMCServiceAuthenticateUserProcedure = "/schema.v1alpha1.BMCService/AuthenticateUser"
 )
 
-// HostManagementServiceClient is a client for the schema.v1alpha1.HostManagementService service.
-type HostManagementServiceClient interface {
-	// Get a host management configuration by ID
-	GetHostManagement(context.Context, *connect.Request[v1alpha1.GetHostManagementRequest]) (*connect.Response[v1alpha1.GetHostManagementResponse], error)
-	// List all host management configurations
-	ListHostManagement(context.Context, *connect.Request[v1alpha1.ListHostManagementRequest]) (*connect.Response[v1alpha1.ListHostManagementResponse], error)
-}
-
-// NewHostManagementServiceClient constructs a client for the schema.v1alpha1.HostManagementService
-// service. By default, it uses the Connect protocol with the binary Protobuf Codec, asks for
-// gzipped responses, and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply
-// the connect.WithGRPC() or connect.WithGRPCWeb() options.
-//
-// The URL supplied here should be the base URL for the Connect or gRPC server (for example,
-// http://api.acme.com or https://acme.com/grpc).
-func NewHostManagementServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) HostManagementServiceClient {
-	baseURL = strings.TrimRight(baseURL, "/")
-	hostManagementServiceMethods := v1alpha1.File_schema_v1alpha1_system_proto.Services().ByName("HostManagementService").Methods()
-	return &hostManagementServiceClient{
-		getHostManagement: connect.NewClient[v1alpha1.GetHostManagementRequest, v1alpha1.GetHostManagementResponse](
-			httpClient,
-			baseURL+HostManagementServiceGetHostManagementProcedure,
-			connect.WithSchema(hostManagementServiceMethods.ByName("GetHostManagement")),
-			connect.WithClientOptions(opts...),
-		),
-		listHostManagement: connect.NewClient[v1alpha1.ListHostManagementRequest, v1alpha1.ListHostManagementResponse](
-			httpClient,
-			baseURL+HostManagementServiceListHostManagementProcedure,
-			connect.WithSchema(hostManagementServiceMethods.ByName("ListHostManagement")),
-			connect.WithClientOptions(opts...),
-		),
-	}
-}
-
-// hostManagementServiceClient implements HostManagementServiceClient.
-type hostManagementServiceClient struct {
-	getHostManagement  *connect.Client[v1alpha1.GetHostManagementRequest, v1alpha1.GetHostManagementResponse]
-	listHostManagement *connect.Client[v1alpha1.ListHostManagementRequest, v1alpha1.ListHostManagementResponse]
-}
-
-// GetHostManagement calls schema.v1alpha1.HostManagementService.GetHostManagement.
-func (c *hostManagementServiceClient) GetHostManagement(ctx context.Context, req *connect.Request[v1alpha1.GetHostManagementRequest]) (*connect.Response[v1alpha1.GetHostManagementResponse], error) {
-	return c.getHostManagement.CallUnary(ctx, req)
-}
-
-// ListHostManagement calls schema.v1alpha1.HostManagementService.ListHostManagement.
-func (c *hostManagementServiceClient) ListHostManagement(ctx context.Context, req *connect.Request[v1alpha1.ListHostManagementRequest]) (*connect.Response[v1alpha1.ListHostManagementResponse], error) {
-	return c.listHostManagement.CallUnary(ctx, req)
-}
-
-// HostManagementServiceHandler is an implementation of the schema.v1alpha1.HostManagementService
-// service.
-type HostManagementServiceHandler interface {
-	// Get a host management configuration by ID
-	GetHostManagement(context.Context, *connect.Request[v1alpha1.GetHostManagementRequest]) (*connect.Response[v1alpha1.GetHostManagementResponse], error)
-	// List all host management configurations
-	ListHostManagement(context.Context, *connect.Request[v1alpha1.ListHostManagementRequest]) (*connect.Response[v1alpha1.ListHostManagementResponse], error)
-}
-
-// NewHostManagementServiceHandler builds an HTTP handler from the service implementation. It
-// returns the path on which to mount the handler and the handler itself.
-//
-// By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
-// and JSON codecs. They also support gzip compression.
-func NewHostManagementServiceHandler(svc HostManagementServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	hostManagementServiceMethods := v1alpha1.File_schema_v1alpha1_system_proto.Services().ByName("HostManagementService").Methods()
-	hostManagementServiceGetHostManagementHandler := connect.NewUnaryHandler(
-		HostManagementServiceGetHostManagementProcedure,
-		svc.GetHostManagement,
-		connect.WithSchema(hostManagementServiceMethods.ByName("GetHostManagement")),
-		connect.WithHandlerOptions(opts...),
-	)
-	hostManagementServiceListHostManagementHandler := connect.NewUnaryHandler(
-		HostManagementServiceListHostManagementProcedure,
-		svc.ListHostManagement,
-		connect.WithSchema(hostManagementServiceMethods.ByName("ListHostManagement")),
-		connect.WithHandlerOptions(opts...),
-	)
-	return "/schema.v1alpha1.HostManagementService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		switch r.URL.Path {
-		case HostManagementServiceGetHostManagementProcedure:
-			hostManagementServiceGetHostManagementHandler.ServeHTTP(w, r)
-		case HostManagementServiceListHostManagementProcedure:
-			hostManagementServiceListHostManagementHandler.ServeHTTP(w, r)
-		default:
-			http.NotFound(w, r)
-		}
-	})
-}
-
-// UnimplementedHostManagementServiceHandler returns CodeUnimplemented from all methods.
-type UnimplementedHostManagementServiceHandler struct{}
-
-func (UnimplementedHostManagementServiceHandler) GetHostManagement(context.Context, *connect.Request[v1alpha1.GetHostManagementRequest]) (*connect.Response[v1alpha1.GetHostManagementResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.HostManagementService.GetHostManagement is not implemented"))
-}
-
-func (UnimplementedHostManagementServiceHandler) ListHostManagement(context.Context, *connect.Request[v1alpha1.ListHostManagementRequest]) (*connect.Response[v1alpha1.ListHostManagementResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.HostManagementService.ListHostManagement is not implemented"))
-}
-
-// ChassisServiceClient is a client for the schema.v1alpha1.ChassisService service.
-type ChassisServiceClient interface {
-	// Get a chassis by ID
+// BMCServiceClient is a client for the schema.v1alpha1.BMCService service.
+type BMCServiceClient interface {
+	GetSystemInfo(context.Context, *connect.Request[v1alpha1.GetSystemInfoRequest]) (*connect.Response[v1alpha1.GetSystemInfoResponse], error)
+	GetHealth(context.Context, *connect.Request[v1alpha1.GetHealthRequest]) (*connect.Response[v1alpha1.GetHealthResponse], error)
+	GetAssetInfo(context.Context, *connect.Request[v1alpha1.GetAssetInfoRequest]) (*connect.Response[v1alpha1.GetAssetInfoResponse], error)
+	SetAssetInfo(context.Context, *connect.Request[v1alpha1.SetAssetInfoRequest]) (*connect.Response[v1alpha1.SetAssetInfoResponse], error)
 	GetChassis(context.Context, *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error)
-	// List all chassis with optional filtering
 	ListChassis(context.Context, *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error)
-}
-
-// NewChassisServiceClient constructs a client for the schema.v1alpha1.ChassisService service. By
-// default, it uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses,
-// and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the
-// connect.WithGRPC() or connect.WithGRPCWeb() options.
-//
-// The URL supplied here should be the base URL for the Connect or gRPC server (for example,
-// http://api.acme.com or https://acme.com/grpc).
-func NewChassisServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) ChassisServiceClient {
-	baseURL = strings.TrimRight(baseURL, "/")
-	chassisServiceMethods := v1alpha1.File_schema_v1alpha1_system_proto.Services().ByName("ChassisService").Methods()
-	return &chassisServiceClient{
-		getChassis: connect.NewClient[v1alpha1.GetChassisRequest, v1alpha1.GetChassisResponse](
-			httpClient,
-			baseURL+ChassisServiceGetChassisProcedure,
-			connect.WithSchema(chassisServiceMethods.ByName("GetChassis")),
-			connect.WithClientOptions(opts...),
-		),
-		listChassis: connect.NewClient[v1alpha1.ListChassisRequest, v1alpha1.ListChassisResponse](
-			httpClient,
-			baseURL+ChassisServiceListChassisProcedure,
-			connect.WithSchema(chassisServiceMethods.ByName("ListChassis")),
-			connect.WithClientOptions(opts...),
-		),
-	}
-}
-
-// chassisServiceClient implements ChassisServiceClient.
-type chassisServiceClient struct {
-	getChassis  *connect.Client[v1alpha1.GetChassisRequest, v1alpha1.GetChassisResponse]
-	listChassis *connect.Client[v1alpha1.ListChassisRequest, v1alpha1.ListChassisResponse]
-}
-
-// GetChassis calls schema.v1alpha1.ChassisService.GetChassis.
-func (c *chassisServiceClient) GetChassis(ctx context.Context, req *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error) {
-	return c.getChassis.CallUnary(ctx, req)
-}
-
-// ListChassis calls schema.v1alpha1.ChassisService.ListChassis.
-func (c *chassisServiceClient) ListChassis(ctx context.Context, req *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error) {
-	return c.listChassis.CallUnary(ctx, req)
-}
-
-// ChassisServiceHandler is an implementation of the schema.v1alpha1.ChassisService service.
-type ChassisServiceHandler interface {
-	// Get a chassis by ID
-	GetChassis(context.Context, *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error)
-	// List all chassis with optional filtering
-	ListChassis(context.Context, *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error)
-}
-
-// NewChassisServiceHandler builds an HTTP handler from the service implementation. It returns the
-// path on which to mount the handler and the handler itself.
-//
-// By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
-// and JSON codecs. They also support gzip compression.
-func NewChassisServiceHandler(svc ChassisServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	chassisServiceMethods := v1alpha1.File_schema_v1alpha1_system_proto.Services().ByName("ChassisService").Methods()
-	chassisServiceGetChassisHandler := connect.NewUnaryHandler(
-		ChassisServiceGetChassisProcedure,
-		svc.GetChassis,
-		connect.WithSchema(chassisServiceMethods.ByName("GetChassis")),
-		connect.WithHandlerOptions(opts...),
-	)
-	chassisServiceListChassisHandler := connect.NewUnaryHandler(
-		ChassisServiceListChassisProcedure,
-		svc.ListChassis,
-		connect.WithSchema(chassisServiceMethods.ByName("ListChassis")),
-		connect.WithHandlerOptions(opts...),
-	)
-	return "/schema.v1alpha1.ChassisService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		switch r.URL.Path {
-		case ChassisServiceGetChassisProcedure:
-			chassisServiceGetChassisHandler.ServeHTTP(w, r)
-		case ChassisServiceListChassisProcedure:
-			chassisServiceListChassisHandler.ServeHTTP(w, r)
-		default:
-			http.NotFound(w, r)
-		}
-	})
-}
-
-// UnimplementedChassisServiceHandler returns CodeUnimplemented from all methods.
-type UnimplementedChassisServiceHandler struct{}
-
-func (UnimplementedChassisServiceHandler) GetChassis(context.Context, *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.ChassisService.GetChassis is not implemented"))
-}
-
-func (UnimplementedChassisServiceHandler) ListChassis(context.Context, *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.ChassisService.ListChassis is not implemented"))
-}
-
-// HostServiceClient is a client for the schema.v1alpha1.HostService service.
-type HostServiceClient interface {
-	// Get a host by ID
+	UpdateChassis(context.Context, *connect.Request[v1alpha1.UpdateChassisRequest]) (*connect.Response[v1alpha1.UpdateChassisResponse], error)
+	ChassisChangeState(context.Context, *connect.Request[v1alpha1.ChassisChangeStateRequest]) (*connect.Response[v1alpha1.ChassisChangeStateResponse], error)
+	ChassisControl(context.Context, *connect.Request[v1alpha1.ChassisControlRequest]) (*connect.Response[v1alpha1.ChassisControlResponse], error)
 	GetHost(context.Context, *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error)
-	// List all hosts with optional filtering
 	ListHosts(context.Context, *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error)
+	UpdateHost(context.Context, *connect.Request[v1alpha1.UpdateHostRequest]) (*connect.Response[v1alpha1.UpdateHostResponse], error)
+	HostChangeState(context.Context, *connect.Request[v1alpha1.HostChangeStateRequest]) (*connect.Response[v1alpha1.HostChangeStateResponse], error)
+	GetManagementController(context.Context, *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error)
+	ListManagementControllers(context.Context, *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error)
+	UpdateManagementController(context.Context, *connect.Request[v1alpha1.UpdateManagementControllerRequest]) (*connect.Response[v1alpha1.UpdateManagementControllerResponse], error)
+	ManagementControllerControl(context.Context, *connect.Request[v1alpha1.ManagementControllerControlRequest]) (*connect.Response[v1alpha1.ManagementControllerControlResponse], error)
+	ListSensors(context.Context, *connect.Request[v1alpha1.ListSensorsRequest]) (*connect.Response[v1alpha1.ListSensorsResponse], error)
+	GetSensor(context.Context, *connect.Request[v1alpha1.GetSensorRequest]) (*connect.Response[v1alpha1.GetSensorResponse], error)
+	GetThermalZone(context.Context, *connect.Request[v1alpha1.GetThermalZoneRequest]) (*connect.Response[v1alpha1.GetThermalZoneResponse], error)
+	SetThermalZone(context.Context, *connect.Request[v1alpha1.SetThermalZoneRequest]) (*connect.Response[v1alpha1.SetThermalZoneResponse], error)
+	ListThermalZones(context.Context, *connect.Request[v1alpha1.ListThermalZonesRequest]) (*connect.Response[v1alpha1.ListThermalZonesResponse], error)
+	CreateUser(context.Context, *connect.Request[v1alpha1.CreateUserRequest]) (*connect.Response[v1alpha1.CreateUserResponse], error)
+	GetUser(context.Context, *connect.Request[v1alpha1.GetUserRequest]) (*connect.Response[v1alpha1.GetUserResponse], error)
+	UpdateUser(context.Context, *connect.Request[v1alpha1.UpdateUserRequest]) (*connect.Response[v1alpha1.UpdateUserResponse], error)
+	DeleteUser(context.Context, *connect.Request[v1alpha1.DeleteUserRequest]) (*connect.Response[v1alpha1.DeleteUserResponse], error)
+	ListUsers(context.Context, *connect.Request[v1alpha1.ListUsersRequest]) (*connect.Response[v1alpha1.ListUsersResponse], error)
+	ChangePassword(context.Context, *connect.Request[v1alpha1.ChangePasswordRequest]) (*connect.Response[v1alpha1.ChangePasswordResponse], error)
+	ResetPassword(context.Context, *connect.Request[v1alpha1.ResetPasswordRequest]) (*connect.Response[v1alpha1.ResetPasswordResponse], error)
+	AuthenticateUser(context.Context, *connect.Request[v1alpha1.AuthenticateUserRequest]) (*connect.Response[v1alpha1.AuthenticateUserResponse], error)
 }
 
-// NewHostServiceClient constructs a client for the schema.v1alpha1.HostService service. By default,
+// NewBMCServiceClient constructs a client for the schema.v1alpha1.BMCService service. By default,
 // it uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and
 // sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC()
 // or connect.WithGRPCWeb() options.
 //
 // The URL supplied here should be the base URL for the Connect or gRPC server (for example,
 // http://api.acme.com or https://acme.com/grpc).
-func NewHostServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) HostServiceClient {
+func NewBMCServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) BMCServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
-	hostServiceMethods := v1alpha1.File_schema_v1alpha1_system_proto.Services().ByName("HostService").Methods()
-	return &hostServiceClient{
+	bMCServiceMethods := v1alpha1.File_schema_v1alpha1_system_proto.Services().ByName("BMCService").Methods()
+	return &bMCServiceClient{
+		getSystemInfo: connect.NewClient[v1alpha1.GetSystemInfoRequest, v1alpha1.GetSystemInfoResponse](
+			httpClient,
+			baseURL+BMCServiceGetSystemInfoProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("GetSystemInfo")),
+			connect.WithClientOptions(opts...),
+		),
+		getHealth: connect.NewClient[v1alpha1.GetHealthRequest, v1alpha1.GetHealthResponse](
+			httpClient,
+			baseURL+BMCServiceGetHealthProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("GetHealth")),
+			connect.WithClientOptions(opts...),
+		),
+		getAssetInfo: connect.NewClient[v1alpha1.GetAssetInfoRequest, v1alpha1.GetAssetInfoResponse](
+			httpClient,
+			baseURL+BMCServiceGetAssetInfoProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("GetAssetInfo")),
+			connect.WithClientOptions(opts...),
+		),
+		setAssetInfo: connect.NewClient[v1alpha1.SetAssetInfoRequest, v1alpha1.SetAssetInfoResponse](
+			httpClient,
+			baseURL+BMCServiceSetAssetInfoProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("SetAssetInfo")),
+			connect.WithClientOptions(opts...),
+		),
+		getChassis: connect.NewClient[v1alpha1.GetChassisRequest, v1alpha1.GetChassisResponse](
+			httpClient,
+			baseURL+BMCServiceGetChassisProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("GetChassis")),
+			connect.WithClientOptions(opts...),
+		),
+		listChassis: connect.NewClient[v1alpha1.ListChassisRequest, v1alpha1.ListChassisResponse](
+			httpClient,
+			baseURL+BMCServiceListChassisProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("ListChassis")),
+			connect.WithClientOptions(opts...),
+		),
+		updateChassis: connect.NewClient[v1alpha1.UpdateChassisRequest, v1alpha1.UpdateChassisResponse](
+			httpClient,
+			baseURL+BMCServiceUpdateChassisProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("UpdateChassis")),
+			connect.WithClientOptions(opts...),
+		),
+		chassisChangeState: connect.NewClient[v1alpha1.ChassisChangeStateRequest, v1alpha1.ChassisChangeStateResponse](
+			httpClient,
+			baseURL+BMCServiceChassisChangeStateProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("ChassisChangeState")),
+			connect.WithClientOptions(opts...),
+		),
+		chassisControl: connect.NewClient[v1alpha1.ChassisControlRequest, v1alpha1.ChassisControlResponse](
+			httpClient,
+			baseURL+BMCServiceChassisControlProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("ChassisControl")),
+			connect.WithClientOptions(opts...),
+		),
 		getHost: connect.NewClient[v1alpha1.GetHostRequest, v1alpha1.GetHostResponse](
 			httpClient,
-			baseURL+HostServiceGetHostProcedure,
-			connect.WithSchema(hostServiceMethods.ByName("GetHost")),
+			baseURL+BMCServiceGetHostProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("GetHost")),
 			connect.WithClientOptions(opts...),
 		),
 		listHosts: connect.NewClient[v1alpha1.ListHostsRequest, v1alpha1.ListHostsResponse](
 			httpClient,
-			baseURL+HostServiceListHostsProcedure,
-			connect.WithSchema(hostServiceMethods.ByName("ListHosts")),
+			baseURL+BMCServiceListHostsProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("ListHosts")),
 			connect.WithClientOptions(opts...),
 		),
-	}
-}
-
-// hostServiceClient implements HostServiceClient.
-type hostServiceClient struct {
-	getHost   *connect.Client[v1alpha1.GetHostRequest, v1alpha1.GetHostResponse]
-	listHosts *connect.Client[v1alpha1.ListHostsRequest, v1alpha1.ListHostsResponse]
-}
-
-// GetHost calls schema.v1alpha1.HostService.GetHost.
-func (c *hostServiceClient) GetHost(ctx context.Context, req *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error) {
-	return c.getHost.CallUnary(ctx, req)
-}
-
-// ListHosts calls schema.v1alpha1.HostService.ListHosts.
-func (c *hostServiceClient) ListHosts(ctx context.Context, req *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error) {
-	return c.listHosts.CallUnary(ctx, req)
-}
-
-// HostServiceHandler is an implementation of the schema.v1alpha1.HostService service.
-type HostServiceHandler interface {
-	// Get a host by ID
-	GetHost(context.Context, *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error)
-	// List all hosts with optional filtering
-	ListHosts(context.Context, *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error)
-}
-
-// NewHostServiceHandler builds an HTTP handler from the service implementation. It returns the path
-// on which to mount the handler and the handler itself.
-//
-// By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
-// and JSON codecs. They also support gzip compression.
-func NewHostServiceHandler(svc HostServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	hostServiceMethods := v1alpha1.File_schema_v1alpha1_system_proto.Services().ByName("HostService").Methods()
-	hostServiceGetHostHandler := connect.NewUnaryHandler(
-		HostServiceGetHostProcedure,
-		svc.GetHost,
-		connect.WithSchema(hostServiceMethods.ByName("GetHost")),
-		connect.WithHandlerOptions(opts...),
-	)
-	hostServiceListHostsHandler := connect.NewUnaryHandler(
-		HostServiceListHostsProcedure,
-		svc.ListHosts,
-		connect.WithSchema(hostServiceMethods.ByName("ListHosts")),
-		connect.WithHandlerOptions(opts...),
-	)
-	return "/schema.v1alpha1.HostService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		switch r.URL.Path {
-		case HostServiceGetHostProcedure:
-			hostServiceGetHostHandler.ServeHTTP(w, r)
-		case HostServiceListHostsProcedure:
-			hostServiceListHostsHandler.ServeHTTP(w, r)
-		default:
-			http.NotFound(w, r)
-		}
-	})
-}
-
-// UnimplementedHostServiceHandler returns CodeUnimplemented from all methods.
-type UnimplementedHostServiceHandler struct{}
-
-func (UnimplementedHostServiceHandler) GetHost(context.Context, *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.HostService.GetHost is not implemented"))
-}
-
-func (UnimplementedHostServiceHandler) ListHosts(context.Context, *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.HostService.ListHosts is not implemented"))
-}
-
-// ManagementControllerServiceClient is a client for the schema.v1alpha1.ManagementControllerService
-// service.
-type ManagementControllerServiceClient interface {
-	// Get a management controller by ID
-	GetManagementController(context.Context, *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error)
-	// List all management controllers with optional filtering
-	ListManagementControllers(context.Context, *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error)
-}
-
-// NewManagementControllerServiceClient constructs a client for the
-// schema.v1alpha1.ManagementControllerService service. By default, it uses the Connect protocol
-// with the binary Protobuf Codec, asks for gzipped responses, and sends uncompressed requests. To
-// use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or connect.WithGRPCWeb()
-// options.
-//
-// The URL supplied here should be the base URL for the Connect or gRPC server (for example,
-// http://api.acme.com or https://acme.com/grpc).
-func NewManagementControllerServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) ManagementControllerServiceClient {
-	baseURL = strings.TrimRight(baseURL, "/")
-	managementControllerServiceMethods := v1alpha1.File_schema_v1alpha1_system_proto.Services().ByName("ManagementControllerService").Methods()
-	return &managementControllerServiceClient{
+		updateHost: connect.NewClient[v1alpha1.UpdateHostRequest, v1alpha1.UpdateHostResponse](
+			httpClient,
+			baseURL+BMCServiceUpdateHostProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("UpdateHost")),
+			connect.WithClientOptions(opts...),
+		),
+		hostChangeState: connect.NewClient[v1alpha1.HostChangeStateRequest, v1alpha1.HostChangeStateResponse](
+			httpClient,
+			baseURL+BMCServiceHostChangeStateProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("HostChangeState")),
+			connect.WithClientOptions(opts...),
+		),
 		getManagementController: connect.NewClient[v1alpha1.GetManagementControllerRequest, v1alpha1.GetManagementControllerResponse](
 			httpClient,
-			baseURL+ManagementControllerServiceGetManagementControllerProcedure,
-			connect.WithSchema(managementControllerServiceMethods.ByName("GetManagementController")),
+			baseURL+BMCServiceGetManagementControllerProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("GetManagementController")),
 			connect.WithClientOptions(opts...),
 		),
 		listManagementControllers: connect.NewClient[v1alpha1.ListManagementControllersRequest, v1alpha1.ListManagementControllersResponse](
 			httpClient,
-			baseURL+ManagementControllerServiceListManagementControllersProcedure,
-			connect.WithSchema(managementControllerServiceMethods.ByName("ListManagementControllers")),
+			baseURL+BMCServiceListManagementControllersProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("ListManagementControllers")),
+			connect.WithClientOptions(opts...),
+		),
+		updateManagementController: connect.NewClient[v1alpha1.UpdateManagementControllerRequest, v1alpha1.UpdateManagementControllerResponse](
+			httpClient,
+			baseURL+BMCServiceUpdateManagementControllerProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("UpdateManagementController")),
+			connect.WithClientOptions(opts...),
+		),
+		managementControllerControl: connect.NewClient[v1alpha1.ManagementControllerControlRequest, v1alpha1.ManagementControllerControlResponse](
+			httpClient,
+			baseURL+BMCServiceManagementControllerControlProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("ManagementControllerControl")),
+			connect.WithClientOptions(opts...),
+		),
+		listSensors: connect.NewClient[v1alpha1.ListSensorsRequest, v1alpha1.ListSensorsResponse](
+			httpClient,
+			baseURL+BMCServiceListSensorsProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("ListSensors")),
+			connect.WithClientOptions(opts...),
+		),
+		getSensor: connect.NewClient[v1alpha1.GetSensorRequest, v1alpha1.GetSensorResponse](
+			httpClient,
+			baseURL+BMCServiceGetSensorProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("GetSensor")),
+			connect.WithClientOptions(opts...),
+		),
+		getThermalZone: connect.NewClient[v1alpha1.GetThermalZoneRequest, v1alpha1.GetThermalZoneResponse](
+			httpClient,
+			baseURL+BMCServiceGetThermalZoneProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("GetThermalZone")),
+			connect.WithClientOptions(opts...),
+		),
+		setThermalZone: connect.NewClient[v1alpha1.SetThermalZoneRequest, v1alpha1.SetThermalZoneResponse](
+			httpClient,
+			baseURL+BMCServiceSetThermalZoneProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("SetThermalZone")),
+			connect.WithClientOptions(opts...),
+		),
+		listThermalZones: connect.NewClient[v1alpha1.ListThermalZonesRequest, v1alpha1.ListThermalZonesResponse](
+			httpClient,
+			baseURL+BMCServiceListThermalZonesProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("ListThermalZones")),
+			connect.WithClientOptions(opts...),
+		),
+		createUser: connect.NewClient[v1alpha1.CreateUserRequest, v1alpha1.CreateUserResponse](
+			httpClient,
+			baseURL+BMCServiceCreateUserProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("CreateUser")),
+			connect.WithClientOptions(opts...),
+		),
+		getUser: connect.NewClient[v1alpha1.GetUserRequest, v1alpha1.GetUserResponse](
+			httpClient,
+			baseURL+BMCServiceGetUserProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("GetUser")),
+			connect.WithClientOptions(opts...),
+		),
+		updateUser: connect.NewClient[v1alpha1.UpdateUserRequest, v1alpha1.UpdateUserResponse](
+			httpClient,
+			baseURL+BMCServiceUpdateUserProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("UpdateUser")),
+			connect.WithClientOptions(opts...),
+		),
+		deleteUser: connect.NewClient[v1alpha1.DeleteUserRequest, v1alpha1.DeleteUserResponse](
+			httpClient,
+			baseURL+BMCServiceDeleteUserProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("DeleteUser")),
+			connect.WithClientOptions(opts...),
+		),
+		listUsers: connect.NewClient[v1alpha1.ListUsersRequest, v1alpha1.ListUsersResponse](
+			httpClient,
+			baseURL+BMCServiceListUsersProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("ListUsers")),
+			connect.WithClientOptions(opts...),
+		),
+		changePassword: connect.NewClient[v1alpha1.ChangePasswordRequest, v1alpha1.ChangePasswordResponse](
+			httpClient,
+			baseURL+BMCServiceChangePasswordProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("ChangePassword")),
+			connect.WithClientOptions(opts...),
+		),
+		resetPassword: connect.NewClient[v1alpha1.ResetPasswordRequest, v1alpha1.ResetPasswordResponse](
+			httpClient,
+			baseURL+BMCServiceResetPasswordProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("ResetPassword")),
+			connect.WithClientOptions(opts...),
+		),
+		authenticateUser: connect.NewClient[v1alpha1.AuthenticateUserRequest, v1alpha1.AuthenticateUserResponse](
+			httpClient,
+			baseURL+BMCServiceAuthenticateUserProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("AuthenticateUser")),
 			connect.WithClientOptions(opts...),
 		),
 	}
 }
 
-// managementControllerServiceClient implements ManagementControllerServiceClient.
-type managementControllerServiceClient struct {
-	getManagementController   *connect.Client[v1alpha1.GetManagementControllerRequest, v1alpha1.GetManagementControllerResponse]
-	listManagementControllers *connect.Client[v1alpha1.ListManagementControllersRequest, v1alpha1.ListManagementControllersResponse]
+// bMCServiceClient implements BMCServiceClient.
+type bMCServiceClient struct {
+	getSystemInfo               *connect.Client[v1alpha1.GetSystemInfoRequest, v1alpha1.GetSystemInfoResponse]
+	getHealth                   *connect.Client[v1alpha1.GetHealthRequest, v1alpha1.GetHealthResponse]
+	getAssetInfo                *connect.Client[v1alpha1.GetAssetInfoRequest, v1alpha1.GetAssetInfoResponse]
+	setAssetInfo                *connect.Client[v1alpha1.SetAssetInfoRequest, v1alpha1.SetAssetInfoResponse]
+	getChassis                  *connect.Client[v1alpha1.GetChassisRequest, v1alpha1.GetChassisResponse]
+	listChassis                 *connect.Client[v1alpha1.ListChassisRequest, v1alpha1.ListChassisResponse]
+	updateChassis               *connect.Client[v1alpha1.UpdateChassisRequest, v1alpha1.UpdateChassisResponse]
+	chassisChangeState          *connect.Client[v1alpha1.ChassisChangeStateRequest, v1alpha1.ChassisChangeStateResponse]
+	chassisControl              *connect.Client[v1alpha1.ChassisControlRequest, v1alpha1.ChassisControlResponse]
+	getHost                     *connect.Client[v1alpha1.GetHostRequest, v1alpha1.GetHostResponse]
+	listHosts                   *connect.Client[v1alpha1.ListHostsRequest, v1alpha1.ListHostsResponse]
+	updateHost                  *connect.Client[v1alpha1.UpdateHostRequest, v1alpha1.UpdateHostResponse]
+	hostChangeState             *connect.Client[v1alpha1.HostChangeStateRequest, v1alpha1.HostChangeStateResponse]
+	getManagementController     *connect.Client[v1alpha1.GetManagementControllerRequest, v1alpha1.GetManagementControllerResponse]
+	listManagementControllers   *connect.Client[v1alpha1.ListManagementControllersRequest, v1alpha1.ListManagementControllersResponse]
+	updateManagementController  *connect.Client[v1alpha1.UpdateManagementControllerRequest, v1alpha1.UpdateManagementControllerResponse]
+	managementControllerControl *connect.Client[v1alpha1.ManagementControllerControlRequest, v1alpha1.ManagementControllerControlResponse]
+	listSensors                 *connect.Client[v1alpha1.ListSensorsRequest, v1alpha1.ListSensorsResponse]
+	getSensor                   *connect.Client[v1alpha1.GetSensorRequest, v1alpha1.GetSensorResponse]
+	getThermalZone              *connect.Client[v1alpha1.GetThermalZoneRequest, v1alpha1.GetThermalZoneResponse]
+	setThermalZone              *connect.Client[v1alpha1.SetThermalZoneRequest, v1alpha1.SetThermalZoneResponse]
+	listThermalZones            *connect.Client[v1alpha1.ListThermalZonesRequest, v1alpha1.ListThermalZonesResponse]
+	createUser                  *connect.Client[v1alpha1.CreateUserRequest, v1alpha1.CreateUserResponse]
+	getUser                     *connect.Client[v1alpha1.GetUserRequest, v1alpha1.GetUserResponse]
+	updateUser                  *connect.Client[v1alpha1.UpdateUserRequest, v1alpha1.UpdateUserResponse]
+	deleteUser                  *connect.Client[v1alpha1.DeleteUserRequest, v1alpha1.DeleteUserResponse]
+	listUsers                   *connect.Client[v1alpha1.ListUsersRequest, v1alpha1.ListUsersResponse]
+	changePassword              *connect.Client[v1alpha1.ChangePasswordRequest, v1alpha1.ChangePasswordResponse]
+	resetPassword               *connect.Client[v1alpha1.ResetPasswordRequest, v1alpha1.ResetPasswordResponse]
+	authenticateUser            *connect.Client[v1alpha1.AuthenticateUserRequest, v1alpha1.AuthenticateUserResponse]
 }
 
-// GetManagementController calls
-// schema.v1alpha1.ManagementControllerService.GetManagementController.
-func (c *managementControllerServiceClient) GetManagementController(ctx context.Context, req *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error) {
+// GetSystemInfo calls schema.v1alpha1.BMCService.GetSystemInfo.
+func (c *bMCServiceClient) GetSystemInfo(ctx context.Context, req *connect.Request[v1alpha1.GetSystemInfoRequest]) (*connect.Response[v1alpha1.GetSystemInfoResponse], error) {
+	return c.getSystemInfo.CallUnary(ctx, req)
+}
+
+// GetHealth calls schema.v1alpha1.BMCService.GetHealth.
+func (c *bMCServiceClient) GetHealth(ctx context.Context, req *connect.Request[v1alpha1.GetHealthRequest]) (*connect.Response[v1alpha1.GetHealthResponse], error) {
+	return c.getHealth.CallUnary(ctx, req)
+}
+
+// GetAssetInfo calls schema.v1alpha1.BMCService.GetAssetInfo.
+func (c *bMCServiceClient) GetAssetInfo(ctx context.Context, req *connect.Request[v1alpha1.GetAssetInfoRequest]) (*connect.Response[v1alpha1.GetAssetInfoResponse], error) {
+	return c.getAssetInfo.CallUnary(ctx, req)
+}
+
+// SetAssetInfo calls schema.v1alpha1.BMCService.SetAssetInfo.
+func (c *bMCServiceClient) SetAssetInfo(ctx context.Context, req *connect.Request[v1alpha1.SetAssetInfoRequest]) (*connect.Response[v1alpha1.SetAssetInfoResponse], error) {
+	return c.setAssetInfo.CallUnary(ctx, req)
+}
+
+// GetChassis calls schema.v1alpha1.BMCService.GetChassis.
+func (c *bMCServiceClient) GetChassis(ctx context.Context, req *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error) {
+	return c.getChassis.CallUnary(ctx, req)
+}
+
+// ListChassis calls schema.v1alpha1.BMCService.ListChassis.
+func (c *bMCServiceClient) ListChassis(ctx context.Context, req *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error) {
+	return c.listChassis.CallUnary(ctx, req)
+}
+
+// UpdateChassis calls schema.v1alpha1.BMCService.UpdateChassis.
+func (c *bMCServiceClient) UpdateChassis(ctx context.Context, req *connect.Request[v1alpha1.UpdateChassisRequest]) (*connect.Response[v1alpha1.UpdateChassisResponse], error) {
+	return c.updateChassis.CallUnary(ctx, req)
+}
+
+// ChassisChangeState calls schema.v1alpha1.BMCService.ChassisChangeState.
+func (c *bMCServiceClient) ChassisChangeState(ctx context.Context, req *connect.Request[v1alpha1.ChassisChangeStateRequest]) (*connect.Response[v1alpha1.ChassisChangeStateResponse], error) {
+	return c.chassisChangeState.CallUnary(ctx, req)
+}
+
+// ChassisControl calls schema.v1alpha1.BMCService.ChassisControl.
+func (c *bMCServiceClient) ChassisControl(ctx context.Context, req *connect.Request[v1alpha1.ChassisControlRequest]) (*connect.Response[v1alpha1.ChassisControlResponse], error) {
+	return c.chassisControl.CallUnary(ctx, req)
+}
+
+// GetHost calls schema.v1alpha1.BMCService.GetHost.
+func (c *bMCServiceClient) GetHost(ctx context.Context, req *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error) {
+	return c.getHost.CallUnary(ctx, req)
+}
+
+// ListHosts calls schema.v1alpha1.BMCService.ListHosts.
+func (c *bMCServiceClient) ListHosts(ctx context.Context, req *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error) {
+	return c.listHosts.CallUnary(ctx, req)
+}
+
+// UpdateHost calls schema.v1alpha1.BMCService.UpdateHost.
+func (c *bMCServiceClient) UpdateHost(ctx context.Context, req *connect.Request[v1alpha1.UpdateHostRequest]) (*connect.Response[v1alpha1.UpdateHostResponse], error) {
+	return c.updateHost.CallUnary(ctx, req)
+}
+
+// HostChangeState calls schema.v1alpha1.BMCService.HostChangeState.
+func (c *bMCServiceClient) HostChangeState(ctx context.Context, req *connect.Request[v1alpha1.HostChangeStateRequest]) (*connect.Response[v1alpha1.HostChangeStateResponse], error) {
+	return c.hostChangeState.CallUnary(ctx, req)
+}
+
+// GetManagementController calls schema.v1alpha1.BMCService.GetManagementController.
+func (c *bMCServiceClient) GetManagementController(ctx context.Context, req *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error) {
 	return c.getManagementController.CallUnary(ctx, req)
 }
 
-// ListManagementControllers calls
-// schema.v1alpha1.ManagementControllerService.ListManagementControllers.
-func (c *managementControllerServiceClient) ListManagementControllers(ctx context.Context, req *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error) {
+// ListManagementControllers calls schema.v1alpha1.BMCService.ListManagementControllers.
+func (c *bMCServiceClient) ListManagementControllers(ctx context.Context, req *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error) {
 	return c.listManagementControllers.CallUnary(ctx, req)
 }
 
-// ManagementControllerServiceHandler is an implementation of the
-// schema.v1alpha1.ManagementControllerService service.
-type ManagementControllerServiceHandler interface {
-	// Get a management controller by ID
-	GetManagementController(context.Context, *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error)
-	// List all management controllers with optional filtering
-	ListManagementControllers(context.Context, *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error)
+// UpdateManagementController calls schema.v1alpha1.BMCService.UpdateManagementController.
+func (c *bMCServiceClient) UpdateManagementController(ctx context.Context, req *connect.Request[v1alpha1.UpdateManagementControllerRequest]) (*connect.Response[v1alpha1.UpdateManagementControllerResponse], error) {
+	return c.updateManagementController.CallUnary(ctx, req)
 }
 
-// NewManagementControllerServiceHandler builds an HTTP handler from the service implementation. It
-// returns the path on which to mount the handler and the handler itself.
+// ManagementControllerControl calls schema.v1alpha1.BMCService.ManagementControllerControl.
+func (c *bMCServiceClient) ManagementControllerControl(ctx context.Context, req *connect.Request[v1alpha1.ManagementControllerControlRequest]) (*connect.Response[v1alpha1.ManagementControllerControlResponse], error) {
+	return c.managementControllerControl.CallUnary(ctx, req)
+}
+
+// ListSensors calls schema.v1alpha1.BMCService.ListSensors.
+func (c *bMCServiceClient) ListSensors(ctx context.Context, req *connect.Request[v1alpha1.ListSensorsRequest]) (*connect.Response[v1alpha1.ListSensorsResponse], error) {
+	return c.listSensors.CallUnary(ctx, req)
+}
+
+// GetSensor calls schema.v1alpha1.BMCService.GetSensor.
+func (c *bMCServiceClient) GetSensor(ctx context.Context, req *connect.Request[v1alpha1.GetSensorRequest]) (*connect.Response[v1alpha1.GetSensorResponse], error) {
+	return c.getSensor.CallUnary(ctx, req)
+}
+
+// GetThermalZone calls schema.v1alpha1.BMCService.GetThermalZone.
+func (c *bMCServiceClient) GetThermalZone(ctx context.Context, req *connect.Request[v1alpha1.GetThermalZoneRequest]) (*connect.Response[v1alpha1.GetThermalZoneResponse], error) {
+	return c.getThermalZone.CallUnary(ctx, req)
+}
+
+// SetThermalZone calls schema.v1alpha1.BMCService.SetThermalZone.
+func (c *bMCServiceClient) SetThermalZone(ctx context.Context, req *connect.Request[v1alpha1.SetThermalZoneRequest]) (*connect.Response[v1alpha1.SetThermalZoneResponse], error) {
+	return c.setThermalZone.CallUnary(ctx, req)
+}
+
+// ListThermalZones calls schema.v1alpha1.BMCService.ListThermalZones.
+func (c *bMCServiceClient) ListThermalZones(ctx context.Context, req *connect.Request[v1alpha1.ListThermalZonesRequest]) (*connect.Response[v1alpha1.ListThermalZonesResponse], error) {
+	return c.listThermalZones.CallUnary(ctx, req)
+}
+
+// CreateUser calls schema.v1alpha1.BMCService.CreateUser.
+func (c *bMCServiceClient) CreateUser(ctx context.Context, req *connect.Request[v1alpha1.CreateUserRequest]) (*connect.Response[v1alpha1.CreateUserResponse], error) {
+	return c.createUser.CallUnary(ctx, req)
+}
+
+// GetUser calls schema.v1alpha1.BMCService.GetUser.
+func (c *bMCServiceClient) GetUser(ctx context.Context, req *connect.Request[v1alpha1.GetUserRequest]) (*connect.Response[v1alpha1.GetUserResponse], error) {
+	return c.getUser.CallUnary(ctx, req)
+}
+
+// UpdateUser calls schema.v1alpha1.BMCService.UpdateUser.
+func (c *bMCServiceClient) UpdateUser(ctx context.Context, req *connect.Request[v1alpha1.UpdateUserRequest]) (*connect.Response[v1alpha1.UpdateUserResponse], error) {
+	return c.updateUser.CallUnary(ctx, req)
+}
+
+// DeleteUser calls schema.v1alpha1.BMCService.DeleteUser.
+func (c *bMCServiceClient) DeleteUser(ctx context.Context, req *connect.Request[v1alpha1.DeleteUserRequest]) (*connect.Response[v1alpha1.DeleteUserResponse], error) {
+	return c.deleteUser.CallUnary(ctx, req)
+}
+
+// ListUsers calls schema.v1alpha1.BMCService.ListUsers.
+func (c *bMCServiceClient) ListUsers(ctx context.Context, req *connect.Request[v1alpha1.ListUsersRequest]) (*connect.Response[v1alpha1.ListUsersResponse], error) {
+	return c.listUsers.CallUnary(ctx, req)
+}
+
+// ChangePassword calls schema.v1alpha1.BMCService.ChangePassword.
+func (c *bMCServiceClient) ChangePassword(ctx context.Context, req *connect.Request[v1alpha1.ChangePasswordRequest]) (*connect.Response[v1alpha1.ChangePasswordResponse], error) {
+	return c.changePassword.CallUnary(ctx, req)
+}
+
+// ResetPassword calls schema.v1alpha1.BMCService.ResetPassword.
+func (c *bMCServiceClient) ResetPassword(ctx context.Context, req *connect.Request[v1alpha1.ResetPasswordRequest]) (*connect.Response[v1alpha1.ResetPasswordResponse], error) {
+	return c.resetPassword.CallUnary(ctx, req)
+}
+
+// AuthenticateUser calls schema.v1alpha1.BMCService.AuthenticateUser.
+func (c *bMCServiceClient) AuthenticateUser(ctx context.Context, req *connect.Request[v1alpha1.AuthenticateUserRequest]) (*connect.Response[v1alpha1.AuthenticateUserResponse], error) {
+	return c.authenticateUser.CallUnary(ctx, req)
+}
+
+// BMCServiceHandler is an implementation of the schema.v1alpha1.BMCService service.
+type BMCServiceHandler interface {
+	GetSystemInfo(context.Context, *connect.Request[v1alpha1.GetSystemInfoRequest]) (*connect.Response[v1alpha1.GetSystemInfoResponse], error)
+	GetHealth(context.Context, *connect.Request[v1alpha1.GetHealthRequest]) (*connect.Response[v1alpha1.GetHealthResponse], error)
+	GetAssetInfo(context.Context, *connect.Request[v1alpha1.GetAssetInfoRequest]) (*connect.Response[v1alpha1.GetAssetInfoResponse], error)
+	SetAssetInfo(context.Context, *connect.Request[v1alpha1.SetAssetInfoRequest]) (*connect.Response[v1alpha1.SetAssetInfoResponse], error)
+	GetChassis(context.Context, *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error)
+	ListChassis(context.Context, *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error)
+	UpdateChassis(context.Context, *connect.Request[v1alpha1.UpdateChassisRequest]) (*connect.Response[v1alpha1.UpdateChassisResponse], error)
+	ChassisChangeState(context.Context, *connect.Request[v1alpha1.ChassisChangeStateRequest]) (*connect.Response[v1alpha1.ChassisChangeStateResponse], error)
+	ChassisControl(context.Context, *connect.Request[v1alpha1.ChassisControlRequest]) (*connect.Response[v1alpha1.ChassisControlResponse], error)
+	GetHost(context.Context, *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error)
+	ListHosts(context.Context, *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error)
+	UpdateHost(context.Context, *connect.Request[v1alpha1.UpdateHostRequest]) (*connect.Response[v1alpha1.UpdateHostResponse], error)
+	HostChangeState(context.Context, *connect.Request[v1alpha1.HostChangeStateRequest]) (*connect.Response[v1alpha1.HostChangeStateResponse], error)
+	GetManagementController(context.Context, *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error)
+	ListManagementControllers(context.Context, *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error)
+	UpdateManagementController(context.Context, *connect.Request[v1alpha1.UpdateManagementControllerRequest]) (*connect.Response[v1alpha1.UpdateManagementControllerResponse], error)
+	ManagementControllerControl(context.Context, *connect.Request[v1alpha1.ManagementControllerControlRequest]) (*connect.Response[v1alpha1.ManagementControllerControlResponse], error)
+	ListSensors(context.Context, *connect.Request[v1alpha1.ListSensorsRequest]) (*connect.Response[v1alpha1.ListSensorsResponse], error)
+	GetSensor(context.Context, *connect.Request[v1alpha1.GetSensorRequest]) (*connect.Response[v1alpha1.GetSensorResponse], error)
+	GetThermalZone(context.Context, *connect.Request[v1alpha1.GetThermalZoneRequest]) (*connect.Response[v1alpha1.GetThermalZoneResponse], error)
+	SetThermalZone(context.Context, *connect.Request[v1alpha1.SetThermalZoneRequest]) (*connect.Response[v1alpha1.SetThermalZoneResponse], error)
+	ListThermalZones(context.Context, *connect.Request[v1alpha1.ListThermalZonesRequest]) (*connect.Response[v1alpha1.ListThermalZonesResponse], error)
+	CreateUser(context.Context, *connect.Request[v1alpha1.CreateUserRequest]) (*connect.Response[v1alpha1.CreateUserResponse], error)
+	GetUser(context.Context, *connect.Request[v1alpha1.GetUserRequest]) (*connect.Response[v1alpha1.GetUserResponse], error)
+	UpdateUser(context.Context, *connect.Request[v1alpha1.UpdateUserRequest]) (*connect.Response[v1alpha1.UpdateUserResponse], error)
+	DeleteUser(context.Context, *connect.Request[v1alpha1.DeleteUserRequest]) (*connect.Response[v1alpha1.DeleteUserResponse], error)
+	ListUsers(context.Context, *connect.Request[v1alpha1.ListUsersRequest]) (*connect.Response[v1alpha1.ListUsersResponse], error)
+	ChangePassword(context.Context, *connect.Request[v1alpha1.ChangePasswordRequest]) (*connect.Response[v1alpha1.ChangePasswordResponse], error)
+	ResetPassword(context.Context, *connect.Request[v1alpha1.ResetPasswordRequest]) (*connect.Response[v1alpha1.ResetPasswordResponse], error)
+	AuthenticateUser(context.Context, *connect.Request[v1alpha1.AuthenticateUserRequest]) (*connect.Response[v1alpha1.AuthenticateUserResponse], error)
+}
+
+// NewBMCServiceHandler builds an HTTP handler from the service implementation. It returns the path
+// on which to mount the handler and the handler itself.
 //
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
-func NewManagementControllerServiceHandler(svc ManagementControllerServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	managementControllerServiceMethods := v1alpha1.File_schema_v1alpha1_system_proto.Services().ByName("ManagementControllerService").Methods()
-	managementControllerServiceGetManagementControllerHandler := connect.NewUnaryHandler(
-		ManagementControllerServiceGetManagementControllerProcedure,
+func NewBMCServiceHandler(svc BMCServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	bMCServiceMethods := v1alpha1.File_schema_v1alpha1_system_proto.Services().ByName("BMCService").Methods()
+	bMCServiceGetSystemInfoHandler := connect.NewUnaryHandler(
+		BMCServiceGetSystemInfoProcedure,
+		svc.GetSystemInfo,
+		connect.WithSchema(bMCServiceMethods.ByName("GetSystemInfo")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceGetHealthHandler := connect.NewUnaryHandler(
+		BMCServiceGetHealthProcedure,
+		svc.GetHealth,
+		connect.WithSchema(bMCServiceMethods.ByName("GetHealth")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceGetAssetInfoHandler := connect.NewUnaryHandler(
+		BMCServiceGetAssetInfoProcedure,
+		svc.GetAssetInfo,
+		connect.WithSchema(bMCServiceMethods.ByName("GetAssetInfo")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceSetAssetInfoHandler := connect.NewUnaryHandler(
+		BMCServiceSetAssetInfoProcedure,
+		svc.SetAssetInfo,
+		connect.WithSchema(bMCServiceMethods.ByName("SetAssetInfo")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceGetChassisHandler := connect.NewUnaryHandler(
+		BMCServiceGetChassisProcedure,
+		svc.GetChassis,
+		connect.WithSchema(bMCServiceMethods.ByName("GetChassis")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceListChassisHandler := connect.NewUnaryHandler(
+		BMCServiceListChassisProcedure,
+		svc.ListChassis,
+		connect.WithSchema(bMCServiceMethods.ByName("ListChassis")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceUpdateChassisHandler := connect.NewUnaryHandler(
+		BMCServiceUpdateChassisProcedure,
+		svc.UpdateChassis,
+		connect.WithSchema(bMCServiceMethods.ByName("UpdateChassis")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceChassisChangeStateHandler := connect.NewUnaryHandler(
+		BMCServiceChassisChangeStateProcedure,
+		svc.ChassisChangeState,
+		connect.WithSchema(bMCServiceMethods.ByName("ChassisChangeState")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceChassisControlHandler := connect.NewUnaryHandler(
+		BMCServiceChassisControlProcedure,
+		svc.ChassisControl,
+		connect.WithSchema(bMCServiceMethods.ByName("ChassisControl")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceGetHostHandler := connect.NewUnaryHandler(
+		BMCServiceGetHostProcedure,
+		svc.GetHost,
+		connect.WithSchema(bMCServiceMethods.ByName("GetHost")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceListHostsHandler := connect.NewUnaryHandler(
+		BMCServiceListHostsProcedure,
+		svc.ListHosts,
+		connect.WithSchema(bMCServiceMethods.ByName("ListHosts")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceUpdateHostHandler := connect.NewUnaryHandler(
+		BMCServiceUpdateHostProcedure,
+		svc.UpdateHost,
+		connect.WithSchema(bMCServiceMethods.ByName("UpdateHost")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceHostChangeStateHandler := connect.NewUnaryHandler(
+		BMCServiceHostChangeStateProcedure,
+		svc.HostChangeState,
+		connect.WithSchema(bMCServiceMethods.ByName("HostChangeState")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceGetManagementControllerHandler := connect.NewUnaryHandler(
+		BMCServiceGetManagementControllerProcedure,
 		svc.GetManagementController,
-		connect.WithSchema(managementControllerServiceMethods.ByName("GetManagementController")),
+		connect.WithSchema(bMCServiceMethods.ByName("GetManagementController")),
 		connect.WithHandlerOptions(opts...),
 	)
-	managementControllerServiceListManagementControllersHandler := connect.NewUnaryHandler(
-		ManagementControllerServiceListManagementControllersProcedure,
+	bMCServiceListManagementControllersHandler := connect.NewUnaryHandler(
+		BMCServiceListManagementControllersProcedure,
 		svc.ListManagementControllers,
-		connect.WithSchema(managementControllerServiceMethods.ByName("ListManagementControllers")),
+		connect.WithSchema(bMCServiceMethods.ByName("ListManagementControllers")),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/schema.v1alpha1.ManagementControllerService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	bMCServiceUpdateManagementControllerHandler := connect.NewUnaryHandler(
+		BMCServiceUpdateManagementControllerProcedure,
+		svc.UpdateManagementController,
+		connect.WithSchema(bMCServiceMethods.ByName("UpdateManagementController")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceManagementControllerControlHandler := connect.NewUnaryHandler(
+		BMCServiceManagementControllerControlProcedure,
+		svc.ManagementControllerControl,
+		connect.WithSchema(bMCServiceMethods.ByName("ManagementControllerControl")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceListSensorsHandler := connect.NewUnaryHandler(
+		BMCServiceListSensorsProcedure,
+		svc.ListSensors,
+		connect.WithSchema(bMCServiceMethods.ByName("ListSensors")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceGetSensorHandler := connect.NewUnaryHandler(
+		BMCServiceGetSensorProcedure,
+		svc.GetSensor,
+		connect.WithSchema(bMCServiceMethods.ByName("GetSensor")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceGetThermalZoneHandler := connect.NewUnaryHandler(
+		BMCServiceGetThermalZoneProcedure,
+		svc.GetThermalZone,
+		connect.WithSchema(bMCServiceMethods.ByName("GetThermalZone")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceSetThermalZoneHandler := connect.NewUnaryHandler(
+		BMCServiceSetThermalZoneProcedure,
+		svc.SetThermalZone,
+		connect.WithSchema(bMCServiceMethods.ByName("SetThermalZone")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceListThermalZonesHandler := connect.NewUnaryHandler(
+		BMCServiceListThermalZonesProcedure,
+		svc.ListThermalZones,
+		connect.WithSchema(bMCServiceMethods.ByName("ListThermalZones")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceCreateUserHandler := connect.NewUnaryHandler(
+		BMCServiceCreateUserProcedure,
+		svc.CreateUser,
+		connect.WithSchema(bMCServiceMethods.ByName("CreateUser")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceGetUserHandler := connect.NewUnaryHandler(
+		BMCServiceGetUserProcedure,
+		svc.GetUser,
+		connect.WithSchema(bMCServiceMethods.ByName("GetUser")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceUpdateUserHandler := connect.NewUnaryHandler(
+		BMCServiceUpdateUserProcedure,
+		svc.UpdateUser,
+		connect.WithSchema(bMCServiceMethods.ByName("UpdateUser")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceDeleteUserHandler := connect.NewUnaryHandler(
+		BMCServiceDeleteUserProcedure,
+		svc.DeleteUser,
+		connect.WithSchema(bMCServiceMethods.ByName("DeleteUser")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceListUsersHandler := connect.NewUnaryHandler(
+		BMCServiceListUsersProcedure,
+		svc.ListUsers,
+		connect.WithSchema(bMCServiceMethods.ByName("ListUsers")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceChangePasswordHandler := connect.NewUnaryHandler(
+		BMCServiceChangePasswordProcedure,
+		svc.ChangePassword,
+		connect.WithSchema(bMCServiceMethods.ByName("ChangePassword")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceResetPasswordHandler := connect.NewUnaryHandler(
+		BMCServiceResetPasswordProcedure,
+		svc.ResetPassword,
+		connect.WithSchema(bMCServiceMethods.ByName("ResetPassword")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bMCServiceAuthenticateUserHandler := connect.NewUnaryHandler(
+		BMCServiceAuthenticateUserProcedure,
+		svc.AuthenticateUser,
+		connect.WithSchema(bMCServiceMethods.ByName("AuthenticateUser")),
+		connect.WithHandlerOptions(opts...),
+	)
+	return "/schema.v1alpha1.BMCService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
-		case ManagementControllerServiceGetManagementControllerProcedure:
-			managementControllerServiceGetManagementControllerHandler.ServeHTTP(w, r)
-		case ManagementControllerServiceListManagementControllersProcedure:
-			managementControllerServiceListManagementControllersHandler.ServeHTTP(w, r)
+		case BMCServiceGetSystemInfoProcedure:
+			bMCServiceGetSystemInfoHandler.ServeHTTP(w, r)
+		case BMCServiceGetHealthProcedure:
+			bMCServiceGetHealthHandler.ServeHTTP(w, r)
+		case BMCServiceGetAssetInfoProcedure:
+			bMCServiceGetAssetInfoHandler.ServeHTTP(w, r)
+		case BMCServiceSetAssetInfoProcedure:
+			bMCServiceSetAssetInfoHandler.ServeHTTP(w, r)
+		case BMCServiceGetChassisProcedure:
+			bMCServiceGetChassisHandler.ServeHTTP(w, r)
+		case BMCServiceListChassisProcedure:
+			bMCServiceListChassisHandler.ServeHTTP(w, r)
+		case BMCServiceUpdateChassisProcedure:
+			bMCServiceUpdateChassisHandler.ServeHTTP(w, r)
+		case BMCServiceChassisChangeStateProcedure:
+			bMCServiceChassisChangeStateHandler.ServeHTTP(w, r)
+		case BMCServiceChassisControlProcedure:
+			bMCServiceChassisControlHandler.ServeHTTP(w, r)
+		case BMCServiceGetHostProcedure:
+			bMCServiceGetHostHandler.ServeHTTP(w, r)
+		case BMCServiceListHostsProcedure:
+			bMCServiceListHostsHandler.ServeHTTP(w, r)
+		case BMCServiceUpdateHostProcedure:
+			bMCServiceUpdateHostHandler.ServeHTTP(w, r)
+		case BMCServiceHostChangeStateProcedure:
+			bMCServiceHostChangeStateHandler.ServeHTTP(w, r)
+		case BMCServiceGetManagementControllerProcedure:
+			bMCServiceGetManagementControllerHandler.ServeHTTP(w, r)
+		case BMCServiceListManagementControllersProcedure:
+			bMCServiceListManagementControllersHandler.ServeHTTP(w, r)
+		case BMCServiceUpdateManagementControllerProcedure:
+			bMCServiceUpdateManagementControllerHandler.ServeHTTP(w, r)
+		case BMCServiceManagementControllerControlProcedure:
+			bMCServiceManagementControllerControlHandler.ServeHTTP(w, r)
+		case BMCServiceListSensorsProcedure:
+			bMCServiceListSensorsHandler.ServeHTTP(w, r)
+		case BMCServiceGetSensorProcedure:
+			bMCServiceGetSensorHandler.ServeHTTP(w, r)
+		case BMCServiceGetThermalZoneProcedure:
+			bMCServiceGetThermalZoneHandler.ServeHTTP(w, r)
+		case BMCServiceSetThermalZoneProcedure:
+			bMCServiceSetThermalZoneHandler.ServeHTTP(w, r)
+		case BMCServiceListThermalZonesProcedure:
+			bMCServiceListThermalZonesHandler.ServeHTTP(w, r)
+		case BMCServiceCreateUserProcedure:
+			bMCServiceCreateUserHandler.ServeHTTP(w, r)
+		case BMCServiceGetUserProcedure:
+			bMCServiceGetUserHandler.ServeHTTP(w, r)
+		case BMCServiceUpdateUserProcedure:
+			bMCServiceUpdateUserHandler.ServeHTTP(w, r)
+		case BMCServiceDeleteUserProcedure:
+			bMCServiceDeleteUserHandler.ServeHTTP(w, r)
+		case BMCServiceListUsersProcedure:
+			bMCServiceListUsersHandler.ServeHTTP(w, r)
+		case BMCServiceChangePasswordProcedure:
+			bMCServiceChangePasswordHandler.ServeHTTP(w, r)
+		case BMCServiceResetPasswordProcedure:
+			bMCServiceResetPasswordHandler.ServeHTTP(w, r)
+		case BMCServiceAuthenticateUserProcedure:
+			bMCServiceAuthenticateUserHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
 	})
 }
 
-// UnimplementedManagementControllerServiceHandler returns CodeUnimplemented from all methods.
-type UnimplementedManagementControllerServiceHandler struct{}
+// UnimplementedBMCServiceHandler returns CodeUnimplemented from all methods.
+type UnimplementedBMCServiceHandler struct{}
 
-func (UnimplementedManagementControllerServiceHandler) GetManagementController(context.Context, *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.ManagementControllerService.GetManagementController is not implemented"))
+func (UnimplementedBMCServiceHandler) GetSystemInfo(context.Context, *connect.Request[v1alpha1.GetSystemInfoRequest]) (*connect.Response[v1alpha1.GetSystemInfoResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetSystemInfo is not implemented"))
 }
 
-func (UnimplementedManagementControllerServiceHandler) ListManagementControllers(context.Context, *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.ManagementControllerService.ListManagementControllers is not implemented"))
+func (UnimplementedBMCServiceHandler) GetHealth(context.Context, *connect.Request[v1alpha1.GetHealthRequest]) (*connect.Response[v1alpha1.GetHealthResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetHealth is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) GetAssetInfo(context.Context, *connect.Request[v1alpha1.GetAssetInfoRequest]) (*connect.Response[v1alpha1.GetAssetInfoResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetAssetInfo is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) SetAssetInfo(context.Context, *connect.Request[v1alpha1.SetAssetInfoRequest]) (*connect.Response[v1alpha1.SetAssetInfoResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.SetAssetInfo is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) GetChassis(context.Context, *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetChassis is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) ListChassis(context.Context, *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ListChassis is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) UpdateChassis(context.Context, *connect.Request[v1alpha1.UpdateChassisRequest]) (*connect.Response[v1alpha1.UpdateChassisResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.UpdateChassis is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) ChassisChangeState(context.Context, *connect.Request[v1alpha1.ChassisChangeStateRequest]) (*connect.Response[v1alpha1.ChassisChangeStateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ChassisChangeState is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) ChassisControl(context.Context, *connect.Request[v1alpha1.ChassisControlRequest]) (*connect.Response[v1alpha1.ChassisControlResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ChassisControl is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) GetHost(context.Context, *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetHost is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) ListHosts(context.Context, *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ListHosts is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) UpdateHost(context.Context, *connect.Request[v1alpha1.UpdateHostRequest]) (*connect.Response[v1alpha1.UpdateHostResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.UpdateHost is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) HostChangeState(context.Context, *connect.Request[v1alpha1.HostChangeStateRequest]) (*connect.Response[v1alpha1.HostChangeStateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.HostChangeState is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) GetManagementController(context.Context, *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetManagementController is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) ListManagementControllers(context.Context, *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ListManagementControllers is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) UpdateManagementController(context.Context, *connect.Request[v1alpha1.UpdateManagementControllerRequest]) (*connect.Response[v1alpha1.UpdateManagementControllerResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.UpdateManagementController is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) ManagementControllerControl(context.Context, *connect.Request[v1alpha1.ManagementControllerControlRequest]) (*connect.Response[v1alpha1.ManagementControllerControlResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ManagementControllerControl is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) ListSensors(context.Context, *connect.Request[v1alpha1.ListSensorsRequest]) (*connect.Response[v1alpha1.ListSensorsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ListSensors is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) GetSensor(context.Context, *connect.Request[v1alpha1.GetSensorRequest]) (*connect.Response[v1alpha1.GetSensorResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetSensor is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) GetThermalZone(context.Context, *connect.Request[v1alpha1.GetThermalZoneRequest]) (*connect.Response[v1alpha1.GetThermalZoneResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetThermalZone is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) SetThermalZone(context.Context, *connect.Request[v1alpha1.SetThermalZoneRequest]) (*connect.Response[v1alpha1.SetThermalZoneResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.SetThermalZone is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) ListThermalZones(context.Context, *connect.Request[v1alpha1.ListThermalZonesRequest]) (*connect.Response[v1alpha1.ListThermalZonesResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ListThermalZones is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) CreateUser(context.Context, *connect.Request[v1alpha1.CreateUserRequest]) (*connect.Response[v1alpha1.CreateUserResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.CreateUser is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) GetUser(context.Context, *connect.Request[v1alpha1.GetUserRequest]) (*connect.Response[v1alpha1.GetUserResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetUser is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) UpdateUser(context.Context, *connect.Request[v1alpha1.UpdateUserRequest]) (*connect.Response[v1alpha1.UpdateUserResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.UpdateUser is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) DeleteUser(context.Context, *connect.Request[v1alpha1.DeleteUserRequest]) (*connect.Response[v1alpha1.DeleteUserResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.DeleteUser is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) ListUsers(context.Context, *connect.Request[v1alpha1.ListUsersRequest]) (*connect.Response[v1alpha1.ListUsersResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ListUsers is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) ChangePassword(context.Context, *connect.Request[v1alpha1.ChangePasswordRequest]) (*connect.Response[v1alpha1.ChangePasswordResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ChangePassword is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) ResetPassword(context.Context, *connect.Request[v1alpha1.ResetPasswordRequest]) (*connect.Response[v1alpha1.ResetPasswordResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ResetPassword is not implemented"))
+}
+
+func (UnimplementedBMCServiceHandler) AuthenticateUser(context.Context, *connect.Request[v1alpha1.AuthenticateUserRequest]) (*connect.Response[v1alpha1.AuthenticateUserResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.AuthenticateUser is not implemented"))
 }

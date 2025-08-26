@@ -1,0 +1,44 @@
+// SPDX-License-Identifier: BSD-3-Clause
+
+syntax = "proto3";
+
+package schema.v1alpha1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+message Firmware {
+  optional string version = 1;
+  optional google.protobuf.Timestamp build_date = 2;
+  optional string build_number = 3;
+  optional string firmware_type = 4;
+  optional string vendor = 5;
+  repeated FirmwareComponent components = 6;
+  optional BackupFirmware backup_firmware = 7;
+  optional bool secure_boot_enabled = 8;
+  optional TPM tpm = 9;
+}
+
+message FirmwareComponent {
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string type = 2;
+  optional string version = 3;
+  optional google.protobuf.Timestamp build_date = 4;
+  optional string status = 5;
+}
+
+message BackupFirmware {
+  bool available = 1;
+  optional string version = 2;
+  optional google.protobuf.Timestamp backup_date = 3;
+  optional bool bootable = 4;
+}
+
+message TPM {
+  bool present = 1;
+  optional string version = 2;
+  optional string manufacturer = 3;
+  optional bool enabled = 4;
+  optional bool activated = 5;
+  optional bool owned = 6;
+}

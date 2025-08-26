@@ -60,192 +60,276 @@ func (m *User) validate(all bool) error {
 
 	// no validation rules for Username
 
-	// no validation rules for FullName
-
-	// no validation rules for Email
-
 	// no validation rules for Enabled
 
-	// no validation rules for CreatedAt
+	if all {
+		switch v := interface{}(m.GetCreatedAt()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UserValidationError{
+					field:  "CreatedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UserValidationError{
+					field:  "CreatedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UserValidationError{
+				field:  "CreatedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
-	// no validation rules for UpdatedAt
-
-	// no validation rules for LastLogin
+	if all {
+		switch v := interface{}(m.GetUpdatedAt()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UserValidationError{
+					field:  "UpdatedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UserValidationError{
+					field:  "UpdatedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UserValidationError{
+				field:  "UpdatedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	// no validation rules for SourceSystem
 
-	if all {
-		switch v := interface{}(m.GetAuthData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UserValidationError{
+	// no validation rules for CreationInterface
+
+	// no validation rules for CustomAttributes
+
+	if m.FullName != nil {
+		// no validation rules for FullName
+	}
+
+	if m.Email != nil {
+		// no validation rules for Email
+	}
+
+	if m.LastLogin != nil {
+
+		if all {
+			switch v := interface{}(m.GetLastLogin()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  "LastLogin",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  "LastLogin",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetLastLogin()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UserValidationError{
+					field:  "LastLogin",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.AuthData != nil {
+
+		if all {
+			switch v := interface{}(m.GetAuthData()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  "AuthData",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  "AuthData",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetAuthData()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UserValidationError{
 					field:  "AuthData",
 					reason: "embedded message failed validation",
 					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UserValidationError{
-					field:  "AuthData",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
+				}
 			}
 		}
-	} else if v, ok := interface{}(m.GetAuthData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UserValidationError{
-				field:  "AuthData",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
+
 	}
 
-	if all {
-		switch v := interface{}(m.GetUnixInfo()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UserValidationError{
+	if m.UnixInfo != nil {
+
+		if all {
+			switch v := interface{}(m.GetUnixInfo()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  "UnixInfo",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  "UnixInfo",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetUnixInfo()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UserValidationError{
 					field:  "UnixInfo",
 					reason: "embedded message failed validation",
 					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UserValidationError{
-					field:  "UnixInfo",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
+				}
 			}
 		}
-	} else if v, ok := interface{}(m.GetUnixInfo()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UserValidationError{
-				field:  "UnixInfo",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
+
 	}
 
-	if all {
-		switch v := interface{}(m.GetLdapInfo()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UserValidationError{
+	if m.LdapInfo != nil {
+
+		if all {
+			switch v := interface{}(m.GetLdapInfo()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  "LdapInfo",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  "LdapInfo",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetLdapInfo()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UserValidationError{
 					field:  "LdapInfo",
 					reason: "embedded message failed validation",
 					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UserValidationError{
-					field:  "LdapInfo",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
+				}
 			}
 		}
-	} else if v, ok := interface{}(m.GetLdapInfo()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UserValidationError{
-				field:  "LdapInfo",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
+
 	}
 
-	if all {
-		switch v := interface{}(m.GetRedfishInfo()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UserValidationError{
+	if m.RedfishInfo != nil {
+
+		if all {
+			switch v := interface{}(m.GetRedfishInfo()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  "RedfishInfo",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  "RedfishInfo",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetRedfishInfo()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UserValidationError{
 					field:  "RedfishInfo",
 					reason: "embedded message failed validation",
 					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UserValidationError{
-					field:  "RedfishInfo",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
+				}
 			}
 		}
-	} else if v, ok := interface{}(m.GetRedfishInfo()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UserValidationError{
-				field:  "RedfishInfo",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
+
 	}
 
-	if all {
-		switch v := interface{}(m.GetNatsInfo()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UserValidationError{
+	if m.NatsInfo != nil {
+
+		if all {
+			switch v := interface{}(m.GetNatsInfo()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  "NatsInfo",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  "NatsInfo",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetNatsInfo()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UserValidationError{
 					field:  "NatsInfo",
 					reason: "embedded message failed validation",
 					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UserValidationError{
-					field:  "NatsInfo",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
+				}
 			}
 		}
-	} else if v, ok := interface{}(m.GetNatsInfo()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UserValidationError{
-				field:  "NatsInfo",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
 
-	if all {
-		switch v := interface{}(m.GetSelinuxInfo()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UserValidationError{
-					field:  "SelinuxInfo",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UserValidationError{
-					field:  "SelinuxInfo",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetSelinuxInfo()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UserValidationError{
-				field:  "SelinuxInfo",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
 	}
 
 	if len(errors) > 0 {
@@ -349,43 +433,111 @@ func (m *AuthenticationData) validate(all bool) error {
 
 	// no validation rules for PasswordHash
 
-	// no validation rules for PasswordSalt
-
 	// no validation rules for HashAlgorithm
 
 	// no validation rules for Iterations
 
-	// no validation rules for PasswordLastChanged
+	if m.PasswordSalt != nil {
+		// no validation rules for PasswordSalt
+	}
 
-	// no validation rules for PasswordExpiresAt
+	if m.PasswordLastChanged != nil {
 
-	if all {
-		switch v := interface{}(m.GetLockoutInfo()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AuthenticationDataValidationError{
-					field:  "LockoutInfo",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
+		if all {
+			switch v := interface{}(m.GetPasswordLastChanged()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, AuthenticationDataValidationError{
+						field:  "PasswordLastChanged",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, AuthenticationDataValidationError{
+						field:  "PasswordLastChanged",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
 			}
-		case interface{ Validate() error }:
+		} else if v, ok := interface{}(m.GetPasswordLastChanged()).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AuthenticationDataValidationError{
+				return AuthenticationDataValidationError{
+					field:  "PasswordLastChanged",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.PasswordExpiresAt != nil {
+
+		if all {
+			switch v := interface{}(m.GetPasswordExpiresAt()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, AuthenticationDataValidationError{
+						field:  "PasswordExpiresAt",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, AuthenticationDataValidationError{
+						field:  "PasswordExpiresAt",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetPasswordExpiresAt()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return AuthenticationDataValidationError{
+					field:  "PasswordExpiresAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.LockoutInfo != nil {
+
+		if all {
+			switch v := interface{}(m.GetLockoutInfo()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, AuthenticationDataValidationError{
+						field:  "LockoutInfo",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, AuthenticationDataValidationError{
+						field:  "LockoutInfo",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetLockoutInfo()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return AuthenticationDataValidationError{
 					field:  "LockoutInfo",
 					reason: "embedded message failed validation",
 					cause:  err,
-				})
+				}
 			}
 		}
-	} else if v, ok := interface{}(m.GetLockoutInfo()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return AuthenticationDataValidationError{
-				field:  "LockoutInfo",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
+
 	}
 
 	if len(errors) > 0 {
@@ -492,13 +644,81 @@ func (m *AccountLockoutInfo) validate(all bool) error {
 
 	// no validation rules for Locked
 
-	// no validation rules for Reason
-
-	// no validation rules for LockoutTime
-
 	// no validation rules for FailedAttempts
 
-	// no validation rules for AttemptsResetTime
+	if m.Reason != nil {
+		// no validation rules for Reason
+	}
+
+	if m.LockoutTime != nil {
+
+		if all {
+			switch v := interface{}(m.GetLockoutTime()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, AccountLockoutInfoValidationError{
+						field:  "LockoutTime",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, AccountLockoutInfoValidationError{
+						field:  "LockoutTime",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetLockoutTime()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return AccountLockoutInfoValidationError{
+					field:  "LockoutTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.AttemptsResetTime != nil {
+
+		if all {
+			switch v := interface{}(m.GetAttemptsResetTime()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, AccountLockoutInfoValidationError{
+						field:  "AttemptsResetTime",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, AccountLockoutInfoValidationError{
+						field:  "AttemptsResetTime",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetAttemptsResetTime()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return AccountLockoutInfoValidationError{
+					field:  "AttemptsResetTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.MaxFailedAttempts != nil {
+		// no validation rules for MaxFailedAttempts
+	}
 
 	if len(errors) > 0 {
 		return AccountLockoutInfoMultiError(errors)
@@ -608,9 +828,13 @@ func (m *UnixUserInfo) validate(all bool) error {
 
 	// no validation rules for HomeDirectory
 
-	// no validation rules for Shell
+	if m.Shell != nil {
+		// no validation rules for Shell
+	}
 
-	// no validation rules for Gecos
+	if m.Gecos != nil {
+		// no validation rules for Gecos
+	}
 
 	if len(errors) > 0 {
 		return UnixUserInfoMultiError(errors)
@@ -713,15 +937,91 @@ func (m *LdapUserInfo) validate(all bool) error {
 
 	// no validation rules for LdapDn
 
-	// no validation rules for ObjectGuid
+	if m.ObjectGuid != nil {
+		// no validation rules for ObjectGuid
+	}
 
-	// no validation rules for SamAccountName
+	if m.SamAccountName != nil {
+		// no validation rules for SamAccountName
+	}
 
-	// no validation rules for UserPrincipalName
+	if m.UserPrincipalName != nil {
+		// no validation rules for UserPrincipalName
+	}
 
-	// no validation rules for AccountExpires
+	if m.AccountExpires != nil {
 
-	// no validation rules for PwdLastSet
+		if all {
+			switch v := interface{}(m.GetAccountExpires()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, LdapUserInfoValidationError{
+						field:  "AccountExpires",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, LdapUserInfoValidationError{
+						field:  "AccountExpires",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetAccountExpires()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return LdapUserInfoValidationError{
+					field:  "AccountExpires",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.PwdLastSet != nil {
+
+		if all {
+			switch v := interface{}(m.GetPwdLastSet()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, LdapUserInfoValidationError{
+						field:  "PwdLastSet",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, LdapUserInfoValidationError{
+						field:  "PwdLastSet",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetPwdLastSet()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return LdapUserInfoValidationError{
+					field:  "PwdLastSet",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.Domain != nil {
+		// no validation rules for Domain
+	}
+
+	if m.OrganizationalUnit != nil {
+		// no validation rules for OrganizationalUnit
+	}
 
 	if len(errors) > 0 {
 		return LdapUserInfoMultiError(errors)
@@ -822,37 +1122,47 @@ func (m *RedfishAccountInfo) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AccountId
-
 	// no validation rules for RoleId
 
-	if all {
-		switch v := interface{}(m.GetLockoutPolicy()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, RedfishAccountInfoValidationError{
-					field:  "LockoutPolicy",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
+	if m.AccountId != nil {
+		// no validation rules for AccountId
+	}
+
+	if m.LockoutPolicy != nil {
+
+		if all {
+			switch v := interface{}(m.GetLockoutPolicy()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, RedfishAccountInfoValidationError{
+						field:  "LockoutPolicy",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, RedfishAccountInfoValidationError{
+						field:  "LockoutPolicy",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
 			}
-		case interface{ Validate() error }:
+		} else if v, ok := interface{}(m.GetLockoutPolicy()).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				errors = append(errors, RedfishAccountInfoValidationError{
+				return RedfishAccountInfoValidationError{
 					field:  "LockoutPolicy",
 					reason: "embedded message failed validation",
 					cause:  err,
-				})
+				}
 			}
 		}
-	} else if v, ok := interface{}(m.GetLockoutPolicy()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return RedfishAccountInfoValidationError{
-				field:  "LockoutPolicy",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
+
+	}
+
+	if m.PasswordChangeRequired != nil {
+		// no validation rules for PasswordChangeRequired
 	}
 
 	if len(errors) > 0 {
@@ -959,9 +1269,13 @@ func (m *RedfishLockoutPolicy) validate(all bool) error {
 
 	// no validation rules for Threshold
 
-	// no validation rules for Duration
+	if m.Duration != nil {
+		// no validation rules for Duration
+	}
 
-	// no validation rules for ResetAfter
+	if m.ResetAfter != nil {
+		// no validation rules for ResetAfter
+	}
 
 	if len(errors) > 0 {
 		return RedfishLockoutPolicyMultiError(errors)
@@ -1067,69 +1381,116 @@ func (m *NatsAccountInfo) validate(all bool) error {
 
 	// no validation rules for Account
 
-	if all {
-		switch v := interface{}(m.GetPermissions()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, NatsAccountInfoValidationError{
+	if m.Permissions != nil {
+
+		if all {
+			switch v := interface{}(m.GetPermissions()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, NatsAccountInfoValidationError{
+						field:  "Permissions",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, NatsAccountInfoValidationError{
+						field:  "Permissions",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetPermissions()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return NatsAccountInfoValidationError{
 					field:  "Permissions",
 					reason: "embedded message failed validation",
 					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, NatsAccountInfoValidationError{
-					field:  "Permissions",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
+				}
 			}
 		}
-	} else if v, ok := interface{}(m.GetPermissions()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return NatsAccountInfoValidationError{
-				field:  "Permissions",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
+
 	}
 
-	if all {
-		switch v := interface{}(m.GetLimits()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, NatsAccountInfoValidationError{
+	if m.Limits != nil {
+
+		if all {
+			switch v := interface{}(m.GetLimits()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, NatsAccountInfoValidationError{
+						field:  "Limits",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, NatsAccountInfoValidationError{
+						field:  "Limits",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetLimits()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return NatsAccountInfoValidationError{
 					field:  "Limits",
 					reason: "embedded message failed validation",
 					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, NatsAccountInfoValidationError{
-					field:  "Limits",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
+				}
 			}
 		}
-	} else if v, ok := interface{}(m.GetLimits()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return NatsAccountInfoValidationError{
-				field:  "Limits",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
+
 	}
 
-	// no validation rules for UserJwt
+	if m.UserJwt != nil {
+		// no validation rules for UserJwt
+	}
 
-	// no validation rules for UserKey
+	if m.UserKey != nil {
+		// no validation rules for UserKey
+	}
 
-	// no validation rules for UserCred
+	if m.UserCred != nil {
+		// no validation rules for UserCred
+	}
+
+	if m.JwtExpiresAt != nil {
+
+		if all {
+			switch v := interface{}(m.GetJwtExpiresAt()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, NatsAccountInfoValidationError{
+						field:  "JwtExpiresAt",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, NatsAccountInfoValidationError{
+						field:  "JwtExpiresAt",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetJwtExpiresAt()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return NatsAccountInfoValidationError{
+					field:  "JwtExpiresAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return NatsAccountInfoMultiError(errors)
@@ -1337,6 +1698,14 @@ func (m *NatsLimits) validate(all bool) error {
 
 	// no validation rules for Subs
 
+	if m.Conn != nil {
+		// no validation rules for Conn
+	}
+
+	if m.Leaf != nil {
+		// no validation rules for Leaf
+	}
+
 	if len(errors) > 0 {
 		return NatsLimitsMultiError(errors)
 	}
@@ -1414,50 +1783,66 @@ var _ interface {
 	ErrorName() string
 } = NatsLimitsValidationError{}
 
-// Validate checks the field values on SelinuxUserInfo with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *SelinuxUserInfo) Validate() error {
+// Validate checks the field values on UserLinkingOptions with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UserLinkingOptions) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on SelinuxUserInfo with the rules
+// ValidateAll checks the field values on UserLinkingOptions with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// SelinuxUserInfoMultiError, or nil if none found.
-func (m *SelinuxUserInfo) ValidateAll() error {
+// UserLinkingOptionsMultiError, or nil if none found.
+func (m *UserLinkingOptions) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *SelinuxUserInfo) validate(all bool) error {
+func (m *UserLinkingOptions) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	// no validation rules for User
+	// no validation rules for UnixAction
 
-	// no validation rules for Role
+	// no validation rules for LdapAction
 
-	// no validation rules for Type
+	// no validation rules for RedfishAction
 
-	// no validation rules for Level
+	// no validation rules for NatsAction
+
+	if m.ExistingUnixUsername != nil {
+		// no validation rules for ExistingUnixUsername
+	}
+
+	if m.ExistingLdapDn != nil {
+		// no validation rules for ExistingLdapDn
+	}
+
+	if m.ExistingRedfishAccountId != nil {
+		// no validation rules for ExistingRedfishAccountId
+	}
+
+	if m.ExistingNatsAccount != nil {
+		// no validation rules for ExistingNatsAccount
+	}
 
 	if len(errors) > 0 {
-		return SelinuxUserInfoMultiError(errors)
+		return UserLinkingOptionsMultiError(errors)
 	}
 
 	return nil
 }
 
-// SelinuxUserInfoMultiError is an error wrapping multiple validation errors
-// returned by SelinuxUserInfo.ValidateAll() if the designated constraints
+// UserLinkingOptionsMultiError is an error wrapping multiple validation errors
+// returned by UserLinkingOptions.ValidateAll() if the designated constraints
 // aren't met.
-type SelinuxUserInfoMultiError []error
+type UserLinkingOptionsMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m SelinuxUserInfoMultiError) Error() string {
+func (m UserLinkingOptionsMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1466,11 +1851,11 @@ func (m SelinuxUserInfoMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m SelinuxUserInfoMultiError) AllErrors() []error { return m }
+func (m UserLinkingOptionsMultiError) AllErrors() []error { return m }
 
-// SelinuxUserInfoValidationError is the validation error returned by
-// SelinuxUserInfo.Validate if the designated constraints aren't met.
-type SelinuxUserInfoValidationError struct {
+// UserLinkingOptionsValidationError is the validation error returned by
+// UserLinkingOptions.Validate if the designated constraints aren't met.
+type UserLinkingOptionsValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1478,22 +1863,24 @@ type SelinuxUserInfoValidationError struct {
 }
 
 // Field function returns field value.
-func (e SelinuxUserInfoValidationError) Field() string { return e.field }
+func (e UserLinkingOptionsValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e SelinuxUserInfoValidationError) Reason() string { return e.reason }
+func (e UserLinkingOptionsValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e SelinuxUserInfoValidationError) Cause() error { return e.cause }
+func (e UserLinkingOptionsValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e SelinuxUserInfoValidationError) Key() bool { return e.key }
+func (e UserLinkingOptionsValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e SelinuxUserInfoValidationError) ErrorName() string { return "SelinuxUserInfoValidationError" }
+func (e UserLinkingOptionsValidationError) ErrorName() string {
+	return "UserLinkingOptionsValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e SelinuxUserInfoValidationError) Error() string {
+func (e UserLinkingOptionsValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1505,14 +1892,14 @@ func (e SelinuxUserInfoValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sSelinuxUserInfo.%s: %s%s",
+		"invalid %sUserLinkingOptions.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = SelinuxUserInfoValidationError{}
+var _ error = UserLinkingOptionsValidationError{}
 
 var _ interface {
 	Field() string
@@ -1520,7 +1907,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = SelinuxUserInfoValidationError{}
+} = UserLinkingOptionsValidationError{}
 
 // Validate checks the field values on CreateUserRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -1573,7 +1960,46 @@ func (m *CreateUserRequest) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for Password
+	if m.Password != nil {
+		// no validation rules for Password
+	}
+
+	if m.LinkingOptions != nil {
+
+		if all {
+			switch v := interface{}(m.GetLinkingOptions()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CreateUserRequestValidationError{
+						field:  "LinkingOptions",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CreateUserRequestValidationError{
+						field:  "LinkingOptions",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetLinkingOptions()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CreateUserRequestValidationError{
+					field:  "LinkingOptions",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.DryRun != nil {
+		// no validation rules for DryRun
+	}
 
 	if len(errors) > 0 {
 		return CreateUserRequestMultiError(errors)
@@ -1808,7 +2234,79 @@ func (m *GetUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	switch v := m.Identifier.(type) {
+	case *GetUserRequest_Id:
+		if v == nil {
+			err := GetUserRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Id
+	case *GetUserRequest_Username:
+		if v == nil {
+			err := GetUserRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Username
+	case *GetUserRequest_Email:
+		if v == nil {
+			err := GetUserRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Email
+	default:
+		_ = v // ensures v is used
+	}
+
+	if m.FieldMask != nil {
+
+		if all {
+			switch v := interface{}(m.GetFieldMask()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetUserRequestValidationError{
+						field:  "FieldMask",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetUserRequestValidationError{
+						field:  "FieldMask",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetFieldMask()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetUserRequestValidationError{
+					field:  "FieldMask",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return GetUserRequestMultiError(errors)
@@ -2068,6 +2566,68 @@ func (m *UpdateUserRequest) validate(all bool) error {
 		}
 	}
 
+	if all {
+		switch v := interface{}(m.GetFieldMask()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateUserRequestValidationError{
+					field:  "FieldMask",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateUserRequestValidationError{
+					field:  "FieldMask",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetFieldMask()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateUserRequestValidationError{
+				field:  "FieldMask",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if m.LinkingOptions != nil {
+
+		if all {
+			switch v := interface{}(m.GetLinkingOptions()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateUserRequestValidationError{
+						field:  "LinkingOptions",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateUserRequestValidationError{
+						field:  "LinkingOptions",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetLinkingOptions()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateUserRequestValidationError{
+					field:  "LinkingOptions",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return UpdateUserRequestMultiError(errors)
 	}
@@ -2303,6 +2863,14 @@ func (m *DeleteUserRequest) validate(all bool) error {
 
 	// no validation rules for Id
 
+	if m.CascadeDelete != nil {
+		// no validation rules for CascadeDelete
+	}
+
+	if m.BackupData != nil {
+		// no validation rules for BackupData
+	}
+
 	if len(errors) > 0 {
 		return DeleteUserRequestMultiError(errors)
 	}
@@ -2407,6 +2975,10 @@ func (m *DeleteUserResponse) validate(all bool) error {
 
 	// no validation rules for Success
 
+	if m.BackupLocation != nil {
+		// no validation rules for BackupLocation
+	}
+
 	if len(errors) > 0 {
 		return DeleteUserResponseMultiError(errors)
 	}
@@ -2509,11 +3081,58 @@ func (m *ListUsersRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Source
+	if m.Source != nil {
+		// no validation rules for Source
+	}
 
-	// no validation rules for Enabled
+	if m.Enabled != nil {
+		// no validation rules for Enabled
+	}
 
-	// no validation rules for UsernamePrefix
+	if m.UsernamePrefix != nil {
+		// no validation rules for UsernamePrefix
+	}
+
+	if m.FieldMask != nil {
+
+		if all {
+			switch v := interface{}(m.GetFieldMask()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListUsersRequestValidationError{
+						field:  "FieldMask",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListUsersRequestValidationError{
+						field:  "FieldMask",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetFieldMask()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListUsersRequestValidationError{
+					field:  "FieldMask",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.PageSize != nil {
+		// no validation rules for PageSize
+	}
+
+	if m.PageToken != nil {
+		// no validation rules for PageToken
+	}
 
 	if len(errors) > 0 {
 		return ListUsersRequestMultiError(errors)
@@ -2647,6 +3266,10 @@ func (m *ListUsersResponse) validate(all bool) error {
 			}
 		}
 
+	}
+
+	if m.NextPageToken != nil {
+		// no validation rules for NextPageToken
 	}
 
 	if len(errors) > 0 {
@@ -2861,6 +3484,10 @@ func (m *ChangePasswordResponse) validate(all bool) error {
 
 	// no validation rules for Success
 
+	if m.FailureReason != nil {
+		// no validation rules for FailureReason
+	}
+
 	if len(errors) > 0 {
 		return ChangePasswordResponseMultiError(errors)
 	}
@@ -2965,9 +3592,17 @@ func (m *ResetPasswordRequest) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for NewPassword
+	if m.NewPassword != nil {
+		// no validation rules for NewPassword
+	}
 
-	// no validation rules for Force
+	if m.Force != nil {
+		// no validation rules for Force
+	}
+
+	if m.GeneratePassword != nil {
+		// no validation rules for GeneratePassword
+	}
 
 	if len(errors) > 0 {
 		return ResetPasswordRequestMultiError(errors)
@@ -3075,6 +3710,10 @@ func (m *ResetPasswordResponse) validate(all bool) error {
 
 	// no validation rules for Success
 
+	if m.FailureReason != nil {
+		// no validation rules for FailureReason
+	}
+
 	if len(errors) > 0 {
 		return ResetPasswordResponseMultiError(errors)
 	}
@@ -3181,6 +3820,14 @@ func (m *AuthenticateUserRequest) validate(all bool) error {
 
 	// no validation rules for Password
 
+	if m.SourceIp != nil {
+		// no validation rules for SourceIp
+	}
+
+	if m.UserAgent != nil {
+		// no validation rules for UserAgent
+	}
+
 	if len(errors) > 0 {
 		return AuthenticateUserRequestMultiError(errors)
 	}
@@ -3285,11 +3932,50 @@ func (m *AuthenticateUserResponse) validate(all bool) error {
 
 	// no validation rules for Success
 
-	// no validation rules for UserId
+	if m.UserId != nil {
+		// no validation rules for UserId
+	}
 
-	// no validation rules for Token
+	if m.Token != nil {
+		// no validation rules for Token
+	}
 
-	// no validation rules for FailureReason
+	if m.FailureReason != nil {
+		// no validation rules for FailureReason
+	}
+
+	if m.TokenExpiresAt != nil {
+
+		if all {
+			switch v := interface{}(m.GetTokenExpiresAt()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, AuthenticateUserResponseValidationError{
+						field:  "TokenExpiresAt",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, AuthenticateUserResponseValidationError{
+						field:  "TokenExpiresAt",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetTokenExpiresAt()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return AuthenticateUserResponseValidationError{
+					field:  "TokenExpiresAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return AuthenticateUserResponseMultiError(errors)

@@ -5,307 +5,117 @@ syntax = "proto3";
 package schema.v1alpha1;
 
 import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "schema/v1alpha1/asset.proto";
+import "schema/v1alpha1/chassis.proto";
+import "schema/v1alpha1/contact.proto";
+import "schema/v1alpha1/host.proto";
+import "schema/v1alpha1/managementcontroller.proto";
+import "schema/v1alpha1/sensor.proto";
+import "schema/v1alpha1/thermal.proto";
+import "schema/v1alpha1/user.proto";
 
-// HostManagement represents the overall host and chassis management configuration
-message HostManagement {
-  // Unique identifier for the host management instance
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-
-  // Human-readable name for the host management instance
-  string name = 2 [(buf.validate.field).string.min_len = 1];
-
-  // List of chassis managed by this host management instance
-  repeated Chassis chassis = 3 [(buf.validate.field).repeated.min_items = 1];
-
-  // List of hosts managed by this host management instance
-  repeated Host hosts = 4 [(buf.validate.field).repeated.min_items = 1];
-
-  // Management hierarchy topology
-  ManagementTopology topology = 5;
-
-  // Timestamp of the last update
-  int64 last_update_timestamp = 6;
+enum HealthStatus {
+  HEALTH_STATUS_UNSPECIFIED = 0;
+  HEALTH_STATUS_OK = 1;
+  HEALTH_STATUS_WARNING = 2;
+  HEALTH_STATUS_CRITICAL = 3;
+  HEALTH_STATUS_UNKNOWN = 4;
 }
 
-// Chassis represents a physical or virtual chassis containing hosts and other components
-message Chassis {
-  // Unique identifier for the chassis
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-
-  // Human-readable name for the chassis
-  string name = 2 [(buf.validate.field).string.min_len = 1];
-
-  // Chassis type (e.g., Rack, Blade, Standalone)
-  ChassisType type = 3;
-
-  // Current power state of the chassis
-  PowerState power_state = 4;
-
-  // Physical location of the chassis
-  string physical_location = 5;
-
-  // List of host IDs contained in this chassis
-  repeated string host_ids = 6 [(buf.validate.field).repeated.min_items = 0];
-
-  // List of sensor IDs associated with this chassis
-  repeated string sensor_ids = 7 [(buf.validate.field).repeated.min_items = 0];
-
-  // List of thermal zone IDs associated with this chassis
-  repeated string thermal_zone_ids = 8 [(buf.validate.field).repeated.min_items = 0];
-
-  // Status of the chassis
-  ChassisStatus status = 9;
-
-  // Timestamp of the last update
-  int64 last_update_timestamp = 10;
+enum SystemState {
+  SYSTEM_STATE_UNSPECIFIED = 0;
+  SYSTEM_STATE_STARTING = 1;
+  SYSTEM_STATE_ENABLED = 2;
+  SYSTEM_STATE_DISABLED = 3;
+  SYSTEM_STATE_STANDBY = 4;
+  SYSTEM_STATE_QUIESCED = 5;
+  SYSTEM_STATE_IN_TEST = 6;
+  SYSTEM_STATE_UPDATING = 7;
 }
 
-// Host represents a compute host within a chassis
-message Host {
-  // Unique identifier for the host
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-
-  // Human-readable name for the host
-  string name = 2 [(buf.validate.field).string.min_len = 1];
-
-  // Host state (on, off, error, etc.)
-  HostState state = 3;
-
-  // Requested host state (what we want the host to be)
-  HostState requested_state = 4;
-
-  // Host health status
-  HostHealth health = 5;
-
-  // Chassis ID this host belongs to
-  string chassis_id = 6 [(buf.validate.field).string.min_len = 1];
-
-  // Physical location of the host within the chassis
-  string physical_location = 7;
-
-  // BIOS/UEFI version
-  string bios_version = 8;
-
-  // Host power state
-  PowerState power_state = 9;
-
-  // Timestamp of the last update
-  int64 last_update_timestamp = 10;
+message Health {
+  HealthStatus status = 1 [ (buf.validate.field).enum.defined_only = true ];
+  optional string status_description = 2;
+  repeated HealthDetail details = 3;
+  optional google.protobuf.Timestamp last_updated = 4;
+  optional google.protobuf.Duration uptime = 5;
 }
 
-// ManagementTopology represents the hierarchical management structure
-message ManagementTopology {
-  // Root management controllers
-  repeated ManagementController root_controllers = 1 [(buf.validate.field).repeated.min_items = 1];
+message HealthDetail {
+  string component = 1 [ (buf.validate.field).string.min_len = 1 ];
+  HealthStatus status = 2 [ (buf.validate.field).enum.defined_only = true ];
+  optional string message = 3;
+  optional google.protobuf.Timestamp timestamp = 4;
 }
 
-// ManagementController represents a management controller in the hierarchy
-message ManagementController {
-  // Unique identifier for the management controller
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-
-  // Human-readable name for the management controller
-  string name = 2 [(buf.validate.field).string.min_len = 1];
-
-  // Type of management controller
-  ManagementControllerType type = 3;
-
-  // Host IDs managed by this controller
-  repeated string managed_host_ids = 4 [(buf.validate.field).repeated.min_items = 0];
-
-  // Chassis IDs managed by this controller
-  repeated string managed_chassis_ids = 5 [(buf.validate.field).repeated.min_items = 0];
-
-  // Child management controllers (e.g., BMCs managed by an SMC)
-  repeated ManagementController child_controllers = 6 [(buf.validate.field).repeated.min_items = 0];
-
-  // Physical location of the management controller
-  string physical_location = 7;
-
-  // Status of the management controller
-  ManagementControllerStatus status = 8;
-
-  // Timestamp of the last update
-  int64 last_update_timestamp = 9;
+message SystemInfo {
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string description = 2;
+  SystemState state = 3 [ (buf.validate.field).enum.defined_only = true ];
+  Health health = 4 [ (buf.validate.field).required = true ];
+  optional string version = 5;
+  optional google.protobuf.Timestamp boot_time = 6;
+  optional google.protobuf.Duration uptime = 7;
+  optional ContactInfo contact_info = 8;
+  map<string, string> metadata = 9;
 }
 
-// HostState represents the operational state of a host
-enum HostState {
-  HOST_STATE_UNSPECIFIED = 0;
-  HOST_STATE_ON = 1;
-  HOST_STATE_OFF = 2;
-  HOST_STATE_ERROR = 3;
-  HOST_STATE_UNKNOWN = 4;
-  HOST_STATE_STARTING = 5;
-  HOST_STATE_STOPPING = 6;
+message GetSystemInfoRequest {
+  optional google.protobuf.FieldMask field_mask = 1;
 }
 
-// HostHealth represents the health status of a host
-enum HostHealth {
-  HOST_HEALTH_UNSPECIFIED = 0;
-  HOST_HEALTH_OK = 1;
-  HOST_HEALTH_WARNING = 2;
-  HOST_HEALTH_CRITICAL = 3;
-  HOST_HEALTH_UNKNOWN = 4;
-}
+message GetSystemInfoResponse { SystemInfo system_info = 1; }
 
-// PowerState represents the power state of a component
-enum PowerState {
-  POWER_STATE_UNSPECIFIED = 0;
-  POWER_STATE_ON = 1;
-  POWER_STATE_OFF = 2;
-  POWER_STATE_UNKNOWN = 3;
-}
+message GetHealthRequest { optional google.protobuf.FieldMask field_mask = 1; }
 
-// ChassisType represents the type of chassis
-enum ChassisType {
-  CHASSIS_TYPE_UNSPECIFIED = 0;
-  CHASSIS_TYPE_RACK = 1;
-  CHASSIS_TYPE_BLADE = 2;
-  CHASSIS_TYPE_STANDALONE = 3;
-  CHASSIS_TYPE_CARD = 4;
-}
+message GetHealthResponse { Health health = 1; }
 
-// ChassisStatus represents the operational status of a chassis
-enum ChassisStatus {
-  CHASSIS_STATUS_UNSPECIFIED = 0;
-  CHASSIS_STATUS_OK = 1;
-  CHASSIS_STATUS_WARNING = 2;
-  CHASSIS_STATUS_CRITICAL = 3;
-  CHASSIS_STATUS_UNKNOWN = 4;
-}
+service BMCService {
+  rpc GetSystemInfo(GetSystemInfoRequest) returns (GetSystemInfoResponse);
+  rpc GetHealth(GetHealthRequest) returns (GetHealthResponse);
 
-// ManagementControllerType represents the type of management controller
-enum ManagementControllerType {
-  MANAGEMENT_CONTROLLER_TYPE_UNSPECIFIED = 0;
-  MANAGEMENT_CONTROLLER_TYPE_SATELLITE = 1;
-  MANAGEMENT_CONTROLLER_TYPE_BMC = 2;
-  MANAGEMENT_CONTROLLER_TYPE_CHASSIS_CONTROLLER = 3;
-}
+  rpc GetAssetInfo(GetAssetInfoRequest) returns (GetAssetInfoResponse);
+  rpc SetAssetInfo(SetAssetInfoRequest) returns (SetAssetInfoResponse);
 
-// ManagementControllerStatus represents the operational status of a management controller
-enum ManagementControllerStatus {
-  MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED = 0;
-  MANAGEMENT_CONTROLLER_STATUS_OK = 1;
-  MANAGEMENT_CONTROLLER_STATUS_WARNING = 2;
-  MANAGEMENT_CONTROLLER_STATUS_ERROR = 3;
-  MANAGEMENT_CONTROLLER_STATUS_UNKNOWN = 4;
-}
+  rpc GetChassis(GetChassisRequest) returns (GetChassisResponse);
+  rpc ListChassis(ListChassisRequest) returns (ListChassisResponse);
+  rpc UpdateChassis(UpdateChassisRequest) returns (UpdateChassisResponse);
+  rpc ChassisChangeState(ChassisChangeStateRequest)
+      returns (ChassisChangeStateResponse);
+  rpc ChassisControl(ChassisControlRequest) returns (ChassisControlResponse);
 
-// Request message for getting a host management configuration by ID
-message GetHostManagementRequest {
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-}
+  rpc GetHost(GetHostRequest) returns (GetHostResponse);
+  rpc ListHosts(ListHostsRequest) returns (ListHostsResponse);
+  rpc UpdateHost(UpdateHostRequest) returns (UpdateHostResponse);
+  rpc HostChangeState(HostChangeStateRequest) returns (HostChangeStateResponse);
 
-// Response message for getting a host management configuration
-message GetHostManagementResponse {
-  HostManagement host_management = 1;
-}
+  rpc GetManagementController(GetManagementControllerRequest)
+      returns (GetManagementControllerResponse);
+  rpc ListManagementControllers(ListManagementControllersRequest)
+      returns (ListManagementControllersResponse);
+  rpc UpdateManagementController(UpdateManagementControllerRequest)
+      returns (UpdateManagementControllerResponse);
+  rpc ManagementControllerControl(ManagementControllerControlRequest)
+      returns (ManagementControllerControlResponse);
 
-// Request message for listing host management configurations
-message ListHostManagementRequest {}
+  rpc ListSensors(ListSensorsRequest) returns (ListSensorsResponse);
+  rpc GetSensor(GetSensorRequest) returns (GetSensorResponse);
 
-// Response message for listing host management configurations
-message ListHostManagementResponse {
-  repeated HostManagement host_managements = 1;
-}
+  rpc GetThermalZone(GetThermalZoneRequest) returns (GetThermalZoneResponse);
+  rpc SetThermalZone(SetThermalZoneRequest) returns (SetThermalZoneResponse);
+  rpc ListThermalZones(ListThermalZonesRequest)
+      returns (ListThermalZonesResponse);
 
-// Request message for getting a chassis by ID
-message GetChassisRequest {
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-}
-
-// Response message for getting a chassis
-message GetChassisResponse {
-  Chassis chassis = 1;
-}
-
-// Request message for listing chassis with optional filtering
-message ListChassisRequest {
-  ChassisType type = 1;
-  ChassisStatus status = 2;
-}
-
-// Response message for listing chassis
-message ListChassisResponse {
-  repeated Chassis chassis = 1;
-}
-
-// Request message for getting a host by ID
-message GetHostRequest {
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-}
-
-// Response message for getting a host
-message GetHostResponse {
-  Host host = 1;
-}
-
-// Request message for listing hosts with optional filtering
-message ListHostsRequest {
-  HostState state = 1;
-  HostHealth health = 2;
-  string chassis_id = 3;
-}
-
-// Response message for listing hosts
-message ListHostsResponse {
-  repeated Host hosts = 1;
-}
-
-// Request message for getting a management controller by ID
-message GetManagementControllerRequest {
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-}
-
-// Response message for getting a management controller
-message GetManagementControllerResponse {
-  ManagementController management_controller = 1;
-}
-
-// Request message for listing management controllers with optional filtering
-message ListManagementControllersRequest {
-  ManagementControllerType type = 1;
-  ManagementControllerStatus status = 2;
-}
-
-// Response message for listing management controllers
-message ListManagementControllersResponse {
-  repeated ManagementController management_controllers = 1;
-}
-
-// Service definition for host management operations
-service HostManagementService {
-  // Get a host management configuration by ID
-  rpc GetHostManagement(GetHostManagementRequest) returns (GetHostManagementResponse) {}
-
-  // List all host management configurations
-  rpc ListHostManagement(ListHostManagementRequest) returns (ListHostManagementResponse) {}
-}
-
-// Service definition for chassis operations
-service ChassisService {
-  // Get a chassis by ID
-  rpc GetChassis(GetChassisRequest) returns (GetChassisResponse) {}
-
-  // List all chassis with optional filtering
-  rpc ListChassis(ListChassisRequest) returns (ListChassisResponse) {}
-}
-
-// Service definition for host operations
-service HostService {
-  // Get a host by ID
-  rpc GetHost(GetHostRequest) returns (GetHostResponse) {}
-
-  // List all hosts with optional filtering
-  rpc ListHosts(ListHostsRequest) returns (ListHostsResponse) {}
-}
-
-// Service definition for management controller operations
-service ManagementControllerService {
-  // Get a management controller by ID
-  rpc GetManagementController(GetManagementControllerRequest) returns (GetManagementControllerResponse) {}
-
-  // List all management controllers with optional filtering
-  rpc ListManagementControllers(ListManagementControllersRequest) returns (ListManagementControllersResponse) {}
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+  rpc AuthenticateUser(AuthenticateUserRequest)
+      returns (AuthenticateUserResponse);
 }
