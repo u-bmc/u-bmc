@@ -51,34 +51,29 @@ func SetupMounts() error {
 		{"pstore", "/sys/fs/pstore", "pstore", unix.MS_NODEV | unix.MS_NOEXEC | unix.MS_NOSUID, ""},
 		{"bpf", "/sys/fs/bpf", "bpf", unix.MS_NODEV | unix.MS_NOEXEC | unix.MS_NOSUID, "mode=700"},
 		{"devtmpfs", "/dev", "devtmpfs", unix.MS_NOSUID, "mode=755"},
-		{"mqueue", "/dev/mqueue", "mqueue", unix.MS_NODEV | unix.MS_NOEXEC | unix.MS_NOSUID, ""},
-		{"tmpfs", "/dev/shm", "tmpfs", unix.MS_NODEV | unix.MS_NOSUID, ""},
-		{"devpts", "/dev/pts", "devpts", unix.MS_NOEXEC | unix.MS_NOSUID, "gid=5,mode=620,ptmxmode=000"},
+		{"mqueue", "/dev/mqueue", "mqueue", unix.MS_NODEV | unix.MS_NOEXEC | unix.MS_NOSUID, "mode=1777"},
+		{"tmpfs", "/dev/shm", "tmpfs", unix.MS_NODEV | unix.MS_NOSUID, "mode=1777"},
+		{"devpts", "/dev/pts", "devpts", unix.MS_NOEXEC | unix.MS_NOSUID, "gid=5,mode=620,ptmxmode=0666"}, // allow non-root to open /dev/pts/ptmx; OK for single-tenant BMC
 		{"tmpfs", "/run", "tmpfs", unix.MS_NODEV | unix.MS_NOSUID, "mode=755"},
-		{"tmpfs", "/tmp", "tmpfs", unix.MS_NODEV | unix.MS_NOSUID, "mode=755"},
+		{"tmpfs", "/tmp", "tmpfs", unix.MS_NODEV | unix.MS_NOSUID, "mode=1777"},
 	}
 
-	procMounted := false
-	for i, m := range mounts {
-		wasMounted, err := ensureMount(m)
+	var errs []error
+	for _, m := range mounts {
+		_, err := ensureMount(m)
 		if err != nil {
-			return fmt.Errorf("failed to mount %s: %w", m.target, err)
-		}
-
-		// After mounting /proc (if it wasn't already mounted), verify existing mounts
-		if m.target == "/proc" && !wasMounted {
-			procMounted = true
-			if err := verifyMounts(mounts[:i+1]); err != nil {
-				return fmt.Errorf("mount verification failed: %w", err)
-			}
+			errs = append(errs, fmt.Errorf("failed to mount %s: %w", m.target, err))
+			continue
 		}
 	}
 
-	// If /proc was already mounted, verify all mounts at the end
-	if !procMounted {
-		if err := verifyMounts(mounts); err != nil {
-			return fmt.Errorf("mount verification failed: %w", err)
-		}
+	// Always perform final verification of all mounts
+	if err := verifyMounts(mounts); err != nil {
+		errs = append(errs, fmt.Errorf("mount verification failed: %w", err))
+	}
+
+	if len(errs) > 0 {
+		return errors.Join(errs...)
 	}
 
 	return nil
@@ -87,17 +82,22 @@ func SetupMounts() error {
 // ensureMount creates the mount point if necessary and performs the mount operation.
 // It returns true if the mount was already present (EBUSY), false if a new mount was created.
 func ensureMount(m mountSpec) (bool, error) {
-	if _, err := os.Stat(m.target); os.IsNotExist(err) {
+	if info, err := os.Stat(m.target); err != nil {
+		if !os.IsNotExist(err) {
+			return false, fmt.Errorf("%w %s: %w", ErrMountPointCreation, m.target, err)
+		}
 		if err := os.MkdirAll(m.target, 0o755); err != nil {
 			return false, fmt.Errorf("%w %s: %w", ErrMountPointCreation, m.target, err)
 		}
+	} else if !info.IsDir() {
+		return false, fmt.Errorf("%w %s: not a directory", ErrMountPointCreation, m.target)
 	}
 
 	if err := unix.Mount(m.source, m.target, m.fstype, m.flags, m.data); err != nil {
-		if err == unix.EBUSY {
+		if errors.Is(err, unix.EBUSY) {
 			return true, nil // Mount already exists
 		}
-		return false, fmt.Errorf("%w: %w", ErrMountFailed, err)
+		return false, fmt.Errorf("%w %s (type=%s): %w", ErrMountFailed, m.target, m.fstype, err)
 	}
 
 	return false, nil
@@ -119,6 +119,7 @@ func verifyMounts(specs []mountSpec) error {
 	}
 
 	scanner := bufio.NewScanner(file)
+	var errs []error
 	for scanner.Scan() {
 		fields := strings.Fields(scanner.Text())
 		if len(fields) < 3 {
@@ -130,14 +131,18 @@ func verifyMounts(specs []mountSpec) error {
 
 		if expectedFsType, exists := expected[mountPoint]; exists {
 			if fsType != expectedFsType {
-				return fmt.Errorf("%w: %s expected %s, got %s",
-					ErrMountVerification, mountPoint, expectedFsType, fsType)
+				errs = append(errs, fmt.Errorf("%w: %s expected %s, got %s",
+					ErrMountVerification, mountPoint, expectedFsType, fsType))
 			}
 		}
 	}
 
 	if err := scanner.Err(); err != nil {
 		return fmt.Errorf("%w: %w", ErrProcMountsRead, err)
+	}
+
+	if len(errs) > 0 {
+		return errors.Join(errs...)
 	}
 
 	return nil

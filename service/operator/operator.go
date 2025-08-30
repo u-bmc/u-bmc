@@ -163,9 +163,9 @@ func (s *Operator) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 	// All mount points should have been set up by init
 	// but we do not want to rely on it so we mount everything needed
 	// that isn't there yet (mostly pseudofilesystems)
-	// l.InfoContext(ctx, "Checking filesystem mounts", "service", s.name)
+	l.InfoContext(ctx, "Checking filesystem mounts", "service", s.name)
 	if err := mount.SetupMounts(); err != nil {
-		return fmt.Errorf("%w: %w", ErrSetupMounts, err)
+		l.WarnContext(ctx, "Failed to setup mounts correctly, continuing anyways", "service", s.name, "error", err)
 	}
 
 	supervisionTree := oversight.New(
@@ -197,7 +197,7 @@ func (s *Operator) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 			oversight.Timeout(s.timeout),
 			"ipc-stub",
 		); err != nil {
-			return fmt.Errorf("%w %s to tree: %w", ErrAddProcess, s.ipc.Name(), err)
+			return fmt.Errorf("%w %s to tree: %w", ErrAddProcess, "ipc-stub", err)
 		}
 	}
 
