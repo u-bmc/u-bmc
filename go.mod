@@ -23,8 +23,8 @@ require (
 	github.com/rs/zerolog v1.34.0
 	github.com/samber/slog-multi v1.4.1
 	github.com/samber/slog-zerolog/v2 v2.7.3
-	go.opentelemetry.io/contrib/bridges/otelslog v0.12.0
-	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.62.0
+	go.opentelemetry.io/contrib/bridges/otelslog v0.13.0
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.63.0
 	go.opentelemetry.io/otel v1.38.0
 	go.opentelemetry.io/otel/log v0.14.0
 	golang.org/x/crypto v0.41.0
