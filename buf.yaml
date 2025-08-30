@@ -2,9 +2,11 @@
 version: v2
 lint:
   use:
-    - DEFAULT
+    - STANDARD
 breaking:
   use:
     - FILE
 deps:
   - buf.build/bufbuild/protovalidate
+  - buf.build/googleapis/googleapis
+  - buf.build/protocolbuffers/wellknowntypes

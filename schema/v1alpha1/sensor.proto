@@ -5,65 +5,35 @@ syntax = "proto3";
 package schema.v1alpha1;
 
 import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "schema/v1alpha1/location.proto";
 
-// Sensor represents a physical or virtual sensor device
-message Sensor {
-  // Unique identifier for the sensor
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-
-  // Human-readable name of the sensor
-  string name = 2 [(buf.validate.field).string.min_len = 1];
-
-  // Physical context of the sensor (e.g., Temperature, Voltage, Fan)
-  SensorContext context = 3;
-
-  // Current status of the sensor
-  SensorStatus status = 4;
-
-  // Unit of measurement for the sensor readings
-  SensorUnit unit = 5;
-
-  // Sensor reading information - either analog with thresholds or discrete state
-  oneof reading {
-    // Analog sensor reading with thresholds
-    AnalogSensorReading analog_reading = 6;
-
-    // Discrete sensor reading with state
-    DiscreteSensorReading discrete_reading = 7;
-  }
-
-  // Physical location of the sensor
-  string physical_location = 8;
-
-  // Timestamp of the last reading
-  int64 last_reading_timestamp = 9;
-}
-
-// SensorContext defines the physical context of the sensor
 enum SensorContext {
   SENSOR_CONTEXT_UNSPECIFIED = 0;
   SENSOR_CONTEXT_TEMPERATURE = 1;
   SENSOR_CONTEXT_VOLTAGE = 2;
   SENSOR_CONTEXT_CURRENT = 3;
-  SENSOR_CONTEXT_FAN = 4;
+  SENSOR_CONTEXT_TACH = 4;
   SENSOR_CONTEXT_POWER = 5;
   SENSOR_CONTEXT_ENERGY = 6;
   SENSOR_CONTEXT_PRESSURE = 7;
   SENSOR_CONTEXT_HUMIDITY = 8;
   SENSOR_CONTEXT_ALTITUDE = 9;
+  SENSOR_CONTEXT_FLOW_RATE = 10;
 }
 
-// SensorStatus represents the operational status of the sensor
 enum SensorStatus {
   SENSOR_STATUS_UNSPECIFIED = 0;
   SENSOR_STATUS_ENABLED = 1;
   SENSOR_STATUS_DISABLED = 2;
-  SENSOR_STATUS_ERROR = 3;
-  SENSOR_STATUS_NOT_PRESENT = 4;
-  SENSOR_STATUS_UNKNOWN = 5;
+  SENSOR_STATUS_NOT_PRESENT = 3;
+  SENSOR_STATUS_WARNING = 4;
+  SENSOR_STATUS_CRITICAL = 5;
+  SENSOR_STATUS_ERROR = 6;
+  SENSOR_STATUS_UNKNOWN = 7;
 }
 
-// SensorUnit defines the unit of measurement for sensor readings
 enum SensorUnit {
   SENSOR_UNIT_UNSPECIFIED = 0;
   SENSOR_UNIT_CELSIUS = 1;
@@ -77,96 +47,152 @@ enum SensorUnit {
   SENSOR_UNIT_PERCENT = 9;
   SENSOR_UNIT_RPM = 10;
   SENSOR_UNIT_HERTZ = 11;
+  SENSOR_UNIT_METERS = 12;
+  SENSOR_UNIT_LITERS_PER_MINUTE = 13;
 }
 
-// AnalogSensorReading represents a sensor with continuous numerical readings and thresholds
+message Sensor {
+  option (buf.validate.message).cel = {
+    id : "sensor_context_unit_compatibility",
+    message : "sensor unit must be compatible with sensor context",
+    // Temperature context allows Celsius, Fahrenheit, or Kelvin units
+    expression : "(this.context == 1 && (this.unit == 1 || this.unit == 2 || "
+                 "this.unit == 3)) || "
+                 // Voltage context allows Volts unit
+                 "(this.context == 2 && this.unit == 4) || "
+                 // Current context allows Amps unit
+                 "(this.context == 3 && this.unit == 5) || "
+                 // Tach context allows RPM or Percent units
+                 "(this.context == 4 && (this.unit == 10 || this.unit == "
+                 "9)) || "
+                 // Power context allows Watts unit
+                 "(this.context == 5 && this.unit == 6) || "
+                 // Energy context allows Joules unit
+                 "(this.context == 6 && this.unit == 7) || "
+                 // Pressure context allows Pascals unit
+                 "(this.context == 7 && this.unit == 8) || "
+                 // Humidity context allows Percent unit
+                 "(this.context == 8 && this.unit == 9) || "
+                 // Altitude context allows Meters unit
+                 "(this.context == 9 && this.unit == 12) || "
+                 // Flow rate context allows Liters per minute unit
+                 "(this.context == 10 && this.unit == 13) || "
+                 // Allow unspecified context or unit
+                 "this.context == 0 || this.unit == 0"
+  };
+  string id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  string name = 2 [ (buf.validate.field).string.min_len = 1 ];
+  optional SensorContext context = 3
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional SensorStatus status = 4
+      [ (buf.validate.field).enum.defined_only = true ];
+  optional SensorUnit unit = 5
+      [ (buf.validate.field).enum.defined_only = true ];
+  oneof reading {
+    option (buf.validate.oneof).required = true;
+    AnalogSensorReading analog_reading = 6;
+    DiscreteSensorReading discrete_reading = 7;
+  }
+  optional Location location = 8;
+  optional google.protobuf.Timestamp last_reading_timestamp = 9;
+  map<string, string> custom_attributes = 10;
+}
+
 message AnalogSensorReading {
-  // Current measured value
-  double value = 1;
-
-  // Upper threshold values for warning and critical levels
-  Threshold upper_thresholds = 2;
-
-  // Lower threshold values for warning and critical levels
-  Threshold lower_thresholds = 3;
-
-  // Minimum and maximum values recorded
-  MinMaxRecorded min_max_recorded = 4;
+  option (buf.validate.message).cel = {
+    id : "analog_sensor_upper_thresholds",
+    message : "upper warning threshold must be less than upper critical "
+              "threshold",
+    expression : "!has(this.upper_thresholds) || "
+                 "!has(this.upper_thresholds.warning) || "
+                 "!has(this.upper_thresholds.critical) || "
+                 "this.upper_thresholds.warning < "
+                 "this.upper_thresholds.critical"
+  };
+  option (buf.validate.message).cel = {
+    id : "analog_sensor_lower_thresholds",
+    message : "lower critical threshold must be less than lower warning "
+              "threshold",
+    expression : "!has(this.lower_thresholds) || "
+                 "!has(this.lower_thresholds.warning) || "
+                 "!has(this.lower_thresholds.critical) || "
+                 "this.lower_thresholds.critical < "
+                 "this.lower_thresholds.warning"
+  };
+  option (buf.validate.message).cel = {
+    id : "analog_sensor_threshold_bounds",
+    message : "lower thresholds must be less than upper thresholds",
+    expression : "(!has(this.lower_thresholds) || "
+                 "!has(this.upper_thresholds)) || "
+                 "(!has(this.lower_thresholds.warning) || "
+                 "!has(this.upper_thresholds.warning) || "
+                 "this.lower_thresholds.warning < "
+                 "this.upper_thresholds.warning) && "
+                 "(!has(this.lower_thresholds.critical) || "
+                 "!has(this.upper_thresholds.critical) || "
+                 "this.lower_thresholds.critical < "
+                 "this.upper_thresholds.critical)"
+  };
+  option (buf.validate.message).cel = {
+    id : "analog_sensor_min_max_bounds",
+    message : "min_value must be less than or equal to max_value",
+    expression : "!has(this.min_max_recorded) || "
+                 "this.min_max_recorded.min_value <= "
+                 "this.min_max_recorded.max_value"
+  };
+  double value = 1 [ (buf.validate.field).required = true ];
+  optional Threshold upper_thresholds = 2;
+  optional Threshold lower_thresholds = 3;
+  optional MinMaxRecorded min_max_recorded = 4;
 }
 
-// DiscreteSensorReading represents a sensor with discrete states rather than numerical values
 message DiscreteSensorReading {
-  // Current state of the sensor
-  SensorState state = 1;
-
-  // Additional state information or description
-  string state_description = 2;
+  string state = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string state_description = 2;
 }
 
-// Threshold defines warning and critical thresholds for sensor readings
 message Threshold {
-  // Warning level threshold
-  double warning = 1;
-
-  // Critical level threshold
-  double critical = 2;
+  option (buf.validate.message).cel = {
+    id : "threshold_ordering",
+    message : "warning threshold must not equal critical threshold",
+    expression : "!has(this.warning) || "
+                 "!has(this.critical) || "
+                 "this.warning != this.critical"
+  };
+  option (buf.validate.message).oneof = {
+    fields : [ "warning", "critical" ],
+    required : true
+  };
+  optional double warning = 1;
+  optional double critical = 2;
 }
 
-// MinMaxRecorded tracks the minimum and maximum values recorded by the sensor
 message MinMaxRecorded {
-  // Minimum value recorded
+  option (buf.validate.message).cel = {
+    id : "min_max_values",
+    message : "min_value must be less than or equal to max_value",
+    expression : "this.min_value <= this.max_value"
+  };
   double min_value = 1;
-
-  // Maximum value recorded
   double max_value = 2;
-
-  // Timestamp when minimum value was recorded
-  int64 min_timestamp = 3;
-
-  // Timestamp when maximum value was recorded
-  int64 max_timestamp = 4;
+  optional google.protobuf.Timestamp min_timestamp = 3;
+  optional google.protobuf.Timestamp max_timestamp = 4;
 }
 
-// SensorState represents the discrete states a sensor can be in
-enum SensorState {
-  SENSOR_STATE_UNSPECIFIED = 0;
-  SENSOR_STATE_NORMAL = 1;
-  SENSOR_STATE_FAULT = 2;
-  SENSOR_STATE_WARNING = 3;
-  SENSOR_STATE_CRITICAL = 4;
-  SENSOR_STATE_UNKNOWN = 5;
-  SENSOR_STATE_NOT_AVAILABLE = 6;
-}
+message ListSensorsRequest { google.protobuf.FieldMask field_mask = 1; }
 
-// Request message for getting a single sensor by ID
+message ListSensorsResponse { repeated Sensor sensor = 1; }
+
 message GetSensorRequest {
-  string id = 1 [(buf.validate.field).string.min_len = 1];
+  oneof identifier {
+    option (buf.validate.oneof).required = true;
+    string id = 1;
+    string name = 2;
+    SensorContext context = 3;
+    SensorStatus status = 4;
+    Location location = 5;
+  }
+  google.protobuf.FieldMask field_mask = 6;
 }
 
-// Response message for getting a single sensor
-message GetSensorResponse {
-  Sensor sensor = 1;
-}
-
-// Request message for listing sensors with optional filtering
-message ListSensorsRequest {
-  // Optional filter by sensor context
-  SensorContext context = 1;
-
-  // Optional filter by sensor status
-  SensorStatus status = 2;
-}
-
-// Response message for listing sensors
-message ListSensorsResponse {
-  repeated Sensor sensors = 1;
-}
-
-// Service definition for sensor operations
-service SensorService {
-  // Get a sensor by ID
-  rpc GetSensor(GetSensorRequest) returns (GetSensorResponse) {}
-
-  // List all sensors with optional filtering
-  rpc ListSensors(ListSensorsRequest) returns (ListSensorsResponse) {}
-}
+message GetSensorResponse { repeated Sensor sensors = 1; }
