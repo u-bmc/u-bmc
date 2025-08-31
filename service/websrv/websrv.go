@@ -8,6 +8,7 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"log/slog"
 	"net"
 	"net/http"
 	"time"
@@ -142,6 +143,7 @@ func (s *WebSrv) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) er
 		WriteTimeout: s.writeTimeout,
 		IdleTimeout:  s.idleTimeout,
 		TLSConfig:    tlsConfig,
+		ErrorLog:     log.NewStdLoggerAt(l, slog.LevelWarn),
 	}
 
 	defer func() {
