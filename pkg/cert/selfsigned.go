@@ -4,13 +4,14 @@ package cert
 
 import (
 	"bytes"
-	"crypto/ed25519"
 	"crypto/rand"
+	"crypto/rsa"
 	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/pem"
 	"math/big"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -29,10 +30,12 @@ type CertificateOptions struct {
 // GenerateSelfsigned creates a self-signed certificate for the given hostname.
 // It returns the certificate and private key as byte slices, or an error if any step of the generation fails.
 func GenerateSelfsigned(opts CertificateOptions) ([]byte, []byte, error) {
-	pub, priv, err := ed25519.GenerateKey(rand.Reader)
+	// Generate RSA key pair
+	priv, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return nil, nil, err
 	}
+	pub := &priv.PublicKey
 
 	serialNumberLimit := new(big.Int).Lsh(big.NewInt(1), 128)
 	sn, err := rand.Int(rand.Reader, serialNumberLimit)
@@ -119,6 +122,14 @@ func LoadOrGenerateCertificate(certPath, keyPath string, opts CertificateOptions
 
 	certData, keyData, err := GenerateSelfsigned(opts)
 	if err != nil {
+		return nil, nil, err
+	}
+
+	// Ensure directories exist
+	if err := os.MkdirAll(filepath.Dir(certPath), 0755); err != nil {
+		return nil, nil, err
+	}
+	if err := os.MkdirAll(filepath.Dir(keyPath), 0755); err != nil {
 		return nil, nil, err
 	}
 
