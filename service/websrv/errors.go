@@ -11,6 +11,8 @@ var (
 	ErrSetupTLS = errors.New("failed to setup TLS")
 	// ErrCreateTCPListener indicates a failure to create a TCP listener for HTTP/2 connections.
 	ErrCreateTCPListener = errors.New("failed to create TCP listener")
+	// ErrCreateHTTPListener indicates a failure to create a HTTP listener for redirect server.
+	ErrCreateHTTPListener = errors.New("failed to create HTTP listener")
 	// ErrResolveUDPAddress indicates a failure to resolve the UDP address for HTTP/3 connections.
 	ErrResolveUDPAddress = errors.New("failed to resolve UDP address")
 	// ErrCreateUDPListener indicates a failure to create a UDP listener for HTTP/3 connections.
@@ -19,6 +21,8 @@ var (
 	ErrHTTP3Server = errors.New("HTTP3 server error")
 	// ErrHTTP2Server indicates an error occurred while running the HTTP/2 server.
 	ErrHTTP2Server = errors.New("HTTP2 server error")
+	// ErrHTTPRedirectServer indicates an error occurred while running the HTTP redirect server.
+	ErrHTTPRedirectServer = errors.New("HTTP redirect server error")
 	// ErrSetRmemMax indicates a failure to configure the kernel's maximum receive buffer size.
 	ErrSetRmemMax = errors.New("failed to set rmem_max")
 	// ErrSetWmemMax indicates a failure to configure the kernel's maximum send buffer size.
