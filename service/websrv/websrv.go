@@ -11,6 +11,7 @@ import (
 	"log/slog"
 	"net"
 	"net/http"
+	"strings"
 	"time"
 
 	"connectrpc.com/connect"
@@ -104,6 +105,13 @@ func (s *WebSrv) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) er
 	}
 	defer tcpListener.Close()
 
+	// Create HTTP redirect listener on port 80
+	httpListener, err := lc.Listen(ctx, "tcp", ":80")
+	if err != nil {
+		return fmt.Errorf("%w: %w", ErrCreateHTTPListener, err)
+	}
+	defer httpListener.Close()
+
 	udpAddr, err := net.ResolveUDPAddr("udp", s.addr)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrResolveUDPAddress, err)
@@ -146,6 +154,23 @@ func (s *WebSrv) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) er
 		ErrorLog:     log.NewStdLoggerAt(l, slog.LevelWarn),
 	}
 
+	// HTTP redirect server that just forwards port 80 to 443
+	redirectServer := &http.Server{
+		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			host := r.Host
+			if strings.Contains(host, ":") {
+				host, _, _ = net.SplitHostPort(host)
+			}
+			httpsURL := "https://" + host + r.RequestURI
+			http.Redirect(w, r, httpsURL, http.StatusMovedPermanently)
+		}),
+		BaseContext:  func(_ net.Listener) context.Context { return ctx },
+		ReadTimeout:  s.readTimeout,
+		WriteTimeout: s.writeTimeout,
+		IdleTimeout:  s.idleTimeout,
+		ErrorLog:     log.NewStdLoggerAt(l, slog.LevelWarn),
+	}
+
 	defer func() {
 		if err := http3Server.Shutdown(ctx); err != nil {
 			l.ErrorContext(ctx, "Error shutting down HTTP3 server", "service", s.name, "error", err)
@@ -155,6 +180,12 @@ func (s *WebSrv) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) er
 	defer func() {
 		if err := http2Server.Shutdown(ctx); err != nil {
 			l.ErrorContext(ctx, "Error shutting down HTTP2 server", "service", s.name, "error", err)
+		}
+	}()
+
+	defer func() {
+		if err := redirectServer.Shutdown(ctx); err != nil {
+			l.ErrorContext(ctx, "Error shutting down HTTP redirect server", "service", s.name, "error", err)
 		}
 	}()
 
@@ -170,6 +201,12 @@ func (s *WebSrv) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) er
 			l.InfoContext(ctx, "Starting HTTP2 fallback server", "service", s.name, "addr", s.addr)
 			if err := http2Server.ServeTLS(tcpListener, "", ""); err != nil && err != http.ErrServerClosed {
 				c <- fmt.Errorf("%w: %w", ErrHTTP2Server, err)
+			}
+		},
+		func(ctx context.Context, c chan error) {
+			l.InfoContext(ctx, "Starting HTTP redirect server", "service", s.name, "addr", ":80")
+			if err := redirectServer.Serve(httpListener); err != nil && err != http.ErrServerClosed {
+				c <- fmt.Errorf("%w: %w", ErrHTTPRedirectServer, err)
 			}
 		})
 }
