@@ -29,6 +29,7 @@ type config struct {
 	id          string
 	disableLogo bool
 	customLogo  string
+	mountCheck  bool
 	otelSetup   func()
 	logger      *slog.Logger
 	timeout     time.Duration
@@ -116,6 +117,23 @@ func (o *customLogoOption) apply(c *config) {
 func WithCustomLogo(customLogo string) Option {
 	return &customLogoOption{
 		customLogo: customLogo,
+	}
+}
+
+type mountCheckOption struct {
+	mountCheck bool
+}
+
+func (o *mountCheckOption) apply(c *config) {
+	c.mountCheck = o.mountCheck
+}
+
+// WithMountCheck controls whether the file system mount checks are enabled.
+// When set to true, the mount points of the system will be checked during startup and
+// any missing mount will be created.
+func WithMountCheck(mountCheck bool) Option {
+	return &mountCheckOption{
+		mountCheck: mountCheck,
 	}
 }
 
