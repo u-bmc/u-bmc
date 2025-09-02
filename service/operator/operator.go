@@ -89,6 +89,7 @@ func New(opts ...Option) *Operator {
 		name:         "operator",
 		id:           "",
 		disableLogo:  false,
+		mountCheck:   true,
 		otelSetup:    telemetry.DefaultSetup,
 		logger:       log.NewDefaultLogger(),
 		timeout:      10 * time.Second,
@@ -162,10 +163,12 @@ func (s *Operator) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 
 	// All mount points should have been set up by init
 	// but we do not want to rely on it so we mount everything needed
-	// that isn't there yet (mostly pseudofilesystems)
-	l.InfoContext(ctx, "Checking filesystem mounts", "service", s.name)
-	if err := mount.SetupMounts(); err != nil {
-		l.WarnContext(ctx, "Failed to setup mounts correctly, continuing anyways", "service", s.name, "error", err)
+	// that isn't there yet (mostly pseudofilesystems). Controlled by WithMountCheck().
+	if s.mountCheck {
+		l.InfoContext(ctx, "Checking filesystem mounts", "service", s.name)
+		if err := mount.SetupMounts(); err != nil {
+			l.WarnContext(ctx, "Failed to setup mounts correctly, continuing anyway", "service", s.name, "state", "degraded", "error", err)
+		}
 	}
 
 	supervisionTree := oversight.New(
