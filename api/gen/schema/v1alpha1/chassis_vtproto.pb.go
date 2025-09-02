@@ -172,7 +172,7 @@ func (m *ChassisPowerSupply) CloneVT() *ChassisPowerSupply {
 		return (*ChassisPowerSupply)(nil)
 	}
 	r := new(ChassisPowerSupply)
-	r.PsuId = m.PsuId
+	r.Name = m.Name
 	r.Asset = m.Asset.CloneVT()
 	r.Location = m.Location.CloneVT()
 	if rhs := m.Type; rhs != nil {
@@ -243,11 +243,7 @@ func (m *ChassisPowerDistribution) CloneVT() *ChassisPowerDistribution {
 		return (*ChassisPowerDistribution)(nil)
 	}
 	r := new(ChassisPowerDistribution)
-	r.PduId = m.PduId
-	if rhs := m.Name; rhs != nil {
-		tmpVal := *rhs
-		r.Name = &tmpVal
-	}
+	r.Name = m.Name
 	if rhs := m.CapacityWatts; rhs != nil {
 		tmpVal := *rhs
 		r.CapacityWatts = &tmpVal
@@ -279,11 +275,7 @@ func (m *PowerCircuit) CloneVT() *PowerCircuit {
 		return (*PowerCircuit)(nil)
 	}
 	r := new(PowerCircuit)
-	r.CircuitId = m.CircuitId
-	if rhs := m.Name; rhs != nil {
-		tmpVal := *rhs
-		r.Name = &tmpVal
-	}
+	r.Name = m.Name
 	if rhs := m.Voltage; rhs != nil {
 		tmpVal := *rhs
 		r.Voltage = &tmpVal
@@ -387,11 +379,7 @@ func (m *ChassisLED) CloneVT() *ChassisLED {
 		return (*ChassisLED)(nil)
 	}
 	r := new(ChassisLED)
-	r.LedId = m.LedId
-	if rhs := m.Name; rhs != nil {
-		tmpVal := *rhs
-		r.Name = &tmpVal
-	}
+	r.Name = m.Name
 	if rhs := m.Type; rhs != nil {
 		tmpVal := *rhs
 		r.Type = &tmpVal
@@ -459,12 +447,8 @@ func (m *ExpansionBay) CloneVT() *ExpansionBay {
 		return (*ExpansionBay)(nil)
 	}
 	r := new(ExpansionBay)
-	r.BayId = m.BayId
+	r.Name = m.Name
 	r.Location = m.Location.CloneVT()
-	if rhs := m.Name; rhs != nil {
-		tmpVal := *rhs
-		r.Name = &tmpVal
-	}
 	if rhs := m.BayType; rhs != nil {
 		tmpVal := *rhs
 		r.BayType = &tmpVal
@@ -493,12 +477,8 @@ func (m *Slot) CloneVT() *Slot {
 		return (*Slot)(nil)
 	}
 	r := new(Slot)
-	r.SlotId = m.SlotId
+	r.Name = m.Name
 	r.Location = m.Location.CloneVT()
-	if rhs := m.Name; rhs != nil {
-		tmpVal := *rhs
-		r.Name = &tmpVal
-	}
 	if rhs := m.SlotType; rhs != nil {
 		tmpVal := *rhs
 		r.SlotType = &tmpVal
@@ -542,15 +522,6 @@ func (m *GetChassisRequest) CloneVT() *GetChassisRequest {
 
 func (m *GetChassisRequest) CloneMessageVT() proto.Message {
 	return m.CloneVT()
-}
-
-func (m *GetChassisRequest_ChassisId) CloneVT() isGetChassisRequest_Identifier {
-	if m == nil {
-		return (*GetChassisRequest_ChassisId)(nil)
-	}
-	r := new(GetChassisRequest_ChassisId)
-	r.ChassisId = m.ChassisId
-	return r
 }
 
 func (m *GetChassisRequest_Name) CloneVT() isGetChassisRequest_Identifier {
@@ -681,7 +652,7 @@ func (m *UpdateChassisRequest) CloneVT() *UpdateChassisRequest {
 		return (*UpdateChassisRequest)(nil)
 	}
 	r := new(UpdateChassisRequest)
-	r.ChassisId = m.ChassisId
+	r.ChassisName = m.ChassisName
 	r.Chassis = m.Chassis.CloneVT()
 	r.FieldMask = (*fieldmaskpb.FieldMask)((*fieldmaskpb1.FieldMask)(m.FieldMask).CloneVT())
 	if len(m.unknownFields) > 0 {
@@ -717,7 +688,7 @@ func (m *ChassisChangeStateRequest) CloneVT() *ChassisChangeStateRequest {
 		return (*ChassisChangeStateRequest)(nil)
 	}
 	r := new(ChassisChangeStateRequest)
-	r.ChassisId = m.ChassisId
+	r.ChassisName = m.ChassisName
 	r.Transition = m.Transition
 	r.FieldMask = (*fieldmaskpb.FieldMask)((*fieldmaskpb1.FieldMask)(m.FieldMask).CloneVT())
 	if rhs := m.Force; rhs != nil {
@@ -784,7 +755,7 @@ func (m *ChassisControlRequest) CloneVT() *ChassisControlRequest {
 		return (*ChassisControlRequest)(nil)
 	}
 	r := new(ChassisControlRequest)
-	r.ChassisId = m.ChassisId
+	r.ChassisName = m.ChassisName
 	r.Action = m.Action
 	r.FieldMask = (*fieldmaskpb.FieldMask)((*fieldmaskpb1.FieldMask)(m.FieldMask).CloneVT())
 	if rhs := m.Force; rhs != nil {
@@ -1083,7 +1054,7 @@ func (this *ChassisPowerSupply) EqualVT(that *ChassisPowerSupply) bool {
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.PsuId != that.PsuId {
+	if this.Name != that.Name {
 		return false
 	}
 	if !this.Asset.EqualVT(that.Asset) {
@@ -1147,10 +1118,7 @@ func (this *ChassisPowerDistribution) EqualVT(that *ChassisPowerDistribution) bo
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.PduId != that.PduId {
-		return false
-	}
-	if p, q := this.Name, that.Name; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+	if this.Name != that.Name {
 		return false
 	}
 	if p, q := this.CapacityWatts, that.CapacityWatts; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
@@ -1192,10 +1160,7 @@ func (this *PowerCircuit) EqualVT(that *PowerCircuit) bool {
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.CircuitId != that.CircuitId {
-		return false
-	}
-	if p, q := this.Name, that.Name; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+	if this.Name != that.Name {
 		return false
 	}
 	if p, q := this.Voltage, that.Voltage; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
@@ -1297,10 +1262,7 @@ func (this *ChassisLED) EqualVT(that *ChassisLED) bool {
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.LedId != that.LedId {
-		return false
-	}
-	if p, q := this.Name, that.Name; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+	if this.Name != that.Name {
 		return false
 	}
 	if p, q := this.Type, that.Type; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
@@ -1368,10 +1330,7 @@ func (this *ExpansionBay) EqualVT(that *ExpansionBay) bool {
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.BayId != that.BayId {
-		return false
-	}
-	if p, q := this.Name, that.Name; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+	if this.Name != that.Name {
 		return false
 	}
 	if p, q := this.BayType, that.BayType; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
@@ -1402,10 +1361,7 @@ func (this *Slot) EqualVT(that *Slot) bool {
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.SlotId != that.SlotId {
-		return false
-	}
-	if p, q := this.Name, that.Name; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+	if this.Name != that.Name {
 		return false
 	}
 	if p, q := this.SlotType, that.SlotType; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
@@ -1461,23 +1417,6 @@ func (this *GetChassisRequest) EqualMessageVT(thatMsg proto.Message) bool {
 	}
 	return this.EqualVT(that)
 }
-func (this *GetChassisRequest_ChassisId) EqualVT(thatIface isGetChassisRequest_Identifier) bool {
-	that, ok := thatIface.(*GetChassisRequest_ChassisId)
-	if !ok {
-		return false
-	}
-	if this == that {
-		return true
-	}
-	if this == nil && that != nil || this != nil && that == nil {
-		return false
-	}
-	if this.ChassisId != that.ChassisId {
-		return false
-	}
-	return true
-}
-
 func (this *GetChassisRequest_Name) EqualVT(thatIface isGetChassisRequest_Identifier) bool {
 	that, ok := thatIface.(*GetChassisRequest_Name)
 	if !ok {
@@ -1663,7 +1602,7 @@ func (this *UpdateChassisRequest) EqualVT(that *UpdateChassisRequest) bool {
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.ChassisId != that.ChassisId {
+	if this.ChassisName != that.ChassisName {
 		return false
 	}
 	if !this.Chassis.EqualVT(that.Chassis) {
@@ -1707,7 +1646,7 @@ func (this *ChassisChangeStateRequest) EqualVT(that *ChassisChangeStateRequest) 
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.ChassisId != that.ChassisId {
+	if this.ChassisName != that.ChassisName {
 		return false
 	}
 	if this.Transition != that.Transition {
@@ -1790,7 +1729,7 @@ func (this *ChassisControlRequest) EqualVT(that *ChassisControlRequest) bool {
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.ChassisId != that.ChassisId {
+	if this.ChassisName != that.ChassisName {
 		return false
 	}
 	if this.Action != that.Action {
@@ -2306,10 +2245,10 @@ func (m *ChassisPowerSupply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.PsuId) > 0 {
-		i -= len(m.PsuId)
-		copy(dAtA[i:], m.PsuId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.PsuId)))
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2355,30 +2294,23 @@ func (m *ChassisPowerDistribution) MarshalToSizedBufferVT(dAtA []byte) (int, err
 			i -= size
 			i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 			i--
-			dAtA[i] = 0x2a
+			dAtA[i] = 0x22
 		}
 	}
 	if m.LoadWatts != nil {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.LoadWatts))
 		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x18
 	}
 	if m.CapacityWatts != nil {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.CapacityWatts))
 		i--
-		dAtA[i] = 0x18
+		dAtA[i] = 0x10
 	}
-	if m.Name != nil {
-		i -= len(*m.Name)
-		copy(dAtA[i:], *m.Name)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Name)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.PduId) > 0 {
-		i -= len(m.PduId)
-		copy(dAtA[i:], m.PduId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.PduId)))
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2421,44 +2353,37 @@ func (m *PowerCircuit) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 			copy(dAtA[i:], m.ConnectedLoads[iNdEx])
 			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ConnectedLoads[iNdEx])))
 			i--
-			dAtA[i] = 0x3a
+			dAtA[i] = 0x32
 		}
 	}
 	if m.BreakerRatingAmps != nil {
 		i -= 8
 		binary.LittleEndian.PutUint64(dAtA[i:], uint64(math.Float64bits(float64(*m.BreakerRatingAmps))))
 		i--
-		dAtA[i] = 0x31
+		dAtA[i] = 0x29
 	}
 	if m.PowerWatts != nil {
 		i -= 8
 		binary.LittleEndian.PutUint64(dAtA[i:], uint64(math.Float64bits(float64(*m.PowerWatts))))
 		i--
-		dAtA[i] = 0x29
+		dAtA[i] = 0x21
 	}
 	if m.CurrentAmps != nil {
 		i -= 8
 		binary.LittleEndian.PutUint64(dAtA[i:], uint64(math.Float64bits(float64(*m.CurrentAmps))))
 		i--
-		dAtA[i] = 0x21
+		dAtA[i] = 0x19
 	}
 	if m.Voltage != nil {
 		i -= 8
 		binary.LittleEndian.PutUint64(dAtA[i:], uint64(math.Float64bits(float64(*m.Voltage))))
 		i--
-		dAtA[i] = 0x19
+		dAtA[i] = 0x11
 	}
-	if m.Name != nil {
-		i -= len(*m.Name)
-		copy(dAtA[i:], *m.Name)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Name)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.CircuitId) > 0 {
-		i -= len(m.CircuitId)
-		copy(dAtA[i:], m.CircuitId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.CircuitId)))
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2630,43 +2555,36 @@ func (m *ChassisLED) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 			dAtA[i] = 0
 		}
 		i--
-		dAtA[i] = 0x38
+		dAtA[i] = 0x30
 	}
 	if m.BlinkPattern != nil {
 		i -= len(*m.BlinkPattern)
 		copy(dAtA[i:], *m.BlinkPattern)
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.BlinkPattern)))
 		i--
-		dAtA[i] = 0x32
+		dAtA[i] = 0x2a
 	}
 	if m.Color != nil {
 		i -= len(*m.Color)
 		copy(dAtA[i:], *m.Color)
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Color)))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
 	if m.State != nil {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.State))
 		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x18
 	}
 	if m.Type != nil {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Type))
 		i--
-		dAtA[i] = 0x18
+		dAtA[i] = 0x10
 	}
-	if m.Name != nil {
-		i -= len(*m.Name)
-		copy(dAtA[i:], *m.Name)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Name)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.LedId) > 0 {
-		i -= len(m.LedId)
-		copy(dAtA[i:], m.LedId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.LedId)))
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2796,14 +2714,14 @@ func (m *ExpansionBay) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x32
+		dAtA[i] = 0x2a
 	}
 	if m.InstalledComponent != nil {
 		i -= len(*m.InstalledComponent)
 		copy(dAtA[i:], *m.InstalledComponent)
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.InstalledComponent)))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
 	if m.Occupied != nil {
 		i--
@@ -2813,26 +2731,19 @@ func (m *ExpansionBay) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 			dAtA[i] = 0
 		}
 		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x18
 	}
 	if m.BayType != nil {
 		i -= len(*m.BayType)
 		copy(dAtA[i:], *m.BayType)
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.BayType)))
 		i--
-		dAtA[i] = 0x1a
-	}
-	if m.Name != nil {
-		i -= len(*m.Name)
-		copy(dAtA[i:], *m.Name)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Name)))
-		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.BayId) > 0 {
-		i -= len(m.BayId)
-		copy(dAtA[i:], m.BayId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.BayId)))
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2877,14 +2788,14 @@ func (m *Slot) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x32
+		dAtA[i] = 0x2a
 	}
 	if m.InstalledComponent != nil {
 		i -= len(*m.InstalledComponent)
 		copy(dAtA[i:], *m.InstalledComponent)
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.InstalledComponent)))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
 	if m.Occupied != nil {
 		i--
@@ -2894,26 +2805,19 @@ func (m *Slot) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 			dAtA[i] = 0
 		}
 		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x18
 	}
 	if m.SlotType != nil {
 		i -= len(*m.SlotType)
 		copy(dAtA[i:], *m.SlotType)
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.SlotType)))
 		i--
-		dAtA[i] = 0x1a
-	}
-	if m.Name != nil {
-		i -= len(*m.Name)
-		copy(dAtA[i:], *m.Name)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Name)))
-		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.SlotId) > 0 {
-		i -= len(m.SlotId)
-		copy(dAtA[i:], m.SlotId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.SlotId)))
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2967,25 +2871,11 @@ func (m *GetChassisRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x32
+		dAtA[i] = 0x2a
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *GetChassisRequest_ChassisId) MarshalToVT(dAtA []byte) (int, error) {
-	size := m.SizeVT()
-	return m.MarshalToSizedBufferVT(dAtA[:size])
-}
-
-func (m *GetChassisRequest_ChassisId) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	i -= len(m.ChassisId)
-	copy(dAtA[i:], m.ChassisId)
-	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ChassisId)))
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
 func (m *GetChassisRequest_Name) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
@@ -2997,7 +2887,7 @@ func (m *GetChassisRequest_Name) MarshalToSizedBufferVT(dAtA []byte) (int, error
 	copy(dAtA[i:], m.Name)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 	i--
-	dAtA[i] = 0x12
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 func (m *GetChassisRequest_Type) MarshalToVT(dAtA []byte) (int, error) {
@@ -3009,7 +2899,7 @@ func (m *GetChassisRequest_Type) MarshalToSizedBufferVT(dAtA []byte) (int, error
 	i := len(dAtA)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Type))
 	i--
-	dAtA[i] = 0x18
+	dAtA[i] = 0x10
 	return len(dAtA) - i, nil
 }
 func (m *GetChassisRequest_Status) MarshalToVT(dAtA []byte) (int, error) {
@@ -3021,7 +2911,7 @@ func (m *GetChassisRequest_Status) MarshalToSizedBufferVT(dAtA []byte) (int, err
 	i := len(dAtA)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Status))
 	i--
-	dAtA[i] = 0x20
+	dAtA[i] = 0x18
 	return len(dAtA) - i, nil
 }
 func (m *GetChassisRequest_Location) MarshalToVT(dAtA []byte) (int, error) {
@@ -3039,7 +2929,7 @@ func (m *GetChassisRequest_Location) MarshalToSizedBufferVT(dAtA []byte) (int, e
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
 	return len(dAtA) - i, nil
 }
@@ -3260,10 +3150,10 @@ func (m *UpdateChassisRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) 
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.ChassisId) > 0 {
-		i -= len(m.ChassisId)
-		copy(dAtA[i:], m.ChassisId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ChassisId)))
+	if len(m.ChassisName) > 0 {
+		i -= len(m.ChassisName)
+		copy(dAtA[i:], m.ChassisName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ChassisName)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -3387,10 +3277,10 @@ func (m *ChassisChangeStateRequest) MarshalToSizedBufferVT(dAtA []byte) (int, er
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.ChassisId) > 0 {
-		i -= len(m.ChassisId)
-		copy(dAtA[i:], m.ChassisId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ChassisId)))
+	if len(m.ChassisName) > 0 {
+		i -= len(m.ChassisName)
+		copy(dAtA[i:], m.ChassisName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ChassisName)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -3562,10 +3452,10 @@ func (m *ChassisControlRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error)
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.ChassisId) > 0 {
-		i -= len(m.ChassisId)
-		copy(dAtA[i:], m.ChassisId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ChassisId)))
+	if len(m.ChassisName) > 0 {
+		i -= len(m.ChassisName)
+		copy(dAtA[i:], m.ChassisName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ChassisName)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -4084,10 +3974,10 @@ func (m *ChassisPowerSupply) MarshalToSizedBufferVTStrict(dAtA []byte) (int, err
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.PsuId) > 0 {
-		i -= len(m.PsuId)
-		copy(dAtA[i:], m.PsuId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.PsuId)))
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -4133,30 +4023,23 @@ func (m *ChassisPowerDistribution) MarshalToSizedBufferVTStrict(dAtA []byte) (in
 			i -= size
 			i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 			i--
-			dAtA[i] = 0x2a
+			dAtA[i] = 0x22
 		}
 	}
 	if m.LoadWatts != nil {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.LoadWatts))
 		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x18
 	}
 	if m.CapacityWatts != nil {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.CapacityWatts))
 		i--
-		dAtA[i] = 0x18
+		dAtA[i] = 0x10
 	}
-	if m.Name != nil {
-		i -= len(*m.Name)
-		copy(dAtA[i:], *m.Name)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Name)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.PduId) > 0 {
-		i -= len(m.PduId)
-		copy(dAtA[i:], m.PduId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.PduId)))
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -4199,44 +4082,37 @@ func (m *PowerCircuit) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 			copy(dAtA[i:], m.ConnectedLoads[iNdEx])
 			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ConnectedLoads[iNdEx])))
 			i--
-			dAtA[i] = 0x3a
+			dAtA[i] = 0x32
 		}
 	}
 	if m.BreakerRatingAmps != nil {
 		i -= 8
 		binary.LittleEndian.PutUint64(dAtA[i:], uint64(math.Float64bits(float64(*m.BreakerRatingAmps))))
 		i--
-		dAtA[i] = 0x31
+		dAtA[i] = 0x29
 	}
 	if m.PowerWatts != nil {
 		i -= 8
 		binary.LittleEndian.PutUint64(dAtA[i:], uint64(math.Float64bits(float64(*m.PowerWatts))))
 		i--
-		dAtA[i] = 0x29
+		dAtA[i] = 0x21
 	}
 	if m.CurrentAmps != nil {
 		i -= 8
 		binary.LittleEndian.PutUint64(dAtA[i:], uint64(math.Float64bits(float64(*m.CurrentAmps))))
 		i--
-		dAtA[i] = 0x21
+		dAtA[i] = 0x19
 	}
 	if m.Voltage != nil {
 		i -= 8
 		binary.LittleEndian.PutUint64(dAtA[i:], uint64(math.Float64bits(float64(*m.Voltage))))
 		i--
-		dAtA[i] = 0x19
+		dAtA[i] = 0x11
 	}
-	if m.Name != nil {
-		i -= len(*m.Name)
-		copy(dAtA[i:], *m.Name)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Name)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.CircuitId) > 0 {
-		i -= len(m.CircuitId)
-		copy(dAtA[i:], m.CircuitId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.CircuitId)))
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -4408,43 +4284,36 @@ func (m *ChassisLED) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 			dAtA[i] = 0
 		}
 		i--
-		dAtA[i] = 0x38
+		dAtA[i] = 0x30
 	}
 	if m.BlinkPattern != nil {
 		i -= len(*m.BlinkPattern)
 		copy(dAtA[i:], *m.BlinkPattern)
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.BlinkPattern)))
 		i--
-		dAtA[i] = 0x32
+		dAtA[i] = 0x2a
 	}
 	if m.Color != nil {
 		i -= len(*m.Color)
 		copy(dAtA[i:], *m.Color)
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Color)))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
 	if m.State != nil {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.State))
 		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x18
 	}
 	if m.Type != nil {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Type))
 		i--
-		dAtA[i] = 0x18
+		dAtA[i] = 0x10
 	}
-	if m.Name != nil {
-		i -= len(*m.Name)
-		copy(dAtA[i:], *m.Name)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Name)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.LedId) > 0 {
-		i -= len(m.LedId)
-		copy(dAtA[i:], m.LedId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.LedId)))
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -4574,14 +4443,14 @@ func (m *ExpansionBay) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x32
+		dAtA[i] = 0x2a
 	}
 	if m.InstalledComponent != nil {
 		i -= len(*m.InstalledComponent)
 		copy(dAtA[i:], *m.InstalledComponent)
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.InstalledComponent)))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
 	if m.Occupied != nil {
 		i--
@@ -4591,26 +4460,19 @@ func (m *ExpansionBay) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 			dAtA[i] = 0
 		}
 		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x18
 	}
 	if m.BayType != nil {
 		i -= len(*m.BayType)
 		copy(dAtA[i:], *m.BayType)
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.BayType)))
 		i--
-		dAtA[i] = 0x1a
-	}
-	if m.Name != nil {
-		i -= len(*m.Name)
-		copy(dAtA[i:], *m.Name)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Name)))
-		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.BayId) > 0 {
-		i -= len(m.BayId)
-		copy(dAtA[i:], m.BayId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.BayId)))
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -4655,14 +4517,14 @@ func (m *Slot) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x32
+		dAtA[i] = 0x2a
 	}
 	if m.InstalledComponent != nil {
 		i -= len(*m.InstalledComponent)
 		copy(dAtA[i:], *m.InstalledComponent)
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.InstalledComponent)))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
 	if m.Occupied != nil {
 		i--
@@ -4672,26 +4534,19 @@ func (m *Slot) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 			dAtA[i] = 0
 		}
 		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x18
 	}
 	if m.SlotType != nil {
 		i -= len(*m.SlotType)
 		copy(dAtA[i:], *m.SlotType)
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.SlotType)))
 		i--
-		dAtA[i] = 0x1a
-	}
-	if m.Name != nil {
-		i -= len(*m.Name)
-		copy(dAtA[i:], *m.Name)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.Name)))
-		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.SlotId) > 0 {
-		i -= len(m.SlotId)
-		copy(dAtA[i:], m.SlotId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.SlotId)))
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -4736,7 +4591,7 @@ func (m *GetChassisRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, erro
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x32
+		dAtA[i] = 0x2a
 	}
 	if msg, ok := m.Identifier.(*GetChassisRequest_Location); ok {
 		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -4766,30 +4621,9 @@ func (m *GetChassisRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, erro
 		}
 		i -= size
 	}
-	if msg, ok := m.Identifier.(*GetChassisRequest_ChassisId); ok {
-		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-	}
 	return len(dAtA) - i, nil
 }
 
-func (m *GetChassisRequest_ChassisId) MarshalToVTStrict(dAtA []byte) (int, error) {
-	size := m.SizeVT()
-	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
-}
-
-func (m *GetChassisRequest_ChassisId) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	i -= len(m.ChassisId)
-	copy(dAtA[i:], m.ChassisId)
-	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ChassisId)))
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
 func (m *GetChassisRequest_Name) MarshalToVTStrict(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
@@ -4801,7 +4635,7 @@ func (m *GetChassisRequest_Name) MarshalToSizedBufferVTStrict(dAtA []byte) (int,
 	copy(dAtA[i:], m.Name)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 	i--
-	dAtA[i] = 0x12
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 func (m *GetChassisRequest_Type) MarshalToVTStrict(dAtA []byte) (int, error) {
@@ -4813,7 +4647,7 @@ func (m *GetChassisRequest_Type) MarshalToSizedBufferVTStrict(dAtA []byte) (int,
 	i := len(dAtA)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Type))
 	i--
-	dAtA[i] = 0x18
+	dAtA[i] = 0x10
 	return len(dAtA) - i, nil
 }
 func (m *GetChassisRequest_Status) MarshalToVTStrict(dAtA []byte) (int, error) {
@@ -4825,7 +4659,7 @@ func (m *GetChassisRequest_Status) MarshalToSizedBufferVTStrict(dAtA []byte) (in
 	i := len(dAtA)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Status))
 	i--
-	dAtA[i] = 0x20
+	dAtA[i] = 0x18
 	return len(dAtA) - i, nil
 }
 func (m *GetChassisRequest_Location) MarshalToVTStrict(dAtA []byte) (int, error) {
@@ -4843,7 +4677,7 @@ func (m *GetChassisRequest_Location) MarshalToSizedBufferVTStrict(dAtA []byte) (
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
 	return len(dAtA) - i, nil
 }
@@ -5064,10 +4898,10 @@ func (m *UpdateChassisRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, e
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.ChassisId) > 0 {
-		i -= len(m.ChassisId)
-		copy(dAtA[i:], m.ChassisId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ChassisId)))
+	if len(m.ChassisName) > 0 {
+		i -= len(m.ChassisName)
+		copy(dAtA[i:], m.ChassisName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ChassisName)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -5191,10 +5025,10 @@ func (m *ChassisChangeStateRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (i
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.ChassisId) > 0 {
-		i -= len(m.ChassisId)
-		copy(dAtA[i:], m.ChassisId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ChassisId)))
+	if len(m.ChassisName) > 0 {
+		i -= len(m.ChassisName)
+		copy(dAtA[i:], m.ChassisName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ChassisName)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -5366,10 +5200,10 @@ func (m *ChassisControlRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, 
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.ChassisId) > 0 {
-		i -= len(m.ChassisId)
-		copy(dAtA[i:], m.ChassisId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ChassisId)))
+	if len(m.ChassisName) > 0 {
+		i -= len(m.ChassisName)
+		copy(dAtA[i:], m.ChassisName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ChassisName)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -5579,7 +5413,7 @@ func (m *ChassisPowerSupply) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.PsuId)
+	l = len(m.Name)
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
@@ -5641,12 +5475,8 @@ func (m *ChassisPowerDistribution) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.PduId)
+	l = len(m.Name)
 	if l > 0 {
-		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
-	}
-	if m.Name != nil {
-		l = len(*m.Name)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	if m.CapacityWatts != nil {
@@ -5671,12 +5501,8 @@ func (m *PowerCircuit) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.CircuitId)
+	l = len(m.Name)
 	if l > 0 {
-		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
-	}
-	if m.Name != nil {
-		l = len(*m.Name)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	if m.Voltage != nil {
@@ -5760,12 +5586,8 @@ func (m *ChassisLED) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.LedId)
+	l = len(m.Name)
 	if l > 0 {
-		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
-	}
-	if m.Name != nil {
-		l = len(*m.Name)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	if m.Type != nil {
@@ -5825,12 +5647,8 @@ func (m *ExpansionBay) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.BayId)
+	l = len(m.Name)
 	if l > 0 {
-		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
-	}
-	if m.Name != nil {
-		l = len(*m.Name)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	if m.BayType != nil {
@@ -5858,12 +5676,8 @@ func (m *Slot) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.SlotId)
+	l = len(m.Name)
 	if l > 0 {
-		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
-	}
-	if m.Name != nil {
-		l = len(*m.Name)
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	if m.SlotType != nil {
@@ -5902,16 +5716,6 @@ func (m *GetChassisRequest) SizeVT() (n int) {
 	return n
 }
 
-func (m *GetChassisRequest_ChassisId) SizeVT() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.ChassisId)
-	n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
-	return n
-}
 func (m *GetChassisRequest_Name) SizeVT() (n int) {
 	if m == nil {
 		return 0
@@ -6024,7 +5828,7 @@ func (m *UpdateChassisRequest) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.ChassisId)
+	l = len(m.ChassisName)
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
@@ -6060,7 +5864,7 @@ func (m *ChassisChangeStateRequest) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.ChassisId)
+	l = len(m.ChassisName)
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
@@ -6128,7 +5932,7 @@ func (m *ChassisControlRequest) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.ChassisId)
+	l = len(m.ChassisName)
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
@@ -7207,7 +7011,7 @@ func (m *ChassisPowerSupply) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field PsuId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -7235,7 +7039,7 @@ func (m *ChassisPowerSupply) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.PsuId = string(dAtA[iNdEx:postIndex])
+			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -7597,38 +7401,6 @@ func (m *ChassisPowerDistribution) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field PduId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.PduId = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -7657,10 +7429,9 @@ func (m *ChassisPowerDistribution) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Name = &s
+			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CapacityWatts", wireType)
 			}
@@ -7680,7 +7451,7 @@ func (m *ChassisPowerDistribution) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.CapacityWatts = &v
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LoadWatts", wireType)
 			}
@@ -7700,7 +7471,7 @@ func (m *ChassisPowerDistribution) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.LoadWatts = &v
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Circuits", wireType)
 			}
@@ -7787,38 +7558,6 @@ func (m *PowerCircuit) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CircuitId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.CircuitId = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -7847,10 +7586,9 @@ func (m *PowerCircuit) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Name = &s
+			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 1 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Voltage", wireType)
 			}
@@ -7862,7 +7600,7 @@ func (m *PowerCircuit) UnmarshalVT(dAtA []byte) error {
 			iNdEx += 8
 			v2 := float64(math.Float64frombits(v))
 			m.Voltage = &v2
-		case 4:
+		case 3:
 			if wireType != 1 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CurrentAmps", wireType)
 			}
@@ -7874,7 +7612,7 @@ func (m *PowerCircuit) UnmarshalVT(dAtA []byte) error {
 			iNdEx += 8
 			v2 := float64(math.Float64frombits(v))
 			m.CurrentAmps = &v2
-		case 5:
+		case 4:
 			if wireType != 1 {
 				return fmt.Errorf("proto: wrong wireType = %d for field PowerWatts", wireType)
 			}
@@ -7886,7 +7624,7 @@ func (m *PowerCircuit) UnmarshalVT(dAtA []byte) error {
 			iNdEx += 8
 			v2 := float64(math.Float64frombits(v))
 			m.PowerWatts = &v2
-		case 6:
+		case 5:
 			if wireType != 1 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BreakerRatingAmps", wireType)
 			}
@@ -7898,7 +7636,7 @@ func (m *PowerCircuit) UnmarshalVT(dAtA []byte) error {
 			iNdEx += 8
 			v2 := float64(math.Float64frombits(v))
 			m.BreakerRatingAmps = &v2
-		case 7:
+		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ConnectedLoads", wireType)
 			}
@@ -8323,38 +8061,6 @@ func (m *ChassisLED) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LedId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.LedId = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -8383,10 +8089,9 @@ func (m *ChassisLED) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Name = &s
+			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
 			}
@@ -8406,7 +8111,7 @@ func (m *ChassisLED) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.Type = &v
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field State", wireType)
 			}
@@ -8426,7 +8131,7 @@ func (m *ChassisLED) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.State = &v
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Color", wireType)
 			}
@@ -8459,7 +8164,7 @@ func (m *ChassisLED) UnmarshalVT(dAtA []byte) error {
 			s := string(dAtA[iNdEx:postIndex])
 			m.Color = &s
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BlinkPattern", wireType)
 			}
@@ -8492,7 +8197,7 @@ func (m *ChassisLED) UnmarshalVT(dAtA []byte) error {
 			s := string(dAtA[iNdEx:postIndex])
 			m.BlinkPattern = &s
 			iNdEx = postIndex
-		case 7:
+		case 6:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Controllable", wireType)
 			}
@@ -8767,38 +8472,6 @@ func (m *ExpansionBay) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BayId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.BayId = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -8827,10 +8500,9 @@ func (m *ExpansionBay) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Name = &s
+			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BayType", wireType)
 			}
@@ -8863,7 +8535,7 @@ func (m *ExpansionBay) UnmarshalVT(dAtA []byte) error {
 			s := string(dAtA[iNdEx:postIndex])
 			m.BayType = &s
 			iNdEx = postIndex
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Occupied", wireType)
 			}
@@ -8884,7 +8556,7 @@ func (m *ExpansionBay) UnmarshalVT(dAtA []byte) error {
 			}
 			b := bool(v != 0)
 			m.Occupied = &b
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field InstalledComponent", wireType)
 			}
@@ -8917,7 +8589,7 @@ func (m *ExpansionBay) UnmarshalVT(dAtA []byte) error {
 			s := string(dAtA[iNdEx:postIndex])
 			m.InstalledComponent = &s
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
 			}
@@ -9006,38 +8678,6 @@ func (m *Slot) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SlotId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.SlotId = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -9066,10 +8706,9 @@ func (m *Slot) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Name = &s
+			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SlotType", wireType)
 			}
@@ -9102,7 +8741,7 @@ func (m *Slot) UnmarshalVT(dAtA []byte) error {
 			s := string(dAtA[iNdEx:postIndex])
 			m.SlotType = &s
 			iNdEx = postIndex
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Occupied", wireType)
 			}
@@ -9123,7 +8762,7 @@ func (m *Slot) UnmarshalVT(dAtA []byte) error {
 			}
 			b := bool(v != 0)
 			m.Occupied = &b
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field InstalledComponent", wireType)
 			}
@@ -9156,7 +8795,7 @@ func (m *Slot) UnmarshalVT(dAtA []byte) error {
 			s := string(dAtA[iNdEx:postIndex])
 			m.InstalledComponent = &s
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
 			}
@@ -9245,38 +8884,6 @@ func (m *GetChassisRequest) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChassisId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Identifier = &GetChassisRequest_ChassisId{ChassisId: string(dAtA[iNdEx:postIndex])}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -9307,7 +8914,7 @@ func (m *GetChassisRequest) UnmarshalVT(dAtA []byte) error {
 			}
 			m.Identifier = &GetChassisRequest_Name{Name: string(dAtA[iNdEx:postIndex])}
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
 			}
@@ -9327,7 +8934,7 @@ func (m *GetChassisRequest) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.Identifier = &GetChassisRequest_Type{Type: v}
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
@@ -9347,7 +8954,7 @@ func (m *GetChassisRequest) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.Identifier = &GetChassisRequest_Status{Status: v}
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
 			}
@@ -9388,7 +8995,7 @@ func (m *GetChassisRequest) UnmarshalVT(dAtA []byte) error {
 				m.Identifier = &GetChassisRequest_Location{Location: v}
 			}
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
 			}
@@ -9880,7 +9487,7 @@ func (m *UpdateChassisRequest) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChassisId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChassisName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -9908,7 +9515,7 @@ func (m *UpdateChassisRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChassisId = string(dAtA[iNdEx:postIndex])
+			m.ChassisName = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -10122,7 +9729,7 @@ func (m *ChassisChangeStateRequest) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChassisId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChassisName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -10150,7 +9757,7 @@ func (m *ChassisChangeStateRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChassisId = string(dAtA[iNdEx:postIndex])
+			m.ChassisName = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
@@ -10728,7 +10335,7 @@ func (m *ChassisControlRequest) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChassisId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChassisName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -10756,7 +10363,7 @@ func (m *ChassisControlRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChassisId = string(dAtA[iNdEx:postIndex])
+			m.ChassisName = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
@@ -12164,7 +11771,7 @@ func (m *ChassisPowerSupply) UnmarshalVTUnsafe(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field PsuId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -12196,7 +11803,7 @@ func (m *ChassisPowerSupply) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.PsuId = stringValue
+			m.Name = stringValue
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -12562,42 +12169,6 @@ func (m *ChassisPowerDistribution) UnmarshalVTUnsafe(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field PduId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			var stringValue string
-			if intStringLen > 0 {
-				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
-			}
-			m.PduId = stringValue
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -12630,10 +12201,9 @@ func (m *ChassisPowerDistribution) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			s := stringValue
-			m.Name = &s
+			m.Name = stringValue
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CapacityWatts", wireType)
 			}
@@ -12653,7 +12223,7 @@ func (m *ChassisPowerDistribution) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.CapacityWatts = &v
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LoadWatts", wireType)
 			}
@@ -12673,7 +12243,7 @@ func (m *ChassisPowerDistribution) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.LoadWatts = &v
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Circuits", wireType)
 			}
@@ -12760,42 +12330,6 @@ func (m *PowerCircuit) UnmarshalVTUnsafe(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CircuitId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			var stringValue string
-			if intStringLen > 0 {
-				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
-			}
-			m.CircuitId = stringValue
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -12828,10 +12362,9 @@ func (m *PowerCircuit) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			s := stringValue
-			m.Name = &s
+			m.Name = stringValue
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 1 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Voltage", wireType)
 			}
@@ -12843,7 +12376,7 @@ func (m *PowerCircuit) UnmarshalVTUnsafe(dAtA []byte) error {
 			iNdEx += 8
 			v2 := float64(math.Float64frombits(v))
 			m.Voltage = &v2
-		case 4:
+		case 3:
 			if wireType != 1 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CurrentAmps", wireType)
 			}
@@ -12855,7 +12388,7 @@ func (m *PowerCircuit) UnmarshalVTUnsafe(dAtA []byte) error {
 			iNdEx += 8
 			v2 := float64(math.Float64frombits(v))
 			m.CurrentAmps = &v2
-		case 5:
+		case 4:
 			if wireType != 1 {
 				return fmt.Errorf("proto: wrong wireType = %d for field PowerWatts", wireType)
 			}
@@ -12867,7 +12400,7 @@ func (m *PowerCircuit) UnmarshalVTUnsafe(dAtA []byte) error {
 			iNdEx += 8
 			v2 := float64(math.Float64frombits(v))
 			m.PowerWatts = &v2
-		case 6:
+		case 5:
 			if wireType != 1 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BreakerRatingAmps", wireType)
 			}
@@ -12879,7 +12412,7 @@ func (m *PowerCircuit) UnmarshalVTUnsafe(dAtA []byte) error {
 			iNdEx += 8
 			v2 := float64(math.Float64frombits(v))
 			m.BreakerRatingAmps = &v2
-		case 7:
+		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ConnectedLoads", wireType)
 			}
@@ -13320,42 +12853,6 @@ func (m *ChassisLED) UnmarshalVTUnsafe(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LedId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			var stringValue string
-			if intStringLen > 0 {
-				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
-			}
-			m.LedId = stringValue
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -13388,10 +12885,9 @@ func (m *ChassisLED) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			s := stringValue
-			m.Name = &s
+			m.Name = stringValue
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
 			}
@@ -13411,7 +12907,7 @@ func (m *ChassisLED) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.Type = &v
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field State", wireType)
 			}
@@ -13431,7 +12927,7 @@ func (m *ChassisLED) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.State = &v
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Color", wireType)
 			}
@@ -13468,7 +12964,7 @@ func (m *ChassisLED) UnmarshalVTUnsafe(dAtA []byte) error {
 			s := stringValue
 			m.Color = &s
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BlinkPattern", wireType)
 			}
@@ -13505,7 +13001,7 @@ func (m *ChassisLED) UnmarshalVTUnsafe(dAtA []byte) error {
 			s := stringValue
 			m.BlinkPattern = &s
 			iNdEx = postIndex
-		case 7:
+		case 6:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Controllable", wireType)
 			}
@@ -13784,42 +13280,6 @@ func (m *ExpansionBay) UnmarshalVTUnsafe(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BayId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			var stringValue string
-			if intStringLen > 0 {
-				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
-			}
-			m.BayId = stringValue
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -13852,10 +13312,9 @@ func (m *ExpansionBay) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			s := stringValue
-			m.Name = &s
+			m.Name = stringValue
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BayType", wireType)
 			}
@@ -13892,7 +13351,7 @@ func (m *ExpansionBay) UnmarshalVTUnsafe(dAtA []byte) error {
 			s := stringValue
 			m.BayType = &s
 			iNdEx = postIndex
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Occupied", wireType)
 			}
@@ -13913,7 +13372,7 @@ func (m *ExpansionBay) UnmarshalVTUnsafe(dAtA []byte) error {
 			}
 			b := bool(v != 0)
 			m.Occupied = &b
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field InstalledComponent", wireType)
 			}
@@ -13950,7 +13409,7 @@ func (m *ExpansionBay) UnmarshalVTUnsafe(dAtA []byte) error {
 			s := stringValue
 			m.InstalledComponent = &s
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
 			}
@@ -14039,42 +13498,6 @@ func (m *Slot) UnmarshalVTUnsafe(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SlotId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			var stringValue string
-			if intStringLen > 0 {
-				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
-			}
-			m.SlotId = stringValue
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -14107,10 +13530,9 @@ func (m *Slot) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			s := stringValue
-			m.Name = &s
+			m.Name = stringValue
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SlotType", wireType)
 			}
@@ -14147,7 +13569,7 @@ func (m *Slot) UnmarshalVTUnsafe(dAtA []byte) error {
 			s := stringValue
 			m.SlotType = &s
 			iNdEx = postIndex
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Occupied", wireType)
 			}
@@ -14168,7 +13590,7 @@ func (m *Slot) UnmarshalVTUnsafe(dAtA []byte) error {
 			}
 			b := bool(v != 0)
 			m.Occupied = &b
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field InstalledComponent", wireType)
 			}
@@ -14205,7 +13627,7 @@ func (m *Slot) UnmarshalVTUnsafe(dAtA []byte) error {
 			s := stringValue
 			m.InstalledComponent = &s
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
 			}
@@ -14294,42 +13716,6 @@ func (m *GetChassisRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChassisId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			var stringValue string
-			if intStringLen > 0 {
-				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
-			}
-			m.Identifier = &GetChassisRequest_ChassisId{ChassisId: stringValue}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -14364,7 +13750,7 @@ func (m *GetChassisRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			}
 			m.Identifier = &GetChassisRequest_Name{Name: stringValue}
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
 			}
@@ -14384,7 +13770,7 @@ func (m *GetChassisRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.Identifier = &GetChassisRequest_Type{Type: v}
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
@@ -14404,7 +13790,7 @@ func (m *GetChassisRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.Identifier = &GetChassisRequest_Status{Status: v}
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
 			}
@@ -14445,7 +13831,7 @@ func (m *GetChassisRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 				m.Identifier = &GetChassisRequest_Location{Location: v}
 			}
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
 			}
@@ -14945,7 +14331,7 @@ func (m *UpdateChassisRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChassisId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChassisName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -14977,7 +14363,7 @@ func (m *UpdateChassisRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.ChassisId = stringValue
+			m.ChassisName = stringValue
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -15191,7 +14577,7 @@ func (m *ChassisChangeStateRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChassisId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChassisName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -15223,7 +14609,7 @@ func (m *ChassisChangeStateRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.ChassisId = stringValue
+			m.ChassisName = stringValue
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
@@ -15825,7 +15211,7 @@ func (m *ChassisControlRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChassisId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChassisName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -15857,7 +15243,7 @@ func (m *ChassisControlRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.ChassisId = stringValue
+			m.ChassisName = stringValue
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {

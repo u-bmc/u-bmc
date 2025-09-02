@@ -156,7 +156,7 @@ message ChassisPowerInfo {
 }
 
 message ChassisPowerSupply {
-  string psu_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
   AssetInfo asset = 2 [ (buf.validate.field).required = true ];
   optional ChassisPowerSupplyType type = 3
       [ (buf.validate.field).enum.defined_only = true ];
@@ -177,22 +177,20 @@ message ChassisPowerSupply {
 }
 
 message ChassisPowerDistribution {
-  string pdu_id = 1 [ (buf.validate.field).string.min_len = 1 ];
-  optional string name = 2;
-  optional uint32 capacity_watts = 3 [ (buf.validate.field).uint32.gt = 0 ];
-  optional uint32 load_watts = 4 [ (buf.validate.field).uint32.gte = 0 ];
-  repeated PowerCircuit circuits = 5;
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional uint32 capacity_watts = 2 [ (buf.validate.field).uint32.gt = 0 ];
+  optional uint32 load_watts = 3 [ (buf.validate.field).uint32.gte = 0 ];
+  repeated PowerCircuit circuits = 4;
 }
 
 message PowerCircuit {
-  string circuit_id = 1 [ (buf.validate.field).string.min_len = 1 ];
-  optional string name = 2;
-  optional double voltage = 3 [ (buf.validate.field).double.gte = 0 ];
-  optional double current_amps = 4 [ (buf.validate.field).double.gte = 0 ];
-  optional double power_watts = 5 [ (buf.validate.field).double.gte = 0 ];
-  optional double breaker_rating_amps = 6
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional double voltage = 2 [ (buf.validate.field).double.gte = 0 ];
+  optional double current_amps = 3 [ (buf.validate.field).double.gte = 0 ];
+  optional double power_watts = 4 [ (buf.validate.field).double.gte = 0 ];
+  optional double breaker_rating_amps = 5
       [ (buf.validate.field).double.gte = 0 ];
-  repeated string connected_loads = 7;
+  repeated string connected_loads = 6;
 }
 
 message ChassisPowerRedundancy {
@@ -227,15 +225,14 @@ message ChassisPowerBudget {
 }
 
 message ChassisLED {
-  string led_id = 1 [ (buf.validate.field).string.min_len = 1 ];
-  optional string name = 2;
-  optional ChassisLEDType type = 3
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional ChassisLEDType type = 2
       [ (buf.validate.field).enum.defined_only = true ];
-  optional ChassisLEDState state = 4
+  optional ChassisLEDState state = 3
       [ (buf.validate.field).enum.defined_only = true ];
-  optional string color = 5;
-  optional string blink_pattern = 6;
-  optional bool controllable = 7;
+  optional string color = 4;
+  optional string blink_pattern = 5;
+  optional bool controllable = 6;
 }
 
 message ChassisIntrusion {
@@ -248,33 +245,30 @@ message ChassisIntrusion {
 }
 
 message ExpansionBay {
-  string bay_id = 1 [ (buf.validate.field).string.min_len = 1 ];
-  optional string name = 2;
-  optional string bay_type = 3;
-  optional bool occupied = 4;
-  optional string installed_component = 5;
-  optional Location location = 6;
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string bay_type = 2;
+  optional bool occupied = 3;
+  optional string installed_component = 4;
+  optional Location location = 5;
 }
 
 message Slot {
-  string slot_id = 1 [ (buf.validate.field).string.min_len = 1 ];
-  optional string name = 2;
-  optional string slot_type = 3;
-  optional bool occupied = 4;
-  optional string installed_component = 5;
-  optional Location location = 6;
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string slot_type = 2;
+  optional bool occupied = 3;
+  optional string installed_component = 4;
+  optional Location location = 5;
 }
 
 message GetChassisRequest {
   oneof identifier {
     option (buf.validate.oneof).required = true;
-    string chassis_id = 1;
-    string name = 2;
-    ChassisType type = 3;
-    ChassisStatus status = 4;
-    Location location = 5;
+    string name = 1;
+    ChassisType type = 2;
+    ChassisStatus status = 3;
+    Location location = 4;
   }
-  optional google.protobuf.FieldMask field_mask = 6;
+  optional google.protobuf.FieldMask field_mask = 5;
 }
 
 message GetChassisResponse { repeated Chassis chassis = 1; }
@@ -296,7 +290,7 @@ message ListChassisResponse {
 }
 
 message UpdateChassisRequest {
-  string chassis_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  string chassis_name = 1 [ (buf.validate.field).string.min_len = 1 ];
   Chassis chassis = 2 [ (buf.validate.field).required = true ];
   google.protobuf.FieldMask field_mask = 3;
 }
@@ -304,7 +298,7 @@ message UpdateChassisRequest {
 message UpdateChassisResponse { Chassis chassis = 1; }
 
 message ChassisChangeStateRequest {
-  string chassis_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  string chassis_name = 1 [ (buf.validate.field).string.min_len = 1 ];
   ChassisTransition transition = 2
       [ (buf.validate.field).enum.defined_only = true ];
   optional bool force = 3;
@@ -323,7 +317,7 @@ message ChassisChangeStateResponse {
 }
 
 message ChassisControlRequest {
-  string chassis_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  string chassis_name = 1 [ (buf.validate.field).string.min_len = 1 ];
   ChassisControlAction action = 2
       [ (buf.validate.field).enum.defined_only = true ];
   optional bool force = 3;

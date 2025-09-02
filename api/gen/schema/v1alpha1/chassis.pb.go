@@ -851,7 +851,7 @@ func (x *ChassisPowerInfo) GetPowerBudgets() []*ChassisPowerBudget {
 
 type ChassisPowerSupply struct {
 	state              protoimpl.MessageState    `protogen:"open.v1"`
-	PsuId              string                    `protobuf:"bytes,1,opt,name=psu_id,json=psuId,proto3" json:"psu_id,omitempty"`
+	Name               string                    `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Asset              *AssetInfo                `protobuf:"bytes,2,opt,name=asset,proto3" json:"asset,omitempty"`
 	Type               *ChassisPowerSupplyType   `protobuf:"varint,3,opt,name=type,proto3,enum=schema.v1alpha1.ChassisPowerSupplyType,oneof" json:"type,omitempty"`
 	Status             *ChassisPowerSupplyStatus `protobuf:"varint,4,opt,name=status,proto3,enum=schema.v1alpha1.ChassisPowerSupplyStatus,oneof" json:"status,omitempty"`
@@ -901,9 +901,9 @@ func (*ChassisPowerSupply) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *ChassisPowerSupply) GetPsuId() string {
+func (x *ChassisPowerSupply) GetName() string {
 	if x != nil {
-		return x.PsuId
+		return x.Name
 	}
 	return ""
 }
@@ -1015,11 +1015,10 @@ func (x *ChassisPowerSupply) GetLocation() *Location {
 
 type ChassisPowerDistribution struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PduId         string                 `protobuf:"bytes,1,opt,name=pdu_id,json=pduId,proto3" json:"pdu_id,omitempty"`
-	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	CapacityWatts *uint32                `protobuf:"varint,3,opt,name=capacity_watts,json=capacityWatts,proto3,oneof" json:"capacity_watts,omitempty"`
-	LoadWatts     *uint32                `protobuf:"varint,4,opt,name=load_watts,json=loadWatts,proto3,oneof" json:"load_watts,omitempty"`
-	Circuits      []*PowerCircuit        `protobuf:"bytes,5,rep,name=circuits,proto3" json:"circuits,omitempty"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	CapacityWatts *uint32                `protobuf:"varint,2,opt,name=capacity_watts,json=capacityWatts,proto3,oneof" json:"capacity_watts,omitempty"`
+	LoadWatts     *uint32                `protobuf:"varint,3,opt,name=load_watts,json=loadWatts,proto3,oneof" json:"load_watts,omitempty"`
+	Circuits      []*PowerCircuit        `protobuf:"bytes,4,rep,name=circuits,proto3" json:"circuits,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1054,16 +1053,9 @@ func (*ChassisPowerDistribution) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ChassisPowerDistribution) GetPduId() string {
-	if x != nil {
-		return x.PduId
-	}
-	return ""
-}
-
 func (x *ChassisPowerDistribution) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
+	if x != nil {
+		return x.Name
 	}
 	return ""
 }
@@ -1091,13 +1083,12 @@ func (x *ChassisPowerDistribution) GetCircuits() []*PowerCircuit {
 
 type PowerCircuit struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	CircuitId         string                 `protobuf:"bytes,1,opt,name=circuit_id,json=circuitId,proto3" json:"circuit_id,omitempty"`
-	Name              *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	Voltage           *float64               `protobuf:"fixed64,3,opt,name=voltage,proto3,oneof" json:"voltage,omitempty"`
-	CurrentAmps       *float64               `protobuf:"fixed64,4,opt,name=current_amps,json=currentAmps,proto3,oneof" json:"current_amps,omitempty"`
-	PowerWatts        *float64               `protobuf:"fixed64,5,opt,name=power_watts,json=powerWatts,proto3,oneof" json:"power_watts,omitempty"`
-	BreakerRatingAmps *float64               `protobuf:"fixed64,6,opt,name=breaker_rating_amps,json=breakerRatingAmps,proto3,oneof" json:"breaker_rating_amps,omitempty"`
-	ConnectedLoads    []string               `protobuf:"bytes,7,rep,name=connected_loads,json=connectedLoads,proto3" json:"connected_loads,omitempty"`
+	Name              string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Voltage           *float64               `protobuf:"fixed64,2,opt,name=voltage,proto3,oneof" json:"voltage,omitempty"`
+	CurrentAmps       *float64               `protobuf:"fixed64,3,opt,name=current_amps,json=currentAmps,proto3,oneof" json:"current_amps,omitempty"`
+	PowerWatts        *float64               `protobuf:"fixed64,4,opt,name=power_watts,json=powerWatts,proto3,oneof" json:"power_watts,omitempty"`
+	BreakerRatingAmps *float64               `protobuf:"fixed64,5,opt,name=breaker_rating_amps,json=breakerRatingAmps,proto3,oneof" json:"breaker_rating_amps,omitempty"`
+	ConnectedLoads    []string               `protobuf:"bytes,6,rep,name=connected_loads,json=connectedLoads,proto3" json:"connected_loads,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -1132,16 +1123,9 @@ func (*PowerCircuit) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *PowerCircuit) GetCircuitId() string {
-	if x != nil {
-		return x.CircuitId
-	}
-	return ""
-}
-
 func (x *PowerCircuit) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
+	if x != nil {
+		return x.Name
 	}
 	return ""
 }
@@ -1335,13 +1319,12 @@ func (x *ChassisPowerBudget) GetPriority() uint32 {
 
 type ChassisLED struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	LedId         string                 `protobuf:"bytes,1,opt,name=led_id,json=ledId,proto3" json:"led_id,omitempty"`
-	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	Type          *ChassisLEDType        `protobuf:"varint,3,opt,name=type,proto3,enum=schema.v1alpha1.ChassisLEDType,oneof" json:"type,omitempty"`
-	State         *ChassisLEDState       `protobuf:"varint,4,opt,name=state,proto3,enum=schema.v1alpha1.ChassisLEDState,oneof" json:"state,omitempty"`
-	Color         *string                `protobuf:"bytes,5,opt,name=color,proto3,oneof" json:"color,omitempty"`
-	BlinkPattern  *string                `protobuf:"bytes,6,opt,name=blink_pattern,json=blinkPattern,proto3,oneof" json:"blink_pattern,omitempty"`
-	Controllable  *bool                  `protobuf:"varint,7,opt,name=controllable,proto3,oneof" json:"controllable,omitempty"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Type          *ChassisLEDType        `protobuf:"varint,2,opt,name=type,proto3,enum=schema.v1alpha1.ChassisLEDType,oneof" json:"type,omitempty"`
+	State         *ChassisLEDState       `protobuf:"varint,3,opt,name=state,proto3,enum=schema.v1alpha1.ChassisLEDState,oneof" json:"state,omitempty"`
+	Color         *string                `protobuf:"bytes,4,opt,name=color,proto3,oneof" json:"color,omitempty"`
+	BlinkPattern  *string                `protobuf:"bytes,5,opt,name=blink_pattern,json=blinkPattern,proto3,oneof" json:"blink_pattern,omitempty"`
+	Controllable  *bool                  `protobuf:"varint,6,opt,name=controllable,proto3,oneof" json:"controllable,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1376,16 +1359,9 @@ func (*ChassisLED) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *ChassisLED) GetLedId() string {
-	if x != nil {
-		return x.LedId
-	}
-	return ""
-}
-
 func (x *ChassisLED) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
+	if x != nil {
+		return x.Name
 	}
 	return ""
 }
@@ -1511,12 +1487,11 @@ func (x *ChassisIntrusion) GetSensorStatus() string {
 
 type ExpansionBay struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	BayId              string                 `protobuf:"bytes,1,opt,name=bay_id,json=bayId,proto3" json:"bay_id,omitempty"`
-	Name               *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	BayType            *string                `protobuf:"bytes,3,opt,name=bay_type,json=bayType,proto3,oneof" json:"bay_type,omitempty"`
-	Occupied           *bool                  `protobuf:"varint,4,opt,name=occupied,proto3,oneof" json:"occupied,omitempty"`
-	InstalledComponent *string                `protobuf:"bytes,5,opt,name=installed_component,json=installedComponent,proto3,oneof" json:"installed_component,omitempty"`
-	Location           *Location              `protobuf:"bytes,6,opt,name=location,proto3,oneof" json:"location,omitempty"`
+	Name               string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	BayType            *string                `protobuf:"bytes,2,opt,name=bay_type,json=bayType,proto3,oneof" json:"bay_type,omitempty"`
+	Occupied           *bool                  `protobuf:"varint,3,opt,name=occupied,proto3,oneof" json:"occupied,omitempty"`
+	InstalledComponent *string                `protobuf:"bytes,4,opt,name=installed_component,json=installedComponent,proto3,oneof" json:"installed_component,omitempty"`
+	Location           *Location              `protobuf:"bytes,5,opt,name=location,proto3,oneof" json:"location,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -1551,16 +1526,9 @@ func (*ExpansionBay) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *ExpansionBay) GetBayId() string {
-	if x != nil {
-		return x.BayId
-	}
-	return ""
-}
-
 func (x *ExpansionBay) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
+	if x != nil {
+		return x.Name
 	}
 	return ""
 }
@@ -1595,12 +1563,11 @@ func (x *ExpansionBay) GetLocation() *Location {
 
 type Slot struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	SlotId             string                 `protobuf:"bytes,1,opt,name=slot_id,json=slotId,proto3" json:"slot_id,omitempty"`
-	Name               *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	SlotType           *string                `protobuf:"bytes,3,opt,name=slot_type,json=slotType,proto3,oneof" json:"slot_type,omitempty"`
-	Occupied           *bool                  `protobuf:"varint,4,opt,name=occupied,proto3,oneof" json:"occupied,omitempty"`
-	InstalledComponent *string                `protobuf:"bytes,5,opt,name=installed_component,json=installedComponent,proto3,oneof" json:"installed_component,omitempty"`
-	Location           *Location              `protobuf:"bytes,6,opt,name=location,proto3,oneof" json:"location,omitempty"`
+	Name               string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	SlotType           *string                `protobuf:"bytes,2,opt,name=slot_type,json=slotType,proto3,oneof" json:"slot_type,omitempty"`
+	Occupied           *bool                  `protobuf:"varint,3,opt,name=occupied,proto3,oneof" json:"occupied,omitempty"`
+	InstalledComponent *string                `protobuf:"bytes,4,opt,name=installed_component,json=installedComponent,proto3,oneof" json:"installed_component,omitempty"`
+	Location           *Location              `protobuf:"bytes,5,opt,name=location,proto3,oneof" json:"location,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -1635,16 +1602,9 @@ func (*Slot) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *Slot) GetSlotId() string {
-	if x != nil {
-		return x.SlotId
-	}
-	return ""
-}
-
 func (x *Slot) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
+	if x != nil {
+		return x.Name
 	}
 	return ""
 }
@@ -1681,13 +1641,12 @@ type GetChassisRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to Identifier:
 	//
-	//	*GetChassisRequest_ChassisId
 	//	*GetChassisRequest_Name
 	//	*GetChassisRequest_Type
 	//	*GetChassisRequest_Status
 	//	*GetChassisRequest_Location
 	Identifier    isGetChassisRequest_Identifier `protobuf_oneof:"identifier"`
-	FieldMask     *fieldmaskpb.FieldMask         `protobuf:"bytes,6,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
+	FieldMask     *fieldmaskpb.FieldMask         `protobuf:"bytes,5,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1727,15 +1686,6 @@ func (x *GetChassisRequest) GetIdentifier() isGetChassisRequest_Identifier {
 		return x.Identifier
 	}
 	return nil
-}
-
-func (x *GetChassisRequest) GetChassisId() string {
-	if x != nil {
-		if x, ok := x.Identifier.(*GetChassisRequest_ChassisId); ok {
-			return x.ChassisId
-		}
-	}
-	return ""
 }
 
 func (x *GetChassisRequest) GetName() string {
@@ -1785,27 +1735,21 @@ type isGetChassisRequest_Identifier interface {
 	isGetChassisRequest_Identifier()
 }
 
-type GetChassisRequest_ChassisId struct {
-	ChassisId string `protobuf:"bytes,1,opt,name=chassis_id,json=chassisId,proto3,oneof"`
-}
-
 type GetChassisRequest_Name struct {
-	Name string `protobuf:"bytes,2,opt,name=name,proto3,oneof"`
+	Name string `protobuf:"bytes,1,opt,name=name,proto3,oneof"`
 }
 
 type GetChassisRequest_Type struct {
-	Type ChassisType `protobuf:"varint,3,opt,name=type,proto3,enum=schema.v1alpha1.ChassisType,oneof"`
+	Type ChassisType `protobuf:"varint,2,opt,name=type,proto3,enum=schema.v1alpha1.ChassisType,oneof"`
 }
 
 type GetChassisRequest_Status struct {
-	Status ChassisStatus `protobuf:"varint,4,opt,name=status,proto3,enum=schema.v1alpha1.ChassisStatus,oneof"`
+	Status ChassisStatus `protobuf:"varint,3,opt,name=status,proto3,enum=schema.v1alpha1.ChassisStatus,oneof"`
 }
 
 type GetChassisRequest_Location struct {
-	Location *Location `protobuf:"bytes,5,opt,name=location,proto3,oneof"`
+	Location *Location `protobuf:"bytes,4,opt,name=location,proto3,oneof"`
 }
-
-func (*GetChassisRequest_ChassisId) isGetChassisRequest_Identifier() {}
 
 func (*GetChassisRequest_Name) isGetChassisRequest_Identifier() {}
 
@@ -1997,7 +1941,7 @@ func (x *ListChassisResponse) GetTotalSize() uint32 {
 
 type UpdateChassisRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ChassisId     string                 `protobuf:"bytes,1,opt,name=chassis_id,json=chassisId,proto3" json:"chassis_id,omitempty"`
+	ChassisName   string                 `protobuf:"bytes,1,opt,name=chassis_name,json=chassisName,proto3" json:"chassis_name,omitempty"`
 	Chassis       *Chassis               `protobuf:"bytes,2,opt,name=chassis,proto3" json:"chassis,omitempty"`
 	FieldMask     *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=field_mask,json=fieldMask,proto3" json:"field_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -2034,9 +1978,9 @@ func (*UpdateChassisRequest) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *UpdateChassisRequest) GetChassisId() string {
+func (x *UpdateChassisRequest) GetChassisName() string {
 	if x != nil {
-		return x.ChassisId
+		return x.ChassisName
 	}
 	return ""
 }
@@ -2101,7 +2045,7 @@ func (x *UpdateChassisResponse) GetChassis() *Chassis {
 
 type ChassisChangeStateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ChassisId     string                 `protobuf:"bytes,1,opt,name=chassis_id,json=chassisId,proto3" json:"chassis_id,omitempty"`
+	ChassisName   string                 `protobuf:"bytes,1,opt,name=chassis_name,json=chassisName,proto3" json:"chassis_name,omitempty"`
 	Transition    ChassisTransition      `protobuf:"varint,2,opt,name=transition,proto3,enum=schema.v1alpha1.ChassisTransition" json:"transition,omitempty"`
 	Force         *bool                  `protobuf:"varint,3,opt,name=force,proto3,oneof" json:"force,omitempty"`
 	FieldMask     *fieldmaskpb.FieldMask `protobuf:"bytes,4,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
@@ -2140,9 +2084,9 @@ func (*ChassisChangeStateRequest) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{17}
 }
 
-func (x *ChassisChangeStateRequest) GetChassisId() string {
+func (x *ChassisChangeStateRequest) GetChassisName() string {
 	if x != nil {
-		return x.ChassisId
+		return x.ChassisName
 	}
 	return ""
 }
@@ -2261,7 +2205,7 @@ func (x *ChassisChangeStateResponse) GetMetadata() map[string]string {
 
 type ChassisControlRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ChassisId     string                 `protobuf:"bytes,1,opt,name=chassis_id,json=chassisId,proto3" json:"chassis_id,omitempty"`
+	ChassisName   string                 `protobuf:"bytes,1,opt,name=chassis_name,json=chassisName,proto3" json:"chassis_name,omitempty"`
 	Action        ChassisControlAction   `protobuf:"varint,2,opt,name=action,proto3,enum=schema.v1alpha1.ChassisControlAction" json:"action,omitempty"`
 	Force         *bool                  `protobuf:"varint,3,opt,name=force,proto3,oneof" json:"force,omitempty"`
 	FieldMask     *fieldmaskpb.FieldMask `protobuf:"bytes,4,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
@@ -2300,9 +2244,9 @@ func (*ChassisControlRequest) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *ChassisControlRequest) GetChassisId() string {
+func (x *ChassisControlRequest) GetChassisName() string {
 	if x != nil {
-		return x.ChassisId
+		return x.ChassisName
 	}
 	return ""
 }
@@ -2455,9 +2399,9 @@ const file_schema_v1alpha1_chassis_proto_rawDesc = "" +
 	"\x16chassis_power_capacity\x129power_consumed_watts must not exceed power_capacity_watts\x1a|!has(this.power_consumed_watts) || !has(this.power_capacity_watts) || this.power_consumed_watts <= this.power_capacity_wattsB\x17\n" +
 	"\x15_power_capacity_wattsB\x17\n" +
 	"\x15_power_consumed_wattsB\r\n" +
-	"\v_redundancy\"\xf0\b\n" +
-	"\x12ChassisPowerSupply\x12\x1e\n" +
-	"\x06psu_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05psuId\x128\n" +
+	"\v_redundancy\"\xed\b\n" +
+	"\x12ChassisPowerSupply\x12\x1b\n" +
+	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x128\n" +
 	"\x05asset\x18\x02 \x01(\v2\x1a.schema.v1alpha1.AssetInfoB\x06\xbaH\x03\xc8\x01\x01R\x05asset\x12J\n" +
 	"\x04type\x18\x03 \x01(\x0e2'.schema.v1alpha1.ChassisPowerSupplyTypeB\b\xbaH\x05\x82\x01\x02\x10\x01H\x00R\x04type\x88\x01\x01\x12P\n" +
 	"\x06status\x18\x04 \x01(\x0e2).schema.v1alpha1.ChassisPowerSupplyStatusB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\x06status\x88\x01\x01\x123\n" +
@@ -2489,28 +2433,23 @@ const file_schema_v1alpha1_chassis_proto_rawDesc = "" +
 	"\x0e_hot_swappableB\f\n" +
 	"\n" +
 	"_redundantB\v\n" +
-	"\t_location\"\x9b\x02\n" +
-	"\x18ChassisPowerDistribution\x12\x1e\n" +
-	"\x06pdu_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05pduId\x12\x17\n" +
-	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x123\n" +
-	"\x0ecapacity_watts\x18\x03 \x01(\rB\a\xbaH\x04*\x02 \x00H\x01R\rcapacityWatts\x88\x01\x01\x12+\n" +
+	"\t_location\"\xf6\x01\n" +
+	"\x18ChassisPowerDistribution\x12\x1b\n" +
+	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x123\n" +
+	"\x0ecapacity_watts\x18\x02 \x01(\rB\a\xbaH\x04*\x02 \x00H\x00R\rcapacityWatts\x88\x01\x01\x12+\n" +
 	"\n" +
-	"load_watts\x18\x04 \x01(\rB\a\xbaH\x04*\x02(\x00H\x02R\tloadWatts\x88\x01\x01\x129\n" +
-	"\bcircuits\x18\x05 \x03(\v2\x1d.schema.v1alpha1.PowerCircuitR\bcircuitsB\a\n" +
-	"\x05_nameB\x11\n" +
+	"load_watts\x18\x03 \x01(\rB\a\xbaH\x04*\x02(\x00H\x01R\tloadWatts\x88\x01\x01\x129\n" +
+	"\bcircuits\x18\x04 \x03(\v2\x1d.schema.v1alpha1.PowerCircuitR\bcircuitsB\x11\n" +
 	"\x0f_capacity_wattsB\r\n" +
-	"\v_load_watts\"\xa8\x03\n" +
-	"\fPowerCircuit\x12&\n" +
-	"\n" +
-	"circuit_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tcircuitId\x12\x17\n" +
-	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12-\n" +
-	"\avoltage\x18\x03 \x01(\x01B\x0e\xbaH\v\x12\t)\x00\x00\x00\x00\x00\x00\x00\x00H\x01R\avoltage\x88\x01\x01\x126\n" +
-	"\fcurrent_amps\x18\x04 \x01(\x01B\x0e\xbaH\v\x12\t)\x00\x00\x00\x00\x00\x00\x00\x00H\x02R\vcurrentAmps\x88\x01\x01\x124\n" +
-	"\vpower_watts\x18\x05 \x01(\x01B\x0e\xbaH\v\x12\t)\x00\x00\x00\x00\x00\x00\x00\x00H\x03R\n" +
+	"\v_load_watts\"\xfb\x02\n" +
+	"\fPowerCircuit\x12\x1b\n" +
+	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12-\n" +
+	"\avoltage\x18\x02 \x01(\x01B\x0e\xbaH\v\x12\t)\x00\x00\x00\x00\x00\x00\x00\x00H\x00R\avoltage\x88\x01\x01\x126\n" +
+	"\fcurrent_amps\x18\x03 \x01(\x01B\x0e\xbaH\v\x12\t)\x00\x00\x00\x00\x00\x00\x00\x00H\x01R\vcurrentAmps\x88\x01\x01\x124\n" +
+	"\vpower_watts\x18\x04 \x01(\x01B\x0e\xbaH\v\x12\t)\x00\x00\x00\x00\x00\x00\x00\x00H\x02R\n" +
 	"powerWatts\x88\x01\x01\x12C\n" +
-	"\x13breaker_rating_amps\x18\x06 \x01(\x01B\x0e\xbaH\v\x12\t)\x00\x00\x00\x00\x00\x00\x00\x00H\x04R\x11breakerRatingAmps\x88\x01\x01\x12'\n" +
-	"\x0fconnected_loads\x18\a \x03(\tR\x0econnectedLoadsB\a\n" +
-	"\x05_nameB\n" +
+	"\x13breaker_rating_amps\x18\x05 \x01(\x01B\x0e\xbaH\v\x12\t)\x00\x00\x00\x00\x00\x00\x00\x00H\x03R\x11breakerRatingAmps\x88\x01\x01\x12'\n" +
+	"\x0fconnected_loads\x18\x06 \x03(\tR\x0econnectedLoadsB\n" +
 	"\n" +
 	"\b_voltageB\x0f\n" +
 	"\r_current_ampsB\x0e\n" +
@@ -2539,17 +2478,15 @@ const file_schema_v1alpha1_chassis_proto_rawDesc = "" +
 	"\v_used_wattsB\f\n" +
 	"\n" +
 	"_max_wattsB\v\n" +
-	"\t_priority\"\x87\x03\n" +
+	"\t_priority\"\xe2\x02\n" +
 	"\n" +
-	"ChassisLED\x12\x1e\n" +
-	"\x06led_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05ledId\x12\x17\n" +
-	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12B\n" +
-	"\x04type\x18\x03 \x01(\x0e2\x1f.schema.v1alpha1.ChassisLEDTypeB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\x04type\x88\x01\x01\x12E\n" +
-	"\x05state\x18\x04 \x01(\x0e2 .schema.v1alpha1.ChassisLEDStateB\b\xbaH\x05\x82\x01\x02\x10\x01H\x02R\x05state\x88\x01\x01\x12\x19\n" +
-	"\x05color\x18\x05 \x01(\tH\x03R\x05color\x88\x01\x01\x12(\n" +
-	"\rblink_pattern\x18\x06 \x01(\tH\x04R\fblinkPattern\x88\x01\x01\x12'\n" +
-	"\fcontrollable\x18\a \x01(\bH\x05R\fcontrollable\x88\x01\x01B\a\n" +
-	"\x05_nameB\a\n" +
+	"ChassisLED\x12\x1b\n" +
+	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12B\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x1f.schema.v1alpha1.ChassisLEDTypeB\b\xbaH\x05\x82\x01\x02\x10\x01H\x00R\x04type\x88\x01\x01\x12E\n" +
+	"\x05state\x18\x03 \x01(\x0e2 .schema.v1alpha1.ChassisLEDStateB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\x05state\x88\x01\x01\x12\x19\n" +
+	"\x05color\x18\x04 \x01(\tH\x02R\x05color\x88\x01\x01\x12(\n" +
+	"\rblink_pattern\x18\x05 \x01(\tH\x03R\fblinkPattern\x88\x01\x01\x12'\n" +
+	"\fcontrollable\x18\x06 \x01(\bH\x04R\fcontrollable\x88\x01\x01B\a\n" +
 	"\x05_typeB\b\n" +
 	"\x06_stateB\b\n" +
 	"\x06_colorB\x10\n" +
@@ -2566,41 +2503,35 @@ const file_schema_v1alpha1_chassis_proto_rawDesc = "" +
 	"\x0f_last_intrusionB\x12\n" +
 	"\x10_intrusion_countB\x0e\n" +
 	"\f_reset_countB\x10\n" +
-	"\x0e_sensor_status\"\xc2\x02\n" +
-	"\fExpansionBay\x12\x1e\n" +
-	"\x06bay_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05bayId\x12\x17\n" +
-	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1e\n" +
-	"\bbay_type\x18\x03 \x01(\tH\x01R\abayType\x88\x01\x01\x12\x1f\n" +
-	"\boccupied\x18\x04 \x01(\bH\x02R\boccupied\x88\x01\x01\x124\n" +
-	"\x13installed_component\x18\x05 \x01(\tH\x03R\x12installedComponent\x88\x01\x01\x12:\n" +
-	"\blocation\x18\x06 \x01(\v2\x19.schema.v1alpha1.LocationH\x04R\blocation\x88\x01\x01B\a\n" +
-	"\x05_nameB\v\n" +
+	"\x0e_sensor_status\"\x9d\x02\n" +
+	"\fExpansionBay\x12\x1b\n" +
+	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12\x1e\n" +
+	"\bbay_type\x18\x02 \x01(\tH\x00R\abayType\x88\x01\x01\x12\x1f\n" +
+	"\boccupied\x18\x03 \x01(\bH\x01R\boccupied\x88\x01\x01\x124\n" +
+	"\x13installed_component\x18\x04 \x01(\tH\x02R\x12installedComponent\x88\x01\x01\x12:\n" +
+	"\blocation\x18\x05 \x01(\v2\x19.schema.v1alpha1.LocationH\x03R\blocation\x88\x01\x01B\v\n" +
 	"\t_bay_typeB\v\n" +
 	"\t_occupiedB\x16\n" +
 	"\x14_installed_componentB\v\n" +
-	"\t_location\"\xbf\x02\n" +
-	"\x04Slot\x12 \n" +
-	"\aslot_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06slotId\x12\x17\n" +
-	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12 \n" +
-	"\tslot_type\x18\x03 \x01(\tH\x01R\bslotType\x88\x01\x01\x12\x1f\n" +
-	"\boccupied\x18\x04 \x01(\bH\x02R\boccupied\x88\x01\x01\x124\n" +
-	"\x13installed_component\x18\x05 \x01(\tH\x03R\x12installedComponent\x88\x01\x01\x12:\n" +
-	"\blocation\x18\x06 \x01(\v2\x19.schema.v1alpha1.LocationH\x04R\blocation\x88\x01\x01B\a\n" +
-	"\x05_nameB\f\n" +
+	"\t_location\"\x98\x02\n" +
+	"\x04Slot\x12\x1b\n" +
+	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12 \n" +
+	"\tslot_type\x18\x02 \x01(\tH\x00R\bslotType\x88\x01\x01\x12\x1f\n" +
+	"\boccupied\x18\x03 \x01(\bH\x01R\boccupied\x88\x01\x01\x124\n" +
+	"\x13installed_component\x18\x04 \x01(\tH\x02R\x12installedComponent\x88\x01\x01\x12:\n" +
+	"\blocation\x18\x05 \x01(\v2\x19.schema.v1alpha1.LocationH\x03R\blocation\x88\x01\x01B\f\n" +
 	"\n" +
 	"_slot_typeB\v\n" +
 	"\t_occupiedB\x16\n" +
 	"\x14_installed_componentB\v\n" +
-	"\t_location\"\xd5\x02\n" +
-	"\x11GetChassisRequest\x12\x1f\n" +
+	"\t_location\"\xb4\x02\n" +
+	"\x11GetChassisRequest\x12\x14\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x122\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x1c.schema.v1alpha1.ChassisTypeH\x00R\x04type\x128\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x1e.schema.v1alpha1.ChassisStatusH\x00R\x06status\x127\n" +
+	"\blocation\x18\x04 \x01(\v2\x19.schema.v1alpha1.LocationH\x00R\blocation\x12>\n" +
 	"\n" +
-	"chassis_id\x18\x01 \x01(\tH\x00R\tchassisId\x12\x14\n" +
-	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x122\n" +
-	"\x04type\x18\x03 \x01(\x0e2\x1c.schema.v1alpha1.ChassisTypeH\x00R\x04type\x128\n" +
-	"\x06status\x18\x04 \x01(\x0e2\x1e.schema.v1alpha1.ChassisStatusH\x00R\x06status\x127\n" +
-	"\blocation\x18\x05 \x01(\v2\x19.schema.v1alpha1.LocationH\x00R\blocation\x12>\n" +
-	"\n" +
-	"field_mask\x18\x06 \x01(\v2\x1a.google.protobuf.FieldMaskH\x01R\tfieldMask\x88\x01\x01B\x13\n" +
+	"field_mask\x18\x05 \x01(\v2\x1a.google.protobuf.FieldMaskH\x01R\tfieldMask\x88\x01\x01B\x13\n" +
 	"\n" +
 	"identifier\x12\x05\xbaH\x02\b\x01B\r\n" +
 	"\v_field_mask\"H\n" +
@@ -2626,18 +2557,16 @@ const file_schema_v1alpha1_chassis_proto_rawDesc = "" +
 	"\n" +
 	"total_size\x18\x03 \x01(\rH\x01R\ttotalSize\x88\x01\x01B\x12\n" +
 	"\x10_next_page_tokenB\r\n" +
-	"\v_total_size\"\xb5\x01\n" +
-	"\x14UpdateChassisRequest\x12&\n" +
-	"\n" +
-	"chassis_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tchassisId\x12:\n" +
+	"\v_total_size\"\xb9\x01\n" +
+	"\x14UpdateChassisRequest\x12*\n" +
+	"\fchassis_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vchassisName\x12:\n" +
 	"\achassis\x18\x02 \x01(\v2\x18.schema.v1alpha1.ChassisB\x06\xbaH\x03\xc8\x01\x01R\achassis\x129\n" +
 	"\n" +
 	"field_mask\x18\x03 \x01(\v2\x1a.google.protobuf.FieldMaskR\tfieldMask\"K\n" +
 	"\x15UpdateChassisResponse\x122\n" +
-	"\achassis\x18\x01 \x01(\v2\x18.schema.v1alpha1.ChassisR\achassis\"\x98\x03\n" +
-	"\x19ChassisChangeStateRequest\x12&\n" +
-	"\n" +
-	"chassis_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tchassisId\x12L\n" +
+	"\achassis\x18\x01 \x01(\v2\x18.schema.v1alpha1.ChassisR\achassis\"\x9c\x03\n" +
+	"\x19ChassisChangeStateRequest\x12*\n" +
+	"\fchassis_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vchassisName\x12L\n" +
 	"\n" +
 	"transition\x18\x02 \x01(\x0e2\".schema.v1alpha1.ChassisTransitionB\b\xbaH\x05\x82\x01\x02\x10\x01R\n" +
 	"transition\x12\x19\n" +
@@ -2663,10 +2592,9 @@ const file_schema_v1alpha1_chassis_proto_rawDesc = "" +
 	"\x0e_error_messageB\t\n" +
 	"\a_statusB\x10\n" +
 	"\x0e_transition_idB\x17\n" +
-	"\x15_estimated_completion\"\x93\x03\n" +
-	"\x15ChassisControlRequest\x12&\n" +
-	"\n" +
-	"chassis_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tchassisId\x12G\n" +
+	"\x15_estimated_completion\"\x97\x03\n" +
+	"\x15ChassisControlRequest\x12*\n" +
+	"\fchassis_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vchassisName\x12G\n" +
 	"\x06action\x18\x02 \x01(\x0e2%.schema.v1alpha1.ChassisControlActionB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06action\x12\x19\n" +
 	"\x05force\x18\x03 \x01(\bH\x00R\x05force\x88\x01\x01\x12>\n" +
 	"\n" +
@@ -2897,7 +2825,6 @@ func file_schema_v1alpha1_chassis_proto_init() {
 	file_schema_v1alpha1_chassis_proto_msgTypes[9].OneofWrappers = []any{}
 	file_schema_v1alpha1_chassis_proto_msgTypes[10].OneofWrappers = []any{}
 	file_schema_v1alpha1_chassis_proto_msgTypes[11].OneofWrappers = []any{
-		(*GetChassisRequest_ChassisId)(nil),
 		(*GetChassisRequest_Name)(nil),
 		(*GetChassisRequest_Type)(nil),
 		(*GetChassisRequest_Status)(nil),
