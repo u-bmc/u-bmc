@@ -5,8 +5,8 @@ tone_instructions: ""
 early_access: true
 enable_free_tier: true
 reviews:
-  profile: chill
-  request_changes_workflow: false
+  profile: assertive
+  request_changes_workflow: true
   high_level_summary: true
   high_level_summary_placeholder: "@coderabbitai summary"
   high_level_summary_in_walkthrough: false
@@ -14,10 +14,11 @@ reviews:
   auto_title_instructions: ""
   review_status: true
   commit_status: true
-  fail_commit_status: false
+  fail_commit_status: true
   collapse_walkthrough: false
   changed_files_summary: true
   sequence_diagrams: true
+  estimate_code_review_effort: false
   assess_linked_issues: true
   related_issues: true
   related_prs: true
@@ -26,13 +27,9 @@ reviews:
   suggested_reviewers: true
   auto_assign_reviewers: false
   poem: false
-  labeling_instructions:
-    - label: ""
-      instructions: ""
+  labeling_instructions: []
   path_filters: []
-  path_instructions:
-    - path: ""
-      instructions: ""
+  path_instructions: []
   abort_on_close: true
   disable_cache: false
   auto_review:
@@ -141,12 +138,13 @@ reviews:
     checkmake:
       enabled: true
 chat:
+  art: false
   auto_reply: true
   integrations:
     jira:
-      usage: auto
+      usage: disabled
     linear:
-      usage: auto
+      usage: disabled
 knowledge_base:
   opt_out: false
   web_search:
@@ -159,20 +157,16 @@ knowledge_base:
   issues:
     scope: auto
   jira:
-    usage: auto
+    usage: disabled
     project_keys: []
   linear:
-    usage: auto
+    usage: disabled
     team_keys: []
   pull_requests:
     scope: auto
 code_generation:
   docstrings:
     language: en-US
-    path_instructions:
-      - path: ""
-        instructions: ""
+    path_instructions: []
   unit_tests:
-    path_instructions:
-      - path: ""
-        instructions: ""
+    path_instructions: []
