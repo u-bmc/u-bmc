@@ -10,6 +10,7 @@ package schemav1alpha1
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	durationpb "google.golang.org/protobuf/types/known/durationpb"
@@ -578,7 +579,7 @@ var File_schema_v1alpha1_system_proto protoreflect.FileDescriptor
 
 const file_schema_v1alpha1_system_proto_rawDesc = "" +
 	"\n" +
-	"\x1cschema/v1alpha1/system.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bschema/v1alpha1/asset.proto\x1a\x1dschema/v1alpha1/chassis.proto\x1a\x1dschema/v1alpha1/contact.proto\x1a\x1aschema/v1alpha1/host.proto\x1a*schema/v1alpha1/managementcontroller.proto\x1a\x1cschema/v1alpha1/sensor.proto\x1a\x1dschema/v1alpha1/thermal.proto\x1a\x1aschema/v1alpha1/user.proto\"\xe5\x02\n" +
+	"\x1cschema/v1alpha1/system.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\x1a\x1cgoogle/api/annotations.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bschema/v1alpha1/asset.proto\x1a\x1dschema/v1alpha1/chassis.proto\x1a\x1dschema/v1alpha1/contact.proto\x1a\x1aschema/v1alpha1/host.proto\x1a*schema/v1alpha1/managementcontroller.proto\x1a\x1cschema/v1alpha1/sensor.proto\x1a\x1dschema/v1alpha1/thermal.proto\x1a\x1aschema/v1alpha1/user.proto\"\xe5\x02\n" +
 	"\x06Health\x12?\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x1d.schema.v1alpha1.HealthStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06status\x122\n" +
 	"\x12status_description\x18\x02 \x01(\tH\x00R\x11statusDescription\x88\x01\x01\x127\n" +
@@ -645,44 +646,44 @@ const file_schema_v1alpha1_system_proto_rawDesc = "" +
 	"\x14SYSTEM_STATE_STANDBY\x10\x04\x12\x19\n" +
 	"\x15SYSTEM_STATE_QUIESCED\x10\x05\x12\x18\n" +
 	"\x14SYSTEM_STATE_IN_TEST\x10\x06\x12\x19\n" +
-	"\x15SYSTEM_STATE_UPDATING\x10\a2\x82\x17\n" +
+	"\x15SYSTEM_STATE_UPDATING\x10\a2\x84!\n" +
 	"\n" +
-	"BMCService\x12^\n" +
-	"\rGetSystemInfo\x12%.schema.v1alpha1.GetSystemInfoRequest\x1a&.schema.v1alpha1.GetSystemInfoResponse\x12R\n" +
-	"\tGetHealth\x12!.schema.v1alpha1.GetHealthRequest\x1a\".schema.v1alpha1.GetHealthResponse\x12[\n" +
-	"\fGetAssetInfo\x12$.schema.v1alpha1.GetAssetInfoRequest\x1a%.schema.v1alpha1.GetAssetInfoResponse\x12[\n" +
-	"\fSetAssetInfo\x12$.schema.v1alpha1.SetAssetInfoRequest\x1a%.schema.v1alpha1.SetAssetInfoResponse\x12U\n" +
+	"BMCService\x12\x81\x01\n" +
+	"\rGetSystemInfo\x12%.schema.v1alpha1.GetSystemInfoRequest\x1a&.schema.v1alpha1.GetSystemInfoResponse\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/api/v1alpha1/system/info\x12w\n" +
+	"\tGetHealth\x12!.schema.v1alpha1.GetHealthRequest\x1a\".schema.v1alpha1.GetHealthResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/api/v1alpha1/system/health\x12x\n" +
+	"\fGetAssetInfo\x12$.schema.v1alpha1.GetAssetInfoRequest\x1a%.schema.v1alpha1.GetAssetInfoResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/api/v1alpha1/asset\x12{\n" +
+	"\fSetAssetInfo\x12$.schema.v1alpha1.SetAssetInfoRequest\x1a%.schema.v1alpha1.SetAssetInfoResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\x1a\x13/api/v1alpha1/asset\x12{\n" +
 	"\n" +
-	"GetChassis\x12\".schema.v1alpha1.GetChassisRequest\x1a#.schema.v1alpha1.GetChassisResponse\x12X\n" +
-	"\vListChassis\x12#.schema.v1alpha1.ListChassisRequest\x1a$.schema.v1alpha1.ListChassisResponse\x12^\n" +
-	"\rUpdateChassis\x12%.schema.v1alpha1.UpdateChassisRequest\x1a&.schema.v1alpha1.UpdateChassisResponse\x12m\n" +
-	"\x12ChassisChangeState\x12*.schema.v1alpha1.ChassisChangeStateRequest\x1a+.schema.v1alpha1.ChassisChangeStateResponse\x12a\n" +
-	"\x0eChassisControl\x12&.schema.v1alpha1.ChassisControlRequest\x1a'.schema.v1alpha1.ChassisControlResponse\x12L\n" +
-	"\aGetHost\x12\x1f.schema.v1alpha1.GetHostRequest\x1a .schema.v1alpha1.GetHostResponse\x12R\n" +
-	"\tListHosts\x12!.schema.v1alpha1.ListHostsRequest\x1a\".schema.v1alpha1.ListHostsResponse\x12U\n" +
+	"GetChassis\x12\".schema.v1alpha1.GetChassisRequest\x1a#.schema.v1alpha1.GetChassisResponse\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/api/v1alpha1/chassis/{name}\x12w\n" +
+	"\vListChassis\x12#.schema.v1alpha1.ListChassisRequest\x1a$.schema.v1alpha1.ListChassisResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/v1alpha1/chassis\x12\x8f\x01\n" +
+	"\rUpdateChassis\x12%.schema.v1alpha1.UpdateChassisRequest\x1a&.schema.v1alpha1.UpdateChassisResponse\"/\x82\xd3\xe4\x93\x02):\x01*2$/api/v1alpha1/chassis/{chassis_name}\x12\xa4\x01\n" +
+	"\x12ChassisChangeState\x12*.schema.v1alpha1.ChassisChangeStateRequest\x1a+.schema.v1alpha1.ChassisChangeStateResponse\"5\x82\xd3\xe4\x93\x02/:\x01*\"*/api/v1alpha1/chassis/{chassis_name}/state\x12\x9a\x01\n" +
+	"\x0eChassisControl\x12&.schema.v1alpha1.ChassisControlRequest\x1a'.schema.v1alpha1.ChassisControlResponse\"7\x82\xd3\xe4\x93\x021:\x01*\",/api/v1alpha1/chassis/{chassis_name}/control\x12p\n" +
+	"\aGetHost\x12\x1f.schema.v1alpha1.GetHostRequest\x1a .schema.v1alpha1.GetHostResponse\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/api/v1alpha1/hosts/{name}\x12o\n" +
+	"\tListHosts\x12!.schema.v1alpha1.ListHostsRequest\x1a\".schema.v1alpha1.ListHostsResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/api/v1alpha1/hosts\x12\x7f\n" +
 	"\n" +
-	"UpdateHost\x12\".schema.v1alpha1.UpdateHostRequest\x1a#.schema.v1alpha1.UpdateHostResponse\x12d\n" +
-	"\x0fHostChangeState\x12'.schema.v1alpha1.HostChangeStateRequest\x1a(.schema.v1alpha1.HostChangeStateResponse\x12|\n" +
-	"\x17GetManagementController\x12/.schema.v1alpha1.GetManagementControllerRequest\x1a0.schema.v1alpha1.GetManagementControllerResponse\x12\x82\x01\n" +
-	"\x19ListManagementControllers\x121.schema.v1alpha1.ListManagementControllersRequest\x1a2.schema.v1alpha1.ListManagementControllersResponse\x12\x85\x01\n" +
-	"\x1aUpdateManagementController\x122.schema.v1alpha1.UpdateManagementControllerRequest\x1a3.schema.v1alpha1.UpdateManagementControllerResponse\x12\x88\x01\n" +
-	"\x1bManagementControllerControl\x123.schema.v1alpha1.ManagementControllerControlRequest\x1a4.schema.v1alpha1.ManagementControllerControlResponse\x12X\n" +
-	"\vListSensors\x12#.schema.v1alpha1.ListSensorsRequest\x1a$.schema.v1alpha1.ListSensorsResponse\x12R\n" +
-	"\tGetSensor\x12!.schema.v1alpha1.GetSensorRequest\x1a\".schema.v1alpha1.GetSensorResponse\x12a\n" +
-	"\x0eGetThermalZone\x12&.schema.v1alpha1.GetThermalZoneRequest\x1a'.schema.v1alpha1.GetThermalZoneResponse\x12a\n" +
-	"\x0eSetThermalZone\x12&.schema.v1alpha1.SetThermalZoneRequest\x1a'.schema.v1alpha1.SetThermalZoneResponse\x12g\n" +
-	"\x10ListThermalZones\x12(.schema.v1alpha1.ListThermalZonesRequest\x1a).schema.v1alpha1.ListThermalZonesResponse\x12U\n" +
+	"UpdateHost\x12\".schema.v1alpha1.UpdateHostRequest\x1a#.schema.v1alpha1.UpdateHostResponse\"(\x82\xd3\xe4\x93\x02\":\x01*2\x1d/api/v1alpha1/hosts/{host_id}\x12\x94\x01\n" +
+	"\x0fHostChangeState\x12'.schema.v1alpha1.HostChangeStateRequest\x1a(.schema.v1alpha1.HostChangeStateResponse\".\x82\xd3\xe4\x93\x02(:\x01*\"#/api/v1alpha1/hosts/{host_id}/state\x12\xb1\x01\n" +
+	"\x17GetManagementController\x12/.schema.v1alpha1.GetManagementControllerRequest\x1a0.schema.v1alpha1.GetManagementControllerResponse\"3\x82\xd3\xe4\x93\x02-\x12+/api/v1alpha1/management-controllers/{name}\x12\xb0\x01\n" +
+	"\x19ListManagementControllers\x121.schema.v1alpha1.ListManagementControllersRequest\x1a2.schema.v1alpha1.ListManagementControllersResponse\",\x82\xd3\xe4\x93\x02&\x12$/api/v1alpha1/management-controllers\x12\xc6\x01\n" +
+	"\x1aUpdateManagementController\x122.schema.v1alpha1.UpdateManagementControllerRequest\x1a3.schema.v1alpha1.UpdateManagementControllerResponse\"?\x82\xd3\xe4\x93\x029:\x01*24/api/v1alpha1/management-controllers/{controller_id}\x12\xd1\x01\n" +
+	"\x1bManagementControllerControl\x123.schema.v1alpha1.ManagementControllerControlRequest\x1a4.schema.v1alpha1.ManagementControllerControlResponse\"G\x82\xd3\xe4\x93\x02A:\x01*\"</api/v1alpha1/management-controllers/{controller_id}/control\x12w\n" +
+	"\vListSensors\x12#.schema.v1alpha1.ListSensorsRequest\x1a$.schema.v1alpha1.ListSensorsResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/v1alpha1/sensors\x12v\n" +
+	"\tGetSensor\x12!.schema.v1alpha1.GetSensorRequest\x1a\".schema.v1alpha1.GetSensorResponse\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/api/v1alpha1/sensors/{id}\x12\x8d\x01\n" +
+	"\x0eGetThermalZone\x12&.schema.v1alpha1.GetThermalZoneRequest\x1a'.schema.v1alpha1.GetThermalZoneResponse\"*\x82\xd3\xe4\x93\x02$\x12\"/api/v1alpha1/thermal-zones/{name}\x12\x90\x01\n" +
+	"\x0eSetThermalZone\x12&.schema.v1alpha1.SetThermalZoneRequest\x1a'.schema.v1alpha1.SetThermalZoneResponse\"-\x82\xd3\xe4\x93\x02':\x01*\x1a\"/api/v1alpha1/thermal-zones/{name}\x12\x8c\x01\n" +
+	"\x10ListThermalZones\x12(.schema.v1alpha1.ListThermalZonesRequest\x1a).schema.v1alpha1.ListThermalZonesResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/api/v1alpha1/thermal-zones\x12u\n" +
 	"\n" +
-	"CreateUser\x12\".schema.v1alpha1.CreateUserRequest\x1a#.schema.v1alpha1.CreateUserResponse\x12L\n" +
-	"\aGetUser\x12\x1f.schema.v1alpha1.GetUserRequest\x1a .schema.v1alpha1.GetUserResponse\x12U\n" +
+	"CreateUser\x12\".schema.v1alpha1.CreateUserRequest\x1a#.schema.v1alpha1.CreateUserResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1alpha1/users\x12n\n" +
+	"\aGetUser\x12\x1f.schema.v1alpha1.GetUserRequest\x1a .schema.v1alpha1.GetUserResponse\" \x82\xd3\xe4\x93\x02\x1a\x12\x18/api/v1alpha1/users/{id}\x12\x7f\n" +
 	"\n" +
-	"UpdateUser\x12\".schema.v1alpha1.UpdateUserRequest\x1a#.schema.v1alpha1.UpdateUserResponse\x12U\n" +
+	"UpdateUser\x12\".schema.v1alpha1.UpdateUserRequest\x1a#.schema.v1alpha1.UpdateUserResponse\"(\x82\xd3\xe4\x93\x02\":\x01*2\x1d/api/v1alpha1/users/{user.id}\x12w\n" +
 	"\n" +
-	"DeleteUser\x12\".schema.v1alpha1.DeleteUserRequest\x1a#.schema.v1alpha1.DeleteUserResponse\x12R\n" +
-	"\tListUsers\x12!.schema.v1alpha1.ListUsersRequest\x1a\".schema.v1alpha1.ListUsersResponse\x12a\n" +
-	"\x0eChangePassword\x12&.schema.v1alpha1.ChangePasswordRequest\x1a'.schema.v1alpha1.ChangePasswordResponse\x12^\n" +
-	"\rResetPassword\x12%.schema.v1alpha1.ResetPasswordRequest\x1a&.schema.v1alpha1.ResetPasswordResponse\x12g\n" +
-	"\x10AuthenticateUser\x12(.schema.v1alpha1.AuthenticateUserRequest\x1a).schema.v1alpha1.AuthenticateUserResponseB\xbe\x01\n" +
+	"DeleteUser\x12\".schema.v1alpha1.DeleteUserRequest\x1a#.schema.v1alpha1.DeleteUserResponse\" \x82\xd3\xe4\x93\x02\x1a*\x18/api/v1alpha1/users/{id}\x12o\n" +
+	"\tListUsers\x12!.schema.v1alpha1.ListUsersRequest\x1a\".schema.v1alpha1.ListUsersResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/api/v1alpha1/users\x12\x96\x01\n" +
+	"\x0eChangePassword\x12&.schema.v1alpha1.ChangePasswordRequest\x1a'.schema.v1alpha1.ChangePasswordResponse\"3\x82\xd3\xe4\x93\x02-:\x01*\"(/api/v1alpha1/users/{id}/change-password\x12\x92\x01\n" +
+	"\rResetPassword\x12%.schema.v1alpha1.ResetPasswordRequest\x1a&.schema.v1alpha1.ResetPasswordResponse\"2\x82\xd3\xe4\x93\x02,:\x01*\"'/api/v1alpha1/users/{id}/reset-password\x12\x93\x01\n" +
+	"\x10AuthenticateUser\x12(.schema.v1alpha1.AuthenticateUserRequest\x1a).schema.v1alpha1.AuthenticateUserResponse\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/api/v1alpha1/auth/authenticateB\xbe\x01\n" +
 	"\x13com.schema.v1alpha1B\vSystemProtoP\x01Z=github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;schemav1alpha1\xa2\x02\x03SXX\xaa\x02\x0fSchema.V1alpha1\xca\x02\x0fSchema\\V1alpha1\xe2\x02\x1bSchema\\V1alpha1\\GPBMetadata\xea\x02\x10Schema::V1alpha1b\x06proto3"
 
 var (

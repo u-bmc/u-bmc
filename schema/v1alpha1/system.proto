@@ -5,6 +5,7 @@ syntax = "proto3";
 package schema.v1alpha1;
 
 import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
@@ -74,48 +75,183 @@ message GetHealthRequest { optional google.protobuf.FieldMask field_mask = 1; }
 message GetHealthResponse { Health health = 1; }
 
 service BMCService {
-  rpc GetSystemInfo(GetSystemInfoRequest) returns (GetSystemInfoResponse);
-  rpc GetHealth(GetHealthRequest) returns (GetHealthResponse);
+  rpc GetSystemInfo(GetSystemInfoRequest) returns (GetSystemInfoResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/system/info"
+    };
+  }
+  rpc GetHealth(GetHealthRequest) returns (GetHealthResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/system/health"
+    };
+  }
 
-  rpc GetAssetInfo(GetAssetInfoRequest) returns (GetAssetInfoResponse);
-  rpc SetAssetInfo(SetAssetInfoRequest) returns (SetAssetInfoResponse);
+  rpc GetAssetInfo(GetAssetInfoRequest) returns (GetAssetInfoResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/asset"
+    };
+  }
+  rpc SetAssetInfo(SetAssetInfoRequest) returns (SetAssetInfoResponse) {
+    option (google.api.http) = {
+      put : "/api/v1alpha1/asset"
+      body : "*"
+    };
+  }
 
-  rpc GetChassis(GetChassisRequest) returns (GetChassisResponse);
-  rpc ListChassis(ListChassisRequest) returns (ListChassisResponse);
-  rpc UpdateChassis(UpdateChassisRequest) returns (UpdateChassisResponse);
+  rpc GetChassis(GetChassisRequest) returns (GetChassisResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/chassis/{name}"
+    };
+  }
+  rpc ListChassis(ListChassisRequest) returns (ListChassisResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/chassis"
+    };
+  }
+  rpc UpdateChassis(UpdateChassisRequest) returns (UpdateChassisResponse) {
+    option (google.api.http) = {
+      patch : "/api/v1alpha1/chassis/{chassis_name}"
+      body : "*"
+    };
+  }
   rpc ChassisChangeState(ChassisChangeStateRequest)
-      returns (ChassisChangeStateResponse);
-  rpc ChassisControl(ChassisControlRequest) returns (ChassisControlResponse);
+      returns (ChassisChangeStateResponse) {
+    option (google.api.http) = {
+      post : "/api/v1alpha1/chassis/{chassis_name}/state"
+      body : "*"
+    };
+  }
+  rpc ChassisControl(ChassisControlRequest) returns (ChassisControlResponse) {
+    option (google.api.http) = {
+      post : "/api/v1alpha1/chassis/{chassis_name}/control"
+      body : "*"
+    };
+  }
 
-  rpc GetHost(GetHostRequest) returns (GetHostResponse);
-  rpc ListHosts(ListHostsRequest) returns (ListHostsResponse);
-  rpc UpdateHost(UpdateHostRequest) returns (UpdateHostResponse);
-  rpc HostChangeState(HostChangeStateRequest) returns (HostChangeStateResponse);
+  rpc GetHost(GetHostRequest) returns (GetHostResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/hosts/{name}"
+    };
+  }
+  rpc ListHosts(ListHostsRequest) returns (ListHostsResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/hosts"
+    };
+  }
+  rpc UpdateHost(UpdateHostRequest) returns (UpdateHostResponse) {
+    option (google.api.http) = {
+      patch : "/api/v1alpha1/hosts/{host_id}"
+      body : "*"
+    };
+  }
+  rpc HostChangeState(HostChangeStateRequest)
+      returns (HostChangeStateResponse) {
+    option (google.api.http) = {
+      post : "/api/v1alpha1/hosts/{host_id}/state"
+      body : "*"
+    };
+  }
 
   rpc GetManagementController(GetManagementControllerRequest)
-      returns (GetManagementControllerResponse);
+      returns (GetManagementControllerResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/management-controllers/{name}"
+    };
+  }
   rpc ListManagementControllers(ListManagementControllersRequest)
-      returns (ListManagementControllersResponse);
+      returns (ListManagementControllersResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/management-controllers"
+    };
+  }
   rpc UpdateManagementController(UpdateManagementControllerRequest)
-      returns (UpdateManagementControllerResponse);
+      returns (UpdateManagementControllerResponse) {
+    option (google.api.http) = {
+      patch : "/api/v1alpha1/management-controllers/{controller_id}"
+      body : "*"
+    };
+  }
   rpc ManagementControllerControl(ManagementControllerControlRequest)
-      returns (ManagementControllerControlResponse);
+      returns (ManagementControllerControlResponse) {
+    option (google.api.http) = {
+      post : "/api/v1alpha1/management-controllers/{controller_id}/control"
+      body : "*"
+    };
+  }
 
-  rpc ListSensors(ListSensorsRequest) returns (ListSensorsResponse);
-  rpc GetSensor(GetSensorRequest) returns (GetSensorResponse);
+  rpc ListSensors(ListSensorsRequest) returns (ListSensorsResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/sensors"
+    };
+  }
+  rpc GetSensor(GetSensorRequest) returns (GetSensorResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/sensors/{id}"
+    };
+  }
 
-  rpc GetThermalZone(GetThermalZoneRequest) returns (GetThermalZoneResponse);
-  rpc SetThermalZone(SetThermalZoneRequest) returns (SetThermalZoneResponse);
+  rpc GetThermalZone(GetThermalZoneRequest) returns (GetThermalZoneResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/thermal-zones/{name}"
+    };
+  }
+  rpc SetThermalZone(SetThermalZoneRequest) returns (SetThermalZoneResponse) {
+    option (google.api.http) = {
+      put : "/api/v1alpha1/thermal-zones/{name}"
+      body : "*"
+    };
+  }
   rpc ListThermalZones(ListThermalZonesRequest)
-      returns (ListThermalZonesResponse);
+      returns (ListThermalZonesResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/thermal-zones"
+    };
+  }
 
-  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
-  rpc GetUser(GetUserRequest) returns (GetUserResponse);
-  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
-  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
-  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
-  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
-  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post : "/api/v1alpha1/users"
+      body : "*"
+    };
+  }
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/users/{id}"
+    };
+  }
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      patch : "/api/v1alpha1/users/{user.id}"
+      body : "*"
+    };
+  }
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+    option (google.api.http) = {
+      delete : "/api/v1alpha1/users/{id}"
+    };
+  }
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+    option (google.api.http) = {
+      get : "/api/v1alpha1/users"
+    };
+  }
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse) {
+    option (google.api.http) = {
+      post : "/api/v1alpha1/users/{id}/change-password"
+      body : "*"
+    };
+  }
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse) {
+    option (google.api.http) = {
+      post : "/api/v1alpha1/users/{id}/reset-password"
+      body : "*"
+    };
+  }
   rpc AuthenticateUser(AuthenticateUserRequest)
-      returns (AuthenticateUserResponse);
+      returns (AuthenticateUserResponse) {
+    option (google.api.http) = {
+      post : "/api/v1alpha1/auth/authenticate"
+      body : "*"
+    };
+  }
 }

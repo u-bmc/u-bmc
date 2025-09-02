@@ -786,7 +786,7 @@ func (m *ChassisPowerSupply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for PsuId
+	// no validation rules for Name
 
 	if all {
 		switch v := interface{}(m.GetAsset()).(type) {
@@ -1004,7 +1004,7 @@ func (m *ChassisPowerDistribution) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for PduId
+	// no validation rules for Name
 
 	for idx, item := range m.GetCircuits() {
 		_, _ = idx, item
@@ -1038,10 +1038,6 @@ func (m *ChassisPowerDistribution) validate(all bool) error {
 			}
 		}
 
-	}
-
-	if m.Name != nil {
-		// no validation rules for Name
 	}
 
 	if m.CapacityWatts != nil {
@@ -1154,11 +1150,7 @@ func (m *PowerCircuit) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for CircuitId
-
-	if m.Name != nil {
-		// no validation rules for Name
-	}
+	// no validation rules for Name
 
 	if m.Voltage != nil {
 		// no validation rules for Voltage
@@ -1515,11 +1507,7 @@ func (m *ChassisLED) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for LedId
-
-	if m.Name != nil {
-		// no validation rules for Name
-	}
+	// no validation rules for Name
 
 	if m.Type != nil {
 		// no validation rules for Type
@@ -1789,11 +1777,7 @@ func (m *ExpansionBay) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for BayId
-
-	if m.Name != nil {
-		// no validation rules for Name
-	}
+	// no validation rules for Name
 
 	if m.BayType != nil {
 		// no validation rules for BayType
@@ -1938,11 +1922,7 @@ func (m *Slot) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for SlotId
-
-	if m.Name != nil {
-		// no validation rules for Name
-	}
+	// no validation rules for Name
 
 	if m.SlotType != nil {
 		// no validation rules for SlotType
@@ -2089,18 +2069,6 @@ func (m *GetChassisRequest) validate(all bool) error {
 	var errors []error
 
 	switch v := m.Identifier.(type) {
-	case *GetChassisRequest_ChassisId:
-		if v == nil {
-			err := GetChassisRequestValidationError{
-				field:  "Identifier",
-				reason: "oneof value cannot be a typed-nil",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-		// no validation rules for ChassisId
 	case *GetChassisRequest_Name:
 		if v == nil {
 			err := GetChassisRequestValidationError{
@@ -2748,7 +2716,7 @@ func (m *UpdateChassisRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for ChassisId
+	// no validation rules for ChassisName
 
 	if all {
 		switch v := interface{}(m.GetChassis()).(type) {
@@ -3041,7 +3009,7 @@ func (m *ChassisChangeStateRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for ChassisId
+	// no validation rules for ChassisName
 
 	// no validation rules for Transition
 
@@ -3337,7 +3305,7 @@ func (m *ChassisControlRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for ChassisId
+	// no validation rules for ChassisName
 
 	// no validation rules for Action
 
