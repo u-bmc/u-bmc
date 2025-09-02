@@ -1,2 +1,29 @@
-output
-keys
+# Ignore everything
+*
+
+# Except:
+# Git related
+!**/.gitignore
+!.gitattributes
+!.gitmodules
+# Documentation related
+!*.md
+# Protobuf schema related
+!*.proto
+# Go related
+!*.go
+!go.sum
+!go.mod
+# GitHub/Repository related
+!LICENSE
+!CODEOWNERS
+# YAML configs (all except renovate)
+!*.yml
+!*.yaml
+# Renovate JSON config
+!renovate.json
+# Lock files
+!*.lock
+
+# Also traverse subdirectories
+!**/
