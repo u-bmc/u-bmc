@@ -2,21 +2,23 @@
 
 package websrv
 
-import "time"
+import (
+	"time"
+
+	"github.com/u-bmc/u-bmc/pkg/cert"
+)
 
 type config struct {
 	name         string
 	addr         string
 	webui        bool
-	hostname     string
-	certPath     string
-	keyPath      string
 	webuiPath    string
 	readTimeout  time.Duration
 	writeTimeout time.Duration
 	idleTimeout  time.Duration
 	rmemMax      string
 	wmemMax      string
+	certConfig   *cert.Config
 }
 
 type Option interface {
@@ -72,12 +74,31 @@ func WithWebUI(webui bool) Option {
 	}
 }
 
+type certConfigOption struct {
+	certConfig *cert.Config
+}
+
+func (o *certConfigOption) apply(c *config) {
+	c.certConfig = o.certConfig
+}
+
+// WithCertConfig sets the certificate configuration for TLS.
+// This allows full customization of certificate generation and management.
+func WithCertConfig(certConfig *cert.Config) Option {
+	return &certConfigOption{
+		certConfig: certConfig,
+	}
+}
+
 type hostnameOption struct {
 	hostname string
 }
 
 func (o *hostnameOption) apply(c *config) {
-	c.hostname = o.hostname
+	if c.certConfig == nil {
+		c.certConfig = cert.NewConfig()
+	}
+	c.certConfig.Hostname = o.hostname
 }
 
 // WithHostname sets the hostname used for TLS certificate generation.
@@ -93,7 +114,10 @@ type certPathOption struct {
 }
 
 func (o *certPathOption) apply(c *config) {
-	c.certPath = o.certPath
+	if c.certConfig == nil {
+		c.certConfig = cert.NewConfig()
+	}
+	c.certConfig.CertPath = o.certPath
 }
 
 // WithCertPath sets the file path where the TLS certificate is stored or will be generated.
@@ -109,7 +133,10 @@ type keyPathOption struct {
 }
 
 func (o *keyPathOption) apply(c *config) {
-	c.keyPath = o.keyPath
+	if c.certConfig == nil {
+		c.certConfig = cert.NewConfig()
+	}
+	c.certConfig.KeyPath = o.keyPath
 }
 
 // WithKeyPath sets the file path where the TLS private key is stored or will be generated.
@@ -117,6 +144,60 @@ func (o *keyPathOption) apply(c *config) {
 func WithKeyPath(keyPath string) Option {
 	return &keyPathOption{
 		keyPath: keyPath,
+	}
+}
+
+type certificateTypeOption struct {
+	certType cert.CertificateType
+}
+
+func (o *certificateTypeOption) apply(c *config) {
+	if c.certConfig == nil {
+		c.certConfig = cert.NewConfig()
+	}
+	c.certConfig.Type = o.certType
+}
+
+// WithCertificateType sets the type of certificate to use (self-signed or Let's Encrypt).
+func WithCertificateType(certType cert.CertificateType) Option {
+	return &certificateTypeOption{
+		certType: certType,
+	}
+}
+
+type certEmailOption struct {
+	email string
+}
+
+func (o *certEmailOption) apply(c *config) {
+	if c.certConfig == nil {
+		c.certConfig = cert.NewConfig()
+	}
+	c.certConfig.Email = o.email
+}
+
+// WithCertEmail sets the email address for Let's Encrypt certificate registration.
+func WithCertEmail(email string) Option {
+	return &certEmailOption{
+		email: email,
+	}
+}
+
+type alternativeNamesOption struct {
+	altNames []string
+}
+
+func (o *alternativeNamesOption) apply(c *config) {
+	if c.certConfig == nil {
+		c.certConfig = cert.NewConfig()
+	}
+	c.certConfig.AlternativeNames = o.altNames
+}
+
+// WithAlternativeNames sets additional hostnames and IP addresses for the certificate.
+func WithAlternativeNames(altNames ...string) Option {
+	return &alternativeNamesOption{
+		altNames: altNames,
 	}
 }
 
@@ -215,5 +296,36 @@ func (o *wmemMaxOption) apply(c *config) {
 func WithWmemMax(wmemMax string) Option {
 	return &wmemMaxOption{
 		wmemMax: wmemMax,
+	}
+}
+
+// GetCertConfig returns the certificate configuration, creating a default one if none exists.
+func (c *config) GetCertConfig() *cert.Config {
+	if c.certConfig == nil {
+		c.certConfig = cert.NewConfig()
+	}
+	return c.certConfig
+}
+
+// SetCertDefaults applies sensible defaults to the certificate configuration if not already set.
+func (c *config) SetCertDefaults() {
+	if c.certConfig == nil {
+		c.certConfig = cert.NewConfig()
+	}
+
+	// Set default paths if not specified
+	if c.certConfig.CertPath == "" {
+		c.certConfig.CertPath = "/var/cache/cert/cert.pem"
+	}
+	if c.certConfig.KeyPath == "" {
+		c.certConfig.KeyPath = "/var/cache/cert/key.pem"
+	}
+	if c.certConfig.CacheDir == "" {
+		c.certConfig.CacheDir = "/var/cache/cert"
+	}
+
+	// Set default hostname if not specified
+	if c.certConfig.Hostname == "" {
+		c.certConfig.Hostname = "localhost"
 	}
 }
