@@ -9,136 +9,139 @@ import (
 	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/pem"
+	"fmt"
 	"math/big"
 	"os"
 	"path/filepath"
 	"time"
 )
 
-// CertificateOptions contains the configurable options for generating a certificate.
-type CertificateOptions struct {
-	Hostname     string
-	Organization string
-	Country      string
-	Province     string
-	Locality     string
-	NotBefore    time.Time
-	NotAfter     time.Time
-	IsCA         bool
-}
-
-// GenerateSelfsigned creates a self-signed certificate for the given hostname.
+// GenerateSelfsigned creates a self-signed certificate using the provided configuration.
 // It returns the certificate and private key as byte slices, or an error if any step of the generation fails.
-func GenerateSelfsigned(opts CertificateOptions) ([]byte, []byte, error) {
+func GenerateSelfsigned(cfg *Config) ([]byte, []byte, error) {
+	if err := cfg.Validate(); err != nil {
+		return nil, nil, fmt.Errorf("%w: %w", ErrInvalidCertificateOptions, err)
+	}
+
 	// Generate RSA key pair
-	priv, err := rsa.GenerateKey(rand.Reader, 2048)
+	priv, err := rsa.GenerateKey(rand.Reader, cfg.KeySize)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("%w: %w", ErrGenerateRSAKey, err)
 	}
 	pub := &priv.PublicKey
 
 	serialNumberLimit := new(big.Int).Lsh(big.NewInt(1), 128)
 	sn, err := rand.Int(rand.Reader, serialNumberLimit)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("%w: %w", ErrGenerateSerialNumber, err)
 	}
 
-	if opts.Organization == "" {
-		opts.Organization = "u-bmc"
-	}
-
-	if opts.NotBefore.IsZero() {
-		opts.NotBefore = time.Now().Add(-30 * time.Second)
-	}
-
-	if opts.NotAfter.IsZero() {
-		opts.NotAfter = time.Now().Add(262980 * time.Hour)
-	}
+	notBefore := time.Now().Add(-cfg.NotBeforeOffset)
+	notAfter := notBefore.Add(cfg.ValidityPeriod)
 
 	subject := pkix.Name{
-		CommonName:   opts.Hostname,
-		Organization: []string{opts.Organization},
+		CommonName:   cfg.Hostname,
+		Organization: []string{cfg.Organization},
 	}
 
-	if opts.Country != "" {
-		subject.Country = []string{opts.Country}
+	if cfg.OrganizationalUnit != "" {
+		subject.OrganizationalUnit = []string{cfg.OrganizationalUnit}
 	}
 
-	if opts.Province != "" {
-		subject.Province = []string{opts.Province}
+	if cfg.Country != "" {
+		subject.Country = []string{cfg.Country}
 	}
 
-	if opts.Locality != "" {
-		subject.Locality = []string{opts.Locality}
+	if cfg.Province != "" {
+		subject.Province = []string{cfg.Province}
+	}
+
+	if cfg.Locality != "" {
+		subject.Locality = []string{cfg.Locality}
+	}
+
+	// Build DNS names and IP addresses
+	dnsNames := cfg.GetAllHostnames()
+	ipAddresses := cfg.GetAllIPs()
+
+	// Set key usage based on whether this is a CA certificate
+	keyUsage := x509.KeyUsageDigitalSignature | x509.KeyUsageKeyEncipherment
+	if cfg.IsCA {
+		keyUsage |= x509.KeyUsageCertSign | x509.KeyUsageCRLSign
 	}
 
 	template := &x509.Certificate{
-		Subject:  subject,
-		DNSNames: []string{opts.Hostname},
+		Subject:     subject,
+		DNSNames:    dnsNames,
+		IPAddresses: ipAddresses,
 		ExtKeyUsage: []x509.ExtKeyUsage{
 			x509.ExtKeyUsageClientAuth,
 			x509.ExtKeyUsageServerAuth,
 		},
-		KeyUsage:              x509.KeyUsageDigitalSignature | x509.KeyUsageKeyEncipherment | x509.KeyUsageKeyAgreement | x509.KeyUsageCertSign,
+		KeyUsage:              keyUsage,
 		BasicConstraintsValid: true,
 		SerialNumber:          sn,
-		NotBefore:             opts.NotBefore,
-		NotAfter:              opts.NotAfter,
-		IsCA:                  opts.IsCA,
+		NotBefore:             notBefore,
+		NotAfter:              notAfter,
+		IsCA:                  cfg.IsCA,
 	}
 
 	derBytes, err := x509.CreateCertificate(rand.Reader, template, template, pub, priv)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("%w: %w", ErrCreateCertificate, err)
 	}
 
 	var certPem bytes.Buffer
 	if err := pem.Encode(&certPem, &pem.Block{Type: "CERTIFICATE", Bytes: derBytes}); err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("%w: %w", ErrEncodeCertificatePEM, err)
 	}
 
 	privBytes, err := x509.MarshalPKCS8PrivateKey(priv)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("%w: %w", ErrMarshalPrivateKey, err)
 	}
 
 	var keyPem bytes.Buffer
 	if err := pem.Encode(&keyPem, &pem.Block{Type: "PRIVATE KEY", Bytes: privBytes}); err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("%w: %w", ErrEncodePrivateKeyPEM, err)
 	}
 
 	return certPem.Bytes(), keyPem.Bytes(), nil
 }
 
 // LoadOrGenerateCertificate loads a certificate and key from disk if they exist,
-// otherwise generates a new self-signed certificate and saves it to disk.
-func LoadOrGenerateCertificate(certPath, keyPath string, opts CertificateOptions) ([]byte, []byte, error) {
-	certData, certErr := os.ReadFile(certPath)
-	keyData, keyErr := os.ReadFile(keyPath)
+// otherwise generates a new self-signed certificate and saves it to disk using the provided configuration.
+func LoadOrGenerateCertificate(cfg *Config) ([]byte, []byte, error) {
+	if err := cfg.Validate(); err != nil {
+		return nil, nil, fmt.Errorf("%w: %w", ErrInvalidCertificateOptions, err)
+	}
+
+	certData, certErr := os.ReadFile(cfg.CertPath)
+	keyData, keyErr := os.ReadFile(cfg.KeyPath)
 
 	if certErr == nil && keyErr == nil {
 		return certData, keyData, nil
 	}
 
-	certData, keyData, err := GenerateSelfsigned(opts)
+	certData, keyData, err := GenerateSelfsigned(cfg)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	// Ensure directories exist
-	if err := os.MkdirAll(filepath.Dir(certPath), 0755); err != nil {
-		return nil, nil, err
+	if err := os.MkdirAll(filepath.Dir(cfg.CertPath), 0o755); err != nil {
+		return nil, nil, fmt.Errorf("%w: %w", ErrCreateCertificateDirectory, err)
 	}
-	if err := os.MkdirAll(filepath.Dir(keyPath), 0755); err != nil {
-		return nil, nil, err
-	}
-
-	if err := os.WriteFile(certPath, certData, 0o600); err != nil {
-		return nil, nil, err
+	if err := os.MkdirAll(filepath.Dir(cfg.KeyPath), 0o755); err != nil {
+		return nil, nil, fmt.Errorf("%w: %w", ErrCreatePrivateKeyDirectory, err)
 	}
 
-	if err := os.WriteFile(keyPath, keyData, 0o600); err != nil {
-		return nil, nil, err
+	if err := os.WriteFile(cfg.CertPath, certData, 0o600); err != nil {
+		return nil, nil, fmt.Errorf("%w: %w", ErrWriteCertificateFile, err)
+	}
+
+	if err := os.WriteFile(cfg.KeyPath, keyData, 0o600); err != nil {
+		return nil, nil, fmt.Errorf("%w: %w", ErrWritePrivateKeyFile, err)
 	}
 
 	return certData, keyData, nil
