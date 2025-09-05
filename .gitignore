@@ -17,11 +17,13 @@
 # GitHub/Repository related
 !LICENSE
 !CODEOWNERS
-# YAML configs (all except renovate)
+# YAML configs
 !*.yml
 !*.yaml
-# Renovate JSON config
-!renovate.json
+# JSON configs
+!*.json
+# TOML configs
+!*.toml
 # Lock files
 !*.lock
 
