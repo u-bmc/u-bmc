@@ -1,0 +1,47 @@
+# General
+!*.html
+!*.css
+# Svelte related
+!*.svelte
+# TypeScript/JavaScript related
+!*.ts
+!*.tsx
+!*.js
+!*.jsx
+# Node.js related
+test-results
+node_modules
+# Build output related
+.output
+.vercel
+.netlify
+.wrangler
+/.svelte-kit
+/build
+# OS related
+.DS_Store
+Thumbs.db
+# Environment related
+.env
+.env.*
+!.env.example
+!.env.test
+# Vite related
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+# Paraglide related
+src/lib/paraglide
+# Config related
+!.npmrc
+!.prettierrc
+!.prettierignore
+# Image related
+!*.png
+!*.jpg
+!*.jpeg
+!*.gif
+!*.svg
+!*.webp
+!*.ico
+# Raw text
+!*.txt
