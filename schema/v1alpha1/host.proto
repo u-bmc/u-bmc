@@ -21,36 +21,36 @@ enum HostType {
   HOST_TYPE_COMPUTE_NODE = 5;
 }
 
-enum HostState {
-  HOST_STATE_UNSPECIFIED = 0;
-  HOST_STATE_OFF = 1;
-  HOST_STATE_ON = 2;
-  HOST_STATE_TRANSITIONING = 3;
-  HOST_STATE_QUIESCED = 4;
-  HOST_STATE_DIAGNOSTIC_MODE = 5;
-  HOST_STATE_ERROR = 6;
+enum HostStatus {
+  HOST_STATUS_UNSPECIFIED = 0;
+  HOST_STATUS_OFF = 1;
+  HOST_STATUS_ON = 2;
+  HOST_STATUS_TRANSITIONING = 3;
+  HOST_STATUS_QUIESCED = 4;
+  HOST_STATUS_DIAGNOSTIC = 5;
+  HOST_STATUS_ERROR = 6;
 }
 
-enum HostTransition {
-  HOST_TRANSITION_UNSPECIFIED = 0;
-  HOST_TRANSITION_ON = 1;
-  HOST_TRANSITION_OFF = 2;
-  HOST_TRANSITION_REBOOT = 3;
-  HOST_TRANSITION_FORCE_OFF = 4;
-  HOST_TRANSITION_FORCE_RESTART = 5;
+enum HostAction {
+  HOST_ACTION_UNSPECIFIED = 0;
+  HOST_ACTION_ON = 1;
+  HOST_ACTION_OFF = 2;
+  HOST_ACTION_REBOOT = 3;
+  HOST_ACTION_FORCE_OFF = 4;
+  HOST_ACTION_FORCE_RESTART = 5;
 }
 
-enum HostRestartCause {
-  HOST_RESTART_CAUSE_UNSPECIFIED = 0;
-  HOST_RESTART_CAUSE_POWER_BUTTON = 1;
-  HOST_RESTART_CAUSE_RESET_BUTTON = 2;
-  HOST_RESTART_CAUSE_POWER_CYCLE = 3;
-  HOST_RESTART_CAUSE_WATCHDOG = 4;
-  HOST_RESTART_CAUSE_SOFT_RESET = 5;
-  HOST_RESTART_CAUSE_THERMAL = 6;
-  HOST_RESTART_CAUSE_POWER_SUPPLY = 7;
-  HOST_RESTART_CAUSE_OTHER = 8;
-  HOST_RESTART_CAUSE_UNKNOWN = 9;
+enum HostRebootCause {
+  HOST_REBOOT_CAUSE_UNSPECIFIED = 0;
+  HOST_REBOOT_CAUSE_POWER_BUTTON = 1;
+  HOST_REBOOT_CAUSE_RESET_BUTTON = 2;
+  HOST_REBOOT_CAUSE_POWER_CYCLE = 3;
+  HOST_REBOOT_CAUSE_WATCHDOG = 4;
+  HOST_REBOOT_CAUSE_SOFT_RESET = 5;
+  HOST_REBOOT_CAUSE_THERMAL = 6;
+  HOST_REBOOT_CAUSE_POWER_SUPPLY = 7;
+  HOST_REBOOT_CAUSE_OTHER = 8;
+  HOST_REBOOT_CAUSE_UNKNOWN = 9;
 }
 
 enum BootProgressStage {
@@ -86,19 +86,27 @@ message Host {
   AssetInfo asset = 2;
   optional string description = 3;
   optional HostType type = 4 [ (buf.validate.field).enum.defined_only = true ];
-  optional HostState current_state = 5
+  optional HostStatus status = 5
       [ (buf.validate.field).enum.defined_only = true ];
-  optional HostTransition requested_transition = 6
+  optional HostAction requested_action = 6
       [ (buf.validate.field).enum.defined_only = true ];
-  optional HostRestartCause last_restart_cause = 7
+  optional Location location = 7;
+  optional Firmware firmware = 8;
+  optional HostOperatingSystem operating_system = 9;
+  optional BootProgress boot_progress = 10;
+  optional HostRebootInfo last_reboot = 11;
+  optional google.protobuf.Timestamp updated_at = 12;
+  map<string, string> metadata = 13;
+}
+
+message HostStateChange {
+  string host_name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  HostStatus previous_status = 2
       [ (buf.validate.field).enum.defined_only = true ];
-  optional Location location = 8;
-  optional Firmware firmware = 9;
-  optional HostOperatingSystem operating_system = 10;
-  optional BootProgress boot_progress = 11;
-  optional HostRebootInfo last_reboot = 12;
-  optional google.protobuf.Timestamp updated_at = 13;
-  map<string, string> metadata = 14;
+  HostStatus current_status = 3
+      [ (buf.validate.field).enum.defined_only = true ];
+  HostAction cause = 4 [ (buf.validate.field).enum.defined_only = true ];
+  google.protobuf.Timestamp changed_at = 5;
 }
 
 message HostOperatingSystem {
@@ -122,7 +130,7 @@ message BootProgress {
 
 message HostRebootInfo {
   optional google.protobuf.Timestamp last_reboot_time = 1;
-  optional HostRestartCause reboot_cause = 2
+  optional HostRebootCause reboot_cause = 2
       [ (buf.validate.field).enum.defined_only = true ];
   optional uint32 reboot_count = 3;
   optional google.protobuf.Duration uptime = 4;
@@ -132,48 +140,41 @@ message HostRebootInfo {
 message GetHostRequest {
   oneof identifier {
     option (buf.validate.oneof).required = true;
-    string host_id = 1;
-    string name = 2;
-    HostType type = 3;
-    HostState state = 4;
-    Location location = 5;
+    string name = 1;
+    HostType type = 2;
+    HostStatus status = 3;
+    Location location = 4;
   }
-  optional google.protobuf.FieldMask field_mask = 6;
+  optional google.protobuf.FieldMask field_mask = 5;
 }
 
 message GetHostResponse { repeated Host hosts = 1; }
 
 message ListHostsRequest {
-  optional HostType type = 1 [ (buf.validate.field).enum.defined_only = true ];
-  optional HostState state = 2
-      [ (buf.validate.field).enum.defined_only = true ];
-  optional google.protobuf.FieldMask field_mask = 3;
+  oneof identifier {
+    HostType type = 1;
+    HostStatus status = 2;
+    Location location = 3;
+  }
+  optional google.protobuf.FieldMask field_mask = 4;
 }
 
 message ListHostsResponse { repeated Host hosts = 1; }
 
 message UpdateHostRequest {
-  string host_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  string host_name = 1 [ (buf.validate.field).string.min_len = 1 ];
   Host host = 2 [ (buf.validate.field).required = true ];
   google.protobuf.FieldMask field_mask = 3;
 }
 
 message UpdateHostResponse { Host host = 1; }
 
-message HostChangeStateRequest {
-  string host_id = 1 [ (buf.validate.field).string.min_len = 1 ];
-  HostTransition transition = 2
-      [ (buf.validate.field).enum.defined_only = true ];
-  optional bool force = 3;
-  map<string, string> metadata = 4;
+message ChangeHostStateRequest {
+  string host_name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  HostAction action = 2 [ (buf.validate.field).enum.defined_only = true ];
 }
 
-message HostChangeStateResponse {
-  bool success = 1;
-  optional string error_message = 2;
-  optional HostState current_state = 3
+message ChangeHostStateResponse {
+  HostStatus current_status = 1
       [ (buf.validate.field).enum.defined_only = true ];
-  optional string transition_id = 4;
-  optional google.protobuf.Timestamp estimated_completion = 5;
-  map<string, string> metadata = 6;
 }

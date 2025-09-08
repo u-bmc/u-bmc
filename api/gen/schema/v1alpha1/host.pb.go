@@ -85,192 +85,192 @@ func (HostType) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{0}
 }
 
-type HostState int32
+type HostStatus int32
 
 const (
-	HostState_HOST_STATE_UNSPECIFIED     HostState = 0
-	HostState_HOST_STATE_OFF             HostState = 1
-	HostState_HOST_STATE_ON              HostState = 2
-	HostState_HOST_STATE_TRANSITIONING   HostState = 3
-	HostState_HOST_STATE_QUIESCED        HostState = 4
-	HostState_HOST_STATE_DIAGNOSTIC_MODE HostState = 5
-	HostState_HOST_STATE_ERROR           HostState = 6
+	HostStatus_HOST_STATUS_UNSPECIFIED   HostStatus = 0
+	HostStatus_HOST_STATUS_OFF           HostStatus = 1
+	HostStatus_HOST_STATUS_ON            HostStatus = 2
+	HostStatus_HOST_STATUS_TRANSITIONING HostStatus = 3
+	HostStatus_HOST_STATUS_QUIESCED      HostStatus = 4
+	HostStatus_HOST_STATUS_DIAGNOSTIC    HostStatus = 5
+	HostStatus_HOST_STATUS_ERROR         HostStatus = 6
 )
 
-// Enum value maps for HostState.
+// Enum value maps for HostStatus.
 var (
-	HostState_name = map[int32]string{
-		0: "HOST_STATE_UNSPECIFIED",
-		1: "HOST_STATE_OFF",
-		2: "HOST_STATE_ON",
-		3: "HOST_STATE_TRANSITIONING",
-		4: "HOST_STATE_QUIESCED",
-		5: "HOST_STATE_DIAGNOSTIC_MODE",
-		6: "HOST_STATE_ERROR",
+	HostStatus_name = map[int32]string{
+		0: "HOST_STATUS_UNSPECIFIED",
+		1: "HOST_STATUS_OFF",
+		2: "HOST_STATUS_ON",
+		3: "HOST_STATUS_TRANSITIONING",
+		4: "HOST_STATUS_QUIESCED",
+		5: "HOST_STATUS_DIAGNOSTIC",
+		6: "HOST_STATUS_ERROR",
 	}
-	HostState_value = map[string]int32{
-		"HOST_STATE_UNSPECIFIED":     0,
-		"HOST_STATE_OFF":             1,
-		"HOST_STATE_ON":              2,
-		"HOST_STATE_TRANSITIONING":   3,
-		"HOST_STATE_QUIESCED":        4,
-		"HOST_STATE_DIAGNOSTIC_MODE": 5,
-		"HOST_STATE_ERROR":           6,
+	HostStatus_value = map[string]int32{
+		"HOST_STATUS_UNSPECIFIED":   0,
+		"HOST_STATUS_OFF":           1,
+		"HOST_STATUS_ON":            2,
+		"HOST_STATUS_TRANSITIONING": 3,
+		"HOST_STATUS_QUIESCED":      4,
+		"HOST_STATUS_DIAGNOSTIC":    5,
+		"HOST_STATUS_ERROR":         6,
 	}
 )
 
-func (x HostState) Enum() *HostState {
-	p := new(HostState)
+func (x HostStatus) Enum() *HostStatus {
+	p := new(HostStatus)
 	*p = x
 	return p
 }
 
-func (x HostState) String() string {
+func (x HostStatus) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (HostState) Descriptor() protoreflect.EnumDescriptor {
+func (HostStatus) Descriptor() protoreflect.EnumDescriptor {
 	return file_schema_v1alpha1_host_proto_enumTypes[1].Descriptor()
 }
 
-func (HostState) Type() protoreflect.EnumType {
+func (HostStatus) Type() protoreflect.EnumType {
 	return &file_schema_v1alpha1_host_proto_enumTypes[1]
 }
 
-func (x HostState) Number() protoreflect.EnumNumber {
+func (x HostStatus) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use HostState.Descriptor instead.
-func (HostState) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use HostStatus.Descriptor instead.
+func (HostStatus) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{1}
 }
 
-type HostTransition int32
+type HostAction int32
 
 const (
-	HostTransition_HOST_TRANSITION_UNSPECIFIED   HostTransition = 0
-	HostTransition_HOST_TRANSITION_ON            HostTransition = 1
-	HostTransition_HOST_TRANSITION_OFF           HostTransition = 2
-	HostTransition_HOST_TRANSITION_REBOOT        HostTransition = 3
-	HostTransition_HOST_TRANSITION_FORCE_OFF     HostTransition = 4
-	HostTransition_HOST_TRANSITION_FORCE_RESTART HostTransition = 5
+	HostAction_HOST_ACTION_UNSPECIFIED   HostAction = 0
+	HostAction_HOST_ACTION_ON            HostAction = 1
+	HostAction_HOST_ACTION_OFF           HostAction = 2
+	HostAction_HOST_ACTION_REBOOT        HostAction = 3
+	HostAction_HOST_ACTION_FORCE_OFF     HostAction = 4
+	HostAction_HOST_ACTION_FORCE_RESTART HostAction = 5
 )
 
-// Enum value maps for HostTransition.
+// Enum value maps for HostAction.
 var (
-	HostTransition_name = map[int32]string{
-		0: "HOST_TRANSITION_UNSPECIFIED",
-		1: "HOST_TRANSITION_ON",
-		2: "HOST_TRANSITION_OFF",
-		3: "HOST_TRANSITION_REBOOT",
-		4: "HOST_TRANSITION_FORCE_OFF",
-		5: "HOST_TRANSITION_FORCE_RESTART",
+	HostAction_name = map[int32]string{
+		0: "HOST_ACTION_UNSPECIFIED",
+		1: "HOST_ACTION_ON",
+		2: "HOST_ACTION_OFF",
+		3: "HOST_ACTION_REBOOT",
+		4: "HOST_ACTION_FORCE_OFF",
+		5: "HOST_ACTION_FORCE_RESTART",
 	}
-	HostTransition_value = map[string]int32{
-		"HOST_TRANSITION_UNSPECIFIED":   0,
-		"HOST_TRANSITION_ON":            1,
-		"HOST_TRANSITION_OFF":           2,
-		"HOST_TRANSITION_REBOOT":        3,
-		"HOST_TRANSITION_FORCE_OFF":     4,
-		"HOST_TRANSITION_FORCE_RESTART": 5,
+	HostAction_value = map[string]int32{
+		"HOST_ACTION_UNSPECIFIED":   0,
+		"HOST_ACTION_ON":            1,
+		"HOST_ACTION_OFF":           2,
+		"HOST_ACTION_REBOOT":        3,
+		"HOST_ACTION_FORCE_OFF":     4,
+		"HOST_ACTION_FORCE_RESTART": 5,
 	}
 )
 
-func (x HostTransition) Enum() *HostTransition {
-	p := new(HostTransition)
+func (x HostAction) Enum() *HostAction {
+	p := new(HostAction)
 	*p = x
 	return p
 }
 
-func (x HostTransition) String() string {
+func (x HostAction) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (HostTransition) Descriptor() protoreflect.EnumDescriptor {
+func (HostAction) Descriptor() protoreflect.EnumDescriptor {
 	return file_schema_v1alpha1_host_proto_enumTypes[2].Descriptor()
 }
 
-func (HostTransition) Type() protoreflect.EnumType {
+func (HostAction) Type() protoreflect.EnumType {
 	return &file_schema_v1alpha1_host_proto_enumTypes[2]
 }
 
-func (x HostTransition) Number() protoreflect.EnumNumber {
+func (x HostAction) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use HostTransition.Descriptor instead.
-func (HostTransition) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use HostAction.Descriptor instead.
+func (HostAction) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{2}
 }
 
-type HostRestartCause int32
+type HostRebootCause int32
 
 const (
-	HostRestartCause_HOST_RESTART_CAUSE_UNSPECIFIED  HostRestartCause = 0
-	HostRestartCause_HOST_RESTART_CAUSE_POWER_BUTTON HostRestartCause = 1
-	HostRestartCause_HOST_RESTART_CAUSE_RESET_BUTTON HostRestartCause = 2
-	HostRestartCause_HOST_RESTART_CAUSE_POWER_CYCLE  HostRestartCause = 3
-	HostRestartCause_HOST_RESTART_CAUSE_WATCHDOG     HostRestartCause = 4
-	HostRestartCause_HOST_RESTART_CAUSE_SOFT_RESET   HostRestartCause = 5
-	HostRestartCause_HOST_RESTART_CAUSE_THERMAL      HostRestartCause = 6
-	HostRestartCause_HOST_RESTART_CAUSE_POWER_SUPPLY HostRestartCause = 7
-	HostRestartCause_HOST_RESTART_CAUSE_OTHER        HostRestartCause = 8
-	HostRestartCause_HOST_RESTART_CAUSE_UNKNOWN      HostRestartCause = 9
+	HostRebootCause_HOST_REBOOT_CAUSE_UNSPECIFIED  HostRebootCause = 0
+	HostRebootCause_HOST_REBOOT_CAUSE_POWER_BUTTON HostRebootCause = 1
+	HostRebootCause_HOST_REBOOT_CAUSE_RESET_BUTTON HostRebootCause = 2
+	HostRebootCause_HOST_REBOOT_CAUSE_POWER_CYCLE  HostRebootCause = 3
+	HostRebootCause_HOST_REBOOT_CAUSE_WATCHDOG     HostRebootCause = 4
+	HostRebootCause_HOST_REBOOT_CAUSE_SOFT_RESET   HostRebootCause = 5
+	HostRebootCause_HOST_REBOOT_CAUSE_THERMAL      HostRebootCause = 6
+	HostRebootCause_HOST_REBOOT_CAUSE_POWER_SUPPLY HostRebootCause = 7
+	HostRebootCause_HOST_REBOOT_CAUSE_OTHER        HostRebootCause = 8
+	HostRebootCause_HOST_REBOOT_CAUSE_UNKNOWN      HostRebootCause = 9
 )
 
-// Enum value maps for HostRestartCause.
+// Enum value maps for HostRebootCause.
 var (
-	HostRestartCause_name = map[int32]string{
-		0: "HOST_RESTART_CAUSE_UNSPECIFIED",
-		1: "HOST_RESTART_CAUSE_POWER_BUTTON",
-		2: "HOST_RESTART_CAUSE_RESET_BUTTON",
-		3: "HOST_RESTART_CAUSE_POWER_CYCLE",
-		4: "HOST_RESTART_CAUSE_WATCHDOG",
-		5: "HOST_RESTART_CAUSE_SOFT_RESET",
-		6: "HOST_RESTART_CAUSE_THERMAL",
-		7: "HOST_RESTART_CAUSE_POWER_SUPPLY",
-		8: "HOST_RESTART_CAUSE_OTHER",
-		9: "HOST_RESTART_CAUSE_UNKNOWN",
+	HostRebootCause_name = map[int32]string{
+		0: "HOST_REBOOT_CAUSE_UNSPECIFIED",
+		1: "HOST_REBOOT_CAUSE_POWER_BUTTON",
+		2: "HOST_REBOOT_CAUSE_RESET_BUTTON",
+		3: "HOST_REBOOT_CAUSE_POWER_CYCLE",
+		4: "HOST_REBOOT_CAUSE_WATCHDOG",
+		5: "HOST_REBOOT_CAUSE_SOFT_RESET",
+		6: "HOST_REBOOT_CAUSE_THERMAL",
+		7: "HOST_REBOOT_CAUSE_POWER_SUPPLY",
+		8: "HOST_REBOOT_CAUSE_OTHER",
+		9: "HOST_REBOOT_CAUSE_UNKNOWN",
 	}
-	HostRestartCause_value = map[string]int32{
-		"HOST_RESTART_CAUSE_UNSPECIFIED":  0,
-		"HOST_RESTART_CAUSE_POWER_BUTTON": 1,
-		"HOST_RESTART_CAUSE_RESET_BUTTON": 2,
-		"HOST_RESTART_CAUSE_POWER_CYCLE":  3,
-		"HOST_RESTART_CAUSE_WATCHDOG":     4,
-		"HOST_RESTART_CAUSE_SOFT_RESET":   5,
-		"HOST_RESTART_CAUSE_THERMAL":      6,
-		"HOST_RESTART_CAUSE_POWER_SUPPLY": 7,
-		"HOST_RESTART_CAUSE_OTHER":        8,
-		"HOST_RESTART_CAUSE_UNKNOWN":      9,
+	HostRebootCause_value = map[string]int32{
+		"HOST_REBOOT_CAUSE_UNSPECIFIED":  0,
+		"HOST_REBOOT_CAUSE_POWER_BUTTON": 1,
+		"HOST_REBOOT_CAUSE_RESET_BUTTON": 2,
+		"HOST_REBOOT_CAUSE_POWER_CYCLE":  3,
+		"HOST_REBOOT_CAUSE_WATCHDOG":     4,
+		"HOST_REBOOT_CAUSE_SOFT_RESET":   5,
+		"HOST_REBOOT_CAUSE_THERMAL":      6,
+		"HOST_REBOOT_CAUSE_POWER_SUPPLY": 7,
+		"HOST_REBOOT_CAUSE_OTHER":        8,
+		"HOST_REBOOT_CAUSE_UNKNOWN":      9,
 	}
 )
 
-func (x HostRestartCause) Enum() *HostRestartCause {
-	p := new(HostRestartCause)
+func (x HostRebootCause) Enum() *HostRebootCause {
+	p := new(HostRebootCause)
 	*p = x
 	return p
 }
 
-func (x HostRestartCause) String() string {
+func (x HostRebootCause) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (HostRestartCause) Descriptor() protoreflect.EnumDescriptor {
+func (HostRebootCause) Descriptor() protoreflect.EnumDescriptor {
 	return file_schema_v1alpha1_host_proto_enumTypes[3].Descriptor()
 }
 
-func (HostRestartCause) Type() protoreflect.EnumType {
+func (HostRebootCause) Type() protoreflect.EnumType {
 	return &file_schema_v1alpha1_host_proto_enumTypes[3]
 }
 
-func (x HostRestartCause) Number() protoreflect.EnumNumber {
+func (x HostRebootCause) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use HostRestartCause.Descriptor instead.
-func (HostRestartCause) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use HostRebootCause.Descriptor instead.
+func (HostRebootCause) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{3}
 }
 
@@ -421,23 +421,22 @@ func (OSStatus) EnumDescriptor() ([]byte, []int) {
 }
 
 type Host struct {
-	state               protoimpl.MessageState `protogen:"open.v1"`
-	Name                string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Asset               *AssetInfo             `protobuf:"bytes,2,opt,name=asset,proto3" json:"asset,omitempty"`
-	Description         *string                `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
-	Type                *HostType              `protobuf:"varint,4,opt,name=type,proto3,enum=schema.v1alpha1.HostType,oneof" json:"type,omitempty"`
-	CurrentState        *HostState             `protobuf:"varint,5,opt,name=current_state,json=currentState,proto3,enum=schema.v1alpha1.HostState,oneof" json:"current_state,omitempty"`
-	RequestedTransition *HostTransition        `protobuf:"varint,6,opt,name=requested_transition,json=requestedTransition,proto3,enum=schema.v1alpha1.HostTransition,oneof" json:"requested_transition,omitempty"`
-	LastRestartCause    *HostRestartCause      `protobuf:"varint,7,opt,name=last_restart_cause,json=lastRestartCause,proto3,enum=schema.v1alpha1.HostRestartCause,oneof" json:"last_restart_cause,omitempty"`
-	Location            *Location              `protobuf:"bytes,8,opt,name=location,proto3,oneof" json:"location,omitempty"`
-	Firmware            *Firmware              `protobuf:"bytes,9,opt,name=firmware,proto3,oneof" json:"firmware,omitempty"`
-	OperatingSystem     *HostOperatingSystem   `protobuf:"bytes,10,opt,name=operating_system,json=operatingSystem,proto3,oneof" json:"operating_system,omitempty"`
-	BootProgress        *BootProgress          `protobuf:"bytes,11,opt,name=boot_progress,json=bootProgress,proto3,oneof" json:"boot_progress,omitempty"`
-	LastReboot          *HostRebootInfo        `protobuf:"bytes,12,opt,name=last_reboot,json=lastReboot,proto3,oneof" json:"last_reboot,omitempty"`
-	UpdatedAt           *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
-	Metadata            map[string]string      `protobuf:"bytes,14,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Name            string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Asset           *AssetInfo             `protobuf:"bytes,2,opt,name=asset,proto3" json:"asset,omitempty"`
+	Description     *string                `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	Type            *HostType              `protobuf:"varint,4,opt,name=type,proto3,enum=schema.v1alpha1.HostType,oneof" json:"type,omitempty"`
+	Status          *HostStatus            `protobuf:"varint,5,opt,name=status,proto3,enum=schema.v1alpha1.HostStatus,oneof" json:"status,omitempty"`
+	RequestedAction *HostAction            `protobuf:"varint,6,opt,name=requested_action,json=requestedAction,proto3,enum=schema.v1alpha1.HostAction,oneof" json:"requested_action,omitempty"`
+	Location        *Location              `protobuf:"bytes,7,opt,name=location,proto3,oneof" json:"location,omitempty"`
+	Firmware        *Firmware              `protobuf:"bytes,8,opt,name=firmware,proto3,oneof" json:"firmware,omitempty"`
+	OperatingSystem *HostOperatingSystem   `protobuf:"bytes,9,opt,name=operating_system,json=operatingSystem,proto3,oneof" json:"operating_system,omitempty"`
+	BootProgress    *BootProgress          `protobuf:"bytes,10,opt,name=boot_progress,json=bootProgress,proto3,oneof" json:"boot_progress,omitempty"`
+	LastReboot      *HostRebootInfo        `protobuf:"bytes,11,opt,name=last_reboot,json=lastReboot,proto3,oneof" json:"last_reboot,omitempty"`
+	UpdatedAt       *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
+	Metadata        map[string]string      `protobuf:"bytes,13,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *Host) Reset() {
@@ -498,25 +497,18 @@ func (x *Host) GetType() HostType {
 	return HostType_HOST_TYPE_UNSPECIFIED
 }
 
-func (x *Host) GetCurrentState() HostState {
-	if x != nil && x.CurrentState != nil {
-		return *x.CurrentState
+func (x *Host) GetStatus() HostStatus {
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
-	return HostState_HOST_STATE_UNSPECIFIED
+	return HostStatus_HOST_STATUS_UNSPECIFIED
 }
 
-func (x *Host) GetRequestedTransition() HostTransition {
-	if x != nil && x.RequestedTransition != nil {
-		return *x.RequestedTransition
+func (x *Host) GetRequestedAction() HostAction {
+	if x != nil && x.RequestedAction != nil {
+		return *x.RequestedAction
 	}
-	return HostTransition_HOST_TRANSITION_UNSPECIFIED
-}
-
-func (x *Host) GetLastRestartCause() HostRestartCause {
-	if x != nil && x.LastRestartCause != nil {
-		return *x.LastRestartCause
-	}
-	return HostRestartCause_HOST_RESTART_CAUSE_UNSPECIFIED
+	return HostAction_HOST_ACTION_UNSPECIFIED
 }
 
 func (x *Host) GetLocation() *Location {
@@ -568,6 +560,82 @@ func (x *Host) GetMetadata() map[string]string {
 	return nil
 }
 
+type HostStateChange struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	HostName       string                 `protobuf:"bytes,1,opt,name=host_name,json=hostName,proto3" json:"host_name,omitempty"`
+	PreviousStatus HostStatus             `protobuf:"varint,2,opt,name=previous_status,json=previousStatus,proto3,enum=schema.v1alpha1.HostStatus" json:"previous_status,omitempty"`
+	CurrentStatus  HostStatus             `protobuf:"varint,3,opt,name=current_status,json=currentStatus,proto3,enum=schema.v1alpha1.HostStatus" json:"current_status,omitempty"`
+	Cause          HostAction             `protobuf:"varint,4,opt,name=cause,proto3,enum=schema.v1alpha1.HostAction" json:"cause,omitempty"`
+	ChangedAt      *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=changed_at,json=changedAt,proto3" json:"changed_at,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *HostStateChange) Reset() {
+	*x = HostStateChange{}
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HostStateChange) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HostStateChange) ProtoMessage() {}
+
+func (x *HostStateChange) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HostStateChange.ProtoReflect.Descriptor instead.
+func (*HostStateChange) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *HostStateChange) GetHostName() string {
+	if x != nil {
+		return x.HostName
+	}
+	return ""
+}
+
+func (x *HostStateChange) GetPreviousStatus() HostStatus {
+	if x != nil {
+		return x.PreviousStatus
+	}
+	return HostStatus_HOST_STATUS_UNSPECIFIED
+}
+
+func (x *HostStateChange) GetCurrentStatus() HostStatus {
+	if x != nil {
+		return x.CurrentStatus
+	}
+	return HostStatus_HOST_STATUS_UNSPECIFIED
+}
+
+func (x *HostStateChange) GetCause() HostAction {
+	if x != nil {
+		return x.Cause
+	}
+	return HostAction_HOST_ACTION_UNSPECIFIED
+}
+
+func (x *HostStateChange) GetChangedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.ChangedAt
+	}
+	return nil
+}
+
 type HostOperatingSystem struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	Name             *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
@@ -585,7 +653,7 @@ type HostOperatingSystem struct {
 
 func (x *HostOperatingSystem) Reset() {
 	*x = HostOperatingSystem{}
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[1]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -597,7 +665,7 @@ func (x *HostOperatingSystem) String() string {
 func (*HostOperatingSystem) ProtoMessage() {}
 
 func (x *HostOperatingSystem) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[1]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -610,7 +678,7 @@ func (x *HostOperatingSystem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HostOperatingSystem.ProtoReflect.Descriptor instead.
 func (*HostOperatingSystem) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{1}
+	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *HostOperatingSystem) GetName() string {
@@ -687,7 +755,7 @@ type BootProgress struct {
 
 func (x *BootProgress) Reset() {
 	*x = BootProgress{}
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[2]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -699,7 +767,7 @@ func (x *BootProgress) String() string {
 func (*BootProgress) ProtoMessage() {}
 
 func (x *BootProgress) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[2]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -712,7 +780,7 @@ func (x *BootProgress) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BootProgress.ProtoReflect.Descriptor instead.
 func (*BootProgress) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{2}
+	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *BootProgress) GetStage() BootProgressStage {
@@ -739,7 +807,7 @@ func (x *BootProgress) GetLastBootTime() *timestamppb.Timestamp {
 type HostRebootInfo struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	LastRebootTime *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=last_reboot_time,json=lastRebootTime,proto3,oneof" json:"last_reboot_time,omitempty"`
-	RebootCause    *HostRestartCause      `protobuf:"varint,2,opt,name=reboot_cause,json=rebootCause,proto3,enum=schema.v1alpha1.HostRestartCause,oneof" json:"reboot_cause,omitempty"`
+	RebootCause    *HostRebootCause       `protobuf:"varint,2,opt,name=reboot_cause,json=rebootCause,proto3,enum=schema.v1alpha1.HostRebootCause,oneof" json:"reboot_cause,omitempty"`
 	RebootCount    *uint32                `protobuf:"varint,3,opt,name=reboot_count,json=rebootCount,proto3,oneof" json:"reboot_count,omitempty"`
 	Uptime         *durationpb.Duration   `protobuf:"bytes,4,opt,name=uptime,proto3,oneof" json:"uptime,omitempty"`
 	BootTime       *durationpb.Duration   `protobuf:"bytes,5,opt,name=boot_time,json=bootTime,proto3,oneof" json:"boot_time,omitempty"`
@@ -749,7 +817,7 @@ type HostRebootInfo struct {
 
 func (x *HostRebootInfo) Reset() {
 	*x = HostRebootInfo{}
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[3]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -761,7 +829,7 @@ func (x *HostRebootInfo) String() string {
 func (*HostRebootInfo) ProtoMessage() {}
 
 func (x *HostRebootInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[3]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -774,7 +842,7 @@ func (x *HostRebootInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HostRebootInfo.ProtoReflect.Descriptor instead.
 func (*HostRebootInfo) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{3}
+	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *HostRebootInfo) GetLastRebootTime() *timestamppb.Timestamp {
@@ -784,11 +852,11 @@ func (x *HostRebootInfo) GetLastRebootTime() *timestamppb.Timestamp {
 	return nil
 }
 
-func (x *HostRebootInfo) GetRebootCause() HostRestartCause {
+func (x *HostRebootInfo) GetRebootCause() HostRebootCause {
 	if x != nil && x.RebootCause != nil {
 		return *x.RebootCause
 	}
-	return HostRestartCause_HOST_RESTART_CAUSE_UNSPECIFIED
+	return HostRebootCause_HOST_REBOOT_CAUSE_UNSPECIFIED
 }
 
 func (x *HostRebootInfo) GetRebootCount() uint32 {
@@ -816,20 +884,19 @@ type GetHostRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to Identifier:
 	//
-	//	*GetHostRequest_HostId
 	//	*GetHostRequest_Name
 	//	*GetHostRequest_Type
-	//	*GetHostRequest_State
+	//	*GetHostRequest_Status
 	//	*GetHostRequest_Location
 	Identifier    isGetHostRequest_Identifier `protobuf_oneof:"identifier"`
-	FieldMask     *fieldmaskpb.FieldMask      `protobuf:"bytes,6,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
+	FieldMask     *fieldmaskpb.FieldMask      `protobuf:"bytes,5,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetHostRequest) Reset() {
 	*x = GetHostRequest{}
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[4]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -841,7 +908,7 @@ func (x *GetHostRequest) String() string {
 func (*GetHostRequest) ProtoMessage() {}
 
 func (x *GetHostRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[4]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -854,7 +921,7 @@ func (x *GetHostRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHostRequest.ProtoReflect.Descriptor instead.
 func (*GetHostRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{4}
+	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetHostRequest) GetIdentifier() isGetHostRequest_Identifier {
@@ -862,15 +929,6 @@ func (x *GetHostRequest) GetIdentifier() isGetHostRequest_Identifier {
 		return x.Identifier
 	}
 	return nil
-}
-
-func (x *GetHostRequest) GetHostId() string {
-	if x != nil {
-		if x, ok := x.Identifier.(*GetHostRequest_HostId); ok {
-			return x.HostId
-		}
-	}
-	return ""
 }
 
 func (x *GetHostRequest) GetName() string {
@@ -891,13 +949,13 @@ func (x *GetHostRequest) GetType() HostType {
 	return HostType_HOST_TYPE_UNSPECIFIED
 }
 
-func (x *GetHostRequest) GetState() HostState {
+func (x *GetHostRequest) GetStatus() HostStatus {
 	if x != nil {
-		if x, ok := x.Identifier.(*GetHostRequest_State); ok {
-			return x.State
+		if x, ok := x.Identifier.(*GetHostRequest_Status); ok {
+			return x.Status
 		}
 	}
-	return HostState_HOST_STATE_UNSPECIFIED
+	return HostStatus_HOST_STATUS_UNSPECIFIED
 }
 
 func (x *GetHostRequest) GetLocation() *Location {
@@ -920,33 +978,27 @@ type isGetHostRequest_Identifier interface {
 	isGetHostRequest_Identifier()
 }
 
-type GetHostRequest_HostId struct {
-	HostId string `protobuf:"bytes,1,opt,name=host_id,json=hostId,proto3,oneof"`
-}
-
 type GetHostRequest_Name struct {
-	Name string `protobuf:"bytes,2,opt,name=name,proto3,oneof"`
+	Name string `protobuf:"bytes,1,opt,name=name,proto3,oneof"`
 }
 
 type GetHostRequest_Type struct {
-	Type HostType `protobuf:"varint,3,opt,name=type,proto3,enum=schema.v1alpha1.HostType,oneof"`
+	Type HostType `protobuf:"varint,2,opt,name=type,proto3,enum=schema.v1alpha1.HostType,oneof"`
 }
 
-type GetHostRequest_State struct {
-	State HostState `protobuf:"varint,4,opt,name=state,proto3,enum=schema.v1alpha1.HostState,oneof"`
+type GetHostRequest_Status struct {
+	Status HostStatus `protobuf:"varint,3,opt,name=status,proto3,enum=schema.v1alpha1.HostStatus,oneof"`
 }
 
 type GetHostRequest_Location struct {
-	Location *Location `protobuf:"bytes,5,opt,name=location,proto3,oneof"`
+	Location *Location `protobuf:"bytes,4,opt,name=location,proto3,oneof"`
 }
-
-func (*GetHostRequest_HostId) isGetHostRequest_Identifier() {}
 
 func (*GetHostRequest_Name) isGetHostRequest_Identifier() {}
 
 func (*GetHostRequest_Type) isGetHostRequest_Identifier() {}
 
-func (*GetHostRequest_State) isGetHostRequest_Identifier() {}
+func (*GetHostRequest_Status) isGetHostRequest_Identifier() {}
 
 func (*GetHostRequest_Location) isGetHostRequest_Identifier() {}
 
@@ -959,7 +1011,7 @@ type GetHostResponse struct {
 
 func (x *GetHostResponse) Reset() {
 	*x = GetHostResponse{}
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[5]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -971,7 +1023,7 @@ func (x *GetHostResponse) String() string {
 func (*GetHostResponse) ProtoMessage() {}
 
 func (x *GetHostResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[5]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -984,7 +1036,7 @@ func (x *GetHostResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHostResponse.ProtoReflect.Descriptor instead.
 func (*GetHostResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{5}
+	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetHostResponse) GetHosts() []*Host {
@@ -995,17 +1047,21 @@ func (x *GetHostResponse) GetHosts() []*Host {
 }
 
 type ListHostsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          *HostType              `protobuf:"varint,1,opt,name=type,proto3,enum=schema.v1alpha1.HostType,oneof" json:"type,omitempty"`
-	State         *HostState             `protobuf:"varint,2,opt,name=state,proto3,enum=schema.v1alpha1.HostState,oneof" json:"state,omitempty"`
-	FieldMask     *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Identifier:
+	//
+	//	*ListHostsRequest_Type
+	//	*ListHostsRequest_Status
+	//	*ListHostsRequest_Location
+	Identifier    isListHostsRequest_Identifier `protobuf_oneof:"identifier"`
+	FieldMask     *fieldmaskpb.FieldMask        `protobuf:"bytes,4,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListHostsRequest) Reset() {
 	*x = ListHostsRequest{}
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[6]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1017,7 +1073,7 @@ func (x *ListHostsRequest) String() string {
 func (*ListHostsRequest) ProtoMessage() {}
 
 func (x *ListHostsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[6]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1030,21 +1086,41 @@ func (x *ListHostsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListHostsRequest.ProtoReflect.Descriptor instead.
 func (*ListHostsRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{6}
+	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ListHostsRequest) GetIdentifier() isListHostsRequest_Identifier {
+	if x != nil {
+		return x.Identifier
+	}
+	return nil
 }
 
 func (x *ListHostsRequest) GetType() HostType {
-	if x != nil && x.Type != nil {
-		return *x.Type
+	if x != nil {
+		if x, ok := x.Identifier.(*ListHostsRequest_Type); ok {
+			return x.Type
+		}
 	}
 	return HostType_HOST_TYPE_UNSPECIFIED
 }
 
-func (x *ListHostsRequest) GetState() HostState {
-	if x != nil && x.State != nil {
-		return *x.State
+func (x *ListHostsRequest) GetStatus() HostStatus {
+	if x != nil {
+		if x, ok := x.Identifier.(*ListHostsRequest_Status); ok {
+			return x.Status
+		}
 	}
-	return HostState_HOST_STATE_UNSPECIFIED
+	return HostStatus_HOST_STATUS_UNSPECIFIED
+}
+
+func (x *ListHostsRequest) GetLocation() *Location {
+	if x != nil {
+		if x, ok := x.Identifier.(*ListHostsRequest_Location); ok {
+			return x.Location
+		}
+	}
+	return nil
 }
 
 func (x *ListHostsRequest) GetFieldMask() *fieldmaskpb.FieldMask {
@@ -1053,6 +1129,28 @@ func (x *ListHostsRequest) GetFieldMask() *fieldmaskpb.FieldMask {
 	}
 	return nil
 }
+
+type isListHostsRequest_Identifier interface {
+	isListHostsRequest_Identifier()
+}
+
+type ListHostsRequest_Type struct {
+	Type HostType `protobuf:"varint,1,opt,name=type,proto3,enum=schema.v1alpha1.HostType,oneof"`
+}
+
+type ListHostsRequest_Status struct {
+	Status HostStatus `protobuf:"varint,2,opt,name=status,proto3,enum=schema.v1alpha1.HostStatus,oneof"`
+}
+
+type ListHostsRequest_Location struct {
+	Location *Location `protobuf:"bytes,3,opt,name=location,proto3,oneof"`
+}
+
+func (*ListHostsRequest_Type) isListHostsRequest_Identifier() {}
+
+func (*ListHostsRequest_Status) isListHostsRequest_Identifier() {}
+
+func (*ListHostsRequest_Location) isListHostsRequest_Identifier() {}
 
 type ListHostsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1063,7 +1161,7 @@ type ListHostsResponse struct {
 
 func (x *ListHostsResponse) Reset() {
 	*x = ListHostsResponse{}
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[7]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1075,7 +1173,7 @@ func (x *ListHostsResponse) String() string {
 func (*ListHostsResponse) ProtoMessage() {}
 
 func (x *ListHostsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[7]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1088,7 +1186,7 @@ func (x *ListHostsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListHostsResponse.ProtoReflect.Descriptor instead.
 func (*ListHostsResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{7}
+	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListHostsResponse) GetHosts() []*Host {
@@ -1100,7 +1198,7 @@ func (x *ListHostsResponse) GetHosts() []*Host {
 
 type UpdateHostRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	HostId        string                 `protobuf:"bytes,1,opt,name=host_id,json=hostId,proto3" json:"host_id,omitempty"`
+	HostName      string                 `protobuf:"bytes,1,opt,name=host_name,json=hostName,proto3" json:"host_name,omitempty"`
 	Host          *Host                  `protobuf:"bytes,2,opt,name=host,proto3" json:"host,omitempty"`
 	FieldMask     *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=field_mask,json=fieldMask,proto3" json:"field_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1109,7 +1207,7 @@ type UpdateHostRequest struct {
 
 func (x *UpdateHostRequest) Reset() {
 	*x = UpdateHostRequest{}
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[8]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1121,7 +1219,7 @@ func (x *UpdateHostRequest) String() string {
 func (*UpdateHostRequest) ProtoMessage() {}
 
 func (x *UpdateHostRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[8]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1134,12 +1232,12 @@ func (x *UpdateHostRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateHostRequest.ProtoReflect.Descriptor instead.
 func (*UpdateHostRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{8}
+	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *UpdateHostRequest) GetHostId() string {
+func (x *UpdateHostRequest) GetHostName() string {
 	if x != nil {
-		return x.HostId
+		return x.HostName
 	}
 	return ""
 }
@@ -1167,7 +1265,7 @@ type UpdateHostResponse struct {
 
 func (x *UpdateHostResponse) Reset() {
 	*x = UpdateHostResponse{}
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[9]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1179,7 +1277,7 @@ func (x *UpdateHostResponse) String() string {
 func (*UpdateHostResponse) ProtoMessage() {}
 
 func (x *UpdateHostResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[9]
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1192,7 +1290,7 @@ func (x *UpdateHostResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateHostResponse.ProtoReflect.Descriptor instead.
 func (*UpdateHostResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{9}
+	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *UpdateHostResponse) GetHost() *Host {
@@ -1202,100 +1300,28 @@ func (x *UpdateHostResponse) GetHost() *Host {
 	return nil
 }
 
-type HostChangeStateRequest struct {
+type ChangeHostStateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	HostId        string                 `protobuf:"bytes,1,opt,name=host_id,json=hostId,proto3" json:"host_id,omitempty"`
-	Transition    HostTransition         `protobuf:"varint,2,opt,name=transition,proto3,enum=schema.v1alpha1.HostTransition" json:"transition,omitempty"`
-	Force         *bool                  `protobuf:"varint,3,opt,name=force,proto3,oneof" json:"force,omitempty"`
-	Metadata      map[string]string      `protobuf:"bytes,4,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	HostName      string                 `protobuf:"bytes,1,opt,name=host_name,json=hostName,proto3" json:"host_name,omitempty"`
+	Action        HostAction             `protobuf:"varint,2,opt,name=action,proto3,enum=schema.v1alpha1.HostAction" json:"action,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *HostChangeStateRequest) Reset() {
-	*x = HostChangeStateRequest{}
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *HostChangeStateRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*HostChangeStateRequest) ProtoMessage() {}
-
-func (x *HostChangeStateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_host_proto_msgTypes[10]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use HostChangeStateRequest.ProtoReflect.Descriptor instead.
-func (*HostChangeStateRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *HostChangeStateRequest) GetHostId() string {
-	if x != nil {
-		return x.HostId
-	}
-	return ""
-}
-
-func (x *HostChangeStateRequest) GetTransition() HostTransition {
-	if x != nil {
-		return x.Transition
-	}
-	return HostTransition_HOST_TRANSITION_UNSPECIFIED
-}
-
-func (x *HostChangeStateRequest) GetForce() bool {
-	if x != nil && x.Force != nil {
-		return *x.Force
-	}
-	return false
-}
-
-func (x *HostChangeStateRequest) GetMetadata() map[string]string {
-	if x != nil {
-		return x.Metadata
-	}
-	return nil
-}
-
-type HostChangeStateResponse struct {
-	state               protoimpl.MessageState `protogen:"open.v1"`
-	Success             bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	ErrorMessage        *string                `protobuf:"bytes,2,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
-	CurrentState        *HostState             `protobuf:"varint,3,opt,name=current_state,json=currentState,proto3,enum=schema.v1alpha1.HostState,oneof" json:"current_state,omitempty"`
-	TransitionId        *string                `protobuf:"bytes,4,opt,name=transition_id,json=transitionId,proto3,oneof" json:"transition_id,omitempty"`
-	EstimatedCompletion *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=estimated_completion,json=estimatedCompletion,proto3,oneof" json:"estimated_completion,omitempty"`
-	Metadata            map[string]string      `protobuf:"bytes,6,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
-}
-
-func (x *HostChangeStateResponse) Reset() {
-	*x = HostChangeStateResponse{}
+func (x *ChangeHostStateRequest) Reset() {
+	*x = ChangeHostStateRequest{}
 	mi := &file_schema_v1alpha1_host_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *HostChangeStateResponse) String() string {
+func (x *ChangeHostStateRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*HostChangeStateResponse) ProtoMessage() {}
+func (*ChangeHostStateRequest) ProtoMessage() {}
 
-func (x *HostChangeStateResponse) ProtoReflect() protoreflect.Message {
+func (x *ChangeHostStateRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_schema_v1alpha1_host_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1307,91 +1333,111 @@ func (x *HostChangeStateResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use HostChangeStateResponse.ProtoReflect.Descriptor instead.
-func (*HostChangeStateResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ChangeHostStateRequest.ProtoReflect.Descriptor instead.
+func (*ChangeHostStateRequest) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *HostChangeStateResponse) GetSuccess() bool {
+func (x *ChangeHostStateRequest) GetHostName() string {
 	if x != nil {
-		return x.Success
-	}
-	return false
-}
-
-func (x *HostChangeStateResponse) GetErrorMessage() string {
-	if x != nil && x.ErrorMessage != nil {
-		return *x.ErrorMessage
+		return x.HostName
 	}
 	return ""
 }
 
-func (x *HostChangeStateResponse) GetCurrentState() HostState {
-	if x != nil && x.CurrentState != nil {
-		return *x.CurrentState
-	}
-	return HostState_HOST_STATE_UNSPECIFIED
-}
-
-func (x *HostChangeStateResponse) GetTransitionId() string {
-	if x != nil && x.TransitionId != nil {
-		return *x.TransitionId
-	}
-	return ""
-}
-
-func (x *HostChangeStateResponse) GetEstimatedCompletion() *timestamppb.Timestamp {
+func (x *ChangeHostStateRequest) GetAction() HostAction {
 	if x != nil {
-		return x.EstimatedCompletion
+		return x.Action
 	}
-	return nil
+	return HostAction_HOST_ACTION_UNSPECIFIED
 }
 
-func (x *HostChangeStateResponse) GetMetadata() map[string]string {
+type ChangeHostStateResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CurrentStatus HostStatus             `protobuf:"varint,1,opt,name=current_status,json=currentStatus,proto3,enum=schema.v1alpha1.HostStatus" json:"current_status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChangeHostStateResponse) Reset() {
+	*x = ChangeHostStateResponse{}
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChangeHostStateResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangeHostStateResponse) ProtoMessage() {}
+
+func (x *ChangeHostStateResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_host_proto_msgTypes[12]
 	if x != nil {
-		return x.Metadata
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
 	}
-	return nil
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangeHostStateResponse.ProtoReflect.Descriptor instead.
+func (*ChangeHostStateResponse) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_host_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ChangeHostStateResponse) GetCurrentStatus() HostStatus {
+	if x != nil {
+		return x.CurrentStatus
+	}
+	return HostStatus_HOST_STATUS_UNSPECIFIED
 }
 
 var File_schema_v1alpha1_host_proto protoreflect.FileDescriptor
 
 const file_schema_v1alpha1_host_proto_rawDesc = "" +
 	"\n" +
-	"\x1aschema/v1alpha1/host.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bschema/v1alpha1/asset.proto\x1a\x1eschema/v1alpha1/location.proto\x1a\x1eschema/v1alpha1/firmware.proto\"\xa4\t\n" +
+	"\x1aschema/v1alpha1/host.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bschema/v1alpha1/asset.proto\x1a\x1eschema/v1alpha1/location.proto\x1a\x1eschema/v1alpha1/firmware.proto\"\x8a\b\n" +
 	"\x04Host\x12\x1b\n" +
 	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x120\n" +
 	"\x05asset\x18\x02 \x01(\v2\x1a.schema.v1alpha1.AssetInfoR\x05asset\x12%\n" +
 	"\vdescription\x18\x03 \x01(\tH\x00R\vdescription\x88\x01\x01\x12<\n" +
-	"\x04type\x18\x04 \x01(\x0e2\x19.schema.v1alpha1.HostTypeB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\x04type\x88\x01\x01\x12N\n" +
-	"\rcurrent_state\x18\x05 \x01(\x0e2\x1a.schema.v1alpha1.HostStateB\b\xbaH\x05\x82\x01\x02\x10\x01H\x02R\fcurrentState\x88\x01\x01\x12a\n" +
-	"\x14requested_transition\x18\x06 \x01(\x0e2\x1f.schema.v1alpha1.HostTransitionB\b\xbaH\x05\x82\x01\x02\x10\x01H\x03R\x13requestedTransition\x88\x01\x01\x12^\n" +
-	"\x12last_restart_cause\x18\a \x01(\x0e2!.schema.v1alpha1.HostRestartCauseB\b\xbaH\x05\x82\x01\x02\x10\x01H\x04R\x10lastRestartCause\x88\x01\x01\x12:\n" +
-	"\blocation\x18\b \x01(\v2\x19.schema.v1alpha1.LocationH\x05R\blocation\x88\x01\x01\x12:\n" +
-	"\bfirmware\x18\t \x01(\v2\x19.schema.v1alpha1.FirmwareH\x06R\bfirmware\x88\x01\x01\x12T\n" +
-	"\x10operating_system\x18\n" +
-	" \x01(\v2$.schema.v1alpha1.HostOperatingSystemH\aR\x0foperatingSystem\x88\x01\x01\x12G\n" +
-	"\rboot_progress\x18\v \x01(\v2\x1d.schema.v1alpha1.BootProgressH\bR\fbootProgress\x88\x01\x01\x12E\n" +
-	"\vlast_reboot\x18\f \x01(\v2\x1f.schema.v1alpha1.HostRebootInfoH\tR\n" +
+	"\x04type\x18\x04 \x01(\x0e2\x19.schema.v1alpha1.HostTypeB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\x04type\x88\x01\x01\x12B\n" +
+	"\x06status\x18\x05 \x01(\x0e2\x1b.schema.v1alpha1.HostStatusB\b\xbaH\x05\x82\x01\x02\x10\x01H\x02R\x06status\x88\x01\x01\x12U\n" +
+	"\x10requested_action\x18\x06 \x01(\x0e2\x1b.schema.v1alpha1.HostActionB\b\xbaH\x05\x82\x01\x02\x10\x01H\x03R\x0frequestedAction\x88\x01\x01\x12:\n" +
+	"\blocation\x18\a \x01(\v2\x19.schema.v1alpha1.LocationH\x04R\blocation\x88\x01\x01\x12:\n" +
+	"\bfirmware\x18\b \x01(\v2\x19.schema.v1alpha1.FirmwareH\x05R\bfirmware\x88\x01\x01\x12T\n" +
+	"\x10operating_system\x18\t \x01(\v2$.schema.v1alpha1.HostOperatingSystemH\x06R\x0foperatingSystem\x88\x01\x01\x12G\n" +
+	"\rboot_progress\x18\n" +
+	" \x01(\v2\x1d.schema.v1alpha1.BootProgressH\aR\fbootProgress\x88\x01\x01\x12E\n" +
+	"\vlast_reboot\x18\v \x01(\v2\x1f.schema.v1alpha1.HostRebootInfoH\bR\n" +
 	"lastReboot\x88\x01\x01\x12>\n" +
 	"\n" +
-	"updated_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampH\n" +
-	"R\tupdatedAt\x88\x01\x01\x12?\n" +
-	"\bmetadata\x18\x0e \x03(\v2#.schema.v1alpha1.Host.MetadataEntryR\bmetadata\x1a;\n" +
+	"updated_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampH\tR\tupdatedAt\x88\x01\x01\x12?\n" +
+	"\bmetadata\x18\r \x03(\v2#.schema.v1alpha1.Host.MetadataEntryR\bmetadata\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\x0e\n" +
 	"\f_descriptionB\a\n" +
-	"\x05_typeB\x10\n" +
-	"\x0e_current_stateB\x17\n" +
-	"\x15_requested_transitionB\x15\n" +
-	"\x13_last_restart_causeB\v\n" +
+	"\x05_typeB\t\n" +
+	"\a_statusB\x13\n" +
+	"\x11_requested_actionB\v\n" +
 	"\t_locationB\v\n" +
 	"\t_firmwareB\x13\n" +
 	"\x11_operating_systemB\x10\n" +
 	"\x0e_boot_progressB\x0e\n" +
 	"\f_last_rebootB\r\n" +
-	"\v_updated_at\"\xd9\x04\n" +
+	"\v_updated_at\"\xcd\x02\n" +
+	"\x0fHostStateChange\x12$\n" +
+	"\thost_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bhostName\x12N\n" +
+	"\x0fprevious_status\x18\x02 \x01(\x0e2\x1b.schema.v1alpha1.HostStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\x0epreviousStatus\x12L\n" +
+	"\x0ecurrent_status\x18\x03 \x01(\x0e2\x1b.schema.v1alpha1.HostStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\rcurrentStatus\x12;\n" +
+	"\x05cause\x18\x04 \x01(\x0e2\x1b.schema.v1alpha1.HostActionB\b\xbaH\x05\x82\x01\x02\x10\x01R\x05cause\x129\n" +
+	"\n" +
+	"changed_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tchangedAt\"\xd9\x04\n" +
 	"\x13HostOperatingSystem\x12\x17\n" +
 	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1d\n" +
 	"\aversion\x18\x02 \x01(\tH\x01R\aversion\x88\x01\x01\x12'\n" +
@@ -1416,10 +1462,10 @@ const file_schema_v1alpha1_host_proto_rawDesc = "" +
 	"\x05stage\x18\x01 \x01(\x0e2\".schema.v1alpha1.BootProgressStageB\b\xbaH\x05\x82\x01\x02\x10\x01R\x05stage\x122\n" +
 	"\x10progress_percent\x18\x02 \x01(\rB\a\xbaH\x04*\x02\x18dR\x0fprogressPercent\x12E\n" +
 	"\x0elast_boot_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\flastBootTime\x88\x01\x01B\x11\n" +
-	"\x0f_last_boot_time\"\x9d\x03\n" +
+	"\x0f_last_boot_time\"\x9c\x03\n" +
 	"\x0eHostRebootInfo\x12I\n" +
-	"\x10last_reboot_time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\x0elastRebootTime\x88\x01\x01\x12S\n" +
-	"\freboot_cause\x18\x02 \x01(\x0e2!.schema.v1alpha1.HostRestartCauseB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\vrebootCause\x88\x01\x01\x12&\n" +
+	"\x10last_reboot_time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\x0elastRebootTime\x88\x01\x01\x12R\n" +
+	"\freboot_cause\x18\x02 \x01(\x0e2 .schema.v1alpha1.HostRebootCauseB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\vrebootCause\x88\x01\x01\x12&\n" +
 	"\freboot_count\x18\x03 \x01(\rH\x02R\vrebootCount\x88\x01\x01\x126\n" +
 	"\x06uptime\x18\x04 \x01(\v2\x19.google.protobuf.DurationH\x03R\x06uptime\x88\x01\x01\x12;\n" +
 	"\tboot_time\x18\x05 \x01(\v2\x19.google.protobuf.DurationH\x04R\bbootTime\x88\x01\x01B\x13\n" +
@@ -1428,95 +1474,77 @@ const file_schema_v1alpha1_host_proto_rawDesc = "" +
 	"\r_reboot_countB\t\n" +
 	"\a_uptimeB\f\n" +
 	"\n" +
-	"_boot_time\"\xc3\x02\n" +
-	"\x0eGetHostRequest\x12\x19\n" +
-	"\ahost_id\x18\x01 \x01(\tH\x00R\x06hostId\x12\x14\n" +
-	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x12/\n" +
-	"\x04type\x18\x03 \x01(\x0e2\x19.schema.v1alpha1.HostTypeH\x00R\x04type\x122\n" +
-	"\x05state\x18\x04 \x01(\x0e2\x1a.schema.v1alpha1.HostStateH\x00R\x05state\x127\n" +
-	"\blocation\x18\x05 \x01(\v2\x19.schema.v1alpha1.LocationH\x00R\blocation\x12>\n" +
+	"_boot_time\"\xab\x02\n" +
+	"\x0eGetHostRequest\x12\x14\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x12/\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x19.schema.v1alpha1.HostTypeH\x00R\x04type\x125\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x1b.schema.v1alpha1.HostStatusH\x00R\x06status\x127\n" +
+	"\blocation\x18\x04 \x01(\v2\x19.schema.v1alpha1.LocationH\x00R\blocation\x12>\n" +
 	"\n" +
-	"field_mask\x18\x06 \x01(\v2\x1a.google.protobuf.FieldMaskH\x01R\tfieldMask\x88\x01\x01B\x13\n" +
+	"field_mask\x18\x05 \x01(\v2\x1a.google.protobuf.FieldMaskH\x01R\tfieldMask\x88\x01\x01B\x13\n" +
 	"\n" +
 	"identifier\x12\x05\xbaH\x02\b\x01B\r\n" +
 	"\v_field_mask\">\n" +
 	"\x0fGetHostResponse\x12+\n" +
-	"\x05hosts\x18\x01 \x03(\v2\x15.schema.v1alpha1.HostR\x05hosts\"\xf3\x01\n" +
-	"\x10ListHostsRequest\x12<\n" +
-	"\x04type\x18\x01 \x01(\x0e2\x19.schema.v1alpha1.HostTypeB\b\xbaH\x05\x82\x01\x02\x10\x01H\x00R\x04type\x88\x01\x01\x12?\n" +
-	"\x05state\x18\x02 \x01(\x0e2\x1a.schema.v1alpha1.HostStateB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\x05state\x88\x01\x01\x12>\n" +
+	"\x05hosts\x18\x01 \x03(\v2\x15.schema.v1alpha1.HostR\x05hosts\"\x90\x02\n" +
+	"\x10ListHostsRequest\x12/\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x19.schema.v1alpha1.HostTypeH\x00R\x04type\x125\n" +
+	"\x06status\x18\x02 \x01(\x0e2\x1b.schema.v1alpha1.HostStatusH\x00R\x06status\x127\n" +
+	"\blocation\x18\x03 \x01(\v2\x19.schema.v1alpha1.LocationH\x00R\blocation\x12>\n" +
 	"\n" +
-	"field_mask\x18\x03 \x01(\v2\x1a.google.protobuf.FieldMaskH\x02R\tfieldMask\x88\x01\x01B\a\n" +
-	"\x05_typeB\b\n" +
-	"\x06_stateB\r\n" +
+	"field_mask\x18\x04 \x01(\v2\x1a.google.protobuf.FieldMaskH\x01R\tfieldMask\x88\x01\x01B\f\n" +
+	"\n" +
+	"identifierB\r\n" +
 	"\v_field_mask\"@\n" +
 	"\x11ListHostsResponse\x12+\n" +
-	"\x05hosts\x18\x01 \x03(\v2\x15.schema.v1alpha1.HostR\x05hosts\"\xa3\x01\n" +
-	"\x11UpdateHostRequest\x12 \n" +
-	"\ahost_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06hostId\x121\n" +
+	"\x05hosts\x18\x01 \x03(\v2\x15.schema.v1alpha1.HostR\x05hosts\"\xa7\x01\n" +
+	"\x11UpdateHostRequest\x12$\n" +
+	"\thost_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bhostName\x121\n" +
 	"\x04host\x18\x02 \x01(\v2\x15.schema.v1alpha1.HostB\x06\xbaH\x03\xc8\x01\x01R\x04host\x129\n" +
 	"\n" +
 	"field_mask\x18\x03 \x01(\v2\x1a.google.protobuf.FieldMaskR\tfieldMask\"?\n" +
 	"\x12UpdateHostResponse\x12)\n" +
-	"\x04host\x18\x01 \x01(\v2\x15.schema.v1alpha1.HostR\x04host\"\xba\x02\n" +
-	"\x16HostChangeStateRequest\x12 \n" +
-	"\ahost_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06hostId\x12I\n" +
-	"\n" +
-	"transition\x18\x02 \x01(\x0e2\x1f.schema.v1alpha1.HostTransitionB\b\xbaH\x05\x82\x01\x02\x10\x01R\n" +
-	"transition\x12\x19\n" +
-	"\x05force\x18\x03 \x01(\bH\x00R\x05force\x88\x01\x01\x12Q\n" +
-	"\bmetadata\x18\x04 \x03(\v25.schema.v1alpha1.HostChangeStateRequest.MetadataEntryR\bmetadata\x1a;\n" +
-	"\rMetadataEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\b\n" +
-	"\x06_force\"\x8b\x04\n" +
-	"\x17HostChangeStateResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\x12(\n" +
-	"\rerror_message\x18\x02 \x01(\tH\x00R\ferrorMessage\x88\x01\x01\x12N\n" +
-	"\rcurrent_state\x18\x03 \x01(\x0e2\x1a.schema.v1alpha1.HostStateB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\fcurrentState\x88\x01\x01\x12(\n" +
-	"\rtransition_id\x18\x04 \x01(\tH\x02R\ftransitionId\x88\x01\x01\x12R\n" +
-	"\x14estimated_completion\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampH\x03R\x13estimatedCompletion\x88\x01\x01\x12R\n" +
-	"\bmetadata\x18\x06 \x03(\v26.schema.v1alpha1.HostChangeStateResponse.MetadataEntryR\bmetadata\x1a;\n" +
-	"\rMetadataEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\x10\n" +
-	"\x0e_error_messageB\x10\n" +
-	"\x0e_current_stateB\x10\n" +
-	"\x0e_transition_idB\x17\n" +
-	"\x15_estimated_completion*\x9e\x01\n" +
+	"\x04host\x18\x01 \x01(\v2\x15.schema.v1alpha1.HostR\x04host\"}\n" +
+	"\x16ChangeHostStateRequest\x12$\n" +
+	"\thost_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bhostName\x12=\n" +
+	"\x06action\x18\x02 \x01(\x0e2\x1b.schema.v1alpha1.HostActionB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06action\"g\n" +
+	"\x17ChangeHostStateResponse\x12L\n" +
+	"\x0ecurrent_status\x18\x01 \x01(\x0e2\x1b.schema.v1alpha1.HostStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\rcurrentStatus*\x9e\x01\n" +
 	"\bHostType\x12\x19\n" +
 	"\x15HOST_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12HOST_TYPE_PHYSICAL\x10\x01\x12\x15\n" +
 	"\x11HOST_TYPE_VIRTUAL\x10\x02\x12\x17\n" +
 	"\x13HOST_TYPE_CONTAINER\x10\x03\x12\x13\n" +
 	"\x0fHOST_TYPE_BLADE\x10\x04\x12\x1a\n" +
-	"\x16HOST_TYPE_COMPUTE_NODE\x10\x05*\xbb\x01\n" +
-	"\tHostState\x12\x1a\n" +
-	"\x16HOST_STATE_UNSPECIFIED\x10\x00\x12\x12\n" +
-	"\x0eHOST_STATE_OFF\x10\x01\x12\x11\n" +
-	"\rHOST_STATE_ON\x10\x02\x12\x1c\n" +
-	"\x18HOST_STATE_TRANSITIONING\x10\x03\x12\x17\n" +
-	"\x13HOST_STATE_QUIESCED\x10\x04\x12\x1e\n" +
-	"\x1aHOST_STATE_DIAGNOSTIC_MODE\x10\x05\x12\x14\n" +
-	"\x10HOST_STATE_ERROR\x10\x06*\xc0\x01\n" +
-	"\x0eHostTransition\x12\x1f\n" +
-	"\x1bHOST_TRANSITION_UNSPECIFIED\x10\x00\x12\x16\n" +
-	"\x12HOST_TRANSITION_ON\x10\x01\x12\x17\n" +
-	"\x13HOST_TRANSITION_OFF\x10\x02\x12\x1a\n" +
-	"\x16HOST_TRANSITION_REBOOT\x10\x03\x12\x1d\n" +
-	"\x19HOST_TRANSITION_FORCE_OFF\x10\x04\x12!\n" +
-	"\x1dHOST_TRANSITION_FORCE_RESTART\x10\x05*\xeb\x02\n" +
-	"\x10HostRestartCause\x12\"\n" +
-	"\x1eHOST_RESTART_CAUSE_UNSPECIFIED\x10\x00\x12#\n" +
-	"\x1fHOST_RESTART_CAUSE_POWER_BUTTON\x10\x01\x12#\n" +
-	"\x1fHOST_RESTART_CAUSE_RESET_BUTTON\x10\x02\x12\"\n" +
-	"\x1eHOST_RESTART_CAUSE_POWER_CYCLE\x10\x03\x12\x1f\n" +
-	"\x1bHOST_RESTART_CAUSE_WATCHDOG\x10\x04\x12!\n" +
-	"\x1dHOST_RESTART_CAUSE_SOFT_RESET\x10\x05\x12\x1e\n" +
-	"\x1aHOST_RESTART_CAUSE_THERMAL\x10\x06\x12#\n" +
-	"\x1fHOST_RESTART_CAUSE_POWER_SUPPLY\x10\a\x12\x1c\n" +
-	"\x18HOST_RESTART_CAUSE_OTHER\x10\b\x12\x1e\n" +
-	"\x1aHOST_RESTART_CAUSE_UNKNOWN\x10\t*\xdb\x04\n" +
+	"\x16HOST_TYPE_COMPUTE_NODE\x10\x05*\xbe\x01\n" +
+	"\n" +
+	"HostStatus\x12\x1b\n" +
+	"\x17HOST_STATUS_UNSPECIFIED\x10\x00\x12\x13\n" +
+	"\x0fHOST_STATUS_OFF\x10\x01\x12\x12\n" +
+	"\x0eHOST_STATUS_ON\x10\x02\x12\x1d\n" +
+	"\x19HOST_STATUS_TRANSITIONING\x10\x03\x12\x18\n" +
+	"\x14HOST_STATUS_QUIESCED\x10\x04\x12\x1a\n" +
+	"\x16HOST_STATUS_DIAGNOSTIC\x10\x05\x12\x15\n" +
+	"\x11HOST_STATUS_ERROR\x10\x06*\xa4\x01\n" +
+	"\n" +
+	"HostAction\x12\x1b\n" +
+	"\x17HOST_ACTION_UNSPECIFIED\x10\x00\x12\x12\n" +
+	"\x0eHOST_ACTION_ON\x10\x01\x12\x13\n" +
+	"\x0fHOST_ACTION_OFF\x10\x02\x12\x16\n" +
+	"\x12HOST_ACTION_REBOOT\x10\x03\x12\x19\n" +
+	"\x15HOST_ACTION_FORCE_OFF\x10\x04\x12\x1d\n" +
+	"\x19HOST_ACTION_FORCE_RESTART\x10\x05*\xe0\x02\n" +
+	"\x0fHostRebootCause\x12!\n" +
+	"\x1dHOST_REBOOT_CAUSE_UNSPECIFIED\x10\x00\x12\"\n" +
+	"\x1eHOST_REBOOT_CAUSE_POWER_BUTTON\x10\x01\x12\"\n" +
+	"\x1eHOST_REBOOT_CAUSE_RESET_BUTTON\x10\x02\x12!\n" +
+	"\x1dHOST_REBOOT_CAUSE_POWER_CYCLE\x10\x03\x12\x1e\n" +
+	"\x1aHOST_REBOOT_CAUSE_WATCHDOG\x10\x04\x12 \n" +
+	"\x1cHOST_REBOOT_CAUSE_SOFT_RESET\x10\x05\x12\x1d\n" +
+	"\x19HOST_REBOOT_CAUSE_THERMAL\x10\x06\x12\"\n" +
+	"\x1eHOST_REBOOT_CAUSE_POWER_SUPPLY\x10\a\x12\x1b\n" +
+	"\x17HOST_REBOOT_CAUSE_OTHER\x10\b\x12\x1d\n" +
+	"\x19HOST_REBOOT_CAUSE_UNKNOWN\x10\t*\xdb\x04\n" +
 	"\x11BootProgressStage\x12#\n" +
 	"\x1fBOOT_PROGRESS_STAGE_UNSPECIFIED\x10\x00\x126\n" +
 	"2BOOT_PROGRESS_STAGE_SYSTEM_HARDWARE_INITIALIZATION\x10\x01\x12-\n" +
@@ -1557,80 +1585,80 @@ func file_schema_v1alpha1_host_proto_rawDescGZIP() []byte {
 }
 
 var file_schema_v1alpha1_host_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
-var file_schema_v1alpha1_host_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_schema_v1alpha1_host_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_schema_v1alpha1_host_proto_goTypes = []any{
 	(HostType)(0),                   // 0: schema.v1alpha1.HostType
-	(HostState)(0),                  // 1: schema.v1alpha1.HostState
-	(HostTransition)(0),             // 2: schema.v1alpha1.HostTransition
-	(HostRestartCause)(0),           // 3: schema.v1alpha1.HostRestartCause
+	(HostStatus)(0),                 // 1: schema.v1alpha1.HostStatus
+	(HostAction)(0),                 // 2: schema.v1alpha1.HostAction
+	(HostRebootCause)(0),            // 3: schema.v1alpha1.HostRebootCause
 	(BootProgressStage)(0),          // 4: schema.v1alpha1.BootProgressStage
 	(OSStatus)(0),                   // 5: schema.v1alpha1.OSStatus
 	(*Host)(nil),                    // 6: schema.v1alpha1.Host
-	(*HostOperatingSystem)(nil),     // 7: schema.v1alpha1.HostOperatingSystem
-	(*BootProgress)(nil),            // 8: schema.v1alpha1.BootProgress
-	(*HostRebootInfo)(nil),          // 9: schema.v1alpha1.HostRebootInfo
-	(*GetHostRequest)(nil),          // 10: schema.v1alpha1.GetHostRequest
-	(*GetHostResponse)(nil),         // 11: schema.v1alpha1.GetHostResponse
-	(*ListHostsRequest)(nil),        // 12: schema.v1alpha1.ListHostsRequest
-	(*ListHostsResponse)(nil),       // 13: schema.v1alpha1.ListHostsResponse
-	(*UpdateHostRequest)(nil),       // 14: schema.v1alpha1.UpdateHostRequest
-	(*UpdateHostResponse)(nil),      // 15: schema.v1alpha1.UpdateHostResponse
-	(*HostChangeStateRequest)(nil),  // 16: schema.v1alpha1.HostChangeStateRequest
-	(*HostChangeStateResponse)(nil), // 17: schema.v1alpha1.HostChangeStateResponse
-	nil,                             // 18: schema.v1alpha1.Host.MetadataEntry
-	nil,                             // 19: schema.v1alpha1.HostChangeStateRequest.MetadataEntry
-	nil,                             // 20: schema.v1alpha1.HostChangeStateResponse.MetadataEntry
-	(*AssetInfo)(nil),               // 21: schema.v1alpha1.AssetInfo
-	(*Location)(nil),                // 22: schema.v1alpha1.Location
-	(*Firmware)(nil),                // 23: schema.v1alpha1.Firmware
-	(*timestamppb.Timestamp)(nil),   // 24: google.protobuf.Timestamp
-	(*durationpb.Duration)(nil),     // 25: google.protobuf.Duration
-	(*fieldmaskpb.FieldMask)(nil),   // 26: google.protobuf.FieldMask
+	(*HostStateChange)(nil),         // 7: schema.v1alpha1.HostStateChange
+	(*HostOperatingSystem)(nil),     // 8: schema.v1alpha1.HostOperatingSystem
+	(*BootProgress)(nil),            // 9: schema.v1alpha1.BootProgress
+	(*HostRebootInfo)(nil),          // 10: schema.v1alpha1.HostRebootInfo
+	(*GetHostRequest)(nil),          // 11: schema.v1alpha1.GetHostRequest
+	(*GetHostResponse)(nil),         // 12: schema.v1alpha1.GetHostResponse
+	(*ListHostsRequest)(nil),        // 13: schema.v1alpha1.ListHostsRequest
+	(*ListHostsResponse)(nil),       // 14: schema.v1alpha1.ListHostsResponse
+	(*UpdateHostRequest)(nil),       // 15: schema.v1alpha1.UpdateHostRequest
+	(*UpdateHostResponse)(nil),      // 16: schema.v1alpha1.UpdateHostResponse
+	(*ChangeHostStateRequest)(nil),  // 17: schema.v1alpha1.ChangeHostStateRequest
+	(*ChangeHostStateResponse)(nil), // 18: schema.v1alpha1.ChangeHostStateResponse
+	nil,                             // 19: schema.v1alpha1.Host.MetadataEntry
+	(*AssetInfo)(nil),               // 20: schema.v1alpha1.AssetInfo
+	(*Location)(nil),                // 21: schema.v1alpha1.Location
+	(*Firmware)(nil),                // 22: schema.v1alpha1.Firmware
+	(*timestamppb.Timestamp)(nil),   // 23: google.protobuf.Timestamp
+	(*durationpb.Duration)(nil),     // 24: google.protobuf.Duration
+	(*fieldmaskpb.FieldMask)(nil),   // 25: google.protobuf.FieldMask
 }
 var file_schema_v1alpha1_host_proto_depIdxs = []int32{
-	21, // 0: schema.v1alpha1.Host.asset:type_name -> schema.v1alpha1.AssetInfo
+	20, // 0: schema.v1alpha1.Host.asset:type_name -> schema.v1alpha1.AssetInfo
 	0,  // 1: schema.v1alpha1.Host.type:type_name -> schema.v1alpha1.HostType
-	1,  // 2: schema.v1alpha1.Host.current_state:type_name -> schema.v1alpha1.HostState
-	2,  // 3: schema.v1alpha1.Host.requested_transition:type_name -> schema.v1alpha1.HostTransition
-	3,  // 4: schema.v1alpha1.Host.last_restart_cause:type_name -> schema.v1alpha1.HostRestartCause
-	22, // 5: schema.v1alpha1.Host.location:type_name -> schema.v1alpha1.Location
-	23, // 6: schema.v1alpha1.Host.firmware:type_name -> schema.v1alpha1.Firmware
-	7,  // 7: schema.v1alpha1.Host.operating_system:type_name -> schema.v1alpha1.HostOperatingSystem
-	8,  // 8: schema.v1alpha1.Host.boot_progress:type_name -> schema.v1alpha1.BootProgress
-	9,  // 9: schema.v1alpha1.Host.last_reboot:type_name -> schema.v1alpha1.HostRebootInfo
-	24, // 10: schema.v1alpha1.Host.updated_at:type_name -> google.protobuf.Timestamp
-	18, // 11: schema.v1alpha1.Host.metadata:type_name -> schema.v1alpha1.Host.MetadataEntry
-	24, // 12: schema.v1alpha1.HostOperatingSystem.installation_date:type_name -> google.protobuf.Timestamp
-	24, // 13: schema.v1alpha1.HostOperatingSystem.last_boot_time:type_name -> google.protobuf.Timestamp
-	5,  // 14: schema.v1alpha1.HostOperatingSystem.status:type_name -> schema.v1alpha1.OSStatus
-	4,  // 15: schema.v1alpha1.BootProgress.stage:type_name -> schema.v1alpha1.BootProgressStage
-	24, // 16: schema.v1alpha1.BootProgress.last_boot_time:type_name -> google.protobuf.Timestamp
-	24, // 17: schema.v1alpha1.HostRebootInfo.last_reboot_time:type_name -> google.protobuf.Timestamp
-	3,  // 18: schema.v1alpha1.HostRebootInfo.reboot_cause:type_name -> schema.v1alpha1.HostRestartCause
-	25, // 19: schema.v1alpha1.HostRebootInfo.uptime:type_name -> google.protobuf.Duration
-	25, // 20: schema.v1alpha1.HostRebootInfo.boot_time:type_name -> google.protobuf.Duration
-	0,  // 21: schema.v1alpha1.GetHostRequest.type:type_name -> schema.v1alpha1.HostType
-	1,  // 22: schema.v1alpha1.GetHostRequest.state:type_name -> schema.v1alpha1.HostState
-	22, // 23: schema.v1alpha1.GetHostRequest.location:type_name -> schema.v1alpha1.Location
-	26, // 24: schema.v1alpha1.GetHostRequest.field_mask:type_name -> google.protobuf.FieldMask
-	6,  // 25: schema.v1alpha1.GetHostResponse.hosts:type_name -> schema.v1alpha1.Host
-	0,  // 26: schema.v1alpha1.ListHostsRequest.type:type_name -> schema.v1alpha1.HostType
-	1,  // 27: schema.v1alpha1.ListHostsRequest.state:type_name -> schema.v1alpha1.HostState
-	26, // 28: schema.v1alpha1.ListHostsRequest.field_mask:type_name -> google.protobuf.FieldMask
-	6,  // 29: schema.v1alpha1.ListHostsResponse.hosts:type_name -> schema.v1alpha1.Host
-	6,  // 30: schema.v1alpha1.UpdateHostRequest.host:type_name -> schema.v1alpha1.Host
-	26, // 31: schema.v1alpha1.UpdateHostRequest.field_mask:type_name -> google.protobuf.FieldMask
-	6,  // 32: schema.v1alpha1.UpdateHostResponse.host:type_name -> schema.v1alpha1.Host
-	2,  // 33: schema.v1alpha1.HostChangeStateRequest.transition:type_name -> schema.v1alpha1.HostTransition
-	19, // 34: schema.v1alpha1.HostChangeStateRequest.metadata:type_name -> schema.v1alpha1.HostChangeStateRequest.MetadataEntry
-	1,  // 35: schema.v1alpha1.HostChangeStateResponse.current_state:type_name -> schema.v1alpha1.HostState
-	24, // 36: schema.v1alpha1.HostChangeStateResponse.estimated_completion:type_name -> google.protobuf.Timestamp
-	20, // 37: schema.v1alpha1.HostChangeStateResponse.metadata:type_name -> schema.v1alpha1.HostChangeStateResponse.MetadataEntry
-	38, // [38:38] is the sub-list for method output_type
-	38, // [38:38] is the sub-list for method input_type
-	38, // [38:38] is the sub-list for extension type_name
-	38, // [38:38] is the sub-list for extension extendee
-	0,  // [0:38] is the sub-list for field type_name
+	1,  // 2: schema.v1alpha1.Host.status:type_name -> schema.v1alpha1.HostStatus
+	2,  // 3: schema.v1alpha1.Host.requested_action:type_name -> schema.v1alpha1.HostAction
+	21, // 4: schema.v1alpha1.Host.location:type_name -> schema.v1alpha1.Location
+	22, // 5: schema.v1alpha1.Host.firmware:type_name -> schema.v1alpha1.Firmware
+	8,  // 6: schema.v1alpha1.Host.operating_system:type_name -> schema.v1alpha1.HostOperatingSystem
+	9,  // 7: schema.v1alpha1.Host.boot_progress:type_name -> schema.v1alpha1.BootProgress
+	10, // 8: schema.v1alpha1.Host.last_reboot:type_name -> schema.v1alpha1.HostRebootInfo
+	23, // 9: schema.v1alpha1.Host.updated_at:type_name -> google.protobuf.Timestamp
+	19, // 10: schema.v1alpha1.Host.metadata:type_name -> schema.v1alpha1.Host.MetadataEntry
+	1,  // 11: schema.v1alpha1.HostStateChange.previous_status:type_name -> schema.v1alpha1.HostStatus
+	1,  // 12: schema.v1alpha1.HostStateChange.current_status:type_name -> schema.v1alpha1.HostStatus
+	2,  // 13: schema.v1alpha1.HostStateChange.cause:type_name -> schema.v1alpha1.HostAction
+	23, // 14: schema.v1alpha1.HostStateChange.changed_at:type_name -> google.protobuf.Timestamp
+	23, // 15: schema.v1alpha1.HostOperatingSystem.installation_date:type_name -> google.protobuf.Timestamp
+	23, // 16: schema.v1alpha1.HostOperatingSystem.last_boot_time:type_name -> google.protobuf.Timestamp
+	5,  // 17: schema.v1alpha1.HostOperatingSystem.status:type_name -> schema.v1alpha1.OSStatus
+	4,  // 18: schema.v1alpha1.BootProgress.stage:type_name -> schema.v1alpha1.BootProgressStage
+	23, // 19: schema.v1alpha1.BootProgress.last_boot_time:type_name -> google.protobuf.Timestamp
+	23, // 20: schema.v1alpha1.HostRebootInfo.last_reboot_time:type_name -> google.protobuf.Timestamp
+	3,  // 21: schema.v1alpha1.HostRebootInfo.reboot_cause:type_name -> schema.v1alpha1.HostRebootCause
+	24, // 22: schema.v1alpha1.HostRebootInfo.uptime:type_name -> google.protobuf.Duration
+	24, // 23: schema.v1alpha1.HostRebootInfo.boot_time:type_name -> google.protobuf.Duration
+	0,  // 24: schema.v1alpha1.GetHostRequest.type:type_name -> schema.v1alpha1.HostType
+	1,  // 25: schema.v1alpha1.GetHostRequest.status:type_name -> schema.v1alpha1.HostStatus
+	21, // 26: schema.v1alpha1.GetHostRequest.location:type_name -> schema.v1alpha1.Location
+	25, // 27: schema.v1alpha1.GetHostRequest.field_mask:type_name -> google.protobuf.FieldMask
+	6,  // 28: schema.v1alpha1.GetHostResponse.hosts:type_name -> schema.v1alpha1.Host
+	0,  // 29: schema.v1alpha1.ListHostsRequest.type:type_name -> schema.v1alpha1.HostType
+	1,  // 30: schema.v1alpha1.ListHostsRequest.status:type_name -> schema.v1alpha1.HostStatus
+	21, // 31: schema.v1alpha1.ListHostsRequest.location:type_name -> schema.v1alpha1.Location
+	25, // 32: schema.v1alpha1.ListHostsRequest.field_mask:type_name -> google.protobuf.FieldMask
+	6,  // 33: schema.v1alpha1.ListHostsResponse.hosts:type_name -> schema.v1alpha1.Host
+	6,  // 34: schema.v1alpha1.UpdateHostRequest.host:type_name -> schema.v1alpha1.Host
+	25, // 35: schema.v1alpha1.UpdateHostRequest.field_mask:type_name -> google.protobuf.FieldMask
+	6,  // 36: schema.v1alpha1.UpdateHostResponse.host:type_name -> schema.v1alpha1.Host
+	2,  // 37: schema.v1alpha1.ChangeHostStateRequest.action:type_name -> schema.v1alpha1.HostAction
+	1,  // 38: schema.v1alpha1.ChangeHostStateResponse.current_status:type_name -> schema.v1alpha1.HostStatus
+	39, // [39:39] is the sub-list for method output_type
+	39, // [39:39] is the sub-list for method input_type
+	39, // [39:39] is the sub-list for extension type_name
+	39, // [39:39] is the sub-list for extension extendee
+	0,  // [0:39] is the sub-list for field type_name
 }
 
 func init() { file_schema_v1alpha1_host_proto_init() }
@@ -1642,26 +1670,27 @@ func file_schema_v1alpha1_host_proto_init() {
 	file_schema_v1alpha1_location_proto_init()
 	file_schema_v1alpha1_firmware_proto_init()
 	file_schema_v1alpha1_host_proto_msgTypes[0].OneofWrappers = []any{}
-	file_schema_v1alpha1_host_proto_msgTypes[1].OneofWrappers = []any{}
 	file_schema_v1alpha1_host_proto_msgTypes[2].OneofWrappers = []any{}
 	file_schema_v1alpha1_host_proto_msgTypes[3].OneofWrappers = []any{}
-	file_schema_v1alpha1_host_proto_msgTypes[4].OneofWrappers = []any{
-		(*GetHostRequest_HostId)(nil),
+	file_schema_v1alpha1_host_proto_msgTypes[4].OneofWrappers = []any{}
+	file_schema_v1alpha1_host_proto_msgTypes[5].OneofWrappers = []any{
 		(*GetHostRequest_Name)(nil),
 		(*GetHostRequest_Type)(nil),
-		(*GetHostRequest_State)(nil),
+		(*GetHostRequest_Status)(nil),
 		(*GetHostRequest_Location)(nil),
 	}
-	file_schema_v1alpha1_host_proto_msgTypes[6].OneofWrappers = []any{}
-	file_schema_v1alpha1_host_proto_msgTypes[10].OneofWrappers = []any{}
-	file_schema_v1alpha1_host_proto_msgTypes[11].OneofWrappers = []any{}
+	file_schema_v1alpha1_host_proto_msgTypes[7].OneofWrappers = []any{
+		(*ListHostsRequest_Type)(nil),
+		(*ListHostsRequest_Status)(nil),
+		(*ListHostsRequest_Location)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_schema_v1alpha1_host_proto_rawDesc), len(file_schema_v1alpha1_host_proto_rawDesc)),
 			NumEnums:      6,
-			NumMessages:   15,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

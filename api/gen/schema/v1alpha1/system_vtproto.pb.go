@@ -406,16 +406,15 @@ type BMCServiceClient interface {
 	GetChassis(ctx context.Context, in *GetChassisRequest, opts ...grpc.CallOption) (*GetChassisResponse, error)
 	ListChassis(ctx context.Context, in *ListChassisRequest, opts ...grpc.CallOption) (*ListChassisResponse, error)
 	UpdateChassis(ctx context.Context, in *UpdateChassisRequest, opts ...grpc.CallOption) (*UpdateChassisResponse, error)
-	ChassisChangeState(ctx context.Context, in *ChassisChangeStateRequest, opts ...grpc.CallOption) (*ChassisChangeStateResponse, error)
-	ChassisControl(ctx context.Context, in *ChassisControlRequest, opts ...grpc.CallOption) (*ChassisControlResponse, error)
+	ChangeChassisState(ctx context.Context, in *ChangeChassisStateRequest, opts ...grpc.CallOption) (*ChangeChassisStateResponse, error)
 	GetHost(ctx context.Context, in *GetHostRequest, opts ...grpc.CallOption) (*GetHostResponse, error)
 	ListHosts(ctx context.Context, in *ListHostsRequest, opts ...grpc.CallOption) (*ListHostsResponse, error)
 	UpdateHost(ctx context.Context, in *UpdateHostRequest, opts ...grpc.CallOption) (*UpdateHostResponse, error)
-	HostChangeState(ctx context.Context, in *HostChangeStateRequest, opts ...grpc.CallOption) (*HostChangeStateResponse, error)
+	ChangeHostState(ctx context.Context, in *ChangeHostStateRequest, opts ...grpc.CallOption) (*ChangeHostStateResponse, error)
 	GetManagementController(ctx context.Context, in *GetManagementControllerRequest, opts ...grpc.CallOption) (*GetManagementControllerResponse, error)
 	ListManagementControllers(ctx context.Context, in *ListManagementControllersRequest, opts ...grpc.CallOption) (*ListManagementControllersResponse, error)
 	UpdateManagementController(ctx context.Context, in *UpdateManagementControllerRequest, opts ...grpc.CallOption) (*UpdateManagementControllerResponse, error)
-	ManagementControllerControl(ctx context.Context, in *ManagementControllerControlRequest, opts ...grpc.CallOption) (*ManagementControllerControlResponse, error)
+	ChangeManagementControllerState(ctx context.Context, in *ChangeManagementControllerStateRequest, opts ...grpc.CallOption) (*ChangeManagementControllerStateResponse, error)
 	ListSensors(ctx context.Context, in *ListSensorsRequest, opts ...grpc.CallOption) (*ListSensorsResponse, error)
 	GetSensor(ctx context.Context, in *GetSensorRequest, opts ...grpc.CallOption) (*GetSensorResponse, error)
 	GetThermalZone(ctx context.Context, in *GetThermalZoneRequest, opts ...grpc.CallOption) (*GetThermalZoneResponse, error)
@@ -502,18 +501,9 @@ func (c *bMCServiceClient) UpdateChassis(ctx context.Context, in *UpdateChassisR
 	return out, nil
 }
 
-func (c *bMCServiceClient) ChassisChangeState(ctx context.Context, in *ChassisChangeStateRequest, opts ...grpc.CallOption) (*ChassisChangeStateResponse, error) {
-	out := new(ChassisChangeStateResponse)
-	err := c.cc.Invoke(ctx, "/schema.v1alpha1.BMCService/ChassisChangeState", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *bMCServiceClient) ChassisControl(ctx context.Context, in *ChassisControlRequest, opts ...grpc.CallOption) (*ChassisControlResponse, error) {
-	out := new(ChassisControlResponse)
-	err := c.cc.Invoke(ctx, "/schema.v1alpha1.BMCService/ChassisControl", in, out, opts...)
+func (c *bMCServiceClient) ChangeChassisState(ctx context.Context, in *ChangeChassisStateRequest, opts ...grpc.CallOption) (*ChangeChassisStateResponse, error) {
+	out := new(ChangeChassisStateResponse)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.BMCService/ChangeChassisState", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -547,9 +537,9 @@ func (c *bMCServiceClient) UpdateHost(ctx context.Context, in *UpdateHostRequest
 	return out, nil
 }
 
-func (c *bMCServiceClient) HostChangeState(ctx context.Context, in *HostChangeStateRequest, opts ...grpc.CallOption) (*HostChangeStateResponse, error) {
-	out := new(HostChangeStateResponse)
-	err := c.cc.Invoke(ctx, "/schema.v1alpha1.BMCService/HostChangeState", in, out, opts...)
+func (c *bMCServiceClient) ChangeHostState(ctx context.Context, in *ChangeHostStateRequest, opts ...grpc.CallOption) (*ChangeHostStateResponse, error) {
+	out := new(ChangeHostStateResponse)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.BMCService/ChangeHostState", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -583,9 +573,9 @@ func (c *bMCServiceClient) UpdateManagementController(ctx context.Context, in *U
 	return out, nil
 }
 
-func (c *bMCServiceClient) ManagementControllerControl(ctx context.Context, in *ManagementControllerControlRequest, opts ...grpc.CallOption) (*ManagementControllerControlResponse, error) {
-	out := new(ManagementControllerControlResponse)
-	err := c.cc.Invoke(ctx, "/schema.v1alpha1.BMCService/ManagementControllerControl", in, out, opts...)
+func (c *bMCServiceClient) ChangeManagementControllerState(ctx context.Context, in *ChangeManagementControllerStateRequest, opts ...grpc.CallOption) (*ChangeManagementControllerStateResponse, error) {
+	out := new(ChangeManagementControllerStateResponse)
+	err := c.cc.Invoke(ctx, "/schema.v1alpha1.BMCService/ChangeManagementControllerState", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -720,16 +710,15 @@ type BMCServiceServer interface {
 	GetChassis(context.Context, *GetChassisRequest) (*GetChassisResponse, error)
 	ListChassis(context.Context, *ListChassisRequest) (*ListChassisResponse, error)
 	UpdateChassis(context.Context, *UpdateChassisRequest) (*UpdateChassisResponse, error)
-	ChassisChangeState(context.Context, *ChassisChangeStateRequest) (*ChassisChangeStateResponse, error)
-	ChassisControl(context.Context, *ChassisControlRequest) (*ChassisControlResponse, error)
+	ChangeChassisState(context.Context, *ChangeChassisStateRequest) (*ChangeChassisStateResponse, error)
 	GetHost(context.Context, *GetHostRequest) (*GetHostResponse, error)
 	ListHosts(context.Context, *ListHostsRequest) (*ListHostsResponse, error)
 	UpdateHost(context.Context, *UpdateHostRequest) (*UpdateHostResponse, error)
-	HostChangeState(context.Context, *HostChangeStateRequest) (*HostChangeStateResponse, error)
+	ChangeHostState(context.Context, *ChangeHostStateRequest) (*ChangeHostStateResponse, error)
 	GetManagementController(context.Context, *GetManagementControllerRequest) (*GetManagementControllerResponse, error)
 	ListManagementControllers(context.Context, *ListManagementControllersRequest) (*ListManagementControllersResponse, error)
 	UpdateManagementController(context.Context, *UpdateManagementControllerRequest) (*UpdateManagementControllerResponse, error)
-	ManagementControllerControl(context.Context, *ManagementControllerControlRequest) (*ManagementControllerControlResponse, error)
+	ChangeManagementControllerState(context.Context, *ChangeManagementControllerStateRequest) (*ChangeManagementControllerStateResponse, error)
 	ListSensors(context.Context, *ListSensorsRequest) (*ListSensorsResponse, error)
 	GetSensor(context.Context, *GetSensorRequest) (*GetSensorResponse, error)
 	GetThermalZone(context.Context, *GetThermalZoneRequest) (*GetThermalZoneResponse, error)
@@ -771,11 +760,8 @@ func (UnimplementedBMCServiceServer) ListChassis(context.Context, *ListChassisRe
 func (UnimplementedBMCServiceServer) UpdateChassis(context.Context, *UpdateChassisRequest) (*UpdateChassisResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateChassis not implemented")
 }
-func (UnimplementedBMCServiceServer) ChassisChangeState(context.Context, *ChassisChangeStateRequest) (*ChassisChangeStateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ChassisChangeState not implemented")
-}
-func (UnimplementedBMCServiceServer) ChassisControl(context.Context, *ChassisControlRequest) (*ChassisControlResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ChassisControl not implemented")
+func (UnimplementedBMCServiceServer) ChangeChassisState(context.Context, *ChangeChassisStateRequest) (*ChangeChassisStateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeChassisState not implemented")
 }
 func (UnimplementedBMCServiceServer) GetHost(context.Context, *GetHostRequest) (*GetHostResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetHost not implemented")
@@ -786,8 +772,8 @@ func (UnimplementedBMCServiceServer) ListHosts(context.Context, *ListHostsReques
 func (UnimplementedBMCServiceServer) UpdateHost(context.Context, *UpdateHostRequest) (*UpdateHostResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateHost not implemented")
 }
-func (UnimplementedBMCServiceServer) HostChangeState(context.Context, *HostChangeStateRequest) (*HostChangeStateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HostChangeState not implemented")
+func (UnimplementedBMCServiceServer) ChangeHostState(context.Context, *ChangeHostStateRequest) (*ChangeHostStateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeHostState not implemented")
 }
 func (UnimplementedBMCServiceServer) GetManagementController(context.Context, *GetManagementControllerRequest) (*GetManagementControllerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetManagementController not implemented")
@@ -798,8 +784,8 @@ func (UnimplementedBMCServiceServer) ListManagementControllers(context.Context, 
 func (UnimplementedBMCServiceServer) UpdateManagementController(context.Context, *UpdateManagementControllerRequest) (*UpdateManagementControllerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateManagementController not implemented")
 }
-func (UnimplementedBMCServiceServer) ManagementControllerControl(context.Context, *ManagementControllerControlRequest) (*ManagementControllerControlResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ManagementControllerControl not implemented")
+func (UnimplementedBMCServiceServer) ChangeManagementControllerState(context.Context, *ChangeManagementControllerStateRequest) (*ChangeManagementControllerStateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeManagementControllerState not implemented")
 }
 func (UnimplementedBMCServiceServer) ListSensors(context.Context, *ListSensorsRequest) (*ListSensorsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListSensors not implemented")
@@ -979,38 +965,20 @@ func _BMCService_UpdateChassis_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BMCService_ChassisChangeState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ChassisChangeStateRequest)
+func _BMCService_ChangeChassisState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeChassisStateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BMCServiceServer).ChassisChangeState(ctx, in)
+		return srv.(BMCServiceServer).ChangeChassisState(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/schema.v1alpha1.BMCService/ChassisChangeState",
+		FullMethod: "/schema.v1alpha1.BMCService/ChangeChassisState",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BMCServiceServer).ChassisChangeState(ctx, req.(*ChassisChangeStateRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _BMCService_ChassisControl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ChassisControlRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BMCServiceServer).ChassisControl(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/schema.v1alpha1.BMCService/ChassisControl",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BMCServiceServer).ChassisControl(ctx, req.(*ChassisControlRequest))
+		return srv.(BMCServiceServer).ChangeChassisState(ctx, req.(*ChangeChassisStateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1069,20 +1037,20 @@ func _BMCService_UpdateHost_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BMCService_HostChangeState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HostChangeStateRequest)
+func _BMCService_ChangeHostState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeHostStateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BMCServiceServer).HostChangeState(ctx, in)
+		return srv.(BMCServiceServer).ChangeHostState(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/schema.v1alpha1.BMCService/HostChangeState",
+		FullMethod: "/schema.v1alpha1.BMCService/ChangeHostState",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BMCServiceServer).HostChangeState(ctx, req.(*HostChangeStateRequest))
+		return srv.(BMCServiceServer).ChangeHostState(ctx, req.(*ChangeHostStateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1141,20 +1109,20 @@ func _BMCService_UpdateManagementController_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BMCService_ManagementControllerControl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ManagementControllerControlRequest)
+func _BMCService_ChangeManagementControllerState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeManagementControllerStateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BMCServiceServer).ManagementControllerControl(ctx, in)
+		return srv.(BMCServiceServer).ChangeManagementControllerState(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/schema.v1alpha1.BMCService/ManagementControllerControl",
+		FullMethod: "/schema.v1alpha1.BMCService/ChangeManagementControllerState",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BMCServiceServer).ManagementControllerControl(ctx, req.(*ManagementControllerControlRequest))
+		return srv.(BMCServiceServer).ChangeManagementControllerState(ctx, req.(*ChangeManagementControllerStateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1429,12 +1397,8 @@ var BMCService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _BMCService_UpdateChassis_Handler,
 		},
 		{
-			MethodName: "ChassisChangeState",
-			Handler:    _BMCService_ChassisChangeState_Handler,
-		},
-		{
-			MethodName: "ChassisControl",
-			Handler:    _BMCService_ChassisControl_Handler,
+			MethodName: "ChangeChassisState",
+			Handler:    _BMCService_ChangeChassisState_Handler,
 		},
 		{
 			MethodName: "GetHost",
@@ -1449,8 +1413,8 @@ var BMCService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _BMCService_UpdateHost_Handler,
 		},
 		{
-			MethodName: "HostChangeState",
-			Handler:    _BMCService_HostChangeState_Handler,
+			MethodName: "ChangeHostState",
+			Handler:    _BMCService_ChangeHostState_Handler,
 		},
 		{
 			MethodName: "GetManagementController",
@@ -1465,8 +1429,8 @@ var BMCService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _BMCService_UpdateManagementController_Handler,
 		},
 		{
-			MethodName: "ManagementControllerControl",
-			Handler:    _BMCService_ManagementControllerControl_Handler,
+			MethodName: "ChangeManagementControllerState",
+			Handler:    _BMCService_ChangeManagementControllerState_Handler,
 		},
 		{
 			MethodName: "ListSensors",

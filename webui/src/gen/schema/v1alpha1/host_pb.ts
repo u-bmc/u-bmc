@@ -21,7 +21,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file schema/v1alpha1/host.proto.
  */
 export const file_schema_v1alpha1_host: GenFile = /*@__PURE__*/
-  fileDesc("ChpzY2hlbWEvdjFhbHBoYTEvaG9zdC5wcm90bxIPc2NoZW1hLnYxYWxwaGExIu8HCgRIb3N0EhUKBG5hbWUYASABKAlCB7pIBHICEAESKQoFYXNzZXQYAiABKAsyGi5zY2hlbWEudjFhbHBoYTEuQXNzZXRJbmZvEhgKC2Rlc2NyaXB0aW9uGAMgASgJSACIAQESNgoEdHlwZRgEIAEoDjIZLnNjaGVtYS52MWFscGhhMS5Ib3N0VHlwZUIIukgFggECEAFIAYgBARJACg1jdXJyZW50X3N0YXRlGAUgASgOMhouc2NoZW1hLnYxYWxwaGExLkhvc3RTdGF0ZUIIukgFggECEAFIAogBARJMChRyZXF1ZXN0ZWRfdHJhbnNpdGlvbhgGIAEoDjIfLnNjaGVtYS52MWFscGhhMS5Ib3N0VHJhbnNpdGlvbkIIukgFggECEAFIA4gBARJMChJsYXN0X3Jlc3RhcnRfY2F1c2UYByABKA4yIS5zY2hlbWEudjFhbHBoYTEuSG9zdFJlc3RhcnRDYXVzZUIIukgFggECEAFIBIgBARIwCghsb2NhdGlvbhgIIAEoCzIZLnNjaGVtYS52MWFscGhhMS5Mb2NhdGlvbkgFiAEBEjAKCGZpcm13YXJlGAkgASgLMhkuc2NoZW1hLnYxYWxwaGExLkZpcm13YXJlSAaIAQESQwoQb3BlcmF0aW5nX3N5c3RlbRgKIAEoCzIkLnNjaGVtYS52MWFscGhhMS5Ib3N0T3BlcmF0aW5nU3lzdGVtSAeIAQESOQoNYm9vdF9wcm9ncmVzcxgLIAEoCzIdLnNjaGVtYS52MWFscGhhMS5Cb290UHJvZ3Jlc3NICIgBARI5CgtsYXN0X3JlYm9vdBgMIAEoCzIfLnNjaGVtYS52MWFscGhhMS5Ib3N0UmVib290SW5mb0gJiAEBEjMKCnVwZGF0ZWRfYXQYDSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAqIAQESNQoIbWV0YWRhdGEYDiADKAsyIy5zY2hlbWEudjFhbHBoYTEuSG9zdC5NZXRhZGF0YUVudHJ5Gi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIOCgxfZGVzY3JpcHRpb25CBwoFX3R5cGVCEAoOX2N1cnJlbnRfc3RhdGVCFwoVX3JlcXVlc3RlZF90cmFuc2l0aW9uQhUKE19sYXN0X3Jlc3RhcnRfY2F1c2VCCwoJX2xvY2F0aW9uQgsKCV9maXJtd2FyZUITChFfb3BlcmF0aW5nX3N5c3RlbUIQCg5fYm9vdF9wcm9ncmVzc0IOCgxfbGFzdF9yZWJvb3RCDQoLX3VwZGF0ZWRfYXQi6gMKE0hvc3RPcGVyYXRpbmdTeXN0ZW0SEQoEbmFtZRgBIAEoCUgAiAEBEhQKB3ZlcnNpb24YAiABKAlIAYgBARIZCgxkaXN0cmlidXRpb24YAyABKAlIAogBARIZCgxhcmNoaXRlY3R1cmUYBCABKAlIA4gBARIbCg5rZXJuZWxfdmVyc2lvbhgFIAEoCUgEiAEBEhkKDGJ1aWxkX251bWJlchgGIAEoCUgFiAEBEjoKEWluc3RhbGxhdGlvbl9kYXRlGAcgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgGiAEBEjcKDmxhc3RfYm9vdF90aW1lGAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgHiAEBEjgKBnN0YXR1cxgJIAEoDjIZLnNjaGVtYS52MWFscGhhMS5PU1N0YXR1c0IIukgFggECEAFICIgBAUIHCgVfbmFtZUIKCghfdmVyc2lvbkIPCg1fZGlzdHJpYnV0aW9uQg8KDV9hcmNoaXRlY3R1cmVCEQoPX2tlcm5lbF92ZXJzaW9uQg8KDV9idWlsZF9udW1iZXJCFAoSX2luc3RhbGxhdGlvbl9kYXRlQhEKD19sYXN0X2Jvb3RfdGltZUIJCgdfc3RhdHVzIroBCgxCb290UHJvZ3Jlc3MSOwoFc3RhZ2UYASABKA4yIi5zY2hlbWEudjFhbHBoYTEuQm9vdFByb2dyZXNzU3RhZ2VCCLpIBYIBAhABEiEKEHByb2dyZXNzX3BlcmNlbnQYAiABKA1CB7pIBCoCGGQSNwoObGFzdF9ib290X3RpbWUYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSACIAQFCEQoPX2xhc3RfYm9vdF90aW1lIuECCg5Ib3N0UmVib290SW5mbxI5ChBsYXN0X3JlYm9vdF90aW1lGAEgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgAiAEBEkYKDHJlYm9vdF9jYXVzZRgCIAEoDjIhLnNjaGVtYS52MWFscGhhMS5Ib3N0UmVzdGFydENhdXNlQgi6SAWCAQIQAUgBiAEBEhkKDHJlYm9vdF9jb3VudBgDIAEoDUgCiAEBEi4KBnVwdGltZRgEIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbkgDiAEBEjEKCWJvb3RfdGltZRgFIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbkgEiAEBQhMKEV9sYXN0X3JlYm9vdF90aW1lQg8KDV9yZWJvb3RfY2F1c2VCDwoNX3JlYm9vdF9jb3VudEIJCgdfdXB0aW1lQgwKCl9ib290X3RpbWUikwIKDkdldEhvc3RSZXF1ZXN0EhEKB2hvc3RfaWQYASABKAlIABIOCgRuYW1lGAIgASgJSAASKQoEdHlwZRgDIAEoDjIZLnNjaGVtYS52MWFscGhhMS5Ib3N0VHlwZUgAEisKBXN0YXRlGAQgASgOMhouc2NoZW1hLnYxYWxwaGExLkhvc3RTdGF0ZUgAEi0KCGxvY2F0aW9uGAUgASgLMhkuc2NoZW1hLnYxYWxwaGExLkxvY2F0aW9uSAASMwoKZmllbGRfbWFzaxgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2tIAYgBAUITCgppZGVudGlmaWVyEgW6SAIIAUINCgtfZmllbGRfbWFzayI3Cg9HZXRIb3N0UmVzcG9uc2USJAoFaG9zdHMYASADKAsyFS5zY2hlbWEudjFhbHBoYTEuSG9zdCLbAQoQTGlzdEhvc3RzUmVxdWVzdBI2CgR0eXBlGAEgASgOMhkuc2NoZW1hLnYxYWxwaGExLkhvc3RUeXBlQgi6SAWCAQIQAUgAiAEBEjgKBXN0YXRlGAIgASgOMhouc2NoZW1hLnYxYWxwaGExLkhvc3RTdGF0ZUIIukgFggECEAFIAYgBARIzCgpmaWVsZF9tYXNrGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLkZpZWxkTWFza0gCiAEBQgcKBV90eXBlQggKBl9zdGF0ZUINCgtfZmllbGRfbWFzayI5ChFMaXN0SG9zdHNSZXNwb25zZRIkCgVob3N0cxgBIAMoCzIVLnNjaGVtYS52MWFscGhhMS5Ib3N0IooBChFVcGRhdGVIb3N0UmVxdWVzdBIYCgdob3N0X2lkGAEgASgJQge6SARyAhABEisKBGhvc3QYAiABKAsyFS5zY2hlbWEudjFhbHBoYTEuSG9zdEIGukgDyAEBEi4KCmZpZWxkX21hc2sYAyABKAsyGi5nb29nbGUucHJvdG9idWYuRmllbGRNYXNrIjkKElVwZGF0ZUhvc3RSZXNwb25zZRIjCgRob3N0GAEgASgLMhUuc2NoZW1hLnYxYWxwaGExLkhvc3QiiQIKFkhvc3RDaGFuZ2VTdGF0ZVJlcXVlc3QSGAoHaG9zdF9pZBgBIAEoCUIHukgEcgIQARI9Cgp0cmFuc2l0aW9uGAIgASgOMh8uc2NoZW1hLnYxYWxwaGExLkhvc3RUcmFuc2l0aW9uQgi6SAWCAQIQARISCgVmb3JjZRgDIAEoCEgAiAEBEkcKCG1ldGFkYXRhGAQgAygLMjUuc2NoZW1hLnYxYWxwaGExLkhvc3RDaGFuZ2VTdGF0ZVJlcXVlc3QuTWV0YWRhdGFFbnRyeRovCg1NZXRhZGF0YUVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAFCCAoGX2ZvcmNlIq0DChdIb3N0Q2hhbmdlU3RhdGVSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEhoKDWVycm9yX21lc3NhZ2UYAiABKAlIAIgBARJACg1jdXJyZW50X3N0YXRlGAMgASgOMhouc2NoZW1hLnYxYWxwaGExLkhvc3RTdGF0ZUIIukgFggECEAFIAYgBARIaCg10cmFuc2l0aW9uX2lkGAQgASgJSAKIAQESPQoUZXN0aW1hdGVkX2NvbXBsZXRpb24YBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAOIAQESSAoIbWV0YWRhdGEYBiADKAsyNi5zY2hlbWEudjFhbHBoYTEuSG9zdENoYW5nZVN0YXRlUmVzcG9uc2UuTWV0YWRhdGFFbnRyeRovCg1NZXRhZGF0YUVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAFCEAoOX2Vycm9yX21lc3NhZ2VCEAoOX2N1cnJlbnRfc3RhdGVCEAoOX3RyYW5zaXRpb25faWRCFwoVX2VzdGltYXRlZF9jb21wbGV0aW9uKp4BCghIb3N0VHlwZRIZChVIT1NUX1RZUEVfVU5TUEVDSUZJRUQQABIWChJIT1NUX1RZUEVfUEhZU0lDQUwQARIVChFIT1NUX1RZUEVfVklSVFVBTBACEhcKE0hPU1RfVFlQRV9DT05UQUlORVIQAxITCg9IT1NUX1RZUEVfQkxBREUQBBIaChZIT1NUX1RZUEVfQ09NUFVURV9OT0RFEAUquwEKCUhvc3RTdGF0ZRIaChZIT1NUX1NUQVRFX1VOU1BFQ0lGSUVEEAASEgoOSE9TVF9TVEFURV9PRkYQARIRCg1IT1NUX1NUQVRFX09OEAISHAoYSE9TVF9TVEFURV9UUkFOU0lUSU9OSU5HEAMSFwoTSE9TVF9TVEFURV9RVUlFU0NFRBAEEh4KGkhPU1RfU1RBVEVfRElBR05PU1RJQ19NT0RFEAUSFAoQSE9TVF9TVEFURV9FUlJPUhAGKsABCg5Ib3N0VHJhbnNpdGlvbhIfChtIT1NUX1RSQU5TSVRJT05fVU5TUEVDSUZJRUQQABIWChJIT1NUX1RSQU5TSVRJT05fT04QARIXChNIT1NUX1RSQU5TSVRJT05fT0ZGEAISGgoWSE9TVF9UUkFOU0lUSU9OX1JFQk9PVBADEh0KGUhPU1RfVFJBTlNJVElPTl9GT1JDRV9PRkYQBBIhCh1IT1NUX1RSQU5TSVRJT05fRk9SQ0VfUkVTVEFSVBAFKusCChBIb3N0UmVzdGFydENhdXNlEiIKHkhPU1RfUkVTVEFSVF9DQVVTRV9VTlNQRUNJRklFRBAAEiMKH0hPU1RfUkVTVEFSVF9DQVVTRV9QT1dFUl9CVVRUT04QARIjCh9IT1NUX1JFU1RBUlRfQ0FVU0VfUkVTRVRfQlVUVE9OEAISIgoeSE9TVF9SRVNUQVJUX0NBVVNFX1BPV0VSX0NZQ0xFEAMSHwobSE9TVF9SRVNUQVJUX0NBVVNFX1dBVENIRE9HEAQSIQodSE9TVF9SRVNUQVJUX0NBVVNFX1NPRlRfUkVTRVQQBRIeChpIT1NUX1JFU1RBUlRfQ0FVU0VfVEhFUk1BTBAGEiMKH0hPU1RfUkVTVEFSVF9DQVVTRV9QT1dFUl9TVVBQTFkQBxIcChhIT1NUX1JFU1RBUlRfQ0FVU0VfT1RIRVIQCBIeChpIT1NUX1JFU1RBUlRfQ0FVU0VfVU5LTk9XThAJKtsEChFCb290UHJvZ3Jlc3NTdGFnZRIjCh9CT09UX1BST0dSRVNTX1NUQUdFX1VOU1BFQ0lGSUVEEAASNgoyQk9PVF9QUk9HUkVTU19TVEFHRV9TWVNURU1fSEFSRFdBUkVfSU5JVElBTElaQVRJT04QARItCilCT09UX1BST0dSRVNTX1NUQUdFX1NZU1RFTV9JTklUSUFMSVpBVElPThACEjgKNEJPT1RfUFJPR1JFU1NfU1RBR0VfUFJJTUFSWV9QUk9DRVNTT1JfSU5JVElBTElaQVRJT04QAxItCilCT09UX1BST0dSRVNTX1NUQUdFX01FTU9SWV9JTklUSUFMSVpBVElPThAEEjoKNkJPT1RfUFJPR1JFU1NfU1RBR0VfU0VDT05EQVJZX1BST0NFU1NPUl9JTklUSUFMSVpBVElPThAFEisKJ0JPT1RfUFJPR1JFU1NfU1RBR0VfUENJX1JFU09VUkNFX0NPTkZJRxAGEjEKLUJPT1RfUFJPR1JFU1NfU1RBR0VfU1RBUlRJTkdfT1BFUkFUSU5HX1NZU1RFTRAHEjAKLEJPT1RfUFJPR1JFU1NfU1RBR0VfQkFTRUJPQVJEX0lOSVRJQUxJWkFUSU9OEAgSMgouQk9PVF9QUk9HUkVTU19TVEFHRV9NT1RIRVJCT0FSRF9JTklUSUFMSVpBVElPThAJEi0KKUJPT1RfUFJPR1JFU1NfU1RBR0VfT1BFUkFUSU5HX1NZU1RFTV9CT09UEAoSIAocQk9PVF9QUk9HUkVTU19TVEFHRV9DT01QTEVURRALKtUCCghPU1N0YXR1cxIZChVPU19TVEFUVVNfVU5TUEVDSUZJRUQQABIbChdPU19TVEFUVVNfQk9PVF9DT01QTEVURRABEh8KG09TX1NUQVRVU19QWEVfQk9PVF9DT01QTEVURRACEiYKIk9TX1NUQVRVU19ESUFHTk9TVElDX0JPT1RfQ09NUExFVEUQAxIeChpPU19TVEFUVVNfQ0RfQk9PVF9DT01QTEVURRAEEh8KG09TX1NUQVRVU19ST01fQk9PVF9DT01QTEVURRAFEicKI09TX1NUQVRVU19CT09UX0NPTVBMRVRFX1VOU1BFQ0lGSUVEEAYSIQodT1NfU1RBVFVTX0lOU1RBTExfSU5fUFJPR1JFU1MQBxIeChpPU19TVEFUVVNfSU5TVEFMTF9DT01QTEVURRAIEhsKF09TX1NUQVRVU19JTlNUQUxMX0VSUk9SEAlCvAEKE2NvbS5zY2hlbWEudjFhbHBoYTFCCUhvc3RQcm90b1ABWj1naXRodWIuY29tL3UtYm1jL3UtYm1jL2FwaS9nZW4vc2NoZW1hL3YxYWxwaGExO3NjaGVtYXYxYWxwaGExogIDU1hYqgIPU2NoZW1hLlYxYWxwaGExygIPU2NoZW1hXFYxYWxwaGEx4gIbU2NoZW1hXFYxYWxwaGExXEdQQk1ldGFkYXRh6gIQU2NoZW1hOjpWMWFscGhhMWIGcHJvdG8z", [file_buf_validate_validate, file_google_protobuf_field_mask, file_google_protobuf_timestamp, file_google_protobuf_duration, file_schema_v1alpha1_asset, file_schema_v1alpha1_location, file_schema_v1alpha1_firmware]);
+  fileDesc("ChpzY2hlbWEvdjFhbHBoYTEvaG9zdC5wcm90bxIPc2NoZW1hLnYxYWxwaGExIvEGCgRIb3N0EhUKBG5hbWUYASABKAlCB7pIBHICEAESKQoFYXNzZXQYAiABKAsyGi5zY2hlbWEudjFhbHBoYTEuQXNzZXRJbmZvEhgKC2Rlc2NyaXB0aW9uGAMgASgJSACIAQESNgoEdHlwZRgEIAEoDjIZLnNjaGVtYS52MWFscGhhMS5Ib3N0VHlwZUIIukgFggECEAFIAYgBARI6CgZzdGF0dXMYBSABKA4yGy5zY2hlbWEudjFhbHBoYTEuSG9zdFN0YXR1c0IIukgFggECEAFIAogBARJEChByZXF1ZXN0ZWRfYWN0aW9uGAYgASgOMhsuc2NoZW1hLnYxYWxwaGExLkhvc3RBY3Rpb25CCLpIBYIBAhABSAOIAQESMAoIbG9jYXRpb24YByABKAsyGS5zY2hlbWEudjFhbHBoYTEuTG9jYXRpb25IBIgBARIwCghmaXJtd2FyZRgIIAEoCzIZLnNjaGVtYS52MWFscGhhMS5GaXJtd2FyZUgFiAEBEkMKEG9wZXJhdGluZ19zeXN0ZW0YCSABKAsyJC5zY2hlbWEudjFhbHBoYTEuSG9zdE9wZXJhdGluZ1N5c3RlbUgGiAEBEjkKDWJvb3RfcHJvZ3Jlc3MYCiABKAsyHS5zY2hlbWEudjFhbHBoYTEuQm9vdFByb2dyZXNzSAeIAQESOQoLbGFzdF9yZWJvb3QYCyABKAsyHy5zY2hlbWEudjFhbHBoYTEuSG9zdFJlYm9vdEluZm9ICIgBARIzCgp1cGRhdGVkX2F0GAwgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgJiAEBEjUKCG1ldGFkYXRhGA0gAygLMiMuc2NoZW1hLnYxYWxwaGExLkhvc3QuTWV0YWRhdGFFbnRyeRovCg1NZXRhZGF0YUVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAFCDgoMX2Rlc2NyaXB0aW9uQgcKBV90eXBlQgkKB19zdGF0dXNCEwoRX3JlcXVlc3RlZF9hY3Rpb25CCwoJX2xvY2F0aW9uQgsKCV9maXJtd2FyZUITChFfb3BlcmF0aW5nX3N5c3RlbUIQCg5fYm9vdF9wcm9ncmVzc0IOCgxfbGFzdF9yZWJvb3RCDQoLX3VwZGF0ZWRfYXQikgIKD0hvc3RTdGF0ZUNoYW5nZRIaCglob3N0X25hbWUYASABKAlCB7pIBHICEAESPgoPcHJldmlvdXNfc3RhdHVzGAIgASgOMhsuc2NoZW1hLnYxYWxwaGExLkhvc3RTdGF0dXNCCLpIBYIBAhABEj0KDmN1cnJlbnRfc3RhdHVzGAMgASgOMhsuc2NoZW1hLnYxYWxwaGExLkhvc3RTdGF0dXNCCLpIBYIBAhABEjQKBWNhdXNlGAQgASgOMhsuc2NoZW1hLnYxYWxwaGExLkhvc3RBY3Rpb25CCLpIBYIBAhABEi4KCmNoYW5nZWRfYXQYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIuoDChNIb3N0T3BlcmF0aW5nU3lzdGVtEhEKBG5hbWUYASABKAlIAIgBARIUCgd2ZXJzaW9uGAIgASgJSAGIAQESGQoMZGlzdHJpYnV0aW9uGAMgASgJSAKIAQESGQoMYXJjaGl0ZWN0dXJlGAQgASgJSAOIAQESGwoOa2VybmVsX3ZlcnNpb24YBSABKAlIBIgBARIZCgxidWlsZF9udW1iZXIYBiABKAlIBYgBARI6ChFpbnN0YWxsYXRpb25fZGF0ZRgHIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIBogBARI3Cg5sYXN0X2Jvb3RfdGltZRgIIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIB4gBARI4CgZzdGF0dXMYCSABKA4yGS5zY2hlbWEudjFhbHBoYTEuT1NTdGF0dXNCCLpIBYIBAhABSAiIAQFCBwoFX25hbWVCCgoIX3ZlcnNpb25CDwoNX2Rpc3RyaWJ1dGlvbkIPCg1fYXJjaGl0ZWN0dXJlQhEKD19rZXJuZWxfdmVyc2lvbkIPCg1fYnVpbGRfbnVtYmVyQhQKEl9pbnN0YWxsYXRpb25fZGF0ZUIRCg9fbGFzdF9ib290X3RpbWVCCQoHX3N0YXR1cyK6AQoMQm9vdFByb2dyZXNzEjsKBXN0YWdlGAEgASgOMiIuc2NoZW1hLnYxYWxwaGExLkJvb3RQcm9ncmVzc1N0YWdlQgi6SAWCAQIQARIhChBwcm9ncmVzc19wZXJjZW50GAIgASgNQge6SAQqAhhkEjcKDmxhc3RfYm9vdF90aW1lGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgAiAEBQhEKD19sYXN0X2Jvb3RfdGltZSLgAgoOSG9zdFJlYm9vdEluZm8SOQoQbGFzdF9yZWJvb3RfdGltZRgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAIgBARJFCgxyZWJvb3RfY2F1c2UYAiABKA4yIC5zY2hlbWEudjFhbHBoYTEuSG9zdFJlYm9vdENhdXNlQgi6SAWCAQIQAUgBiAEBEhkKDHJlYm9vdF9jb3VudBgDIAEoDUgCiAEBEi4KBnVwdGltZRgEIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbkgDiAEBEjEKCWJvb3RfdGltZRgFIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbkgEiAEBQhMKEV9sYXN0X3JlYm9vdF90aW1lQg8KDV9yZWJvb3RfY2F1c2VCDwoNX3JlYm9vdF9jb3VudEIJCgdfdXB0aW1lQgwKCl9ib290X3RpbWUiggIKDkdldEhvc3RSZXF1ZXN0Eg4KBG5hbWUYASABKAlIABIpCgR0eXBlGAIgASgOMhkuc2NoZW1hLnYxYWxwaGExLkhvc3RUeXBlSAASLQoGc3RhdHVzGAMgASgOMhsuc2NoZW1hLnYxYWxwaGExLkhvc3RTdGF0dXNIABItCghsb2NhdGlvbhgEIAEoCzIZLnNjaGVtYS52MWFscGhhMS5Mb2NhdGlvbkgAEjMKCmZpZWxkX21hc2sYBSABKAsyGi5nb29nbGUucHJvdG9idWYuRmllbGRNYXNrSAGIAQFCEwoKaWRlbnRpZmllchIFukgCCAFCDQoLX2ZpZWxkX21hc2siNwoPR2V0SG9zdFJlc3BvbnNlEiQKBWhvc3RzGAEgAygLMhUuc2NoZW1hLnYxYWxwaGExLkhvc3Qi7QEKEExpc3RIb3N0c1JlcXVlc3QSKQoEdHlwZRgBIAEoDjIZLnNjaGVtYS52MWFscGhhMS5Ib3N0VHlwZUgAEi0KBnN0YXR1cxgCIAEoDjIbLnNjaGVtYS52MWFscGhhMS5Ib3N0U3RhdHVzSAASLQoIbG9jYXRpb24YAyABKAsyGS5zY2hlbWEudjFhbHBoYTEuTG9jYXRpb25IABIzCgpmaWVsZF9tYXNrGAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLkZpZWxkTWFza0gBiAEBQgwKCmlkZW50aWZpZXJCDQoLX2ZpZWxkX21hc2siOQoRTGlzdEhvc3RzUmVzcG9uc2USJAoFaG9zdHMYASADKAsyFS5zY2hlbWEudjFhbHBoYTEuSG9zdCKMAQoRVXBkYXRlSG9zdFJlcXVlc3QSGgoJaG9zdF9uYW1lGAEgASgJQge6SARyAhABEisKBGhvc3QYAiABKAsyFS5zY2hlbWEudjFhbHBoYTEuSG9zdEIGukgDyAEBEi4KCmZpZWxkX21hc2sYAyABKAsyGi5nb29nbGUucHJvdG9idWYuRmllbGRNYXNrIjkKElVwZGF0ZUhvc3RSZXNwb25zZRIjCgRob3N0GAEgASgLMhUuc2NoZW1hLnYxYWxwaGExLkhvc3QiawoWQ2hhbmdlSG9zdFN0YXRlUmVxdWVzdBIaCglob3N0X25hbWUYASABKAlCB7pIBHICEAESNQoGYWN0aW9uGAIgASgOMhsuc2NoZW1hLnYxYWxwaGExLkhvc3RBY3Rpb25CCLpIBYIBAhABIlgKF0NoYW5nZUhvc3RTdGF0ZVJlc3BvbnNlEj0KDmN1cnJlbnRfc3RhdHVzGAEgASgOMhsuc2NoZW1hLnYxYWxwaGExLkhvc3RTdGF0dXNCCLpIBYIBAhABKp4BCghIb3N0VHlwZRIZChVIT1NUX1RZUEVfVU5TUEVDSUZJRUQQABIWChJIT1NUX1RZUEVfUEhZU0lDQUwQARIVChFIT1NUX1RZUEVfVklSVFVBTBACEhcKE0hPU1RfVFlQRV9DT05UQUlORVIQAxITCg9IT1NUX1RZUEVfQkxBREUQBBIaChZIT1NUX1RZUEVfQ09NUFVURV9OT0RFEAUqvgEKCkhvc3RTdGF0dXMSGwoXSE9TVF9TVEFUVVNfVU5TUEVDSUZJRUQQABITCg9IT1NUX1NUQVRVU19PRkYQARISCg5IT1NUX1NUQVRVU19PThACEh0KGUhPU1RfU1RBVFVTX1RSQU5TSVRJT05JTkcQAxIYChRIT1NUX1NUQVRVU19RVUlFU0NFRBAEEhoKFkhPU1RfU1RBVFVTX0RJQUdOT1NUSUMQBRIVChFIT1NUX1NUQVRVU19FUlJPUhAGKqQBCgpIb3N0QWN0aW9uEhsKF0hPU1RfQUNUSU9OX1VOU1BFQ0lGSUVEEAASEgoOSE9TVF9BQ1RJT05fT04QARITCg9IT1NUX0FDVElPTl9PRkYQAhIWChJIT1NUX0FDVElPTl9SRUJPT1QQAxIZChVIT1NUX0FDVElPTl9GT1JDRV9PRkYQBBIdChlIT1NUX0FDVElPTl9GT1JDRV9SRVNUQVJUEAUq4AIKD0hvc3RSZWJvb3RDYXVzZRIhCh1IT1NUX1JFQk9PVF9DQVVTRV9VTlNQRUNJRklFRBAAEiIKHkhPU1RfUkVCT09UX0NBVVNFX1BPV0VSX0JVVFRPThABEiIKHkhPU1RfUkVCT09UX0NBVVNFX1JFU0VUX0JVVFRPThACEiEKHUhPU1RfUkVCT09UX0NBVVNFX1BPV0VSX0NZQ0xFEAMSHgoaSE9TVF9SRUJPT1RfQ0FVU0VfV0FUQ0hET0cQBBIgChxIT1NUX1JFQk9PVF9DQVVTRV9TT0ZUX1JFU0VUEAUSHQoZSE9TVF9SRUJPT1RfQ0FVU0VfVEhFUk1BTBAGEiIKHkhPU1RfUkVCT09UX0NBVVNFX1BPV0VSX1NVUFBMWRAHEhsKF0hPU1RfUkVCT09UX0NBVVNFX09USEVSEAgSHQoZSE9TVF9SRUJPT1RfQ0FVU0VfVU5LTk9XThAJKtsEChFCb290UHJvZ3Jlc3NTdGFnZRIjCh9CT09UX1BST0dSRVNTX1NUQUdFX1VOU1BFQ0lGSUVEEAASNgoyQk9PVF9QUk9HUkVTU19TVEFHRV9TWVNURU1fSEFSRFdBUkVfSU5JVElBTElaQVRJT04QARItCilCT09UX1BST0dSRVNTX1NUQUdFX1NZU1RFTV9JTklUSUFMSVpBVElPThACEjgKNEJPT1RfUFJPR1JFU1NfU1RBR0VfUFJJTUFSWV9QUk9DRVNTT1JfSU5JVElBTElaQVRJT04QAxItCilCT09UX1BST0dSRVNTX1NUQUdFX01FTU9SWV9JTklUSUFMSVpBVElPThAEEjoKNkJPT1RfUFJPR1JFU1NfU1RBR0VfU0VDT05EQVJZX1BST0NFU1NPUl9JTklUSUFMSVpBVElPThAFEisKJ0JPT1RfUFJPR1JFU1NfU1RBR0VfUENJX1JFU09VUkNFX0NPTkZJRxAGEjEKLUJPT1RfUFJPR1JFU1NfU1RBR0VfU1RBUlRJTkdfT1BFUkFUSU5HX1NZU1RFTRAHEjAKLEJPT1RfUFJPR1JFU1NfU1RBR0VfQkFTRUJPQVJEX0lOSVRJQUxJWkFUSU9OEAgSMgouQk9PVF9QUk9HUkVTU19TVEFHRV9NT1RIRVJCT0FSRF9JTklUSUFMSVpBVElPThAJEi0KKUJPT1RfUFJPR1JFU1NfU1RBR0VfT1BFUkFUSU5HX1NZU1RFTV9CT09UEAoSIAocQk9PVF9QUk9HUkVTU19TVEFHRV9DT01QTEVURRALKtUCCghPU1N0YXR1cxIZChVPU19TVEFUVVNfVU5TUEVDSUZJRUQQABIbChdPU19TVEFUVVNfQk9PVF9DT01QTEVURRABEh8KG09TX1NUQVRVU19QWEVfQk9PVF9DT01QTEVURRACEiYKIk9TX1NUQVRVU19ESUFHTk9TVElDX0JPT1RfQ09NUExFVEUQAxIeChpPU19TVEFUVVNfQ0RfQk9PVF9DT01QTEVURRAEEh8KG09TX1NUQVRVU19ST01fQk9PVF9DT01QTEVURRAFEicKI09TX1NUQVRVU19CT09UX0NPTVBMRVRFX1VOU1BFQ0lGSUVEEAYSIQodT1NfU1RBVFVTX0lOU1RBTExfSU5fUFJPR1JFU1MQBxIeChpPU19TVEFUVVNfSU5TVEFMTF9DT01QTEVURRAIEhsKF09TX1NUQVRVU19JTlNUQUxMX0VSUk9SEAlCvAEKE2NvbS5zY2hlbWEudjFhbHBoYTFCCUhvc3RQcm90b1ABWj1naXRodWIuY29tL3UtYm1jL3UtYm1jL2FwaS9nZW4vc2NoZW1hL3YxYWxwaGExO3NjaGVtYXYxYWxwaGExogIDU1hYqgIPU2NoZW1hLlYxYWxwaGExygIPU2NoZW1hXFYxYWxwaGEx4gIbU2NoZW1hXFYxYWxwaGExXEdQQk1ldGFkYXRh6gIQU2NoZW1hOjpWMWFscGhhMWIGcHJvdG8z", [file_buf_validate_validate, file_google_protobuf_field_mask, file_google_protobuf_timestamp, file_google_protobuf_duration, file_schema_v1alpha1_asset, file_schema_v1alpha1_location, file_schema_v1alpha1_firmware]);
 
 /**
  * @generated from message schema.v1alpha1.Host
@@ -48,52 +48,47 @@ export type Host = Message<"schema.v1alpha1.Host"> & {
   type?: HostType;
 
   /**
-   * @generated from field: optional schema.v1alpha1.HostState current_state = 5;
+   * @generated from field: optional schema.v1alpha1.HostStatus status = 5;
    */
-  currentState?: HostState;
+  status?: HostStatus;
 
   /**
-   * @generated from field: optional schema.v1alpha1.HostTransition requested_transition = 6;
+   * @generated from field: optional schema.v1alpha1.HostAction requested_action = 6;
    */
-  requestedTransition?: HostTransition;
+  requestedAction?: HostAction;
 
   /**
-   * @generated from field: optional schema.v1alpha1.HostRestartCause last_restart_cause = 7;
-   */
-  lastRestartCause?: HostRestartCause;
-
-  /**
-   * @generated from field: optional schema.v1alpha1.Location location = 8;
+   * @generated from field: optional schema.v1alpha1.Location location = 7;
    */
   location?: Location;
 
   /**
-   * @generated from field: optional schema.v1alpha1.Firmware firmware = 9;
+   * @generated from field: optional schema.v1alpha1.Firmware firmware = 8;
    */
   firmware?: Firmware;
 
   /**
-   * @generated from field: optional schema.v1alpha1.HostOperatingSystem operating_system = 10;
+   * @generated from field: optional schema.v1alpha1.HostOperatingSystem operating_system = 9;
    */
   operatingSystem?: HostOperatingSystem;
 
   /**
-   * @generated from field: optional schema.v1alpha1.BootProgress boot_progress = 11;
+   * @generated from field: optional schema.v1alpha1.BootProgress boot_progress = 10;
    */
   bootProgress?: BootProgress;
 
   /**
-   * @generated from field: optional schema.v1alpha1.HostRebootInfo last_reboot = 12;
+   * @generated from field: optional schema.v1alpha1.HostRebootInfo last_reboot = 11;
    */
   lastReboot?: HostRebootInfo;
 
   /**
-   * @generated from field: optional google.protobuf.Timestamp updated_at = 13;
+   * @generated from field: optional google.protobuf.Timestamp updated_at = 12;
    */
   updatedAt?: Timestamp;
 
   /**
-   * @generated from field: map<string, string> metadata = 14;
+   * @generated from field: map<string, string> metadata = 13;
    */
   metadata: { [key: string]: string };
 };
@@ -104,6 +99,43 @@ export type Host = Message<"schema.v1alpha1.Host"> & {
  */
 export const HostSchema: GenMessage<Host> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_host, 0);
+
+/**
+ * @generated from message schema.v1alpha1.HostStateChange
+ */
+export type HostStateChange = Message<"schema.v1alpha1.HostStateChange"> & {
+  /**
+   * @generated from field: string host_name = 1;
+   */
+  hostName: string;
+
+  /**
+   * @generated from field: schema.v1alpha1.HostStatus previous_status = 2;
+   */
+  previousStatus: HostStatus;
+
+  /**
+   * @generated from field: schema.v1alpha1.HostStatus current_status = 3;
+   */
+  currentStatus: HostStatus;
+
+  /**
+   * @generated from field: schema.v1alpha1.HostAction cause = 4;
+   */
+  cause: HostAction;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp changed_at = 5;
+   */
+  changedAt?: Timestamp;
+};
+
+/**
+ * Describes the message schema.v1alpha1.HostStateChange.
+ * Use `create(HostStateChangeSchema)` to create a new message.
+ */
+export const HostStateChangeSchema: GenMessage<HostStateChange> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_host, 1);
 
 /**
  * @generated from message schema.v1alpha1.HostOperatingSystem
@@ -160,7 +192,7 @@ export type HostOperatingSystem = Message<"schema.v1alpha1.HostOperatingSystem">
  * Use `create(HostOperatingSystemSchema)` to create a new message.
  */
 export const HostOperatingSystemSchema: GenMessage<HostOperatingSystem> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_host, 1);
+  messageDesc(file_schema_v1alpha1_host, 2);
 
 /**
  * @generated from message schema.v1alpha1.BootProgress
@@ -187,7 +219,7 @@ export type BootProgress = Message<"schema.v1alpha1.BootProgress"> & {
  * Use `create(BootProgressSchema)` to create a new message.
  */
 export const BootProgressSchema: GenMessage<BootProgress> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_host, 2);
+  messageDesc(file_schema_v1alpha1_host, 3);
 
 /**
  * @generated from message schema.v1alpha1.HostRebootInfo
@@ -199,9 +231,9 @@ export type HostRebootInfo = Message<"schema.v1alpha1.HostRebootInfo"> & {
   lastRebootTime?: Timestamp;
 
   /**
-   * @generated from field: optional schema.v1alpha1.HostRestartCause reboot_cause = 2;
+   * @generated from field: optional schema.v1alpha1.HostRebootCause reboot_cause = 2;
    */
-  rebootCause?: HostRestartCause;
+  rebootCause?: HostRebootCause;
 
   /**
    * @generated from field: optional uint32 reboot_count = 3;
@@ -224,7 +256,7 @@ export type HostRebootInfo = Message<"schema.v1alpha1.HostRebootInfo"> & {
  * Use `create(HostRebootInfoSchema)` to create a new message.
  */
 export const HostRebootInfoSchema: GenMessage<HostRebootInfo> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_host, 3);
+  messageDesc(file_schema_v1alpha1_host, 4);
 
 /**
  * @generated from message schema.v1alpha1.GetHostRequest
@@ -235,38 +267,32 @@ export type GetHostRequest = Message<"schema.v1alpha1.GetHostRequest"> & {
    */
   identifier: {
     /**
-     * @generated from field: string host_id = 1;
-     */
-    value: string;
-    case: "hostId";
-  } | {
-    /**
-     * @generated from field: string name = 2;
+     * @generated from field: string name = 1;
      */
     value: string;
     case: "name";
   } | {
     /**
-     * @generated from field: schema.v1alpha1.HostType type = 3;
+     * @generated from field: schema.v1alpha1.HostType type = 2;
      */
     value: HostType;
     case: "type";
   } | {
     /**
-     * @generated from field: schema.v1alpha1.HostState state = 4;
+     * @generated from field: schema.v1alpha1.HostStatus status = 3;
      */
-    value: HostState;
-    case: "state";
+    value: HostStatus;
+    case: "status";
   } | {
     /**
-     * @generated from field: schema.v1alpha1.Location location = 5;
+     * @generated from field: schema.v1alpha1.Location location = 4;
      */
     value: Location;
     case: "location";
   } | { case: undefined; value?: undefined };
 
   /**
-   * @generated from field: optional google.protobuf.FieldMask field_mask = 6;
+   * @generated from field: optional google.protobuf.FieldMask field_mask = 5;
    */
   fieldMask?: FieldMask;
 };
@@ -276,7 +302,7 @@ export type GetHostRequest = Message<"schema.v1alpha1.GetHostRequest"> & {
  * Use `create(GetHostRequestSchema)` to create a new message.
  */
 export const GetHostRequestSchema: GenMessage<GetHostRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_host, 4);
+  messageDesc(file_schema_v1alpha1_host, 5);
 
 /**
  * @generated from message schema.v1alpha1.GetHostResponse
@@ -293,24 +319,37 @@ export type GetHostResponse = Message<"schema.v1alpha1.GetHostResponse"> & {
  * Use `create(GetHostResponseSchema)` to create a new message.
  */
 export const GetHostResponseSchema: GenMessage<GetHostResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_host, 5);
+  messageDesc(file_schema_v1alpha1_host, 6);
 
 /**
  * @generated from message schema.v1alpha1.ListHostsRequest
  */
 export type ListHostsRequest = Message<"schema.v1alpha1.ListHostsRequest"> & {
   /**
-   * @generated from field: optional schema.v1alpha1.HostType type = 1;
+   * @generated from oneof schema.v1alpha1.ListHostsRequest.identifier
    */
-  type?: HostType;
+  identifier: {
+    /**
+     * @generated from field: schema.v1alpha1.HostType type = 1;
+     */
+    value: HostType;
+    case: "type";
+  } | {
+    /**
+     * @generated from field: schema.v1alpha1.HostStatus status = 2;
+     */
+    value: HostStatus;
+    case: "status";
+  } | {
+    /**
+     * @generated from field: schema.v1alpha1.Location location = 3;
+     */
+    value: Location;
+    case: "location";
+  } | { case: undefined; value?: undefined };
 
   /**
-   * @generated from field: optional schema.v1alpha1.HostState state = 2;
-   */
-  state?: HostState;
-
-  /**
-   * @generated from field: optional google.protobuf.FieldMask field_mask = 3;
+   * @generated from field: optional google.protobuf.FieldMask field_mask = 4;
    */
   fieldMask?: FieldMask;
 };
@@ -320,7 +359,7 @@ export type ListHostsRequest = Message<"schema.v1alpha1.ListHostsRequest"> & {
  * Use `create(ListHostsRequestSchema)` to create a new message.
  */
 export const ListHostsRequestSchema: GenMessage<ListHostsRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_host, 6);
+  messageDesc(file_schema_v1alpha1_host, 7);
 
 /**
  * @generated from message schema.v1alpha1.ListHostsResponse
@@ -337,16 +376,16 @@ export type ListHostsResponse = Message<"schema.v1alpha1.ListHostsResponse"> & {
  * Use `create(ListHostsResponseSchema)` to create a new message.
  */
 export const ListHostsResponseSchema: GenMessage<ListHostsResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_host, 7);
+  messageDesc(file_schema_v1alpha1_host, 8);
 
 /**
  * @generated from message schema.v1alpha1.UpdateHostRequest
  */
 export type UpdateHostRequest = Message<"schema.v1alpha1.UpdateHostRequest"> & {
   /**
-   * @generated from field: string host_id = 1;
+   * @generated from field: string host_name = 1;
    */
-  hostId: string;
+  hostName: string;
 
   /**
    * @generated from field: schema.v1alpha1.Host host = 2;
@@ -364,7 +403,7 @@ export type UpdateHostRequest = Message<"schema.v1alpha1.UpdateHostRequest"> & {
  * Use `create(UpdateHostRequestSchema)` to create a new message.
  */
 export const UpdateHostRequestSchema: GenMessage<UpdateHostRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_host, 8);
+  messageDesc(file_schema_v1alpha1_host, 9);
 
 /**
  * @generated from message schema.v1alpha1.UpdateHostResponse
@@ -381,81 +420,46 @@ export type UpdateHostResponse = Message<"schema.v1alpha1.UpdateHostResponse"> &
  * Use `create(UpdateHostResponseSchema)` to create a new message.
  */
 export const UpdateHostResponseSchema: GenMessage<UpdateHostResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_host, 9);
-
-/**
- * @generated from message schema.v1alpha1.HostChangeStateRequest
- */
-export type HostChangeStateRequest = Message<"schema.v1alpha1.HostChangeStateRequest"> & {
-  /**
-   * @generated from field: string host_id = 1;
-   */
-  hostId: string;
-
-  /**
-   * @generated from field: schema.v1alpha1.HostTransition transition = 2;
-   */
-  transition: HostTransition;
-
-  /**
-   * @generated from field: optional bool force = 3;
-   */
-  force?: boolean;
-
-  /**
-   * @generated from field: map<string, string> metadata = 4;
-   */
-  metadata: { [key: string]: string };
-};
-
-/**
- * Describes the message schema.v1alpha1.HostChangeStateRequest.
- * Use `create(HostChangeStateRequestSchema)` to create a new message.
- */
-export const HostChangeStateRequestSchema: GenMessage<HostChangeStateRequest> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_host, 10);
 
 /**
- * @generated from message schema.v1alpha1.HostChangeStateResponse
+ * @generated from message schema.v1alpha1.ChangeHostStateRequest
  */
-export type HostChangeStateResponse = Message<"schema.v1alpha1.HostChangeStateResponse"> & {
+export type ChangeHostStateRequest = Message<"schema.v1alpha1.ChangeHostStateRequest"> & {
   /**
-   * @generated from field: bool success = 1;
+   * @generated from field: string host_name = 1;
    */
-  success: boolean;
+  hostName: string;
 
   /**
-   * @generated from field: optional string error_message = 2;
+   * @generated from field: schema.v1alpha1.HostAction action = 2;
    */
-  errorMessage?: string;
-
-  /**
-   * @generated from field: optional schema.v1alpha1.HostState current_state = 3;
-   */
-  currentState?: HostState;
-
-  /**
-   * @generated from field: optional string transition_id = 4;
-   */
-  transitionId?: string;
-
-  /**
-   * @generated from field: optional google.protobuf.Timestamp estimated_completion = 5;
-   */
-  estimatedCompletion?: Timestamp;
-
-  /**
-   * @generated from field: map<string, string> metadata = 6;
-   */
-  metadata: { [key: string]: string };
+  action: HostAction;
 };
 
 /**
- * Describes the message schema.v1alpha1.HostChangeStateResponse.
- * Use `create(HostChangeStateResponseSchema)` to create a new message.
+ * Describes the message schema.v1alpha1.ChangeHostStateRequest.
+ * Use `create(ChangeHostStateRequestSchema)` to create a new message.
  */
-export const HostChangeStateResponseSchema: GenMessage<HostChangeStateResponse> = /*@__PURE__*/
+export const ChangeHostStateRequestSchema: GenMessage<ChangeHostStateRequest> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_host, 11);
+
+/**
+ * @generated from message schema.v1alpha1.ChangeHostStateResponse
+ */
+export type ChangeHostStateResponse = Message<"schema.v1alpha1.ChangeHostStateResponse"> & {
+  /**
+   * @generated from field: schema.v1alpha1.HostStatus current_status = 1;
+   */
+  currentStatus: HostStatus;
+};
+
+/**
+ * Describes the message schema.v1alpha1.ChangeHostStateResponse.
+ * Use `create(ChangeHostStateResponseSchema)` to create a new message.
+ */
+export const ChangeHostStateResponseSchema: GenMessage<ChangeHostStateResponse> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_host, 12);
 
 /**
  * @generated from enum schema.v1alpha1.HostType
@@ -499,151 +503,151 @@ export const HostTypeSchema: GenEnum<HostType> = /*@__PURE__*/
   enumDesc(file_schema_v1alpha1_host, 0);
 
 /**
- * @generated from enum schema.v1alpha1.HostState
+ * @generated from enum schema.v1alpha1.HostStatus
  */
-export enum HostState {
+export enum HostStatus {
   /**
-   * @generated from enum value: HOST_STATE_UNSPECIFIED = 0;
+   * @generated from enum value: HOST_STATUS_UNSPECIFIED = 0;
    */
   UNSPECIFIED = 0,
 
   /**
-   * @generated from enum value: HOST_STATE_OFF = 1;
+   * @generated from enum value: HOST_STATUS_OFF = 1;
    */
   OFF = 1,
 
   /**
-   * @generated from enum value: HOST_STATE_ON = 2;
+   * @generated from enum value: HOST_STATUS_ON = 2;
    */
   ON = 2,
 
   /**
-   * @generated from enum value: HOST_STATE_TRANSITIONING = 3;
+   * @generated from enum value: HOST_STATUS_TRANSITIONING = 3;
    */
   TRANSITIONING = 3,
 
   /**
-   * @generated from enum value: HOST_STATE_QUIESCED = 4;
+   * @generated from enum value: HOST_STATUS_QUIESCED = 4;
    */
   QUIESCED = 4,
 
   /**
-   * @generated from enum value: HOST_STATE_DIAGNOSTIC_MODE = 5;
+   * @generated from enum value: HOST_STATUS_DIAGNOSTIC = 5;
    */
-  DIAGNOSTIC_MODE = 5,
+  DIAGNOSTIC = 5,
 
   /**
-   * @generated from enum value: HOST_STATE_ERROR = 6;
+   * @generated from enum value: HOST_STATUS_ERROR = 6;
    */
   ERROR = 6,
 }
 
 /**
- * Describes the enum schema.v1alpha1.HostState.
+ * Describes the enum schema.v1alpha1.HostStatus.
  */
-export const HostStateSchema: GenEnum<HostState> = /*@__PURE__*/
+export const HostStatusSchema: GenEnum<HostStatus> = /*@__PURE__*/
   enumDesc(file_schema_v1alpha1_host, 1);
 
 /**
- * @generated from enum schema.v1alpha1.HostTransition
+ * @generated from enum schema.v1alpha1.HostAction
  */
-export enum HostTransition {
+export enum HostAction {
   /**
-   * @generated from enum value: HOST_TRANSITION_UNSPECIFIED = 0;
+   * @generated from enum value: HOST_ACTION_UNSPECIFIED = 0;
    */
   UNSPECIFIED = 0,
 
   /**
-   * @generated from enum value: HOST_TRANSITION_ON = 1;
+   * @generated from enum value: HOST_ACTION_ON = 1;
    */
   ON = 1,
 
   /**
-   * @generated from enum value: HOST_TRANSITION_OFF = 2;
+   * @generated from enum value: HOST_ACTION_OFF = 2;
    */
   OFF = 2,
 
   /**
-   * @generated from enum value: HOST_TRANSITION_REBOOT = 3;
+   * @generated from enum value: HOST_ACTION_REBOOT = 3;
    */
   REBOOT = 3,
 
   /**
-   * @generated from enum value: HOST_TRANSITION_FORCE_OFF = 4;
+   * @generated from enum value: HOST_ACTION_FORCE_OFF = 4;
    */
   FORCE_OFF = 4,
 
   /**
-   * @generated from enum value: HOST_TRANSITION_FORCE_RESTART = 5;
+   * @generated from enum value: HOST_ACTION_FORCE_RESTART = 5;
    */
   FORCE_RESTART = 5,
 }
 
 /**
- * Describes the enum schema.v1alpha1.HostTransition.
+ * Describes the enum schema.v1alpha1.HostAction.
  */
-export const HostTransitionSchema: GenEnum<HostTransition> = /*@__PURE__*/
+export const HostActionSchema: GenEnum<HostAction> = /*@__PURE__*/
   enumDesc(file_schema_v1alpha1_host, 2);
 
 /**
- * @generated from enum schema.v1alpha1.HostRestartCause
+ * @generated from enum schema.v1alpha1.HostRebootCause
  */
-export enum HostRestartCause {
+export enum HostRebootCause {
   /**
-   * @generated from enum value: HOST_RESTART_CAUSE_UNSPECIFIED = 0;
+   * @generated from enum value: HOST_REBOOT_CAUSE_UNSPECIFIED = 0;
    */
   UNSPECIFIED = 0,
 
   /**
-   * @generated from enum value: HOST_RESTART_CAUSE_POWER_BUTTON = 1;
+   * @generated from enum value: HOST_REBOOT_CAUSE_POWER_BUTTON = 1;
    */
   POWER_BUTTON = 1,
 
   /**
-   * @generated from enum value: HOST_RESTART_CAUSE_RESET_BUTTON = 2;
+   * @generated from enum value: HOST_REBOOT_CAUSE_RESET_BUTTON = 2;
    */
   RESET_BUTTON = 2,
 
   /**
-   * @generated from enum value: HOST_RESTART_CAUSE_POWER_CYCLE = 3;
+   * @generated from enum value: HOST_REBOOT_CAUSE_POWER_CYCLE = 3;
    */
   POWER_CYCLE = 3,
 
   /**
-   * @generated from enum value: HOST_RESTART_CAUSE_WATCHDOG = 4;
+   * @generated from enum value: HOST_REBOOT_CAUSE_WATCHDOG = 4;
    */
   WATCHDOG = 4,
 
   /**
-   * @generated from enum value: HOST_RESTART_CAUSE_SOFT_RESET = 5;
+   * @generated from enum value: HOST_REBOOT_CAUSE_SOFT_RESET = 5;
    */
   SOFT_RESET = 5,
 
   /**
-   * @generated from enum value: HOST_RESTART_CAUSE_THERMAL = 6;
+   * @generated from enum value: HOST_REBOOT_CAUSE_THERMAL = 6;
    */
   THERMAL = 6,
 
   /**
-   * @generated from enum value: HOST_RESTART_CAUSE_POWER_SUPPLY = 7;
+   * @generated from enum value: HOST_REBOOT_CAUSE_POWER_SUPPLY = 7;
    */
   POWER_SUPPLY = 7,
 
   /**
-   * @generated from enum value: HOST_RESTART_CAUSE_OTHER = 8;
+   * @generated from enum value: HOST_REBOOT_CAUSE_OTHER = 8;
    */
   OTHER = 8,
 
   /**
-   * @generated from enum value: HOST_RESTART_CAUSE_UNKNOWN = 9;
+   * @generated from enum value: HOST_REBOOT_CAUSE_UNKNOWN = 9;
    */
   UNKNOWN = 9,
 }
 
 /**
- * Describes the enum schema.v1alpha1.HostRestartCause.
+ * Describes the enum schema.v1alpha1.HostRebootCause.
  */
-export const HostRestartCauseSchema: GenEnum<HostRestartCause> = /*@__PURE__*/
+export const HostRebootCauseSchema: GenEnum<HostRebootCause> = /*@__PURE__*/
   enumDesc(file_schema_v1alpha1_host, 3);
 
 /**

@@ -47,17 +47,13 @@ func (m *ManagementController) CloneVT() *ManagementController {
 		tmpVal := *rhs
 		r.Type = &tmpVal
 	}
-	if rhs := m.CurrentState; rhs != nil {
-		tmpVal := *rhs
-		r.CurrentState = &tmpVal
-	}
-	if rhs := m.RequestedTransition; rhs != nil {
-		tmpVal := *rhs
-		r.RequestedTransition = &tmpVal
-	}
 	if rhs := m.Status; rhs != nil {
 		tmpVal := *rhs
 		r.Status = &tmpVal
+	}
+	if rhs := m.RequestedAction; rhs != nil {
+		tmpVal := *rhs
+		r.RequestedAction = &tmpVal
 	}
 	if rhs := m.Metadata; rhs != nil {
 		tmpContainer := make(map[string]string, len(rhs))
@@ -253,6 +249,27 @@ func (m *ManagementControllerRebootInfo) CloneMessageVT() proto.Message {
 	return m.CloneVT()
 }
 
+func (m *ManagementControllerStateChange) CloneVT() *ManagementControllerStateChange {
+	if m == nil {
+		return (*ManagementControllerStateChange)(nil)
+	}
+	r := new(ManagementControllerStateChange)
+	r.ControllerName = m.ControllerName
+	r.PreviousStatus = m.PreviousStatus
+	r.CurrentStatus = m.CurrentStatus
+	r.Cause = m.Cause
+	r.ChangedAt = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.ChangedAt).CloneVT())
+	if len(m.unknownFields) > 0 {
+		r.unknownFields = make([]byte, len(m.unknownFields))
+		copy(r.unknownFields, m.unknownFields)
+	}
+	return r
+}
+
+func (m *ManagementControllerStateChange) CloneMessageVT() proto.Message {
+	return m.CloneVT()
+}
+
 func (m *GetManagementControllerRequest) CloneVT() *GetManagementControllerRequest {
 	if m == nil {
 		return (*GetManagementControllerRequest)(nil)
@@ -273,15 +290,6 @@ func (m *GetManagementControllerRequest) CloneVT() *GetManagementControllerReque
 
 func (m *GetManagementControllerRequest) CloneMessageVT() proto.Message {
 	return m.CloneVT()
-}
-
-func (m *GetManagementControllerRequest_ControllerId) CloneVT() isGetManagementControllerRequest_Identifier {
-	if m == nil {
-		return (*GetManagementControllerRequest_ControllerId)(nil)
-	}
-	r := new(GetManagementControllerRequest_ControllerId)
-	r.ControllerId = m.ControllerId
-	return r
 }
 
 func (m *GetManagementControllerRequest_Name) CloneVT() isGetManagementControllerRequest_Identifier {
@@ -320,6 +328,15 @@ func (m *GetManagementControllerRequest_Location) CloneVT() isGetManagementContr
 	return r
 }
 
+func (m *GetManagementControllerRequest_Role) CloneVT() isGetManagementControllerRequest_Identifier {
+	if m == nil {
+		return (*GetManagementControllerRequest_Role)(nil)
+	}
+	r := new(GetManagementControllerRequest_Role)
+	r.Role = m.Role
+	return r
+}
+
 func (m *GetManagementControllerResponse) CloneVT() *GetManagementControllerResponse {
 	if m == nil {
 		return (*GetManagementControllerResponse)(nil)
@@ -349,13 +366,10 @@ func (m *ListManagementControllersRequest) CloneVT() *ListManagementControllersR
 	}
 	r := new(ListManagementControllersRequest)
 	r.FieldMask = (*fieldmaskpb.FieldMask)((*fieldmaskpb1.FieldMask)(m.FieldMask).CloneVT())
-	if rhs := m.Type; rhs != nil {
-		tmpVal := *rhs
-		r.Type = &tmpVal
-	}
-	if rhs := m.Status; rhs != nil {
-		tmpVal := *rhs
-		r.Status = &tmpVal
+	if m.Identifier != nil {
+		r.Identifier = m.Identifier.(interface {
+			CloneVT() isListManagementControllersRequest_Identifier
+		}).CloneVT()
 	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
@@ -366,6 +380,42 @@ func (m *ListManagementControllersRequest) CloneVT() *ListManagementControllersR
 
 func (m *ListManagementControllersRequest) CloneMessageVT() proto.Message {
 	return m.CloneVT()
+}
+
+func (m *ListManagementControllersRequest_Type) CloneVT() isListManagementControllersRequest_Identifier {
+	if m == nil {
+		return (*ListManagementControllersRequest_Type)(nil)
+	}
+	r := new(ListManagementControllersRequest_Type)
+	r.Type = m.Type
+	return r
+}
+
+func (m *ListManagementControllersRequest_Status) CloneVT() isListManagementControllersRequest_Identifier {
+	if m == nil {
+		return (*ListManagementControllersRequest_Status)(nil)
+	}
+	r := new(ListManagementControllersRequest_Status)
+	r.Status = m.Status
+	return r
+}
+
+func (m *ListManagementControllersRequest_Location) CloneVT() isListManagementControllersRequest_Identifier {
+	if m == nil {
+		return (*ListManagementControllersRequest_Location)(nil)
+	}
+	r := new(ListManagementControllersRequest_Location)
+	r.Location = m.Location.CloneVT()
+	return r
+}
+
+func (m *ListManagementControllersRequest_Role) CloneVT() isListManagementControllersRequest_Identifier {
+	if m == nil {
+		return (*ListManagementControllersRequest_Role)(nil)
+	}
+	r := new(ListManagementControllersRequest_Role)
+	r.Role = m.Role
+	return r
 }
 
 func (m *ListManagementControllersResponse) CloneVT() *ListManagementControllersResponse {
@@ -396,7 +446,7 @@ func (m *UpdateManagementControllerRequest) CloneVT() *UpdateManagementControlle
 		return (*UpdateManagementControllerRequest)(nil)
 	}
 	r := new(UpdateManagementControllerRequest)
-	r.ControllerId = m.ControllerId
+	r.ControllerName = m.ControllerName
 	r.Controller = m.Controller.CloneVT()
 	r.FieldMask = (*fieldmaskpb.FieldMask)((*fieldmaskpb1.FieldMask)(m.FieldMask).CloneVT())
 	if len(m.unknownFields) > 0 {
@@ -427,24 +477,13 @@ func (m *UpdateManagementControllerResponse) CloneMessageVT() proto.Message {
 	return m.CloneVT()
 }
 
-func (m *ManagementControllerControlRequest) CloneVT() *ManagementControllerControlRequest {
+func (m *ChangeManagementControllerStateRequest) CloneVT() *ChangeManagementControllerStateRequest {
 	if m == nil {
-		return (*ManagementControllerControlRequest)(nil)
+		return (*ChangeManagementControllerStateRequest)(nil)
 	}
-	r := new(ManagementControllerControlRequest)
-	r.ControllerId = m.ControllerId
+	r := new(ChangeManagementControllerStateRequest)
+	r.ControllerName = m.ControllerName
 	r.Action = m.Action
-	if rhs := m.Force; rhs != nil {
-		tmpVal := *rhs
-		r.Force = &tmpVal
-	}
-	if rhs := m.Parameters; rhs != nil {
-		tmpContainer := make(map[string]string, len(rhs))
-		for k, v := range rhs {
-			tmpContainer[k] = v
-		}
-		r.Parameters = tmpContainer
-	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -452,25 +491,16 @@ func (m *ManagementControllerControlRequest) CloneVT() *ManagementControllerCont
 	return r
 }
 
-func (m *ManagementControllerControlRequest) CloneMessageVT() proto.Message {
+func (m *ChangeManagementControllerStateRequest) CloneMessageVT() proto.Message {
 	return m.CloneVT()
 }
 
-func (m *ManagementControllerControlResponse) CloneVT() *ManagementControllerControlResponse {
+func (m *ChangeManagementControllerStateResponse) CloneVT() *ChangeManagementControllerStateResponse {
 	if m == nil {
-		return (*ManagementControllerControlResponse)(nil)
+		return (*ChangeManagementControllerStateResponse)(nil)
 	}
-	r := new(ManagementControllerControlResponse)
-	r.Success = m.Success
-	r.EstimatedCompletion = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.EstimatedCompletion).CloneVT())
-	if rhs := m.CurrentState; rhs != nil {
-		tmpVal := *rhs
-		r.CurrentState = &tmpVal
-	}
-	if rhs := m.ErrorMessage; rhs != nil {
-		tmpVal := *rhs
-		r.ErrorMessage = &tmpVal
-	}
+	r := new(ChangeManagementControllerStateResponse)
+	r.CurrentStatus = m.CurrentStatus
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -478,7 +508,7 @@ func (m *ManagementControllerControlResponse) CloneVT() *ManagementControllerCon
 	return r
 }
 
-func (m *ManagementControllerControlResponse) CloneMessageVT() proto.Message {
+func (m *ChangeManagementControllerStateResponse) CloneMessageVT() proto.Message {
 	return m.CloneVT()
 }
 
@@ -500,13 +530,10 @@ func (this *ManagementController) EqualVT(that *ManagementController) bool {
 	if p, q := this.Type, that.Type; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if p, q := this.CurrentState, that.CurrentState; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
-		return false
-	}
-	if p, q := this.RequestedTransition, that.RequestedTransition; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
-		return false
-	}
 	if p, q := this.Status, that.Status; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+		return false
+	}
+	if p, q := this.RequestedAction, that.RequestedAction; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	if !this.Location.EqualVT(that.Location) {
@@ -658,10 +685,10 @@ func (this *ManagementControllerRedundancy) EqualVT(that *ManagementControllerRe
 	} else if this == nil || that == nil {
 		return false
 	}
-	if p, q := this.Role, that.Role; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+	if this.RedundancyEnabled != that.RedundancyEnabled {
 		return false
 	}
-	if this.RedundancyEnabled != that.RedundancyEnabled {
+	if p, q := this.Role, that.Role; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	if p, q := this.DisableRedundancyOverride, that.DisableRedundancyOverride; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
@@ -726,6 +753,37 @@ func (this *ManagementControllerRebootInfo) EqualMessageVT(thatMsg proto.Message
 	}
 	return this.EqualVT(that)
 }
+func (this *ManagementControllerStateChange) EqualVT(that *ManagementControllerStateChange) bool {
+	if this == that {
+		return true
+	} else if this == nil || that == nil {
+		return false
+	}
+	if this.ControllerName != that.ControllerName {
+		return false
+	}
+	if this.PreviousStatus != that.PreviousStatus {
+		return false
+	}
+	if this.CurrentStatus != that.CurrentStatus {
+		return false
+	}
+	if this.Cause != that.Cause {
+		return false
+	}
+	if !(*timestamppb1.Timestamp)(this.ChangedAt).EqualVT((*timestamppb1.Timestamp)(that.ChangedAt)) {
+		return false
+	}
+	return string(this.unknownFields) == string(that.unknownFields)
+}
+
+func (this *ManagementControllerStateChange) EqualMessageVT(thatMsg proto.Message) bool {
+	that, ok := thatMsg.(*ManagementControllerStateChange)
+	if !ok {
+		return false
+	}
+	return this.EqualVT(that)
+}
 func (this *GetManagementControllerRequest) EqualVT(that *GetManagementControllerRequest) bool {
 	if this == that {
 		return true
@@ -757,23 +815,6 @@ func (this *GetManagementControllerRequest) EqualMessageVT(thatMsg proto.Message
 	}
 	return this.EqualVT(that)
 }
-func (this *GetManagementControllerRequest_ControllerId) EqualVT(thatIface isGetManagementControllerRequest_Identifier) bool {
-	that, ok := thatIface.(*GetManagementControllerRequest_ControllerId)
-	if !ok {
-		return false
-	}
-	if this == that {
-		return true
-	}
-	if this == nil && that != nil || this != nil && that == nil {
-		return false
-	}
-	if this.ControllerId != that.ControllerId {
-		return false
-	}
-	return true
-}
-
 func (this *GetManagementControllerRequest_Name) EqualVT(thatIface isGetManagementControllerRequest_Identifier) bool {
 	that, ok := thatIface.(*GetManagementControllerRequest_Name)
 	if !ok {
@@ -850,6 +891,23 @@ func (this *GetManagementControllerRequest_Location) EqualVT(thatIface isGetMana
 	return true
 }
 
+func (this *GetManagementControllerRequest_Role) EqualVT(thatIface isGetManagementControllerRequest_Identifier) bool {
+	that, ok := thatIface.(*GetManagementControllerRequest_Role)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if this.Role != that.Role {
+		return false
+	}
+	return true
+}
+
 func (this *GetManagementControllerResponse) EqualVT(that *GetManagementControllerResponse) bool {
 	if this == that {
 		return true
@@ -889,11 +947,17 @@ func (this *ListManagementControllersRequest) EqualVT(that *ListManagementContro
 	} else if this == nil || that == nil {
 		return false
 	}
-	if p, q := this.Type, that.Type; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+	if this.Identifier == nil && that.Identifier != nil {
 		return false
-	}
-	if p, q := this.Status, that.Status; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
-		return false
+	} else if this.Identifier != nil {
+		if that.Identifier == nil {
+			return false
+		}
+		if !this.Identifier.(interface {
+			EqualVT(isListManagementControllersRequest_Identifier) bool
+		}).EqualVT(that.Identifier) {
+			return false
+		}
 	}
 	if !(*fieldmaskpb1.FieldMask)(this.FieldMask).EqualVT((*fieldmaskpb1.FieldMask)(that.FieldMask)) {
 		return false
@@ -908,6 +972,82 @@ func (this *ListManagementControllersRequest) EqualMessageVT(thatMsg proto.Messa
 	}
 	return this.EqualVT(that)
 }
+func (this *ListManagementControllersRequest_Type) EqualVT(thatIface isListManagementControllersRequest_Identifier) bool {
+	that, ok := thatIface.(*ListManagementControllersRequest_Type)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if this.Type != that.Type {
+		return false
+	}
+	return true
+}
+
+func (this *ListManagementControllersRequest_Status) EqualVT(thatIface isListManagementControllersRequest_Identifier) bool {
+	that, ok := thatIface.(*ListManagementControllersRequest_Status)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if this.Status != that.Status {
+		return false
+	}
+	return true
+}
+
+func (this *ListManagementControllersRequest_Location) EqualVT(thatIface isListManagementControllersRequest_Identifier) bool {
+	that, ok := thatIface.(*ListManagementControllersRequest_Location)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if p, q := this.Location, that.Location; p != q {
+		if p == nil {
+			p = &Location{}
+		}
+		if q == nil {
+			q = &Location{}
+		}
+		if !p.EqualVT(q) {
+			return false
+		}
+	}
+	return true
+}
+
+func (this *ListManagementControllersRequest_Role) EqualVT(thatIface isListManagementControllersRequest_Identifier) bool {
+	that, ok := thatIface.(*ListManagementControllersRequest_Role)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if this.Role != that.Role {
+		return false
+	}
+	return true
+}
+
 func (this *ListManagementControllersResponse) EqualVT(that *ListManagementControllersResponse) bool {
 	if this == that {
 		return true
@@ -947,7 +1087,7 @@ func (this *UpdateManagementControllerRequest) EqualVT(that *UpdateManagementCon
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.ControllerId != that.ControllerId {
+	if this.ControllerName != that.ControllerName {
 		return false
 	}
 	if !this.Controller.EqualVT(that.Controller) {
@@ -985,66 +1125,42 @@ func (this *UpdateManagementControllerResponse) EqualMessageVT(thatMsg proto.Mes
 	}
 	return this.EqualVT(that)
 }
-func (this *ManagementControllerControlRequest) EqualVT(that *ManagementControllerControlRequest) bool {
+func (this *ChangeManagementControllerStateRequest) EqualVT(that *ChangeManagementControllerStateRequest) bool {
 	if this == that {
 		return true
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.ControllerId != that.ControllerId {
+	if this.ControllerName != that.ControllerName {
 		return false
 	}
 	if this.Action != that.Action {
 		return false
 	}
-	if p, q := this.Force, that.Force; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
-		return false
-	}
-	if len(this.Parameters) != len(that.Parameters) {
-		return false
-	}
-	for i, vx := range this.Parameters {
-		vy, ok := that.Parameters[i]
-		if !ok {
-			return false
-		}
-		if vx != vy {
-			return false
-		}
-	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
-func (this *ManagementControllerControlRequest) EqualMessageVT(thatMsg proto.Message) bool {
-	that, ok := thatMsg.(*ManagementControllerControlRequest)
+func (this *ChangeManagementControllerStateRequest) EqualMessageVT(thatMsg proto.Message) bool {
+	that, ok := thatMsg.(*ChangeManagementControllerStateRequest)
 	if !ok {
 		return false
 	}
 	return this.EqualVT(that)
 }
-func (this *ManagementControllerControlResponse) EqualVT(that *ManagementControllerControlResponse) bool {
+func (this *ChangeManagementControllerStateResponse) EqualVT(that *ChangeManagementControllerStateResponse) bool {
 	if this == that {
 		return true
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.Success != that.Success {
-		return false
-	}
-	if p, q := this.CurrentState, that.CurrentState; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
-		return false
-	}
-	if p, q := this.ErrorMessage, that.ErrorMessage; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
-		return false
-	}
-	if !(*timestamppb1.Timestamp)(this.EstimatedCompletion).EqualVT((*timestamppb1.Timestamp)(that.EstimatedCompletion)) {
+	if this.CurrentStatus != that.CurrentStatus {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
-func (this *ManagementControllerControlResponse) EqualMessageVT(thatMsg proto.Message) bool {
-	that, ok := thatMsg.(*ManagementControllerControlResponse)
+func (this *ChangeManagementControllerStateResponse) EqualMessageVT(thatMsg proto.Message) bool {
+	that, ok := thatMsg.(*ChangeManagementControllerStateResponse)
 	if !ok {
 		return false
 	}
@@ -1096,7 +1212,7 @@ func (m *ManagementController) MarshalToSizedBufferVT(dAtA []byte) (int, error) 
 			dAtA[i] = 0xa
 			i = protohelpers.EncodeVarint(dAtA, i, uint64(baseI-i))
 			i--
-			dAtA[i] = 0x72
+			dAtA[i] = 0x6a
 		}
 	}
 	if m.UpdatedAt != nil {
@@ -1107,7 +1223,7 @@ func (m *ManagementController) MarshalToSizedBufferVT(dAtA []byte) (int, error) 
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x6a
+		dAtA[i] = 0x62
 	}
 	if m.LastReboot != nil {
 		size, err := m.LastReboot.MarshalToSizedBufferVT(dAtA[:i])
@@ -1117,7 +1233,7 @@ func (m *ManagementController) MarshalToSizedBufferVT(dAtA []byte) (int, error) 
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x62
+		dAtA[i] = 0x5a
 	}
 	if m.Redundancy != nil {
 		size, err := m.Redundancy.MarshalToSizedBufferVT(dAtA[:i])
@@ -1127,7 +1243,7 @@ func (m *ManagementController) MarshalToSizedBufferVT(dAtA []byte) (int, error) 
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x5a
+		dAtA[i] = 0x52
 	}
 	if m.Firmware != nil {
 		size, err := m.Firmware.MarshalToSizedBufferVT(dAtA[:i])
@@ -1137,7 +1253,7 @@ func (m *ManagementController) MarshalToSizedBufferVT(dAtA []byte) (int, error) 
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x52
+		dAtA[i] = 0x4a
 	}
 	if m.Hardware != nil {
 		size, err := m.Hardware.MarshalToSizedBufferVT(dAtA[:i])
@@ -1147,7 +1263,7 @@ func (m *ManagementController) MarshalToSizedBufferVT(dAtA []byte) (int, error) 
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x4a
+		dAtA[i] = 0x42
 	}
 	if m.Location != nil {
 		size, err := m.Location.MarshalToSizedBufferVT(dAtA[:i])
@@ -1157,20 +1273,15 @@ func (m *ManagementController) MarshalToSizedBufferVT(dAtA []byte) (int, error) 
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x42
+		dAtA[i] = 0x3a
 	}
-	if m.Status != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Status))
-		i--
-		dAtA[i] = 0x38
-	}
-	if m.RequestedTransition != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.RequestedTransition))
+	if m.RequestedAction != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.RequestedAction))
 		i--
 		dAtA[i] = 0x30
 	}
-	if m.CurrentState != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.CurrentState))
+	if m.Status != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Status))
 		i--
 		dAtA[i] = 0x28
 	}
@@ -1497,6 +1608,11 @@ func (m *ManagementControllerRedundancy) MarshalToSizedBufferVT(dAtA []byte) (in
 		i--
 		dAtA[i] = 0x18
 	}
+	if m.Role != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Role))
+		i--
+		dAtA[i] = 0x10
+	}
 	if m.RedundancyEnabled {
 		i--
 		if m.RedundancyEnabled {
@@ -1504,11 +1620,6 @@ func (m *ManagementControllerRedundancy) MarshalToSizedBufferVT(dAtA []byte) (in
 		} else {
 			dAtA[i] = 0
 		}
-		i--
-		dAtA[i] = 0x10
-	}
-	if m.Role != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Role))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -1588,6 +1699,71 @@ func (m *ManagementControllerRebootInfo) MarshalToSizedBufferVT(dAtA []byte) (in
 	return len(dAtA) - i, nil
 }
 
+func (m *ManagementControllerStateChange) MarshalVT() (dAtA []byte, err error) {
+	if m == nil {
+		return nil, nil
+	}
+	size := m.SizeVT()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBufferVT(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ManagementControllerStateChange) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *ManagementControllerStateChange) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	if m == nil {
+		return 0, nil
+	}
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.unknownFields != nil {
+		i -= len(m.unknownFields)
+		copy(dAtA[i:], m.unknownFields)
+	}
+	if m.ChangedAt != nil {
+		size, err := (*timestamppb1.Timestamp)(m.ChangedAt).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if m.Cause != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Cause))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.CurrentStatus != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.CurrentStatus))
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.PreviousStatus != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.PreviousStatus))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.ControllerName) > 0 {
+		i -= len(m.ControllerName)
+		copy(dAtA[i:], m.ControllerName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ControllerName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func (m *GetManagementControllerRequest) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
@@ -1640,20 +1816,6 @@ func (m *GetManagementControllerRequest) MarshalToSizedBufferVT(dAtA []byte) (in
 	return len(dAtA) - i, nil
 }
 
-func (m *GetManagementControllerRequest_ControllerId) MarshalToVT(dAtA []byte) (int, error) {
-	size := m.SizeVT()
-	return m.MarshalToSizedBufferVT(dAtA[:size])
-}
-
-func (m *GetManagementControllerRequest_ControllerId) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	i -= len(m.ControllerId)
-	copy(dAtA[i:], m.ControllerId)
-	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ControllerId)))
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
 func (m *GetManagementControllerRequest_Name) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
@@ -1665,7 +1827,7 @@ func (m *GetManagementControllerRequest_Name) MarshalToSizedBufferVT(dAtA []byte
 	copy(dAtA[i:], m.Name)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 	i--
-	dAtA[i] = 0x12
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 func (m *GetManagementControllerRequest_Type) MarshalToVT(dAtA []byte) (int, error) {
@@ -1677,7 +1839,7 @@ func (m *GetManagementControllerRequest_Type) MarshalToSizedBufferVT(dAtA []byte
 	i := len(dAtA)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Type))
 	i--
-	dAtA[i] = 0x18
+	dAtA[i] = 0x10
 	return len(dAtA) - i, nil
 }
 func (m *GetManagementControllerRequest_Status) MarshalToVT(dAtA []byte) (int, error) {
@@ -1689,7 +1851,7 @@ func (m *GetManagementControllerRequest_Status) MarshalToSizedBufferVT(dAtA []by
 	i := len(dAtA)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Status))
 	i--
-	dAtA[i] = 0x20
+	dAtA[i] = 0x18
 	return len(dAtA) - i, nil
 }
 func (m *GetManagementControllerRequest_Location) MarshalToVT(dAtA []byte) (int, error) {
@@ -1707,8 +1869,20 @@ func (m *GetManagementControllerRequest_Location) MarshalToSizedBufferVT(dAtA []
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
+	return len(dAtA) - i, nil
+}
+func (m *GetManagementControllerRequest_Role) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *GetManagementControllerRequest_Role) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Role))
+	i--
+	dAtA[i] = 0x28
 	return len(dAtA) - i, nil
 }
 func (m *GetManagementControllerResponse) MarshalVT() (dAtA []byte, err error) {
@@ -1786,6 +1960,15 @@ func (m *ListManagementControllersRequest) MarshalToSizedBufferVT(dAtA []byte) (
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if vtmsg, ok := m.Identifier.(interface {
+		MarshalToSizedBufferVT([]byte) (int, error)
+	}); ok {
+		size, err := vtmsg.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+	}
 	if m.FieldMask != nil {
 		size, err := (*fieldmaskpb1.FieldMask)(m.FieldMask).MarshalToSizedBufferVT(dAtA[:i])
 		if err != nil {
@@ -1794,21 +1977,66 @@ func (m *ListManagementControllersRequest) MarshalToSizedBufferVT(dAtA []byte) (
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x1a
-	}
-	if m.Status != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Status))
-		i--
-		dAtA[i] = 0x10
-	}
-	if m.Type != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Type))
-		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0x2a
 	}
 	return len(dAtA) - i, nil
 }
 
+func (m *ListManagementControllersRequest_Type) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *ListManagementControllersRequest_Type) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Type))
+	i--
+	dAtA[i] = 0x8
+	return len(dAtA) - i, nil
+}
+func (m *ListManagementControllersRequest_Status) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *ListManagementControllersRequest_Status) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Status))
+	i--
+	dAtA[i] = 0x10
+	return len(dAtA) - i, nil
+}
+func (m *ListManagementControllersRequest_Location) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *ListManagementControllersRequest_Location) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.Location != nil {
+		size, err := m.Location.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x1a
+	}
+	return len(dAtA) - i, nil
+}
+func (m *ListManagementControllersRequest_Role) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *ListManagementControllersRequest_Role) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Role))
+	i--
+	dAtA[i] = 0x20
+	return len(dAtA) - i, nil
+}
 func (m *ListManagementControllersResponse) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
@@ -1904,10 +2132,10 @@ func (m *UpdateManagementControllerRequest) MarshalToSizedBufferVT(dAtA []byte) 
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.ControllerId) > 0 {
-		i -= len(m.ControllerId)
-		copy(dAtA[i:], m.ControllerId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ControllerId)))
+	if len(m.ControllerName) > 0 {
+		i -= len(m.ControllerName)
+		copy(dAtA[i:], m.ControllerName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ControllerName)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -1957,7 +2185,7 @@ func (m *UpdateManagementControllerResponse) MarshalToSizedBufferVT(dAtA []byte)
 	return len(dAtA) - i, nil
 }
 
-func (m *ManagementControllerControlRequest) MarshalVT() (dAtA []byte, err error) {
+func (m *ChangeManagementControllerStateRequest) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -1970,12 +2198,12 @@ func (m *ManagementControllerControlRequest) MarshalVT() (dAtA []byte, err error
 	return dAtA[:n], nil
 }
 
-func (m *ManagementControllerControlRequest) MarshalToVT(dAtA []byte) (int, error) {
+func (m *ChangeManagementControllerStateRequest) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *ManagementControllerControlRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *ChangeManagementControllerStateRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -1986,52 +2214,23 @@ func (m *ManagementControllerControlRequest) MarshalToSizedBufferVT(dAtA []byte)
 	if m.unknownFields != nil {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
-	}
-	if len(m.Parameters) > 0 {
-		for k := range m.Parameters {
-			v := m.Parameters[k]
-			baseI := i
-			i -= len(v)
-			copy(dAtA[i:], v)
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(v)))
-			i--
-			dAtA[i] = 0x12
-			i -= len(k)
-			copy(dAtA[i:], k)
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(k)))
-			i--
-			dAtA[i] = 0xa
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(baseI-i))
-			i--
-			dAtA[i] = 0x22
-		}
-	}
-	if m.Force != nil {
-		i--
-		if *m.Force {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
-		i--
-		dAtA[i] = 0x18
 	}
 	if m.Action != 0 {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Action))
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.ControllerId) > 0 {
-		i -= len(m.ControllerId)
-		copy(dAtA[i:], m.ControllerId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ControllerId)))
+	if len(m.ControllerName) > 0 {
+		i -= len(m.ControllerName)
+		copy(dAtA[i:], m.ControllerName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ControllerName)))
 		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *ManagementControllerControlResponse) MarshalVT() (dAtA []byte, err error) {
+func (m *ChangeManagementControllerStateResponse) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -2044,12 +2243,12 @@ func (m *ManagementControllerControlResponse) MarshalVT() (dAtA []byte, err erro
 	return dAtA[:n], nil
 }
 
-func (m *ManagementControllerControlResponse) MarshalToVT(dAtA []byte) (int, error) {
+func (m *ChangeManagementControllerStateResponse) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *ManagementControllerControlResponse) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *ChangeManagementControllerStateResponse) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -2061,35 +2260,8 @@ func (m *ManagementControllerControlResponse) MarshalToSizedBufferVT(dAtA []byte
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if m.EstimatedCompletion != nil {
-		size, err := (*timestamppb1.Timestamp)(m.EstimatedCompletion).MarshalToSizedBufferVT(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
-		i--
-		dAtA[i] = 0x22
-	}
-	if m.ErrorMessage != nil {
-		i -= len(*m.ErrorMessage)
-		copy(dAtA[i:], *m.ErrorMessage)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ErrorMessage)))
-		i--
-		dAtA[i] = 0x1a
-	}
-	if m.CurrentState != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.CurrentState))
-		i--
-		dAtA[i] = 0x10
-	}
-	if m.Success {
-		i--
-		if m.Success {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
+	if m.CurrentStatus != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.CurrentStatus))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -2142,7 +2314,7 @@ func (m *ManagementController) MarshalToSizedBufferVTStrict(dAtA []byte) (int, e
 			dAtA[i] = 0xa
 			i = protohelpers.EncodeVarint(dAtA, i, uint64(baseI-i))
 			i--
-			dAtA[i] = 0x72
+			dAtA[i] = 0x6a
 		}
 	}
 	if m.UpdatedAt != nil {
@@ -2153,7 +2325,7 @@ func (m *ManagementController) MarshalToSizedBufferVTStrict(dAtA []byte) (int, e
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x6a
+		dAtA[i] = 0x62
 	}
 	if m.LastReboot != nil {
 		size, err := m.LastReboot.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -2163,7 +2335,7 @@ func (m *ManagementController) MarshalToSizedBufferVTStrict(dAtA []byte) (int, e
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x62
+		dAtA[i] = 0x5a
 	}
 	if m.Redundancy != nil {
 		size, err := m.Redundancy.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -2173,7 +2345,7 @@ func (m *ManagementController) MarshalToSizedBufferVTStrict(dAtA []byte) (int, e
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x5a
+		dAtA[i] = 0x52
 	}
 	if m.Firmware != nil {
 		size, err := m.Firmware.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -2183,7 +2355,7 @@ func (m *ManagementController) MarshalToSizedBufferVTStrict(dAtA []byte) (int, e
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x52
+		dAtA[i] = 0x4a
 	}
 	if m.Hardware != nil {
 		size, err := m.Hardware.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -2193,7 +2365,7 @@ func (m *ManagementController) MarshalToSizedBufferVTStrict(dAtA []byte) (int, e
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x4a
+		dAtA[i] = 0x42
 	}
 	if m.Location != nil {
 		size, err := m.Location.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -2203,20 +2375,15 @@ func (m *ManagementController) MarshalToSizedBufferVTStrict(dAtA []byte) (int, e
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x42
+		dAtA[i] = 0x3a
 	}
-	if m.Status != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Status))
-		i--
-		dAtA[i] = 0x38
-	}
-	if m.RequestedTransition != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.RequestedTransition))
+	if m.RequestedAction != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.RequestedAction))
 		i--
 		dAtA[i] = 0x30
 	}
-	if m.CurrentState != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.CurrentState))
+	if m.Status != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Status))
 		i--
 		dAtA[i] = 0x28
 	}
@@ -2543,6 +2710,11 @@ func (m *ManagementControllerRedundancy) MarshalToSizedBufferVTStrict(dAtA []byt
 		i--
 		dAtA[i] = 0x18
 	}
+	if m.Role != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Role))
+		i--
+		dAtA[i] = 0x10
+	}
 	if m.RedundancyEnabled {
 		i--
 		if m.RedundancyEnabled {
@@ -2550,11 +2722,6 @@ func (m *ManagementControllerRedundancy) MarshalToSizedBufferVTStrict(dAtA []byt
 		} else {
 			dAtA[i] = 0
 		}
-		i--
-		dAtA[i] = 0x10
-	}
-	if m.Role != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Role))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -2634,6 +2801,71 @@ func (m *ManagementControllerRebootInfo) MarshalToSizedBufferVTStrict(dAtA []byt
 	return len(dAtA) - i, nil
 }
 
+func (m *ManagementControllerStateChange) MarshalVTStrict() (dAtA []byte, err error) {
+	if m == nil {
+		return nil, nil
+	}
+	size := m.SizeVT()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBufferVTStrict(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ManagementControllerStateChange) MarshalToVTStrict(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
+}
+
+func (m *ManagementControllerStateChange) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+	if m == nil {
+		return 0, nil
+	}
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.unknownFields != nil {
+		i -= len(m.unknownFields)
+		copy(dAtA[i:], m.unknownFields)
+	}
+	if m.ChangedAt != nil {
+		size, err := (*timestamppb1.Timestamp)(m.ChangedAt).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if m.Cause != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Cause))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.CurrentStatus != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.CurrentStatus))
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.PreviousStatus != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.PreviousStatus))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.ControllerName) > 0 {
+		i -= len(m.ControllerName)
+		copy(dAtA[i:], m.ControllerName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ControllerName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func (m *GetManagementControllerRequest) MarshalVTStrict() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
@@ -2674,6 +2906,13 @@ func (m *GetManagementControllerRequest) MarshalToSizedBufferVTStrict(dAtA []byt
 		i--
 		dAtA[i] = 0x32
 	}
+	if msg, ok := m.Identifier.(*GetManagementControllerRequest_Role); ok {
+		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+	}
 	if msg, ok := m.Identifier.(*GetManagementControllerRequest_Location); ok {
 		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
 		if err != nil {
@@ -2702,30 +2941,9 @@ func (m *GetManagementControllerRequest) MarshalToSizedBufferVTStrict(dAtA []byt
 		}
 		i -= size
 	}
-	if msg, ok := m.Identifier.(*GetManagementControllerRequest_ControllerId); ok {
-		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-	}
 	return len(dAtA) - i, nil
 }
 
-func (m *GetManagementControllerRequest_ControllerId) MarshalToVTStrict(dAtA []byte) (int, error) {
-	size := m.SizeVT()
-	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
-}
-
-func (m *GetManagementControllerRequest_ControllerId) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	i -= len(m.ControllerId)
-	copy(dAtA[i:], m.ControllerId)
-	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ControllerId)))
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
 func (m *GetManagementControllerRequest_Name) MarshalToVTStrict(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
@@ -2737,7 +2955,7 @@ func (m *GetManagementControllerRequest_Name) MarshalToSizedBufferVTStrict(dAtA 
 	copy(dAtA[i:], m.Name)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 	i--
-	dAtA[i] = 0x12
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 func (m *GetManagementControllerRequest_Type) MarshalToVTStrict(dAtA []byte) (int, error) {
@@ -2749,7 +2967,7 @@ func (m *GetManagementControllerRequest_Type) MarshalToSizedBufferVTStrict(dAtA 
 	i := len(dAtA)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Type))
 	i--
-	dAtA[i] = 0x18
+	dAtA[i] = 0x10
 	return len(dAtA) - i, nil
 }
 func (m *GetManagementControllerRequest_Status) MarshalToVTStrict(dAtA []byte) (int, error) {
@@ -2761,7 +2979,7 @@ func (m *GetManagementControllerRequest_Status) MarshalToSizedBufferVTStrict(dAt
 	i := len(dAtA)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Status))
 	i--
-	dAtA[i] = 0x20
+	dAtA[i] = 0x18
 	return len(dAtA) - i, nil
 }
 func (m *GetManagementControllerRequest_Location) MarshalToVTStrict(dAtA []byte) (int, error) {
@@ -2779,8 +2997,20 @@ func (m *GetManagementControllerRequest_Location) MarshalToSizedBufferVTStrict(d
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
+	return len(dAtA) - i, nil
+}
+func (m *GetManagementControllerRequest_Role) MarshalToVTStrict(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
+}
+
+func (m *GetManagementControllerRequest_Role) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Role))
+	i--
+	dAtA[i] = 0x28
 	return len(dAtA) - i, nil
 }
 func (m *GetManagementControllerResponse) MarshalVTStrict() (dAtA []byte, err error) {
@@ -2866,21 +3096,94 @@ func (m *ListManagementControllersRequest) MarshalToSizedBufferVTStrict(dAtA []b
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x2a
 	}
-	if m.Status != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Status))
-		i--
-		dAtA[i] = 0x10
+	if msg, ok := m.Identifier.(*ListManagementControllersRequest_Role); ok {
+		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
 	}
-	if m.Type != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Type))
-		i--
-		dAtA[i] = 0x8
+	if msg, ok := m.Identifier.(*ListManagementControllersRequest_Location); ok {
+		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+	}
+	if msg, ok := m.Identifier.(*ListManagementControllersRequest_Status); ok {
+		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+	}
+	if msg, ok := m.Identifier.(*ListManagementControllersRequest_Type); ok {
+		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
 	}
 	return len(dAtA) - i, nil
 }
 
+func (m *ListManagementControllersRequest_Type) MarshalToVTStrict(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
+}
+
+func (m *ListManagementControllersRequest_Type) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Type))
+	i--
+	dAtA[i] = 0x8
+	return len(dAtA) - i, nil
+}
+func (m *ListManagementControllersRequest_Status) MarshalToVTStrict(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
+}
+
+func (m *ListManagementControllersRequest_Status) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Status))
+	i--
+	dAtA[i] = 0x10
+	return len(dAtA) - i, nil
+}
+func (m *ListManagementControllersRequest_Location) MarshalToVTStrict(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
+}
+
+func (m *ListManagementControllersRequest_Location) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.Location != nil {
+		size, err := m.Location.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x1a
+	}
+	return len(dAtA) - i, nil
+}
+func (m *ListManagementControllersRequest_Role) MarshalToVTStrict(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
+}
+
+func (m *ListManagementControllersRequest_Role) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Role))
+	i--
+	dAtA[i] = 0x20
+	return len(dAtA) - i, nil
+}
 func (m *ListManagementControllersResponse) MarshalVTStrict() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
@@ -2976,10 +3279,10 @@ func (m *UpdateManagementControllerRequest) MarshalToSizedBufferVTStrict(dAtA []
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.ControllerId) > 0 {
-		i -= len(m.ControllerId)
-		copy(dAtA[i:], m.ControllerId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ControllerId)))
+	if len(m.ControllerName) > 0 {
+		i -= len(m.ControllerName)
+		copy(dAtA[i:], m.ControllerName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ControllerName)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -3029,7 +3332,7 @@ func (m *UpdateManagementControllerResponse) MarshalToSizedBufferVTStrict(dAtA [
 	return len(dAtA) - i, nil
 }
 
-func (m *ManagementControllerControlRequest) MarshalVTStrict() (dAtA []byte, err error) {
+func (m *ChangeManagementControllerStateRequest) MarshalVTStrict() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -3042,12 +3345,12 @@ func (m *ManagementControllerControlRequest) MarshalVTStrict() (dAtA []byte, err
 	return dAtA[:n], nil
 }
 
-func (m *ManagementControllerControlRequest) MarshalToVTStrict(dAtA []byte) (int, error) {
+func (m *ChangeManagementControllerStateRequest) MarshalToVTStrict(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
 }
 
-func (m *ManagementControllerControlRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+func (m *ChangeManagementControllerStateRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -3058,52 +3361,23 @@ func (m *ManagementControllerControlRequest) MarshalToSizedBufferVTStrict(dAtA [
 	if m.unknownFields != nil {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
-	}
-	if len(m.Parameters) > 0 {
-		for k := range m.Parameters {
-			v := m.Parameters[k]
-			baseI := i
-			i -= len(v)
-			copy(dAtA[i:], v)
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(v)))
-			i--
-			dAtA[i] = 0x12
-			i -= len(k)
-			copy(dAtA[i:], k)
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(k)))
-			i--
-			dAtA[i] = 0xa
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(baseI-i))
-			i--
-			dAtA[i] = 0x22
-		}
-	}
-	if m.Force != nil {
-		i--
-		if *m.Force {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
-		i--
-		dAtA[i] = 0x18
 	}
 	if m.Action != 0 {
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Action))
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.ControllerId) > 0 {
-		i -= len(m.ControllerId)
-		copy(dAtA[i:], m.ControllerId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ControllerId)))
+	if len(m.ControllerName) > 0 {
+		i -= len(m.ControllerName)
+		copy(dAtA[i:], m.ControllerName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.ControllerName)))
 		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *ManagementControllerControlResponse) MarshalVTStrict() (dAtA []byte, err error) {
+func (m *ChangeManagementControllerStateResponse) MarshalVTStrict() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -3116,12 +3390,12 @@ func (m *ManagementControllerControlResponse) MarshalVTStrict() (dAtA []byte, er
 	return dAtA[:n], nil
 }
 
-func (m *ManagementControllerControlResponse) MarshalToVTStrict(dAtA []byte) (int, error) {
+func (m *ChangeManagementControllerStateResponse) MarshalToVTStrict(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
 }
 
-func (m *ManagementControllerControlResponse) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+func (m *ChangeManagementControllerStateResponse) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -3133,35 +3407,8 @@ func (m *ManagementControllerControlResponse) MarshalToSizedBufferVTStrict(dAtA 
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if m.EstimatedCompletion != nil {
-		size, err := (*timestamppb1.Timestamp)(m.EstimatedCompletion).MarshalToSizedBufferVTStrict(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
-		i--
-		dAtA[i] = 0x22
-	}
-	if m.ErrorMessage != nil {
-		i -= len(*m.ErrorMessage)
-		copy(dAtA[i:], *m.ErrorMessage)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ErrorMessage)))
-		i--
-		dAtA[i] = 0x1a
-	}
-	if m.CurrentState != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.CurrentState))
-		i--
-		dAtA[i] = 0x10
-	}
-	if m.Success {
-		i--
-		if m.Success {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
+	if m.CurrentStatus != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.CurrentStatus))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -3189,14 +3436,11 @@ func (m *ManagementController) SizeVT() (n int) {
 	if m.Type != nil {
 		n += 1 + protohelpers.SizeOfVarint(uint64(*m.Type))
 	}
-	if m.CurrentState != nil {
-		n += 1 + protohelpers.SizeOfVarint(uint64(*m.CurrentState))
-	}
-	if m.RequestedTransition != nil {
-		n += 1 + protohelpers.SizeOfVarint(uint64(*m.RequestedTransition))
-	}
 	if m.Status != nil {
 		n += 1 + protohelpers.SizeOfVarint(uint64(*m.Status))
+	}
+	if m.RequestedAction != nil {
+		n += 1 + protohelpers.SizeOfVarint(uint64(*m.RequestedAction))
 	}
 	if m.Location != nil {
 		l = m.Location.SizeVT()
@@ -3325,11 +3569,11 @@ func (m *ManagementControllerRedundancy) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Role != nil {
-		n += 1 + protohelpers.SizeOfVarint(uint64(*m.Role))
-	}
 	if m.RedundancyEnabled {
 		n += 2
+	}
+	if m.Role != nil {
+		n += 1 + protohelpers.SizeOfVarint(uint64(*m.Role))
 	}
 	if m.DisableRedundancyOverride != nil {
 		n += 2
@@ -3383,6 +3627,33 @@ func (m *ManagementControllerRebootInfo) SizeVT() (n int) {
 	return n
 }
 
+func (m *ManagementControllerStateChange) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ControllerName)
+	if l > 0 {
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if m.PreviousStatus != 0 {
+		n += 1 + protohelpers.SizeOfVarint(uint64(m.PreviousStatus))
+	}
+	if m.CurrentStatus != 0 {
+		n += 1 + protohelpers.SizeOfVarint(uint64(m.CurrentStatus))
+	}
+	if m.Cause != 0 {
+		n += 1 + protohelpers.SizeOfVarint(uint64(m.Cause))
+	}
+	if m.ChangedAt != nil {
+		l = (*timestamppb1.Timestamp)(m.ChangedAt).SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	n += len(m.unknownFields)
+	return n
+}
+
 func (m *GetManagementControllerRequest) SizeVT() (n int) {
 	if m == nil {
 		return 0
@@ -3400,16 +3671,6 @@ func (m *GetManagementControllerRequest) SizeVT() (n int) {
 	return n
 }
 
-func (m *GetManagementControllerRequest_ControllerId) SizeVT() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.ControllerId)
-	n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
-	return n
-}
 func (m *GetManagementControllerRequest_Name) SizeVT() (n int) {
 	if m == nil {
 		return 0
@@ -3450,6 +3711,15 @@ func (m *GetManagementControllerRequest_Location) SizeVT() (n int) {
 	}
 	return n
 }
+func (m *GetManagementControllerRequest_Role) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	n += 1 + protohelpers.SizeOfVarint(uint64(m.Role))
+	return n
+}
 func (m *GetManagementControllerResponse) SizeVT() (n int) {
 	if m == nil {
 		return 0
@@ -3472,11 +3742,8 @@ func (m *ListManagementControllersRequest) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Type != nil {
-		n += 1 + protohelpers.SizeOfVarint(uint64(*m.Type))
-	}
-	if m.Status != nil {
-		n += 1 + protohelpers.SizeOfVarint(uint64(*m.Status))
+	if vtmsg, ok := m.Identifier.(interface{ SizeVT() int }); ok {
+		n += vtmsg.SizeVT()
 	}
 	if m.FieldMask != nil {
 		l = (*fieldmaskpb1.FieldMask)(m.FieldMask).SizeVT()
@@ -3486,6 +3753,45 @@ func (m *ListManagementControllersRequest) SizeVT() (n int) {
 	return n
 }
 
+func (m *ListManagementControllersRequest_Type) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	n += 1 + protohelpers.SizeOfVarint(uint64(m.Type))
+	return n
+}
+func (m *ListManagementControllersRequest_Status) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	n += 1 + protohelpers.SizeOfVarint(uint64(m.Status))
+	return n
+}
+func (m *ListManagementControllersRequest_Location) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Location != nil {
+		l = m.Location.SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	return n
+}
+func (m *ListManagementControllersRequest_Role) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	n += 1 + protohelpers.SizeOfVarint(uint64(m.Role))
+	return n
+}
 func (m *ListManagementControllersResponse) SizeVT() (n int) {
 	if m == nil {
 		return 0
@@ -3508,7 +3814,7 @@ func (m *UpdateManagementControllerRequest) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.ControllerId)
+	l = len(m.ControllerName)
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
@@ -3538,53 +3844,31 @@ func (m *UpdateManagementControllerResponse) SizeVT() (n int) {
 	return n
 }
 
-func (m *ManagementControllerControlRequest) SizeVT() (n int) {
+func (m *ChangeManagementControllerStateRequest) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.ControllerId)
+	l = len(m.ControllerName)
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	if m.Action != 0 {
 		n += 1 + protohelpers.SizeOfVarint(uint64(m.Action))
 	}
-	if m.Force != nil {
-		n += 2
-	}
-	if len(m.Parameters) > 0 {
-		for k, v := range m.Parameters {
-			_ = k
-			_ = v
-			mapEntrySize := 1 + len(k) + protohelpers.SizeOfVarint(uint64(len(k))) + 1 + len(v) + protohelpers.SizeOfVarint(uint64(len(v)))
-			n += mapEntrySize + 1 + protohelpers.SizeOfVarint(uint64(mapEntrySize))
-		}
-	}
 	n += len(m.unknownFields)
 	return n
 }
 
-func (m *ManagementControllerControlResponse) SizeVT() (n int) {
+func (m *ChangeManagementControllerStateResponse) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.Success {
-		n += 2
-	}
-	if m.CurrentState != nil {
-		n += 1 + protohelpers.SizeOfVarint(uint64(*m.CurrentState))
-	}
-	if m.ErrorMessage != nil {
-		l = len(*m.ErrorMessage)
-		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
-	}
-	if m.EstimatedCompletion != nil {
-		l = (*timestamppb1.Timestamp)(m.EstimatedCompletion).SizeVT()
-		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	if m.CurrentStatus != 0 {
+		n += 1 + protohelpers.SizeOfVarint(uint64(m.CurrentStatus))
 	}
 	n += len(m.unknownFields)
 	return n
@@ -3742,46 +4026,6 @@ func (m *ManagementController) UnmarshalVT(dAtA []byte) error {
 			m.Type = &v
 		case 5:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CurrentState", wireType)
-			}
-			var v ManagementControllerState
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= ManagementControllerState(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.CurrentState = &v
-		case 6:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field RequestedTransition", wireType)
-			}
-			var v ManagementControllerTransition
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= ManagementControllerTransition(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.RequestedTransition = &v
-		case 7:
-			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
 			var v ManagementControllerStatus
@@ -3800,7 +4044,27 @@ func (m *ManagementController) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.Status = &v
-		case 8:
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RequestedAction", wireType)
+			}
+			var v ManagementControllerAction
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= ManagementControllerAction(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.RequestedAction = &v
+		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
 			}
@@ -3836,7 +4100,7 @@ func (m *ManagementController) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 9:
+		case 8:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Hardware", wireType)
 			}
@@ -3872,7 +4136,7 @@ func (m *ManagementController) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 10:
+		case 9:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Firmware", wireType)
 			}
@@ -3908,7 +4172,7 @@ func (m *ManagementController) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 11:
+		case 10:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Redundancy", wireType)
 			}
@@ -3944,7 +4208,7 @@ func (m *ManagementController) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 12:
+		case 11:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LastReboot", wireType)
 			}
@@ -3980,7 +4244,7 @@ func (m *ManagementController) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 13:
+		case 12:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UpdatedAt", wireType)
 			}
@@ -4016,7 +4280,7 @@ func (m *ManagementController) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 14:
+		case 13:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Metadata", wireType)
 			}
@@ -4747,26 +5011,6 @@ func (m *ManagementControllerRedundancy) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Role", wireType)
-			}
-			var v ManagementControllerRole
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= ManagementControllerRole(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.Role = &v
-		case 2:
-			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field RedundancyEnabled", wireType)
 			}
 			var v int
@@ -4785,6 +5029,26 @@ func (m *ManagementControllerRedundancy) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.RedundancyEnabled = bool(v != 0)
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Role", wireType)
+			}
+			var v ManagementControllerRole
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= ManagementControllerRole(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Role = &v
 		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field DisableRedundancyOverride", wireType)
@@ -5146,6 +5410,182 @@ func (m *ManagementControllerRebootInfo) UnmarshalVT(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *ManagementControllerStateChange) UnmarshalVT(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return protohelpers.ErrIntOverflow
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ManagementControllerStateChange: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ManagementControllerStateChange: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ControllerName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ControllerName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PreviousStatus", wireType)
+			}
+			m.PreviousStatus = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.PreviousStatus |= ManagementControllerStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentStatus", wireType)
+			}
+			m.CurrentStatus = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CurrentStatus |= ManagementControllerStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Cause", wireType)
+			}
+			m.Cause = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Cause |= ManagementControllerAction(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChangedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.ChangedAt == nil {
+				m.ChangedAt = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.ChangedAt).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *GetManagementControllerRequest) UnmarshalVT(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -5177,38 +5617,6 @@ func (m *GetManagementControllerRequest) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ControllerId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Identifier = &GetManagementControllerRequest_ControllerId{ControllerId: string(dAtA[iNdEx:postIndex])}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -5239,7 +5647,7 @@ func (m *GetManagementControllerRequest) UnmarshalVT(dAtA []byte) error {
 			}
 			m.Identifier = &GetManagementControllerRequest_Name{Name: string(dAtA[iNdEx:postIndex])}
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
 			}
@@ -5259,7 +5667,7 @@ func (m *GetManagementControllerRequest) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.Identifier = &GetManagementControllerRequest_Type{Type: v}
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
@@ -5279,7 +5687,7 @@ func (m *GetManagementControllerRequest) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.Identifier = &GetManagementControllerRequest_Status{Status: v}
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
 			}
@@ -5320,6 +5728,26 @@ func (m *GetManagementControllerRequest) UnmarshalVT(dAtA []byte) error {
 				m.Identifier = &GetManagementControllerRequest_Location{Location: v}
 			}
 			iNdEx = postIndex
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Role", wireType)
+			}
+			var v ManagementControllerRole
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= ManagementControllerRole(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Identifier = &GetManagementControllerRequest_Role{Role: v}
 		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
@@ -5511,7 +5939,7 @@ func (m *ListManagementControllersRequest) UnmarshalVT(dAtA []byte) error {
 					break
 				}
 			}
-			m.Type = &v
+			m.Identifier = &ListManagementControllersRequest_Type{Type: v}
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
@@ -5531,8 +5959,69 @@ func (m *ListManagementControllersRequest) UnmarshalVT(dAtA []byte) error {
 					break
 				}
 			}
-			m.Status = &v
+			m.Identifier = &ListManagementControllersRequest_Status{Status: v}
 		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Identifier.(*ListManagementControllersRequest_Location); ok {
+				if err := oneof.Location.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &Location{}
+				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Identifier = &ListManagementControllersRequest_Location{Location: v}
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Role", wireType)
+			}
+			var v ManagementControllerRole
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= ManagementControllerRole(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Identifier = &ListManagementControllersRequest_Role{Role: v}
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
 			}
@@ -5706,7 +6195,7 @@ func (m *UpdateManagementControllerRequest) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ControllerId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ControllerName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -5734,7 +6223,7 @@ func (m *UpdateManagementControllerRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ControllerId = string(dAtA[iNdEx:postIndex])
+			m.ControllerName = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -5917,7 +6406,7 @@ func (m *UpdateManagementControllerResponse) UnmarshalVT(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *ManagementControllerControlRequest) UnmarshalVT(dAtA []byte) error {
+func (m *ChangeManagementControllerStateRequest) UnmarshalVT(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5940,15 +6429,15 @@ func (m *ManagementControllerControlRequest) UnmarshalVT(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ManagementControllerControlRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: ChangeManagementControllerStateRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ManagementControllerControlRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ChangeManagementControllerStateRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ControllerId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ControllerName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -5976,7 +6465,7 @@ func (m *ManagementControllerControlRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ControllerId = string(dAtA[iNdEx:postIndex])
+			m.ControllerName = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
@@ -5997,154 +6486,6 @@ func (m *ManagementControllerControlRequest) UnmarshalVT(dAtA []byte) error {
 					break
 				}
 			}
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Force", wireType)
-			}
-			var v int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			b := bool(v != 0)
-			m.Force = &b
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Parameters", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Parameters == nil {
-				m.Parameters = make(map[string]string)
-			}
-			var mapkey string
-			var mapvalue string
-			for iNdEx < postIndex {
-				entryPreIndex := iNdEx
-				var wire uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protohelpers.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					wire |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				fieldNum := int32(wire >> 3)
-				if fieldNum == 1 {
-					var stringLenmapkey uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return protohelpers.ErrIntOverflow
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapkey |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapkey := int(stringLenmapkey)
-					if intStringLenmapkey < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					postStringIndexmapkey := iNdEx + intStringLenmapkey
-					if postStringIndexmapkey < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if postStringIndexmapkey > l {
-						return io.ErrUnexpectedEOF
-					}
-					mapkey = string(dAtA[iNdEx:postStringIndexmapkey])
-					iNdEx = postStringIndexmapkey
-				} else if fieldNum == 2 {
-					var stringLenmapvalue uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return protohelpers.ErrIntOverflow
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapvalue |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapvalue := int(stringLenmapvalue)
-					if intStringLenmapvalue < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					postStringIndexmapvalue := iNdEx + intStringLenmapvalue
-					if postStringIndexmapvalue < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if postStringIndexmapvalue > l {
-						return io.ErrUnexpectedEOF
-					}
-					mapvalue = string(dAtA[iNdEx:postStringIndexmapvalue])
-					iNdEx = postStringIndexmapvalue
-				} else {
-					iNdEx = entryPreIndex
-					skippy, err := protohelpers.Skip(dAtA[iNdEx:])
-					if err != nil {
-						return err
-					}
-					if (skippy < 0) || (iNdEx+skippy) < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if (iNdEx + skippy) > postIndex {
-						return io.ErrUnexpectedEOF
-					}
-					iNdEx += skippy
-				}
-			}
-			m.Parameters[mapkey] = mapvalue
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -6167,7 +6508,7 @@ func (m *ManagementControllerControlRequest) UnmarshalVT(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *ManagementControllerControlResponse) UnmarshalVT(dAtA []byte) error {
+func (m *ChangeManagementControllerStateResponse) UnmarshalVT(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -6190,17 +6531,17 @@ func (m *ManagementControllerControlResponse) UnmarshalVT(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ManagementControllerControlResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: ChangeManagementControllerStateResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ManagementControllerControlResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ChangeManagementControllerStateResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Success", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentStatus", wireType)
 			}
-			var v int
+			m.CurrentStatus = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -6210,101 +6551,11 @@ func (m *ManagementControllerControlResponse) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= int(b&0x7F) << shift
+				m.CurrentStatus |= ManagementControllerStatus(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Success = bool(v != 0)
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CurrentState", wireType)
-			}
-			var v ManagementControllerState
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= ManagementControllerState(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.CurrentState = &v
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ErrorMessage", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.ErrorMessage = &s
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field EstimatedCompletion", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.EstimatedCompletion == nil {
-				m.EstimatedCompletion = &timestamppb.Timestamp{}
-			}
-			if err := (*timestamppb1.Timestamp)(m.EstimatedCompletion).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -6487,46 +6738,6 @@ func (m *ManagementController) UnmarshalVTUnsafe(dAtA []byte) error {
 			m.Type = &v
 		case 5:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CurrentState", wireType)
-			}
-			var v ManagementControllerState
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= ManagementControllerState(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.CurrentState = &v
-		case 6:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field RequestedTransition", wireType)
-			}
-			var v ManagementControllerTransition
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= ManagementControllerTransition(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.RequestedTransition = &v
-		case 7:
-			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
 			var v ManagementControllerStatus
@@ -6545,7 +6756,27 @@ func (m *ManagementController) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.Status = &v
-		case 8:
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RequestedAction", wireType)
+			}
+			var v ManagementControllerAction
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= ManagementControllerAction(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.RequestedAction = &v
+		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
 			}
@@ -6581,7 +6812,7 @@ func (m *ManagementController) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 9:
+		case 8:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Hardware", wireType)
 			}
@@ -6617,7 +6848,7 @@ func (m *ManagementController) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 10:
+		case 9:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Firmware", wireType)
 			}
@@ -6653,7 +6884,7 @@ func (m *ManagementController) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 11:
+		case 10:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Redundancy", wireType)
 			}
@@ -6689,7 +6920,7 @@ func (m *ManagementController) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 12:
+		case 11:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LastReboot", wireType)
 			}
@@ -6725,7 +6956,7 @@ func (m *ManagementController) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 13:
+		case 12:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UpdatedAt", wireType)
 			}
@@ -6761,7 +6992,7 @@ func (m *ManagementController) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 14:
+		case 13:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Metadata", wireType)
 			}
@@ -7512,26 +7743,6 @@ func (m *ManagementControllerRedundancy) UnmarshalVTUnsafe(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Role", wireType)
-			}
-			var v ManagementControllerRole
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= ManagementControllerRole(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.Role = &v
-		case 2:
-			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field RedundancyEnabled", wireType)
 			}
 			var v int
@@ -7550,6 +7761,26 @@ func (m *ManagementControllerRedundancy) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.RedundancyEnabled = bool(v != 0)
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Role", wireType)
+			}
+			var v ManagementControllerRole
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= ManagementControllerRole(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Role = &v
 		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field DisableRedundancyOverride", wireType)
@@ -7923,7 +8154,7 @@ func (m *ManagementControllerRebootInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *GetManagementControllerRequest) UnmarshalVTUnsafe(dAtA []byte) error {
+func (m *ManagementControllerStateChange) UnmarshalVTUnsafe(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -7946,15 +8177,15 @@ func (m *GetManagementControllerRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: GetManagementControllerRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: ManagementControllerStateChange: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: GetManagementControllerRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ManagementControllerStateChange: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ControllerId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ControllerName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -7986,9 +8217,153 @@ func (m *GetManagementControllerRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.Identifier = &GetManagementControllerRequest_ControllerId{ControllerId: stringValue}
+			m.ControllerName = stringValue
 			iNdEx = postIndex
 		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PreviousStatus", wireType)
+			}
+			m.PreviousStatus = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.PreviousStatus |= ManagementControllerStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentStatus", wireType)
+			}
+			m.CurrentStatus = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CurrentStatus |= ManagementControllerStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Cause", wireType)
+			}
+			m.Cause = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Cause |= ManagementControllerAction(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChangedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.ChangedAt == nil {
+				m.ChangedAt = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.ChangedAt).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetManagementControllerRequest) UnmarshalVTUnsafe(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return protohelpers.ErrIntOverflow
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetManagementControllerRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetManagementControllerRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
@@ -8024,7 +8399,7 @@ func (m *GetManagementControllerRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			}
 			m.Identifier = &GetManagementControllerRequest_Name{Name: stringValue}
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
 			}
@@ -8044,7 +8419,7 @@ func (m *GetManagementControllerRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.Identifier = &GetManagementControllerRequest_Type{Type: v}
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
@@ -8064,7 +8439,7 @@ func (m *GetManagementControllerRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.Identifier = &GetManagementControllerRequest_Status{Status: v}
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
 			}
@@ -8105,6 +8480,26 @@ func (m *GetManagementControllerRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 				m.Identifier = &GetManagementControllerRequest_Location{Location: v}
 			}
 			iNdEx = postIndex
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Role", wireType)
+			}
+			var v ManagementControllerRole
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= ManagementControllerRole(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Identifier = &GetManagementControllerRequest_Role{Role: v}
 		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
@@ -8296,7 +8691,7 @@ func (m *ListManagementControllersRequest) UnmarshalVTUnsafe(dAtA []byte) error 
 					break
 				}
 			}
-			m.Type = &v
+			m.Identifier = &ListManagementControllersRequest_Type{Type: v}
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
@@ -8316,8 +8711,69 @@ func (m *ListManagementControllersRequest) UnmarshalVTUnsafe(dAtA []byte) error 
 					break
 				}
 			}
-			m.Status = &v
+			m.Identifier = &ListManagementControllersRequest_Status{Status: v}
 		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Identifier.(*ListManagementControllersRequest_Location); ok {
+				if err := oneof.Location.UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &Location{}
+				if err := v.UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Identifier = &ListManagementControllersRequest_Location{Location: v}
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Role", wireType)
+			}
+			var v ManagementControllerRole
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= ManagementControllerRole(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Identifier = &ListManagementControllersRequest_Role{Role: v}
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
 			}
@@ -8491,7 +8947,7 @@ func (m *UpdateManagementControllerRequest) UnmarshalVTUnsafe(dAtA []byte) error
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ControllerId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ControllerName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -8523,7 +8979,7 @@ func (m *UpdateManagementControllerRequest) UnmarshalVTUnsafe(dAtA []byte) error
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.ControllerId = stringValue
+			m.ControllerName = stringValue
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -8706,7 +9162,7 @@ func (m *UpdateManagementControllerResponse) UnmarshalVTUnsafe(dAtA []byte) erro
 	}
 	return nil
 }
-func (m *ManagementControllerControlRequest) UnmarshalVTUnsafe(dAtA []byte) error {
+func (m *ChangeManagementControllerStateRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -8729,15 +9185,15 @@ func (m *ManagementControllerControlRequest) UnmarshalVTUnsafe(dAtA []byte) erro
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ManagementControllerControlRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: ChangeManagementControllerStateRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ManagementControllerControlRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ChangeManagementControllerStateRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ControllerId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ControllerName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -8769,7 +9225,7 @@ func (m *ManagementControllerControlRequest) UnmarshalVTUnsafe(dAtA []byte) erro
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.ControllerId = stringValue
+			m.ControllerName = stringValue
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
@@ -8790,162 +9246,6 @@ func (m *ManagementControllerControlRequest) UnmarshalVTUnsafe(dAtA []byte) erro
 					break
 				}
 			}
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Force", wireType)
-			}
-			var v int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			b := bool(v != 0)
-			m.Force = &b
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Parameters", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Parameters == nil {
-				m.Parameters = make(map[string]string)
-			}
-			var mapkey string
-			var mapvalue string
-			for iNdEx < postIndex {
-				entryPreIndex := iNdEx
-				var wire uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protohelpers.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					wire |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				fieldNum := int32(wire >> 3)
-				if fieldNum == 1 {
-					var stringLenmapkey uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return protohelpers.ErrIntOverflow
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapkey |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapkey := int(stringLenmapkey)
-					if intStringLenmapkey < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					postStringIndexmapkey := iNdEx + intStringLenmapkey
-					if postStringIndexmapkey < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if postStringIndexmapkey > l {
-						return io.ErrUnexpectedEOF
-					}
-					if intStringLenmapkey == 0 {
-						mapkey = ""
-					} else {
-						mapkey = unsafe.String(&dAtA[iNdEx], intStringLenmapkey)
-					}
-					iNdEx = postStringIndexmapkey
-				} else if fieldNum == 2 {
-					var stringLenmapvalue uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return protohelpers.ErrIntOverflow
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapvalue |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapvalue := int(stringLenmapvalue)
-					if intStringLenmapvalue < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					postStringIndexmapvalue := iNdEx + intStringLenmapvalue
-					if postStringIndexmapvalue < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if postStringIndexmapvalue > l {
-						return io.ErrUnexpectedEOF
-					}
-					if intStringLenmapvalue == 0 {
-						mapvalue = ""
-					} else {
-						mapvalue = unsafe.String(&dAtA[iNdEx], intStringLenmapvalue)
-					}
-					iNdEx = postStringIndexmapvalue
-				} else {
-					iNdEx = entryPreIndex
-					skippy, err := protohelpers.Skip(dAtA[iNdEx:])
-					if err != nil {
-						return err
-					}
-					if (skippy < 0) || (iNdEx+skippy) < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if (iNdEx + skippy) > postIndex {
-						return io.ErrUnexpectedEOF
-					}
-					iNdEx += skippy
-				}
-			}
-			m.Parameters[mapkey] = mapvalue
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -8968,7 +9268,7 @@ func (m *ManagementControllerControlRequest) UnmarshalVTUnsafe(dAtA []byte) erro
 	}
 	return nil
 }
-func (m *ManagementControllerControlResponse) UnmarshalVTUnsafe(dAtA []byte) error {
+func (m *ChangeManagementControllerStateResponse) UnmarshalVTUnsafe(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -8991,17 +9291,17 @@ func (m *ManagementControllerControlResponse) UnmarshalVTUnsafe(dAtA []byte) err
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ManagementControllerControlResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: ChangeManagementControllerStateResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ManagementControllerControlResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ChangeManagementControllerStateResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Success", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentStatus", wireType)
 			}
-			var v int
+			m.CurrentStatus = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -9011,105 +9311,11 @@ func (m *ManagementControllerControlResponse) UnmarshalVTUnsafe(dAtA []byte) err
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= int(b&0x7F) << shift
+				m.CurrentStatus |= ManagementControllerStatus(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Success = bool(v != 0)
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CurrentState", wireType)
-			}
-			var v ManagementControllerState
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= ManagementControllerState(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.CurrentState = &v
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ErrorMessage", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			var stringValue string
-			if intStringLen > 0 {
-				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
-			}
-			s := stringValue
-			m.ErrorMessage = &s
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field EstimatedCompletion", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.EstimatedCompletion == nil {
-				m.EstimatedCompletion = &timestamppb.Timestamp{}
-			}
-			if err := (*timestamppb1.Timestamp)(m.EstimatedCompletion).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])

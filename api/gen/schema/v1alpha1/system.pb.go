@@ -646,7 +646,7 @@ const file_schema_v1alpha1_system_proto_rawDesc = "" +
 	"\x14SYSTEM_STATE_STANDBY\x10\x04\x12\x19\n" +
 	"\x15SYSTEM_STATE_QUIESCED\x10\x05\x12\x18\n" +
 	"\x14SYSTEM_STATE_IN_TEST\x10\x06\x12\x19\n" +
-	"\x15SYSTEM_STATE_UPDATING\x10\a2\x84!\n" +
+	"\x15SYSTEM_STATE_UPDATING\x10\a2\xfa\x1f\n" +
 	"\n" +
 	"BMCService\x12\x81\x01\n" +
 	"\rGetSystemInfo\x12%.schema.v1alpha1.GetSystemInfoRequest\x1a&.schema.v1alpha1.GetSystemInfoResponse\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/api/v1alpha1/system/info\x12w\n" +
@@ -657,17 +657,16 @@ const file_schema_v1alpha1_system_proto_rawDesc = "" +
 	"GetChassis\x12\".schema.v1alpha1.GetChassisRequest\x1a#.schema.v1alpha1.GetChassisResponse\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/api/v1alpha1/chassis/{name}\x12w\n" +
 	"\vListChassis\x12#.schema.v1alpha1.ListChassisRequest\x1a$.schema.v1alpha1.ListChassisResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/v1alpha1/chassis\x12\x8f\x01\n" +
 	"\rUpdateChassis\x12%.schema.v1alpha1.UpdateChassisRequest\x1a&.schema.v1alpha1.UpdateChassisResponse\"/\x82\xd3\xe4\x93\x02):\x01*2$/api/v1alpha1/chassis/{chassis_name}\x12\xa4\x01\n" +
-	"\x12ChassisChangeState\x12*.schema.v1alpha1.ChassisChangeStateRequest\x1a+.schema.v1alpha1.ChassisChangeStateResponse\"5\x82\xd3\xe4\x93\x02/:\x01*\"*/api/v1alpha1/chassis/{chassis_name}/state\x12\x9a\x01\n" +
-	"\x0eChassisControl\x12&.schema.v1alpha1.ChassisControlRequest\x1a'.schema.v1alpha1.ChassisControlResponse\"7\x82\xd3\xe4\x93\x021:\x01*\",/api/v1alpha1/chassis/{chassis_name}/control\x12p\n" +
+	"\x12ChangeChassisState\x12*.schema.v1alpha1.ChangeChassisStateRequest\x1a+.schema.v1alpha1.ChangeChassisStateResponse\"5\x82\xd3\xe4\x93\x02/:\x01*\"*/api/v1alpha1/chassis/{chassis_name}/state\x12p\n" +
 	"\aGetHost\x12\x1f.schema.v1alpha1.GetHostRequest\x1a .schema.v1alpha1.GetHostResponse\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/api/v1alpha1/hosts/{name}\x12o\n" +
-	"\tListHosts\x12!.schema.v1alpha1.ListHostsRequest\x1a\".schema.v1alpha1.ListHostsResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/api/v1alpha1/hosts\x12\x7f\n" +
+	"\tListHosts\x12!.schema.v1alpha1.ListHostsRequest\x1a\".schema.v1alpha1.ListHostsResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/api/v1alpha1/hosts\x12\x81\x01\n" +
 	"\n" +
-	"UpdateHost\x12\".schema.v1alpha1.UpdateHostRequest\x1a#.schema.v1alpha1.UpdateHostResponse\"(\x82\xd3\xe4\x93\x02\":\x01*2\x1d/api/v1alpha1/hosts/{host_id}\x12\x94\x01\n" +
-	"\x0fHostChangeState\x12'.schema.v1alpha1.HostChangeStateRequest\x1a(.schema.v1alpha1.HostChangeStateResponse\".\x82\xd3\xe4\x93\x02(:\x01*\"#/api/v1alpha1/hosts/{host_id}/state\x12\xb1\x01\n" +
+	"UpdateHost\x12\".schema.v1alpha1.UpdateHostRequest\x1a#.schema.v1alpha1.UpdateHostResponse\"*\x82\xd3\xe4\x93\x02$:\x01*2\x1f/api/v1alpha1/hosts/{host_name}\x12\x96\x01\n" +
+	"\x0fChangeHostState\x12'.schema.v1alpha1.ChangeHostStateRequest\x1a(.schema.v1alpha1.ChangeHostStateResponse\"0\x82\xd3\xe4\x93\x02*:\x01*\"%/api/v1alpha1/hosts/{host_name}/state\x12\xb1\x01\n" +
 	"\x17GetManagementController\x12/.schema.v1alpha1.GetManagementControllerRequest\x1a0.schema.v1alpha1.GetManagementControllerResponse\"3\x82\xd3\xe4\x93\x02-\x12+/api/v1alpha1/management-controllers/{name}\x12\xb0\x01\n" +
-	"\x19ListManagementControllers\x121.schema.v1alpha1.ListManagementControllersRequest\x1a2.schema.v1alpha1.ListManagementControllersResponse\",\x82\xd3\xe4\x93\x02&\x12$/api/v1alpha1/management-controllers\x12\xc6\x01\n" +
-	"\x1aUpdateManagementController\x122.schema.v1alpha1.UpdateManagementControllerRequest\x1a3.schema.v1alpha1.UpdateManagementControllerResponse\"?\x82\xd3\xe4\x93\x029:\x01*24/api/v1alpha1/management-controllers/{controller_id}\x12\xd1\x01\n" +
-	"\x1bManagementControllerControl\x123.schema.v1alpha1.ManagementControllerControlRequest\x1a4.schema.v1alpha1.ManagementControllerControlResponse\"G\x82\xd3\xe4\x93\x02A:\x01*\"</api/v1alpha1/management-controllers/{controller_id}/control\x12w\n" +
+	"\x19ListManagementControllers\x121.schema.v1alpha1.ListManagementControllersRequest\x1a2.schema.v1alpha1.ListManagementControllersResponse\",\x82\xd3\xe4\x93\x02&\x12$/api/v1alpha1/management-controllers\x12\xc8\x01\n" +
+	"\x1aUpdateManagementController\x122.schema.v1alpha1.UpdateManagementControllerRequest\x1a3.schema.v1alpha1.UpdateManagementControllerResponse\"A\x82\xd3\xe4\x93\x02;:\x01*26/api/v1alpha1/management-controllers/{controller_name}\x12\xdd\x01\n" +
+	"\x1fChangeManagementControllerState\x127.schema.v1alpha1.ChangeManagementControllerStateRequest\x1a8.schema.v1alpha1.ChangeManagementControllerStateResponse\"G\x82\xd3\xe4\x93\x02A:\x01*\"</api/v1alpha1/management-controllers/{controller_name}/state\x12w\n" +
 	"\vListSensors\x12#.schema.v1alpha1.ListSensorsRequest\x1a$.schema.v1alpha1.ListSensorsResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/v1alpha1/sensors\x12v\n" +
 	"\tGetSensor\x12!.schema.v1alpha1.GetSensorRequest\x1a\".schema.v1alpha1.GetSensorResponse\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/api/v1alpha1/sensors/{id}\x12\x8d\x01\n" +
 	"\x0eGetThermalZone\x12&.schema.v1alpha1.GetThermalZoneRequest\x1a'.schema.v1alpha1.GetThermalZoneResponse\"*\x82\xd3\xe4\x93\x02$\x12\"/api/v1alpha1/thermal-zones/{name}\x12\x90\x01\n" +
@@ -701,76 +700,74 @@ func file_schema_v1alpha1_system_proto_rawDescGZIP() []byte {
 var file_schema_v1alpha1_system_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_schema_v1alpha1_system_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_schema_v1alpha1_system_proto_goTypes = []any{
-	(HealthStatus)(0),                           // 0: schema.v1alpha1.HealthStatus
-	(SystemState)(0),                            // 1: schema.v1alpha1.SystemState
-	(*Health)(nil),                              // 2: schema.v1alpha1.Health
-	(*HealthDetail)(nil),                        // 3: schema.v1alpha1.HealthDetail
-	(*SystemInfo)(nil),                          // 4: schema.v1alpha1.SystemInfo
-	(*GetSystemInfoRequest)(nil),                // 5: schema.v1alpha1.GetSystemInfoRequest
-	(*GetSystemInfoResponse)(nil),               // 6: schema.v1alpha1.GetSystemInfoResponse
-	(*GetHealthRequest)(nil),                    // 7: schema.v1alpha1.GetHealthRequest
-	(*GetHealthResponse)(nil),                   // 8: schema.v1alpha1.GetHealthResponse
-	nil,                                         // 9: schema.v1alpha1.SystemInfo.MetadataEntry
-	(*timestamppb.Timestamp)(nil),               // 10: google.protobuf.Timestamp
-	(*durationpb.Duration)(nil),                 // 11: google.protobuf.Duration
-	(*ContactInfo)(nil),                         // 12: schema.v1alpha1.ContactInfo
-	(*fieldmaskpb.FieldMask)(nil),               // 13: google.protobuf.FieldMask
-	(*GetAssetInfoRequest)(nil),                 // 14: schema.v1alpha1.GetAssetInfoRequest
-	(*SetAssetInfoRequest)(nil),                 // 15: schema.v1alpha1.SetAssetInfoRequest
-	(*GetChassisRequest)(nil),                   // 16: schema.v1alpha1.GetChassisRequest
-	(*ListChassisRequest)(nil),                  // 17: schema.v1alpha1.ListChassisRequest
-	(*UpdateChassisRequest)(nil),                // 18: schema.v1alpha1.UpdateChassisRequest
-	(*ChassisChangeStateRequest)(nil),           // 19: schema.v1alpha1.ChassisChangeStateRequest
-	(*ChassisControlRequest)(nil),               // 20: schema.v1alpha1.ChassisControlRequest
-	(*GetHostRequest)(nil),                      // 21: schema.v1alpha1.GetHostRequest
-	(*ListHostsRequest)(nil),                    // 22: schema.v1alpha1.ListHostsRequest
-	(*UpdateHostRequest)(nil),                   // 23: schema.v1alpha1.UpdateHostRequest
-	(*HostChangeStateRequest)(nil),              // 24: schema.v1alpha1.HostChangeStateRequest
-	(*GetManagementControllerRequest)(nil),      // 25: schema.v1alpha1.GetManagementControllerRequest
-	(*ListManagementControllersRequest)(nil),    // 26: schema.v1alpha1.ListManagementControllersRequest
-	(*UpdateManagementControllerRequest)(nil),   // 27: schema.v1alpha1.UpdateManagementControllerRequest
-	(*ManagementControllerControlRequest)(nil),  // 28: schema.v1alpha1.ManagementControllerControlRequest
-	(*ListSensorsRequest)(nil),                  // 29: schema.v1alpha1.ListSensorsRequest
-	(*GetSensorRequest)(nil),                    // 30: schema.v1alpha1.GetSensorRequest
-	(*GetThermalZoneRequest)(nil),               // 31: schema.v1alpha1.GetThermalZoneRequest
-	(*SetThermalZoneRequest)(nil),               // 32: schema.v1alpha1.SetThermalZoneRequest
-	(*ListThermalZonesRequest)(nil),             // 33: schema.v1alpha1.ListThermalZonesRequest
-	(*CreateUserRequest)(nil),                   // 34: schema.v1alpha1.CreateUserRequest
-	(*GetUserRequest)(nil),                      // 35: schema.v1alpha1.GetUserRequest
-	(*UpdateUserRequest)(nil),                   // 36: schema.v1alpha1.UpdateUserRequest
-	(*DeleteUserRequest)(nil),                   // 37: schema.v1alpha1.DeleteUserRequest
-	(*ListUsersRequest)(nil),                    // 38: schema.v1alpha1.ListUsersRequest
-	(*ChangePasswordRequest)(nil),               // 39: schema.v1alpha1.ChangePasswordRequest
-	(*ResetPasswordRequest)(nil),                // 40: schema.v1alpha1.ResetPasswordRequest
-	(*AuthenticateUserRequest)(nil),             // 41: schema.v1alpha1.AuthenticateUserRequest
-	(*GetAssetInfoResponse)(nil),                // 42: schema.v1alpha1.GetAssetInfoResponse
-	(*SetAssetInfoResponse)(nil),                // 43: schema.v1alpha1.SetAssetInfoResponse
-	(*GetChassisResponse)(nil),                  // 44: schema.v1alpha1.GetChassisResponse
-	(*ListChassisResponse)(nil),                 // 45: schema.v1alpha1.ListChassisResponse
-	(*UpdateChassisResponse)(nil),               // 46: schema.v1alpha1.UpdateChassisResponse
-	(*ChassisChangeStateResponse)(nil),          // 47: schema.v1alpha1.ChassisChangeStateResponse
-	(*ChassisControlResponse)(nil),              // 48: schema.v1alpha1.ChassisControlResponse
-	(*GetHostResponse)(nil),                     // 49: schema.v1alpha1.GetHostResponse
-	(*ListHostsResponse)(nil),                   // 50: schema.v1alpha1.ListHostsResponse
-	(*UpdateHostResponse)(nil),                  // 51: schema.v1alpha1.UpdateHostResponse
-	(*HostChangeStateResponse)(nil),             // 52: schema.v1alpha1.HostChangeStateResponse
-	(*GetManagementControllerResponse)(nil),     // 53: schema.v1alpha1.GetManagementControllerResponse
-	(*ListManagementControllersResponse)(nil),   // 54: schema.v1alpha1.ListManagementControllersResponse
-	(*UpdateManagementControllerResponse)(nil),  // 55: schema.v1alpha1.UpdateManagementControllerResponse
-	(*ManagementControllerControlResponse)(nil), // 56: schema.v1alpha1.ManagementControllerControlResponse
-	(*ListSensorsResponse)(nil),                 // 57: schema.v1alpha1.ListSensorsResponse
-	(*GetSensorResponse)(nil),                   // 58: schema.v1alpha1.GetSensorResponse
-	(*GetThermalZoneResponse)(nil),              // 59: schema.v1alpha1.GetThermalZoneResponse
-	(*SetThermalZoneResponse)(nil),              // 60: schema.v1alpha1.SetThermalZoneResponse
-	(*ListThermalZonesResponse)(nil),            // 61: schema.v1alpha1.ListThermalZonesResponse
-	(*CreateUserResponse)(nil),                  // 62: schema.v1alpha1.CreateUserResponse
-	(*GetUserResponse)(nil),                     // 63: schema.v1alpha1.GetUserResponse
-	(*UpdateUserResponse)(nil),                  // 64: schema.v1alpha1.UpdateUserResponse
-	(*DeleteUserResponse)(nil),                  // 65: schema.v1alpha1.DeleteUserResponse
-	(*ListUsersResponse)(nil),                   // 66: schema.v1alpha1.ListUsersResponse
-	(*ChangePasswordResponse)(nil),              // 67: schema.v1alpha1.ChangePasswordResponse
-	(*ResetPasswordResponse)(nil),               // 68: schema.v1alpha1.ResetPasswordResponse
-	(*AuthenticateUserResponse)(nil),            // 69: schema.v1alpha1.AuthenticateUserResponse
+	(HealthStatus)(0),                               // 0: schema.v1alpha1.HealthStatus
+	(SystemState)(0),                                // 1: schema.v1alpha1.SystemState
+	(*Health)(nil),                                  // 2: schema.v1alpha1.Health
+	(*HealthDetail)(nil),                            // 3: schema.v1alpha1.HealthDetail
+	(*SystemInfo)(nil),                              // 4: schema.v1alpha1.SystemInfo
+	(*GetSystemInfoRequest)(nil),                    // 5: schema.v1alpha1.GetSystemInfoRequest
+	(*GetSystemInfoResponse)(nil),                   // 6: schema.v1alpha1.GetSystemInfoResponse
+	(*GetHealthRequest)(nil),                        // 7: schema.v1alpha1.GetHealthRequest
+	(*GetHealthResponse)(nil),                       // 8: schema.v1alpha1.GetHealthResponse
+	nil,                                             // 9: schema.v1alpha1.SystemInfo.MetadataEntry
+	(*timestamppb.Timestamp)(nil),                   // 10: google.protobuf.Timestamp
+	(*durationpb.Duration)(nil),                     // 11: google.protobuf.Duration
+	(*ContactInfo)(nil),                             // 12: schema.v1alpha1.ContactInfo
+	(*fieldmaskpb.FieldMask)(nil),                   // 13: google.protobuf.FieldMask
+	(*GetAssetInfoRequest)(nil),                     // 14: schema.v1alpha1.GetAssetInfoRequest
+	(*SetAssetInfoRequest)(nil),                     // 15: schema.v1alpha1.SetAssetInfoRequest
+	(*GetChassisRequest)(nil),                       // 16: schema.v1alpha1.GetChassisRequest
+	(*ListChassisRequest)(nil),                      // 17: schema.v1alpha1.ListChassisRequest
+	(*UpdateChassisRequest)(nil),                    // 18: schema.v1alpha1.UpdateChassisRequest
+	(*ChangeChassisStateRequest)(nil),               // 19: schema.v1alpha1.ChangeChassisStateRequest
+	(*GetHostRequest)(nil),                          // 20: schema.v1alpha1.GetHostRequest
+	(*ListHostsRequest)(nil),                        // 21: schema.v1alpha1.ListHostsRequest
+	(*UpdateHostRequest)(nil),                       // 22: schema.v1alpha1.UpdateHostRequest
+	(*ChangeHostStateRequest)(nil),                  // 23: schema.v1alpha1.ChangeHostStateRequest
+	(*GetManagementControllerRequest)(nil),          // 24: schema.v1alpha1.GetManagementControllerRequest
+	(*ListManagementControllersRequest)(nil),        // 25: schema.v1alpha1.ListManagementControllersRequest
+	(*UpdateManagementControllerRequest)(nil),       // 26: schema.v1alpha1.UpdateManagementControllerRequest
+	(*ChangeManagementControllerStateRequest)(nil),  // 27: schema.v1alpha1.ChangeManagementControllerStateRequest
+	(*ListSensorsRequest)(nil),                      // 28: schema.v1alpha1.ListSensorsRequest
+	(*GetSensorRequest)(nil),                        // 29: schema.v1alpha1.GetSensorRequest
+	(*GetThermalZoneRequest)(nil),                   // 30: schema.v1alpha1.GetThermalZoneRequest
+	(*SetThermalZoneRequest)(nil),                   // 31: schema.v1alpha1.SetThermalZoneRequest
+	(*ListThermalZonesRequest)(nil),                 // 32: schema.v1alpha1.ListThermalZonesRequest
+	(*CreateUserRequest)(nil),                       // 33: schema.v1alpha1.CreateUserRequest
+	(*GetUserRequest)(nil),                          // 34: schema.v1alpha1.GetUserRequest
+	(*UpdateUserRequest)(nil),                       // 35: schema.v1alpha1.UpdateUserRequest
+	(*DeleteUserRequest)(nil),                       // 36: schema.v1alpha1.DeleteUserRequest
+	(*ListUsersRequest)(nil),                        // 37: schema.v1alpha1.ListUsersRequest
+	(*ChangePasswordRequest)(nil),                   // 38: schema.v1alpha1.ChangePasswordRequest
+	(*ResetPasswordRequest)(nil),                    // 39: schema.v1alpha1.ResetPasswordRequest
+	(*AuthenticateUserRequest)(nil),                 // 40: schema.v1alpha1.AuthenticateUserRequest
+	(*GetAssetInfoResponse)(nil),                    // 41: schema.v1alpha1.GetAssetInfoResponse
+	(*SetAssetInfoResponse)(nil),                    // 42: schema.v1alpha1.SetAssetInfoResponse
+	(*GetChassisResponse)(nil),                      // 43: schema.v1alpha1.GetChassisResponse
+	(*ListChassisResponse)(nil),                     // 44: schema.v1alpha1.ListChassisResponse
+	(*UpdateChassisResponse)(nil),                   // 45: schema.v1alpha1.UpdateChassisResponse
+	(*ChangeChassisStateResponse)(nil),              // 46: schema.v1alpha1.ChangeChassisStateResponse
+	(*GetHostResponse)(nil),                         // 47: schema.v1alpha1.GetHostResponse
+	(*ListHostsResponse)(nil),                       // 48: schema.v1alpha1.ListHostsResponse
+	(*UpdateHostResponse)(nil),                      // 49: schema.v1alpha1.UpdateHostResponse
+	(*ChangeHostStateResponse)(nil),                 // 50: schema.v1alpha1.ChangeHostStateResponse
+	(*GetManagementControllerResponse)(nil),         // 51: schema.v1alpha1.GetManagementControllerResponse
+	(*ListManagementControllersResponse)(nil),       // 52: schema.v1alpha1.ListManagementControllersResponse
+	(*UpdateManagementControllerResponse)(nil),      // 53: schema.v1alpha1.UpdateManagementControllerResponse
+	(*ChangeManagementControllerStateResponse)(nil), // 54: schema.v1alpha1.ChangeManagementControllerStateResponse
+	(*ListSensorsResponse)(nil),                     // 55: schema.v1alpha1.ListSensorsResponse
+	(*GetSensorResponse)(nil),                       // 56: schema.v1alpha1.GetSensorResponse
+	(*GetThermalZoneResponse)(nil),                  // 57: schema.v1alpha1.GetThermalZoneResponse
+	(*SetThermalZoneResponse)(nil),                  // 58: schema.v1alpha1.SetThermalZoneResponse
+	(*ListThermalZonesResponse)(nil),                // 59: schema.v1alpha1.ListThermalZonesResponse
+	(*CreateUserResponse)(nil),                      // 60: schema.v1alpha1.CreateUserResponse
+	(*GetUserResponse)(nil),                         // 61: schema.v1alpha1.GetUserResponse
+	(*UpdateUserResponse)(nil),                      // 62: schema.v1alpha1.UpdateUserResponse
+	(*DeleteUserResponse)(nil),                      // 63: schema.v1alpha1.DeleteUserResponse
+	(*ListUsersResponse)(nil),                       // 64: schema.v1alpha1.ListUsersResponse
+	(*ChangePasswordResponse)(nil),                  // 65: schema.v1alpha1.ChangePasswordResponse
+	(*ResetPasswordResponse)(nil),                   // 66: schema.v1alpha1.ResetPasswordResponse
+	(*AuthenticateUserResponse)(nil),                // 67: schema.v1alpha1.AuthenticateUserResponse
 }
 var file_schema_v1alpha1_system_proto_depIdxs = []int32{
 	0,  // 0: schema.v1alpha1.Health.status:type_name -> schema.v1alpha1.HealthStatus
@@ -796,61 +793,59 @@ var file_schema_v1alpha1_system_proto_depIdxs = []int32{
 	16, // 20: schema.v1alpha1.BMCService.GetChassis:input_type -> schema.v1alpha1.GetChassisRequest
 	17, // 21: schema.v1alpha1.BMCService.ListChassis:input_type -> schema.v1alpha1.ListChassisRequest
 	18, // 22: schema.v1alpha1.BMCService.UpdateChassis:input_type -> schema.v1alpha1.UpdateChassisRequest
-	19, // 23: schema.v1alpha1.BMCService.ChassisChangeState:input_type -> schema.v1alpha1.ChassisChangeStateRequest
-	20, // 24: schema.v1alpha1.BMCService.ChassisControl:input_type -> schema.v1alpha1.ChassisControlRequest
-	21, // 25: schema.v1alpha1.BMCService.GetHost:input_type -> schema.v1alpha1.GetHostRequest
-	22, // 26: schema.v1alpha1.BMCService.ListHosts:input_type -> schema.v1alpha1.ListHostsRequest
-	23, // 27: schema.v1alpha1.BMCService.UpdateHost:input_type -> schema.v1alpha1.UpdateHostRequest
-	24, // 28: schema.v1alpha1.BMCService.HostChangeState:input_type -> schema.v1alpha1.HostChangeStateRequest
-	25, // 29: schema.v1alpha1.BMCService.GetManagementController:input_type -> schema.v1alpha1.GetManagementControllerRequest
-	26, // 30: schema.v1alpha1.BMCService.ListManagementControllers:input_type -> schema.v1alpha1.ListManagementControllersRequest
-	27, // 31: schema.v1alpha1.BMCService.UpdateManagementController:input_type -> schema.v1alpha1.UpdateManagementControllerRequest
-	28, // 32: schema.v1alpha1.BMCService.ManagementControllerControl:input_type -> schema.v1alpha1.ManagementControllerControlRequest
-	29, // 33: schema.v1alpha1.BMCService.ListSensors:input_type -> schema.v1alpha1.ListSensorsRequest
-	30, // 34: schema.v1alpha1.BMCService.GetSensor:input_type -> schema.v1alpha1.GetSensorRequest
-	31, // 35: schema.v1alpha1.BMCService.GetThermalZone:input_type -> schema.v1alpha1.GetThermalZoneRequest
-	32, // 36: schema.v1alpha1.BMCService.SetThermalZone:input_type -> schema.v1alpha1.SetThermalZoneRequest
-	33, // 37: schema.v1alpha1.BMCService.ListThermalZones:input_type -> schema.v1alpha1.ListThermalZonesRequest
-	34, // 38: schema.v1alpha1.BMCService.CreateUser:input_type -> schema.v1alpha1.CreateUserRequest
-	35, // 39: schema.v1alpha1.BMCService.GetUser:input_type -> schema.v1alpha1.GetUserRequest
-	36, // 40: schema.v1alpha1.BMCService.UpdateUser:input_type -> schema.v1alpha1.UpdateUserRequest
-	37, // 41: schema.v1alpha1.BMCService.DeleteUser:input_type -> schema.v1alpha1.DeleteUserRequest
-	38, // 42: schema.v1alpha1.BMCService.ListUsers:input_type -> schema.v1alpha1.ListUsersRequest
-	39, // 43: schema.v1alpha1.BMCService.ChangePassword:input_type -> schema.v1alpha1.ChangePasswordRequest
-	40, // 44: schema.v1alpha1.BMCService.ResetPassword:input_type -> schema.v1alpha1.ResetPasswordRequest
-	41, // 45: schema.v1alpha1.BMCService.AuthenticateUser:input_type -> schema.v1alpha1.AuthenticateUserRequest
-	6,  // 46: schema.v1alpha1.BMCService.GetSystemInfo:output_type -> schema.v1alpha1.GetSystemInfoResponse
-	8,  // 47: schema.v1alpha1.BMCService.GetHealth:output_type -> schema.v1alpha1.GetHealthResponse
-	42, // 48: schema.v1alpha1.BMCService.GetAssetInfo:output_type -> schema.v1alpha1.GetAssetInfoResponse
-	43, // 49: schema.v1alpha1.BMCService.SetAssetInfo:output_type -> schema.v1alpha1.SetAssetInfoResponse
-	44, // 50: schema.v1alpha1.BMCService.GetChassis:output_type -> schema.v1alpha1.GetChassisResponse
-	45, // 51: schema.v1alpha1.BMCService.ListChassis:output_type -> schema.v1alpha1.ListChassisResponse
-	46, // 52: schema.v1alpha1.BMCService.UpdateChassis:output_type -> schema.v1alpha1.UpdateChassisResponse
-	47, // 53: schema.v1alpha1.BMCService.ChassisChangeState:output_type -> schema.v1alpha1.ChassisChangeStateResponse
-	48, // 54: schema.v1alpha1.BMCService.ChassisControl:output_type -> schema.v1alpha1.ChassisControlResponse
-	49, // 55: schema.v1alpha1.BMCService.GetHost:output_type -> schema.v1alpha1.GetHostResponse
-	50, // 56: schema.v1alpha1.BMCService.ListHosts:output_type -> schema.v1alpha1.ListHostsResponse
-	51, // 57: schema.v1alpha1.BMCService.UpdateHost:output_type -> schema.v1alpha1.UpdateHostResponse
-	52, // 58: schema.v1alpha1.BMCService.HostChangeState:output_type -> schema.v1alpha1.HostChangeStateResponse
-	53, // 59: schema.v1alpha1.BMCService.GetManagementController:output_type -> schema.v1alpha1.GetManagementControllerResponse
-	54, // 60: schema.v1alpha1.BMCService.ListManagementControllers:output_type -> schema.v1alpha1.ListManagementControllersResponse
-	55, // 61: schema.v1alpha1.BMCService.UpdateManagementController:output_type -> schema.v1alpha1.UpdateManagementControllerResponse
-	56, // 62: schema.v1alpha1.BMCService.ManagementControllerControl:output_type -> schema.v1alpha1.ManagementControllerControlResponse
-	57, // 63: schema.v1alpha1.BMCService.ListSensors:output_type -> schema.v1alpha1.ListSensorsResponse
-	58, // 64: schema.v1alpha1.BMCService.GetSensor:output_type -> schema.v1alpha1.GetSensorResponse
-	59, // 65: schema.v1alpha1.BMCService.GetThermalZone:output_type -> schema.v1alpha1.GetThermalZoneResponse
-	60, // 66: schema.v1alpha1.BMCService.SetThermalZone:output_type -> schema.v1alpha1.SetThermalZoneResponse
-	61, // 67: schema.v1alpha1.BMCService.ListThermalZones:output_type -> schema.v1alpha1.ListThermalZonesResponse
-	62, // 68: schema.v1alpha1.BMCService.CreateUser:output_type -> schema.v1alpha1.CreateUserResponse
-	63, // 69: schema.v1alpha1.BMCService.GetUser:output_type -> schema.v1alpha1.GetUserResponse
-	64, // 70: schema.v1alpha1.BMCService.UpdateUser:output_type -> schema.v1alpha1.UpdateUserResponse
-	65, // 71: schema.v1alpha1.BMCService.DeleteUser:output_type -> schema.v1alpha1.DeleteUserResponse
-	66, // 72: schema.v1alpha1.BMCService.ListUsers:output_type -> schema.v1alpha1.ListUsersResponse
-	67, // 73: schema.v1alpha1.BMCService.ChangePassword:output_type -> schema.v1alpha1.ChangePasswordResponse
-	68, // 74: schema.v1alpha1.BMCService.ResetPassword:output_type -> schema.v1alpha1.ResetPasswordResponse
-	69, // 75: schema.v1alpha1.BMCService.AuthenticateUser:output_type -> schema.v1alpha1.AuthenticateUserResponse
-	46, // [46:76] is the sub-list for method output_type
-	16, // [16:46] is the sub-list for method input_type
+	19, // 23: schema.v1alpha1.BMCService.ChangeChassisState:input_type -> schema.v1alpha1.ChangeChassisStateRequest
+	20, // 24: schema.v1alpha1.BMCService.GetHost:input_type -> schema.v1alpha1.GetHostRequest
+	21, // 25: schema.v1alpha1.BMCService.ListHosts:input_type -> schema.v1alpha1.ListHostsRequest
+	22, // 26: schema.v1alpha1.BMCService.UpdateHost:input_type -> schema.v1alpha1.UpdateHostRequest
+	23, // 27: schema.v1alpha1.BMCService.ChangeHostState:input_type -> schema.v1alpha1.ChangeHostStateRequest
+	24, // 28: schema.v1alpha1.BMCService.GetManagementController:input_type -> schema.v1alpha1.GetManagementControllerRequest
+	25, // 29: schema.v1alpha1.BMCService.ListManagementControllers:input_type -> schema.v1alpha1.ListManagementControllersRequest
+	26, // 30: schema.v1alpha1.BMCService.UpdateManagementController:input_type -> schema.v1alpha1.UpdateManagementControllerRequest
+	27, // 31: schema.v1alpha1.BMCService.ChangeManagementControllerState:input_type -> schema.v1alpha1.ChangeManagementControllerStateRequest
+	28, // 32: schema.v1alpha1.BMCService.ListSensors:input_type -> schema.v1alpha1.ListSensorsRequest
+	29, // 33: schema.v1alpha1.BMCService.GetSensor:input_type -> schema.v1alpha1.GetSensorRequest
+	30, // 34: schema.v1alpha1.BMCService.GetThermalZone:input_type -> schema.v1alpha1.GetThermalZoneRequest
+	31, // 35: schema.v1alpha1.BMCService.SetThermalZone:input_type -> schema.v1alpha1.SetThermalZoneRequest
+	32, // 36: schema.v1alpha1.BMCService.ListThermalZones:input_type -> schema.v1alpha1.ListThermalZonesRequest
+	33, // 37: schema.v1alpha1.BMCService.CreateUser:input_type -> schema.v1alpha1.CreateUserRequest
+	34, // 38: schema.v1alpha1.BMCService.GetUser:input_type -> schema.v1alpha1.GetUserRequest
+	35, // 39: schema.v1alpha1.BMCService.UpdateUser:input_type -> schema.v1alpha1.UpdateUserRequest
+	36, // 40: schema.v1alpha1.BMCService.DeleteUser:input_type -> schema.v1alpha1.DeleteUserRequest
+	37, // 41: schema.v1alpha1.BMCService.ListUsers:input_type -> schema.v1alpha1.ListUsersRequest
+	38, // 42: schema.v1alpha1.BMCService.ChangePassword:input_type -> schema.v1alpha1.ChangePasswordRequest
+	39, // 43: schema.v1alpha1.BMCService.ResetPassword:input_type -> schema.v1alpha1.ResetPasswordRequest
+	40, // 44: schema.v1alpha1.BMCService.AuthenticateUser:input_type -> schema.v1alpha1.AuthenticateUserRequest
+	6,  // 45: schema.v1alpha1.BMCService.GetSystemInfo:output_type -> schema.v1alpha1.GetSystemInfoResponse
+	8,  // 46: schema.v1alpha1.BMCService.GetHealth:output_type -> schema.v1alpha1.GetHealthResponse
+	41, // 47: schema.v1alpha1.BMCService.GetAssetInfo:output_type -> schema.v1alpha1.GetAssetInfoResponse
+	42, // 48: schema.v1alpha1.BMCService.SetAssetInfo:output_type -> schema.v1alpha1.SetAssetInfoResponse
+	43, // 49: schema.v1alpha1.BMCService.GetChassis:output_type -> schema.v1alpha1.GetChassisResponse
+	44, // 50: schema.v1alpha1.BMCService.ListChassis:output_type -> schema.v1alpha1.ListChassisResponse
+	45, // 51: schema.v1alpha1.BMCService.UpdateChassis:output_type -> schema.v1alpha1.UpdateChassisResponse
+	46, // 52: schema.v1alpha1.BMCService.ChangeChassisState:output_type -> schema.v1alpha1.ChangeChassisStateResponse
+	47, // 53: schema.v1alpha1.BMCService.GetHost:output_type -> schema.v1alpha1.GetHostResponse
+	48, // 54: schema.v1alpha1.BMCService.ListHosts:output_type -> schema.v1alpha1.ListHostsResponse
+	49, // 55: schema.v1alpha1.BMCService.UpdateHost:output_type -> schema.v1alpha1.UpdateHostResponse
+	50, // 56: schema.v1alpha1.BMCService.ChangeHostState:output_type -> schema.v1alpha1.ChangeHostStateResponse
+	51, // 57: schema.v1alpha1.BMCService.GetManagementController:output_type -> schema.v1alpha1.GetManagementControllerResponse
+	52, // 58: schema.v1alpha1.BMCService.ListManagementControllers:output_type -> schema.v1alpha1.ListManagementControllersResponse
+	53, // 59: schema.v1alpha1.BMCService.UpdateManagementController:output_type -> schema.v1alpha1.UpdateManagementControllerResponse
+	54, // 60: schema.v1alpha1.BMCService.ChangeManagementControllerState:output_type -> schema.v1alpha1.ChangeManagementControllerStateResponse
+	55, // 61: schema.v1alpha1.BMCService.ListSensors:output_type -> schema.v1alpha1.ListSensorsResponse
+	56, // 62: schema.v1alpha1.BMCService.GetSensor:output_type -> schema.v1alpha1.GetSensorResponse
+	57, // 63: schema.v1alpha1.BMCService.GetThermalZone:output_type -> schema.v1alpha1.GetThermalZoneResponse
+	58, // 64: schema.v1alpha1.BMCService.SetThermalZone:output_type -> schema.v1alpha1.SetThermalZoneResponse
+	59, // 65: schema.v1alpha1.BMCService.ListThermalZones:output_type -> schema.v1alpha1.ListThermalZonesResponse
+	60, // 66: schema.v1alpha1.BMCService.CreateUser:output_type -> schema.v1alpha1.CreateUserResponse
+	61, // 67: schema.v1alpha1.BMCService.GetUser:output_type -> schema.v1alpha1.GetUserResponse
+	62, // 68: schema.v1alpha1.BMCService.UpdateUser:output_type -> schema.v1alpha1.UpdateUserResponse
+	63, // 69: schema.v1alpha1.BMCService.DeleteUser:output_type -> schema.v1alpha1.DeleteUserResponse
+	64, // 70: schema.v1alpha1.BMCService.ListUsers:output_type -> schema.v1alpha1.ListUsersResponse
+	65, // 71: schema.v1alpha1.BMCService.ChangePassword:output_type -> schema.v1alpha1.ChangePasswordResponse
+	66, // 72: schema.v1alpha1.BMCService.ResetPassword:output_type -> schema.v1alpha1.ResetPasswordResponse
+	67, // 73: schema.v1alpha1.BMCService.AuthenticateUser:output_type -> schema.v1alpha1.AuthenticateUserResponse
+	45, // [45:74] is the sub-list for method output_type
+	16, // [16:45] is the sub-list for method input_type
 	16, // [16:16] is the sub-list for extension type_name
 	16, // [16:16] is the sub-list for extension extendee
 	0,  // [0:16] is the sub-list for field type_name

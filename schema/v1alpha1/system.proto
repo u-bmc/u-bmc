@@ -114,16 +114,10 @@ service BMCService {
       body : "*"
     };
   }
-  rpc ChassisChangeState(ChassisChangeStateRequest)
-      returns (ChassisChangeStateResponse) {
+  rpc ChangeChassisState(ChangeChassisStateRequest)
+      returns (ChangeChassisStateResponse) {
     option (google.api.http) = {
       post : "/api/v1alpha1/chassis/{chassis_name}/state"
-      body : "*"
-    };
-  }
-  rpc ChassisControl(ChassisControlRequest) returns (ChassisControlResponse) {
-    option (google.api.http) = {
-      post : "/api/v1alpha1/chassis/{chassis_name}/control"
       body : "*"
     };
   }
@@ -140,14 +134,14 @@ service BMCService {
   }
   rpc UpdateHost(UpdateHostRequest) returns (UpdateHostResponse) {
     option (google.api.http) = {
-      patch : "/api/v1alpha1/hosts/{host_id}"
+      patch : "/api/v1alpha1/hosts/{host_name}"
       body : "*"
     };
   }
-  rpc HostChangeState(HostChangeStateRequest)
-      returns (HostChangeStateResponse) {
+  rpc ChangeHostState(ChangeHostStateRequest)
+      returns (ChangeHostStateResponse) {
     option (google.api.http) = {
-      post : "/api/v1alpha1/hosts/{host_id}/state"
+      post : "/api/v1alpha1/hosts/{host_name}/state"
       body : "*"
     };
   }
@@ -167,14 +161,14 @@ service BMCService {
   rpc UpdateManagementController(UpdateManagementControllerRequest)
       returns (UpdateManagementControllerResponse) {
     option (google.api.http) = {
-      patch : "/api/v1alpha1/management-controllers/{controller_id}"
+      patch : "/api/v1alpha1/management-controllers/{controller_name}"
       body : "*"
     };
   }
-  rpc ManagementControllerControl(ManagementControllerControlRequest)
-      returns (ManagementControllerControlResponse) {
+  rpc ChangeManagementControllerState(ChangeManagementControllerStateRequest)
+      returns (ChangeManagementControllerStateResponse) {
     option (google.api.http) = {
-      post : "/api/v1alpha1/management-controllers/{controller_id}/control"
+      post : "/api/v1alpha1/management-controllers/{controller_name}/state"
       body : "*"
     };
   }

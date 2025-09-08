@@ -47,17 +47,13 @@ func (m *Host) CloneVT() *Host {
 		tmpVal := *rhs
 		r.Type = &tmpVal
 	}
-	if rhs := m.CurrentState; rhs != nil {
+	if rhs := m.Status; rhs != nil {
 		tmpVal := *rhs
-		r.CurrentState = &tmpVal
+		r.Status = &tmpVal
 	}
-	if rhs := m.RequestedTransition; rhs != nil {
+	if rhs := m.RequestedAction; rhs != nil {
 		tmpVal := *rhs
-		r.RequestedTransition = &tmpVal
-	}
-	if rhs := m.LastRestartCause; rhs != nil {
-		tmpVal := *rhs
-		r.LastRestartCause = &tmpVal
+		r.RequestedAction = &tmpVal
 	}
 	if rhs := m.Metadata; rhs != nil {
 		tmpContainer := make(map[string]string, len(rhs))
@@ -74,6 +70,27 @@ func (m *Host) CloneVT() *Host {
 }
 
 func (m *Host) CloneMessageVT() proto.Message {
+	return m.CloneVT()
+}
+
+func (m *HostStateChange) CloneVT() *HostStateChange {
+	if m == nil {
+		return (*HostStateChange)(nil)
+	}
+	r := new(HostStateChange)
+	r.HostName = m.HostName
+	r.PreviousStatus = m.PreviousStatus
+	r.CurrentStatus = m.CurrentStatus
+	r.Cause = m.Cause
+	r.ChangedAt = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.ChangedAt).CloneVT())
+	if len(m.unknownFields) > 0 {
+		r.unknownFields = make([]byte, len(m.unknownFields))
+		copy(r.unknownFields, m.unknownFields)
+	}
+	return r
+}
+
+func (m *HostStateChange) CloneMessageVT() proto.Message {
 	return m.CloneVT()
 }
 
@@ -191,15 +208,6 @@ func (m *GetHostRequest) CloneMessageVT() proto.Message {
 	return m.CloneVT()
 }
 
-func (m *GetHostRequest_HostId) CloneVT() isGetHostRequest_Identifier {
-	if m == nil {
-		return (*GetHostRequest_HostId)(nil)
-	}
-	r := new(GetHostRequest_HostId)
-	r.HostId = m.HostId
-	return r
-}
-
 func (m *GetHostRequest_Name) CloneVT() isGetHostRequest_Identifier {
 	if m == nil {
 		return (*GetHostRequest_Name)(nil)
@@ -218,12 +226,12 @@ func (m *GetHostRequest_Type) CloneVT() isGetHostRequest_Identifier {
 	return r
 }
 
-func (m *GetHostRequest_State) CloneVT() isGetHostRequest_Identifier {
+func (m *GetHostRequest_Status) CloneVT() isGetHostRequest_Identifier {
 	if m == nil {
-		return (*GetHostRequest_State)(nil)
+		return (*GetHostRequest_Status)(nil)
 	}
-	r := new(GetHostRequest_State)
-	r.State = m.State
+	r := new(GetHostRequest_Status)
+	r.Status = m.Status
 	return r
 }
 
@@ -265,13 +273,10 @@ func (m *ListHostsRequest) CloneVT() *ListHostsRequest {
 	}
 	r := new(ListHostsRequest)
 	r.FieldMask = (*fieldmaskpb.FieldMask)((*fieldmaskpb1.FieldMask)(m.FieldMask).CloneVT())
-	if rhs := m.Type; rhs != nil {
-		tmpVal := *rhs
-		r.Type = &tmpVal
-	}
-	if rhs := m.State; rhs != nil {
-		tmpVal := *rhs
-		r.State = &tmpVal
+	if m.Identifier != nil {
+		r.Identifier = m.Identifier.(interface {
+			CloneVT() isListHostsRequest_Identifier
+		}).CloneVT()
 	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
@@ -282,6 +287,33 @@ func (m *ListHostsRequest) CloneVT() *ListHostsRequest {
 
 func (m *ListHostsRequest) CloneMessageVT() proto.Message {
 	return m.CloneVT()
+}
+
+func (m *ListHostsRequest_Type) CloneVT() isListHostsRequest_Identifier {
+	if m == nil {
+		return (*ListHostsRequest_Type)(nil)
+	}
+	r := new(ListHostsRequest_Type)
+	r.Type = m.Type
+	return r
+}
+
+func (m *ListHostsRequest_Status) CloneVT() isListHostsRequest_Identifier {
+	if m == nil {
+		return (*ListHostsRequest_Status)(nil)
+	}
+	r := new(ListHostsRequest_Status)
+	r.Status = m.Status
+	return r
+}
+
+func (m *ListHostsRequest_Location) CloneVT() isListHostsRequest_Identifier {
+	if m == nil {
+		return (*ListHostsRequest_Location)(nil)
+	}
+	r := new(ListHostsRequest_Location)
+	r.Location = m.Location.CloneVT()
+	return r
 }
 
 func (m *ListHostsResponse) CloneVT() *ListHostsResponse {
@@ -312,7 +344,7 @@ func (m *UpdateHostRequest) CloneVT() *UpdateHostRequest {
 		return (*UpdateHostRequest)(nil)
 	}
 	r := new(UpdateHostRequest)
-	r.HostId = m.HostId
+	r.HostName = m.HostName
 	r.Host = m.Host.CloneVT()
 	r.FieldMask = (*fieldmaskpb.FieldMask)((*fieldmaskpb1.FieldMask)(m.FieldMask).CloneVT())
 	if len(m.unknownFields) > 0 {
@@ -343,24 +375,13 @@ func (m *UpdateHostResponse) CloneMessageVT() proto.Message {
 	return m.CloneVT()
 }
 
-func (m *HostChangeStateRequest) CloneVT() *HostChangeStateRequest {
+func (m *ChangeHostStateRequest) CloneVT() *ChangeHostStateRequest {
 	if m == nil {
-		return (*HostChangeStateRequest)(nil)
+		return (*ChangeHostStateRequest)(nil)
 	}
-	r := new(HostChangeStateRequest)
-	r.HostId = m.HostId
-	r.Transition = m.Transition
-	if rhs := m.Force; rhs != nil {
-		tmpVal := *rhs
-		r.Force = &tmpVal
-	}
-	if rhs := m.Metadata; rhs != nil {
-		tmpContainer := make(map[string]string, len(rhs))
-		for k, v := range rhs {
-			tmpContainer[k] = v
-		}
-		r.Metadata = tmpContainer
-	}
+	r := new(ChangeHostStateRequest)
+	r.HostName = m.HostName
+	r.Action = m.Action
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -368,36 +389,16 @@ func (m *HostChangeStateRequest) CloneVT() *HostChangeStateRequest {
 	return r
 }
 
-func (m *HostChangeStateRequest) CloneMessageVT() proto.Message {
+func (m *ChangeHostStateRequest) CloneMessageVT() proto.Message {
 	return m.CloneVT()
 }
 
-func (m *HostChangeStateResponse) CloneVT() *HostChangeStateResponse {
+func (m *ChangeHostStateResponse) CloneVT() *ChangeHostStateResponse {
 	if m == nil {
-		return (*HostChangeStateResponse)(nil)
+		return (*ChangeHostStateResponse)(nil)
 	}
-	r := new(HostChangeStateResponse)
-	r.Success = m.Success
-	r.EstimatedCompletion = (*timestamppb.Timestamp)((*timestamppb1.Timestamp)(m.EstimatedCompletion).CloneVT())
-	if rhs := m.ErrorMessage; rhs != nil {
-		tmpVal := *rhs
-		r.ErrorMessage = &tmpVal
-	}
-	if rhs := m.CurrentState; rhs != nil {
-		tmpVal := *rhs
-		r.CurrentState = &tmpVal
-	}
-	if rhs := m.TransitionId; rhs != nil {
-		tmpVal := *rhs
-		r.TransitionId = &tmpVal
-	}
-	if rhs := m.Metadata; rhs != nil {
-		tmpContainer := make(map[string]string, len(rhs))
-		for k, v := range rhs {
-			tmpContainer[k] = v
-		}
-		r.Metadata = tmpContainer
-	}
+	r := new(ChangeHostStateResponse)
+	r.CurrentStatus = m.CurrentStatus
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
 		copy(r.unknownFields, m.unknownFields)
@@ -405,7 +406,7 @@ func (m *HostChangeStateResponse) CloneVT() *HostChangeStateResponse {
 	return r
 }
 
-func (m *HostChangeStateResponse) CloneMessageVT() proto.Message {
+func (m *ChangeHostStateResponse) CloneMessageVT() proto.Message {
 	return m.CloneVT()
 }
 
@@ -427,13 +428,10 @@ func (this *Host) EqualVT(that *Host) bool {
 	if p, q := this.Type, that.Type; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if p, q := this.CurrentState, that.CurrentState; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+	if p, q := this.Status, that.Status; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
-	if p, q := this.RequestedTransition, that.RequestedTransition; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
-		return false
-	}
-	if p, q := this.LastRestartCause, that.LastRestartCause; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+	if p, q := this.RequestedAction, that.RequestedAction; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
 		return false
 	}
 	if !this.Location.EqualVT(that.Location) {
@@ -471,6 +469,37 @@ func (this *Host) EqualVT(that *Host) bool {
 
 func (this *Host) EqualMessageVT(thatMsg proto.Message) bool {
 	that, ok := thatMsg.(*Host)
+	if !ok {
+		return false
+	}
+	return this.EqualVT(that)
+}
+func (this *HostStateChange) EqualVT(that *HostStateChange) bool {
+	if this == that {
+		return true
+	} else if this == nil || that == nil {
+		return false
+	}
+	if this.HostName != that.HostName {
+		return false
+	}
+	if this.PreviousStatus != that.PreviousStatus {
+		return false
+	}
+	if this.CurrentStatus != that.CurrentStatus {
+		return false
+	}
+	if this.Cause != that.Cause {
+		return false
+	}
+	if !(*timestamppb1.Timestamp)(this.ChangedAt).EqualVT((*timestamppb1.Timestamp)(that.ChangedAt)) {
+		return false
+	}
+	return string(this.unknownFields) == string(that.unknownFields)
+}
+
+func (this *HostStateChange) EqualMessageVT(thatMsg proto.Message) bool {
+	that, ok := thatMsg.(*HostStateChange)
 	if !ok {
 		return false
 	}
@@ -606,23 +635,6 @@ func (this *GetHostRequest) EqualMessageVT(thatMsg proto.Message) bool {
 	}
 	return this.EqualVT(that)
 }
-func (this *GetHostRequest_HostId) EqualVT(thatIface isGetHostRequest_Identifier) bool {
-	that, ok := thatIface.(*GetHostRequest_HostId)
-	if !ok {
-		return false
-	}
-	if this == that {
-		return true
-	}
-	if this == nil && that != nil || this != nil && that == nil {
-		return false
-	}
-	if this.HostId != that.HostId {
-		return false
-	}
-	return true
-}
-
 func (this *GetHostRequest_Name) EqualVT(thatIface isGetHostRequest_Identifier) bool {
 	that, ok := thatIface.(*GetHostRequest_Name)
 	if !ok {
@@ -657,8 +669,8 @@ func (this *GetHostRequest_Type) EqualVT(thatIface isGetHostRequest_Identifier) 
 	return true
 }
 
-func (this *GetHostRequest_State) EqualVT(thatIface isGetHostRequest_Identifier) bool {
-	that, ok := thatIface.(*GetHostRequest_State)
+func (this *GetHostRequest_Status) EqualVT(thatIface isGetHostRequest_Identifier) bool {
+	that, ok := thatIface.(*GetHostRequest_Status)
 	if !ok {
 		return false
 	}
@@ -668,7 +680,7 @@ func (this *GetHostRequest_State) EqualVT(thatIface isGetHostRequest_Identifier)
 	if this == nil && that != nil || this != nil && that == nil {
 		return false
 	}
-	if this.State != that.State {
+	if this.Status != that.Status {
 		return false
 	}
 	return true
@@ -738,11 +750,17 @@ func (this *ListHostsRequest) EqualVT(that *ListHostsRequest) bool {
 	} else if this == nil || that == nil {
 		return false
 	}
-	if p, q := this.Type, that.Type; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
+	if this.Identifier == nil && that.Identifier != nil {
 		return false
-	}
-	if p, q := this.State, that.State; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
-		return false
+	} else if this.Identifier != nil {
+		if that.Identifier == nil {
+			return false
+		}
+		if !this.Identifier.(interface {
+			EqualVT(isListHostsRequest_Identifier) bool
+		}).EqualVT(that.Identifier) {
+			return false
+		}
 	}
 	if !(*fieldmaskpb1.FieldMask)(this.FieldMask).EqualVT((*fieldmaskpb1.FieldMask)(that.FieldMask)) {
 		return false
@@ -757,6 +775,65 @@ func (this *ListHostsRequest) EqualMessageVT(thatMsg proto.Message) bool {
 	}
 	return this.EqualVT(that)
 }
+func (this *ListHostsRequest_Type) EqualVT(thatIface isListHostsRequest_Identifier) bool {
+	that, ok := thatIface.(*ListHostsRequest_Type)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if this.Type != that.Type {
+		return false
+	}
+	return true
+}
+
+func (this *ListHostsRequest_Status) EqualVT(thatIface isListHostsRequest_Identifier) bool {
+	that, ok := thatIface.(*ListHostsRequest_Status)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if this.Status != that.Status {
+		return false
+	}
+	return true
+}
+
+func (this *ListHostsRequest_Location) EqualVT(thatIface isListHostsRequest_Identifier) bool {
+	that, ok := thatIface.(*ListHostsRequest_Location)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if p, q := this.Location, that.Location; p != q {
+		if p == nil {
+			p = &Location{}
+		}
+		if q == nil {
+			q = &Location{}
+		}
+		if !p.EqualVT(q) {
+			return false
+		}
+	}
+	return true
+}
+
 func (this *ListHostsResponse) EqualVT(that *ListHostsResponse) bool {
 	if this == that {
 		return true
@@ -796,7 +873,7 @@ func (this *UpdateHostRequest) EqualVT(that *UpdateHostRequest) bool {
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.HostId != that.HostId {
+	if this.HostName != that.HostName {
 		return false
 	}
 	if !this.Host.EqualVT(that.Host) {
@@ -834,81 +911,42 @@ func (this *UpdateHostResponse) EqualMessageVT(thatMsg proto.Message) bool {
 	}
 	return this.EqualVT(that)
 }
-func (this *HostChangeStateRequest) EqualVT(that *HostChangeStateRequest) bool {
+func (this *ChangeHostStateRequest) EqualVT(that *ChangeHostStateRequest) bool {
 	if this == that {
 		return true
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.HostId != that.HostId {
+	if this.HostName != that.HostName {
 		return false
 	}
-	if this.Transition != that.Transition {
+	if this.Action != that.Action {
 		return false
-	}
-	if p, q := this.Force, that.Force; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
-		return false
-	}
-	if len(this.Metadata) != len(that.Metadata) {
-		return false
-	}
-	for i, vx := range this.Metadata {
-		vy, ok := that.Metadata[i]
-		if !ok {
-			return false
-		}
-		if vx != vy {
-			return false
-		}
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
-func (this *HostChangeStateRequest) EqualMessageVT(thatMsg proto.Message) bool {
-	that, ok := thatMsg.(*HostChangeStateRequest)
+func (this *ChangeHostStateRequest) EqualMessageVT(thatMsg proto.Message) bool {
+	that, ok := thatMsg.(*ChangeHostStateRequest)
 	if !ok {
 		return false
 	}
 	return this.EqualVT(that)
 }
-func (this *HostChangeStateResponse) EqualVT(that *HostChangeStateResponse) bool {
+func (this *ChangeHostStateResponse) EqualVT(that *ChangeHostStateResponse) bool {
 	if this == that {
 		return true
 	} else if this == nil || that == nil {
 		return false
 	}
-	if this.Success != that.Success {
+	if this.CurrentStatus != that.CurrentStatus {
 		return false
-	}
-	if p, q := this.ErrorMessage, that.ErrorMessage; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
-		return false
-	}
-	if p, q := this.CurrentState, that.CurrentState; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
-		return false
-	}
-	if p, q := this.TransitionId, that.TransitionId; (p == nil && q != nil) || (p != nil && (q == nil || *p != *q)) {
-		return false
-	}
-	if !(*timestamppb1.Timestamp)(this.EstimatedCompletion).EqualVT((*timestamppb1.Timestamp)(that.EstimatedCompletion)) {
-		return false
-	}
-	if len(this.Metadata) != len(that.Metadata) {
-		return false
-	}
-	for i, vx := range this.Metadata {
-		vy, ok := that.Metadata[i]
-		if !ok {
-			return false
-		}
-		if vx != vy {
-			return false
-		}
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
-func (this *HostChangeStateResponse) EqualMessageVT(thatMsg proto.Message) bool {
-	that, ok := thatMsg.(*HostChangeStateResponse)
+func (this *ChangeHostStateResponse) EqualMessageVT(thatMsg proto.Message) bool {
+	that, ok := thatMsg.(*ChangeHostStateResponse)
 	if !ok {
 		return false
 	}
@@ -960,7 +998,7 @@ func (m *Host) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 			dAtA[i] = 0xa
 			i = protohelpers.EncodeVarint(dAtA, i, uint64(baseI-i))
 			i--
-			dAtA[i] = 0x72
+			dAtA[i] = 0x6a
 		}
 	}
 	if m.UpdatedAt != nil {
@@ -971,7 +1009,7 @@ func (m *Host) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x6a
+		dAtA[i] = 0x62
 	}
 	if m.LastReboot != nil {
 		size, err := m.LastReboot.MarshalToSizedBufferVT(dAtA[:i])
@@ -981,7 +1019,7 @@ func (m *Host) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x62
+		dAtA[i] = 0x5a
 	}
 	if m.BootProgress != nil {
 		size, err := m.BootProgress.MarshalToSizedBufferVT(dAtA[:i])
@@ -991,7 +1029,7 @@ func (m *Host) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x5a
+		dAtA[i] = 0x52
 	}
 	if m.OperatingSystem != nil {
 		size, err := m.OperatingSystem.MarshalToSizedBufferVT(dAtA[:i])
@@ -1001,7 +1039,7 @@ func (m *Host) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x52
+		dAtA[i] = 0x4a
 	}
 	if m.Firmware != nil {
 		size, err := m.Firmware.MarshalToSizedBufferVT(dAtA[:i])
@@ -1011,7 +1049,7 @@ func (m *Host) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x4a
+		dAtA[i] = 0x42
 	}
 	if m.Location != nil {
 		size, err := m.Location.MarshalToSizedBufferVT(dAtA[:i])
@@ -1021,20 +1059,15 @@ func (m *Host) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x42
+		dAtA[i] = 0x3a
 	}
-	if m.LastRestartCause != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.LastRestartCause))
-		i--
-		dAtA[i] = 0x38
-	}
-	if m.RequestedTransition != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.RequestedTransition))
+	if m.RequestedAction != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.RequestedAction))
 		i--
 		dAtA[i] = 0x30
 	}
-	if m.CurrentState != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.CurrentState))
+	if m.Status != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Status))
 		i--
 		dAtA[i] = 0x28
 	}
@@ -1064,6 +1097,71 @@ func (m *Host) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.Name)
 		copy(dAtA[i:], m.Name)
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *HostStateChange) MarshalVT() (dAtA []byte, err error) {
+	if m == nil {
+		return nil, nil
+	}
+	size := m.SizeVT()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBufferVT(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *HostStateChange) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *HostStateChange) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	if m == nil {
+		return 0, nil
+	}
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.unknownFields != nil {
+		i -= len(m.unknownFields)
+		copy(dAtA[i:], m.unknownFields)
+	}
+	if m.ChangedAt != nil {
+		size, err := (*timestamppb1.Timestamp)(m.ChangedAt).MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if m.Cause != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Cause))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.CurrentStatus != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.CurrentStatus))
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.PreviousStatus != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.PreviousStatus))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.HostName) > 0 {
+		i -= len(m.HostName)
+		copy(dAtA[i:], m.HostName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.HostName)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -1343,25 +1441,11 @@ func (m *GetHostRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x32
+		dAtA[i] = 0x2a
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *GetHostRequest_HostId) MarshalToVT(dAtA []byte) (int, error) {
-	size := m.SizeVT()
-	return m.MarshalToSizedBufferVT(dAtA[:size])
-}
-
-func (m *GetHostRequest_HostId) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	i -= len(m.HostId)
-	copy(dAtA[i:], m.HostId)
-	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.HostId)))
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
 func (m *GetHostRequest_Name) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
@@ -1373,7 +1457,7 @@ func (m *GetHostRequest_Name) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	copy(dAtA[i:], m.Name)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 	i--
-	dAtA[i] = 0x12
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 func (m *GetHostRequest_Type) MarshalToVT(dAtA []byte) (int, error) {
@@ -1385,19 +1469,19 @@ func (m *GetHostRequest_Type) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Type))
 	i--
-	dAtA[i] = 0x18
+	dAtA[i] = 0x10
 	return len(dAtA) - i, nil
 }
-func (m *GetHostRequest_State) MarshalToVT(dAtA []byte) (int, error) {
+func (m *GetHostRequest_Status) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *GetHostRequest_State) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *GetHostRequest_Status) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	i := len(dAtA)
-	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.State))
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Status))
 	i--
-	dAtA[i] = 0x20
+	dAtA[i] = 0x18
 	return len(dAtA) - i, nil
 }
 func (m *GetHostRequest_Location) MarshalToVT(dAtA []byte) (int, error) {
@@ -1415,7 +1499,7 @@ func (m *GetHostRequest_Location) MarshalToSizedBufferVT(dAtA []byte) (int, erro
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
 	return len(dAtA) - i, nil
 }
@@ -1494,6 +1578,15 @@ func (m *ListHostsRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if vtmsg, ok := m.Identifier.(interface {
+		MarshalToSizedBufferVT([]byte) (int, error)
+	}); ok {
+		size, err := vtmsg.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+	}
 	if m.FieldMask != nil {
 		size, err := (*fieldmaskpb1.FieldMask)(m.FieldMask).MarshalToSizedBufferVT(dAtA[:i])
 		if err != nil {
@@ -1502,21 +1595,54 @@ func (m *ListHostsRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x1a
-	}
-	if m.State != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.State))
-		i--
-		dAtA[i] = 0x10
-	}
-	if m.Type != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Type))
-		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0x22
 	}
 	return len(dAtA) - i, nil
 }
 
+func (m *ListHostsRequest_Type) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *ListHostsRequest_Type) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Type))
+	i--
+	dAtA[i] = 0x8
+	return len(dAtA) - i, nil
+}
+func (m *ListHostsRequest_Status) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *ListHostsRequest_Status) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Status))
+	i--
+	dAtA[i] = 0x10
+	return len(dAtA) - i, nil
+}
+func (m *ListHostsRequest_Location) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *ListHostsRequest_Location) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.Location != nil {
+		size, err := m.Location.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x1a
+	}
+	return len(dAtA) - i, nil
+}
 func (m *ListHostsResponse) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
@@ -1612,10 +1738,10 @@ func (m *UpdateHostRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.HostId) > 0 {
-		i -= len(m.HostId)
-		copy(dAtA[i:], m.HostId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.HostId)))
+	if len(m.HostName) > 0 {
+		i -= len(m.HostName)
+		copy(dAtA[i:], m.HostName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.HostName)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -1665,7 +1791,7 @@ func (m *UpdateHostResponse) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *HostChangeStateRequest) MarshalVT() (dAtA []byte, err error) {
+func (m *ChangeHostStateRequest) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -1678,12 +1804,12 @@ func (m *HostChangeStateRequest) MarshalVT() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *HostChangeStateRequest) MarshalToVT(dAtA []byte) (int, error) {
+func (m *ChangeHostStateRequest) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *HostChangeStateRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *ChangeHostStateRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -1695,51 +1821,22 @@ func (m *HostChangeStateRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Metadata) > 0 {
-		for k := range m.Metadata {
-			v := m.Metadata[k]
-			baseI := i
-			i -= len(v)
-			copy(dAtA[i:], v)
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(v)))
-			i--
-			dAtA[i] = 0x12
-			i -= len(k)
-			copy(dAtA[i:], k)
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(k)))
-			i--
-			dAtA[i] = 0xa
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(baseI-i))
-			i--
-			dAtA[i] = 0x22
-		}
-	}
-	if m.Force != nil {
-		i--
-		if *m.Force {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
-		i--
-		dAtA[i] = 0x18
-	}
-	if m.Transition != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Transition))
+	if m.Action != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Action))
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.HostId) > 0 {
-		i -= len(m.HostId)
-		copy(dAtA[i:], m.HostId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.HostId)))
+	if len(m.HostName) > 0 {
+		i -= len(m.HostName)
+		copy(dAtA[i:], m.HostName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.HostName)))
 		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *HostChangeStateResponse) MarshalVT() (dAtA []byte, err error) {
+func (m *ChangeHostStateResponse) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -1752,12 +1849,12 @@ func (m *HostChangeStateResponse) MarshalVT() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *HostChangeStateResponse) MarshalToVT(dAtA []byte) (int, error) {
+func (m *ChangeHostStateResponse) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *HostChangeStateResponse) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *ChangeHostStateResponse) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -1769,61 +1866,8 @@ func (m *HostChangeStateResponse) MarshalToSizedBufferVT(dAtA []byte) (int, erro
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Metadata) > 0 {
-		for k := range m.Metadata {
-			v := m.Metadata[k]
-			baseI := i
-			i -= len(v)
-			copy(dAtA[i:], v)
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(v)))
-			i--
-			dAtA[i] = 0x12
-			i -= len(k)
-			copy(dAtA[i:], k)
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(k)))
-			i--
-			dAtA[i] = 0xa
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(baseI-i))
-			i--
-			dAtA[i] = 0x32
-		}
-	}
-	if m.EstimatedCompletion != nil {
-		size, err := (*timestamppb1.Timestamp)(m.EstimatedCompletion).MarshalToSizedBufferVT(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
-		i--
-		dAtA[i] = 0x2a
-	}
-	if m.TransitionId != nil {
-		i -= len(*m.TransitionId)
-		copy(dAtA[i:], *m.TransitionId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.TransitionId)))
-		i--
-		dAtA[i] = 0x22
-	}
-	if m.CurrentState != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.CurrentState))
-		i--
-		dAtA[i] = 0x18
-	}
-	if m.ErrorMessage != nil {
-		i -= len(*m.ErrorMessage)
-		copy(dAtA[i:], *m.ErrorMessage)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ErrorMessage)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if m.Success {
-		i--
-		if m.Success {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
+	if m.CurrentStatus != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.CurrentStatus))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -1876,7 +1920,7 @@ func (m *Host) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 			dAtA[i] = 0xa
 			i = protohelpers.EncodeVarint(dAtA, i, uint64(baseI-i))
 			i--
-			dAtA[i] = 0x72
+			dAtA[i] = 0x6a
 		}
 	}
 	if m.UpdatedAt != nil {
@@ -1887,7 +1931,7 @@ func (m *Host) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x6a
+		dAtA[i] = 0x62
 	}
 	if m.LastReboot != nil {
 		size, err := m.LastReboot.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -1897,7 +1941,7 @@ func (m *Host) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x62
+		dAtA[i] = 0x5a
 	}
 	if m.BootProgress != nil {
 		size, err := m.BootProgress.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -1907,7 +1951,7 @@ func (m *Host) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x5a
+		dAtA[i] = 0x52
 	}
 	if m.OperatingSystem != nil {
 		size, err := m.OperatingSystem.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -1917,7 +1961,7 @@ func (m *Host) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x52
+		dAtA[i] = 0x4a
 	}
 	if m.Firmware != nil {
 		size, err := m.Firmware.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -1927,7 +1971,7 @@ func (m *Host) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x4a
+		dAtA[i] = 0x42
 	}
 	if m.Location != nil {
 		size, err := m.Location.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -1937,20 +1981,15 @@ func (m *Host) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x42
+		dAtA[i] = 0x3a
 	}
-	if m.LastRestartCause != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.LastRestartCause))
-		i--
-		dAtA[i] = 0x38
-	}
-	if m.RequestedTransition != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.RequestedTransition))
+	if m.RequestedAction != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.RequestedAction))
 		i--
 		dAtA[i] = 0x30
 	}
-	if m.CurrentState != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.CurrentState))
+	if m.Status != nil {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Status))
 		i--
 		dAtA[i] = 0x28
 	}
@@ -1980,6 +2019,71 @@ func (m *Host) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 		i -= len(m.Name)
 		copy(dAtA[i:], m.Name)
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *HostStateChange) MarshalVTStrict() (dAtA []byte, err error) {
+	if m == nil {
+		return nil, nil
+	}
+	size := m.SizeVT()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBufferVTStrict(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *HostStateChange) MarshalToVTStrict(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
+}
+
+func (m *HostStateChange) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+	if m == nil {
+		return 0, nil
+	}
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.unknownFields != nil {
+		i -= len(m.unknownFields)
+		copy(dAtA[i:], m.unknownFields)
+	}
+	if m.ChangedAt != nil {
+		size, err := (*timestamppb1.Timestamp)(m.ChangedAt).MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if m.Cause != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Cause))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.CurrentStatus != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.CurrentStatus))
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.PreviousStatus != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.PreviousStatus))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.HostName) > 0 {
+		i -= len(m.HostName)
+		copy(dAtA[i:], m.HostName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.HostName)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2250,7 +2354,7 @@ func (m *GetHostRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) 
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x32
+		dAtA[i] = 0x2a
 	}
 	if msg, ok := m.Identifier.(*GetHostRequest_Location); ok {
 		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
@@ -2259,7 +2363,7 @@ func (m *GetHostRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) 
 		}
 		i -= size
 	}
-	if msg, ok := m.Identifier.(*GetHostRequest_State); ok {
+	if msg, ok := m.Identifier.(*GetHostRequest_Status); ok {
 		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
 		if err != nil {
 			return 0, err
@@ -2280,30 +2384,9 @@ func (m *GetHostRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) 
 		}
 		i -= size
 	}
-	if msg, ok := m.Identifier.(*GetHostRequest_HostId); ok {
-		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-	}
 	return len(dAtA) - i, nil
 }
 
-func (m *GetHostRequest_HostId) MarshalToVTStrict(dAtA []byte) (int, error) {
-	size := m.SizeVT()
-	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
-}
-
-func (m *GetHostRequest_HostId) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	i -= len(m.HostId)
-	copy(dAtA[i:], m.HostId)
-	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.HostId)))
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
 func (m *GetHostRequest_Name) MarshalToVTStrict(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
@@ -2315,7 +2398,7 @@ func (m *GetHostRequest_Name) MarshalToSizedBufferVTStrict(dAtA []byte) (int, er
 	copy(dAtA[i:], m.Name)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Name)))
 	i--
-	dAtA[i] = 0x12
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 func (m *GetHostRequest_Type) MarshalToVTStrict(dAtA []byte) (int, error) {
@@ -2327,19 +2410,19 @@ func (m *GetHostRequest_Type) MarshalToSizedBufferVTStrict(dAtA []byte) (int, er
 	i := len(dAtA)
 	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Type))
 	i--
-	dAtA[i] = 0x18
+	dAtA[i] = 0x10
 	return len(dAtA) - i, nil
 }
-func (m *GetHostRequest_State) MarshalToVTStrict(dAtA []byte) (int, error) {
+func (m *GetHostRequest_Status) MarshalToVTStrict(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
 }
 
-func (m *GetHostRequest_State) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+func (m *GetHostRequest_Status) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 	i := len(dAtA)
-	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.State))
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Status))
 	i--
-	dAtA[i] = 0x20
+	dAtA[i] = 0x18
 	return len(dAtA) - i, nil
 }
 func (m *GetHostRequest_Location) MarshalToVTStrict(dAtA []byte) (int, error) {
@@ -2357,7 +2440,7 @@ func (m *GetHostRequest_Location) MarshalToSizedBufferVTStrict(dAtA []byte) (int
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
 	return len(dAtA) - i, nil
 }
@@ -2444,21 +2527,75 @@ func (m *ListHostsRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error
 		i -= size
 		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x22
 	}
-	if m.State != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.State))
-		i--
-		dAtA[i] = 0x10
+	if msg, ok := m.Identifier.(*ListHostsRequest_Location); ok {
+		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
 	}
-	if m.Type != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.Type))
-		i--
-		dAtA[i] = 0x8
+	if msg, ok := m.Identifier.(*ListHostsRequest_Status); ok {
+		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+	}
+	if msg, ok := m.Identifier.(*ListHostsRequest_Type); ok {
+		size, err := msg.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
 	}
 	return len(dAtA) - i, nil
 }
 
+func (m *ListHostsRequest_Type) MarshalToVTStrict(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
+}
+
+func (m *ListHostsRequest_Type) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Type))
+	i--
+	dAtA[i] = 0x8
+	return len(dAtA) - i, nil
+}
+func (m *ListHostsRequest_Status) MarshalToVTStrict(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
+}
+
+func (m *ListHostsRequest_Status) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Status))
+	i--
+	dAtA[i] = 0x10
+	return len(dAtA) - i, nil
+}
+func (m *ListHostsRequest_Location) MarshalToVTStrict(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
+}
+
+func (m *ListHostsRequest_Location) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.Location != nil {
+		size, err := m.Location.MarshalToSizedBufferVTStrict(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x1a
+	}
+	return len(dAtA) - i, nil
+}
 func (m *ListHostsResponse) MarshalVTStrict() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
@@ -2554,10 +2691,10 @@ func (m *UpdateHostRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, erro
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.HostId) > 0 {
-		i -= len(m.HostId)
-		copy(dAtA[i:], m.HostId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.HostId)))
+	if len(m.HostName) > 0 {
+		i -= len(m.HostName)
+		copy(dAtA[i:], m.HostName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.HostName)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2607,7 +2744,7 @@ func (m *UpdateHostResponse) MarshalToSizedBufferVTStrict(dAtA []byte) (int, err
 	return len(dAtA) - i, nil
 }
 
-func (m *HostChangeStateRequest) MarshalVTStrict() (dAtA []byte, err error) {
+func (m *ChangeHostStateRequest) MarshalVTStrict() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -2620,12 +2757,12 @@ func (m *HostChangeStateRequest) MarshalVTStrict() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *HostChangeStateRequest) MarshalToVTStrict(dAtA []byte) (int, error) {
+func (m *ChangeHostStateRequest) MarshalToVTStrict(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
 }
 
-func (m *HostChangeStateRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+func (m *ChangeHostStateRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -2637,51 +2774,22 @@ func (m *HostChangeStateRequest) MarshalToSizedBufferVTStrict(dAtA []byte) (int,
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Metadata) > 0 {
-		for k := range m.Metadata {
-			v := m.Metadata[k]
-			baseI := i
-			i -= len(v)
-			copy(dAtA[i:], v)
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(v)))
-			i--
-			dAtA[i] = 0x12
-			i -= len(k)
-			copy(dAtA[i:], k)
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(k)))
-			i--
-			dAtA[i] = 0xa
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(baseI-i))
-			i--
-			dAtA[i] = 0x22
-		}
-	}
-	if m.Force != nil {
-		i--
-		if *m.Force {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
-		i--
-		dAtA[i] = 0x18
-	}
-	if m.Transition != 0 {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Transition))
+	if m.Action != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.Action))
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.HostId) > 0 {
-		i -= len(m.HostId)
-		copy(dAtA[i:], m.HostId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.HostId)))
+	if len(m.HostName) > 0 {
+		i -= len(m.HostName)
+		copy(dAtA[i:], m.HostName)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.HostName)))
 		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *HostChangeStateResponse) MarshalVTStrict() (dAtA []byte, err error) {
+func (m *ChangeHostStateResponse) MarshalVTStrict() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -2694,12 +2802,12 @@ func (m *HostChangeStateResponse) MarshalVTStrict() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *HostChangeStateResponse) MarshalToVTStrict(dAtA []byte) (int, error) {
+func (m *ChangeHostStateResponse) MarshalToVTStrict(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVTStrict(dAtA[:size])
 }
 
-func (m *HostChangeStateResponse) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
+func (m *ChangeHostStateResponse) MarshalToSizedBufferVTStrict(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -2711,61 +2819,8 @@ func (m *HostChangeStateResponse) MarshalToSizedBufferVTStrict(dAtA []byte) (int
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Metadata) > 0 {
-		for k := range m.Metadata {
-			v := m.Metadata[k]
-			baseI := i
-			i -= len(v)
-			copy(dAtA[i:], v)
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(v)))
-			i--
-			dAtA[i] = 0x12
-			i -= len(k)
-			copy(dAtA[i:], k)
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(len(k)))
-			i--
-			dAtA[i] = 0xa
-			i = protohelpers.EncodeVarint(dAtA, i, uint64(baseI-i))
-			i--
-			dAtA[i] = 0x32
-		}
-	}
-	if m.EstimatedCompletion != nil {
-		size, err := (*timestamppb1.Timestamp)(m.EstimatedCompletion).MarshalToSizedBufferVTStrict(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(size))
-		i--
-		dAtA[i] = 0x2a
-	}
-	if m.TransitionId != nil {
-		i -= len(*m.TransitionId)
-		copy(dAtA[i:], *m.TransitionId)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.TransitionId)))
-		i--
-		dAtA[i] = 0x22
-	}
-	if m.CurrentState != nil {
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(*m.CurrentState))
-		i--
-		dAtA[i] = 0x18
-	}
-	if m.ErrorMessage != nil {
-		i -= len(*m.ErrorMessage)
-		copy(dAtA[i:], *m.ErrorMessage)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(*m.ErrorMessage)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if m.Success {
-		i--
-		if m.Success {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
+	if m.CurrentStatus != 0 {
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(m.CurrentStatus))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -2793,14 +2848,11 @@ func (m *Host) SizeVT() (n int) {
 	if m.Type != nil {
 		n += 1 + protohelpers.SizeOfVarint(uint64(*m.Type))
 	}
-	if m.CurrentState != nil {
-		n += 1 + protohelpers.SizeOfVarint(uint64(*m.CurrentState))
+	if m.Status != nil {
+		n += 1 + protohelpers.SizeOfVarint(uint64(*m.Status))
 	}
-	if m.RequestedTransition != nil {
-		n += 1 + protohelpers.SizeOfVarint(uint64(*m.RequestedTransition))
-	}
-	if m.LastRestartCause != nil {
-		n += 1 + protohelpers.SizeOfVarint(uint64(*m.LastRestartCause))
+	if m.RequestedAction != nil {
+		n += 1 + protohelpers.SizeOfVarint(uint64(*m.RequestedAction))
 	}
 	if m.Location != nil {
 		l = m.Location.SizeVT()
@@ -2833,6 +2885,33 @@ func (m *Host) SizeVT() (n int) {
 			mapEntrySize := 1 + len(k) + protohelpers.SizeOfVarint(uint64(len(k))) + 1 + len(v) + protohelpers.SizeOfVarint(uint64(len(v)))
 			n += mapEntrySize + 1 + protohelpers.SizeOfVarint(uint64(mapEntrySize))
 		}
+	}
+	n += len(m.unknownFields)
+	return n
+}
+
+func (m *HostStateChange) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.HostName)
+	if l > 0 {
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	if m.PreviousStatus != 0 {
+		n += 1 + protohelpers.SizeOfVarint(uint64(m.PreviousStatus))
+	}
+	if m.CurrentStatus != 0 {
+		n += 1 + protohelpers.SizeOfVarint(uint64(m.CurrentStatus))
+	}
+	if m.Cause != 0 {
+		n += 1 + protohelpers.SizeOfVarint(uint64(m.Cause))
+	}
+	if m.ChangedAt != nil {
+		l = (*timestamppb1.Timestamp)(m.ChangedAt).SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	n += len(m.unknownFields)
 	return n
@@ -2948,16 +3027,6 @@ func (m *GetHostRequest) SizeVT() (n int) {
 	return n
 }
 
-func (m *GetHostRequest_HostId) SizeVT() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.HostId)
-	n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
-	return n
-}
 func (m *GetHostRequest_Name) SizeVT() (n int) {
 	if m == nil {
 		return 0
@@ -2977,13 +3046,13 @@ func (m *GetHostRequest_Type) SizeVT() (n int) {
 	n += 1 + protohelpers.SizeOfVarint(uint64(m.Type))
 	return n
 }
-func (m *GetHostRequest_State) SizeVT() (n int) {
+func (m *GetHostRequest_Status) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	n += 1 + protohelpers.SizeOfVarint(uint64(m.State))
+	n += 1 + protohelpers.SizeOfVarint(uint64(m.Status))
 	return n
 }
 func (m *GetHostRequest_Location) SizeVT() (n int) {
@@ -3020,11 +3089,8 @@ func (m *ListHostsRequest) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Type != nil {
-		n += 1 + protohelpers.SizeOfVarint(uint64(*m.Type))
-	}
-	if m.State != nil {
-		n += 1 + protohelpers.SizeOfVarint(uint64(*m.State))
+	if vtmsg, ok := m.Identifier.(interface{ SizeVT() int }); ok {
+		n += vtmsg.SizeVT()
 	}
 	if m.FieldMask != nil {
 		l = (*fieldmaskpb1.FieldMask)(m.FieldMask).SizeVT()
@@ -3034,6 +3100,36 @@ func (m *ListHostsRequest) SizeVT() (n int) {
 	return n
 }
 
+func (m *ListHostsRequest_Type) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	n += 1 + protohelpers.SizeOfVarint(uint64(m.Type))
+	return n
+}
+func (m *ListHostsRequest_Status) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	n += 1 + protohelpers.SizeOfVarint(uint64(m.Status))
+	return n
+}
+func (m *ListHostsRequest_Location) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Location != nil {
+		l = m.Location.SizeVT()
+		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
+	}
+	return n
+}
 func (m *ListHostsResponse) SizeVT() (n int) {
 	if m == nil {
 		return 0
@@ -3056,7 +3152,7 @@ func (m *UpdateHostRequest) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.HostId)
+	l = len(m.HostName)
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
@@ -3086,65 +3182,31 @@ func (m *UpdateHostResponse) SizeVT() (n int) {
 	return n
 }
 
-func (m *HostChangeStateRequest) SizeVT() (n int) {
+func (m *ChangeHostStateRequest) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.HostId)
+	l = len(m.HostName)
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	if m.Transition != 0 {
-		n += 1 + protohelpers.SizeOfVarint(uint64(m.Transition))
-	}
-	if m.Force != nil {
-		n += 2
-	}
-	if len(m.Metadata) > 0 {
-		for k, v := range m.Metadata {
-			_ = k
-			_ = v
-			mapEntrySize := 1 + len(k) + protohelpers.SizeOfVarint(uint64(len(k))) + 1 + len(v) + protohelpers.SizeOfVarint(uint64(len(v)))
-			n += mapEntrySize + 1 + protohelpers.SizeOfVarint(uint64(mapEntrySize))
-		}
+	if m.Action != 0 {
+		n += 1 + protohelpers.SizeOfVarint(uint64(m.Action))
 	}
 	n += len(m.unknownFields)
 	return n
 }
 
-func (m *HostChangeStateResponse) SizeVT() (n int) {
+func (m *ChangeHostStateResponse) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.Success {
-		n += 2
-	}
-	if m.ErrorMessage != nil {
-		l = len(*m.ErrorMessage)
-		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
-	}
-	if m.CurrentState != nil {
-		n += 1 + protohelpers.SizeOfVarint(uint64(*m.CurrentState))
-	}
-	if m.TransitionId != nil {
-		l = len(*m.TransitionId)
-		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
-	}
-	if m.EstimatedCompletion != nil {
-		l = (*timestamppb1.Timestamp)(m.EstimatedCompletion).SizeVT()
-		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
-	}
-	if len(m.Metadata) > 0 {
-		for k, v := range m.Metadata {
-			_ = k
-			_ = v
-			mapEntrySize := 1 + len(k) + protohelpers.SizeOfVarint(uint64(len(k))) + 1 + len(v) + protohelpers.SizeOfVarint(uint64(len(v)))
-			n += mapEntrySize + 1 + protohelpers.SizeOfVarint(uint64(mapEntrySize))
-		}
+	if m.CurrentStatus != 0 {
+		n += 1 + protohelpers.SizeOfVarint(uint64(m.CurrentStatus))
 	}
 	n += len(m.unknownFields)
 	return n
@@ -3302,9 +3364,9 @@ func (m *Host) UnmarshalVT(dAtA []byte) error {
 			m.Type = &v
 		case 5:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CurrentState", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
-			var v HostState
+			var v HostStatus
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -3314,17 +3376,17 @@ func (m *Host) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= HostState(b&0x7F) << shift
+				v |= HostStatus(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.CurrentState = &v
+			m.Status = &v
 		case 6:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field RequestedTransition", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field RequestedAction", wireType)
 			}
-			var v HostTransition
+			var v HostAction
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -3334,33 +3396,13 @@ func (m *Host) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= HostTransition(b&0x7F) << shift
+				v |= HostAction(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.RequestedTransition = &v
+			m.RequestedAction = &v
 		case 7:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LastRestartCause", wireType)
-			}
-			var v HostRestartCause
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= HostRestartCause(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.LastRestartCause = &v
-		case 8:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
 			}
@@ -3396,7 +3438,7 @@ func (m *Host) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 9:
+		case 8:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Firmware", wireType)
 			}
@@ -3432,7 +3474,7 @@ func (m *Host) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 10:
+		case 9:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field OperatingSystem", wireType)
 			}
@@ -3468,7 +3510,7 @@ func (m *Host) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 11:
+		case 10:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BootProgress", wireType)
 			}
@@ -3504,7 +3546,7 @@ func (m *Host) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 12:
+		case 11:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LastReboot", wireType)
 			}
@@ -3540,7 +3582,7 @@ func (m *Host) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 13:
+		case 12:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UpdatedAt", wireType)
 			}
@@ -3576,7 +3618,7 @@ func (m *Host) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 14:
+		case 13:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Metadata", wireType)
 			}
@@ -3702,6 +3744,182 @@ func (m *Host) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.Metadata[mapkey] = mapvalue
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *HostStateChange) UnmarshalVT(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return protohelpers.ErrIntOverflow
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: HostStateChange: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: HostStateChange: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field HostName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.HostName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PreviousStatus", wireType)
+			}
+			m.PreviousStatus = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.PreviousStatus |= HostStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentStatus", wireType)
+			}
+			m.CurrentStatus = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CurrentStatus |= HostStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Cause", wireType)
+			}
+			m.Cause = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Cause |= HostAction(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChangedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.ChangedAt == nil {
+				m.ChangedAt = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.ChangedAt).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -4260,7 +4478,7 @@ func (m *HostRebootInfo) UnmarshalVT(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field RebootCause", wireType)
 			}
-			var v HostRestartCause
+			var v HostRebootCause
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -4270,7 +4488,7 @@ func (m *HostRebootInfo) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= HostRestartCause(b&0x7F) << shift
+				v |= HostRebootCause(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -4421,38 +4639,6 @@ func (m *GetHostRequest) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field HostId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Identifier = &GetHostRequest_HostId{HostId: string(dAtA[iNdEx:postIndex])}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -4483,7 +4669,7 @@ func (m *GetHostRequest) UnmarshalVT(dAtA []byte) error {
 			}
 			m.Identifier = &GetHostRequest_Name{Name: string(dAtA[iNdEx:postIndex])}
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
 			}
@@ -4503,11 +4689,11 @@ func (m *GetHostRequest) UnmarshalVT(dAtA []byte) error {
 				}
 			}
 			m.Identifier = &GetHostRequest_Type{Type: v}
-		case 4:
+		case 3:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field State", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
-			var v HostState
+			var v HostStatus
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -4517,13 +4703,13 @@ func (m *GetHostRequest) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= HostState(b&0x7F) << shift
+				v |= HostStatus(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Identifier = &GetHostRequest_State{State: v}
-		case 5:
+			m.Identifier = &GetHostRequest_Status{Status: v}
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
 			}
@@ -4564,7 +4750,7 @@ func (m *GetHostRequest) UnmarshalVT(dAtA []byte) error {
 				m.Identifier = &GetHostRequest_Location{Location: v}
 			}
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
 			}
@@ -4755,12 +4941,12 @@ func (m *ListHostsRequest) UnmarshalVT(dAtA []byte) error {
 					break
 				}
 			}
-			m.Type = &v
+			m.Identifier = &ListHostsRequest_Type{Type: v}
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field State", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
-			var v HostState
+			var v HostStatus
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -4770,13 +4956,54 @@ func (m *ListHostsRequest) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= HostState(b&0x7F) << shift
+				v |= HostStatus(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.State = &v
+			m.Identifier = &ListHostsRequest_Status{Status: v}
 		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Identifier.(*ListHostsRequest_Location); ok {
+				if err := oneof.Location.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &Location{}
+				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Identifier = &ListHostsRequest_Location{Location: v}
+			}
+			iNdEx = postIndex
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
 			}
@@ -4950,7 +5177,7 @@ func (m *UpdateHostRequest) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field HostId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field HostName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4978,7 +5205,7 @@ func (m *UpdateHostRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.HostId = string(dAtA[iNdEx:postIndex])
+			m.HostName = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -5161,7 +5388,7 @@ func (m *UpdateHostResponse) UnmarshalVT(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *HostChangeStateRequest) UnmarshalVT(dAtA []byte) error {
+func (m *ChangeHostStateRequest) UnmarshalVT(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5184,15 +5411,15 @@ func (m *HostChangeStateRequest) UnmarshalVT(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: HostChangeStateRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: ChangeHostStateRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: HostChangeStateRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ChangeHostStateRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field HostId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field HostName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -5220,13 +5447,13 @@ func (m *HostChangeStateRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.HostId = string(dAtA[iNdEx:postIndex])
+			m.HostName = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Transition", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Action", wireType)
 			}
-			m.Transition = 0
+			m.Action = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -5236,159 +5463,11 @@ func (m *HostChangeStateRequest) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Transition |= HostTransition(b&0x7F) << shift
+				m.Action |= HostAction(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Force", wireType)
-			}
-			var v int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			b := bool(v != 0)
-			m.Force = &b
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Metadata", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Metadata == nil {
-				m.Metadata = make(map[string]string)
-			}
-			var mapkey string
-			var mapvalue string
-			for iNdEx < postIndex {
-				entryPreIndex := iNdEx
-				var wire uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protohelpers.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					wire |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				fieldNum := int32(wire >> 3)
-				if fieldNum == 1 {
-					var stringLenmapkey uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return protohelpers.ErrIntOverflow
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapkey |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapkey := int(stringLenmapkey)
-					if intStringLenmapkey < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					postStringIndexmapkey := iNdEx + intStringLenmapkey
-					if postStringIndexmapkey < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if postStringIndexmapkey > l {
-						return io.ErrUnexpectedEOF
-					}
-					mapkey = string(dAtA[iNdEx:postStringIndexmapkey])
-					iNdEx = postStringIndexmapkey
-				} else if fieldNum == 2 {
-					var stringLenmapvalue uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return protohelpers.ErrIntOverflow
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapvalue |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapvalue := int(stringLenmapvalue)
-					if intStringLenmapvalue < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					postStringIndexmapvalue := iNdEx + intStringLenmapvalue
-					if postStringIndexmapvalue < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if postStringIndexmapvalue > l {
-						return io.ErrUnexpectedEOF
-					}
-					mapvalue = string(dAtA[iNdEx:postStringIndexmapvalue])
-					iNdEx = postStringIndexmapvalue
-				} else {
-					iNdEx = entryPreIndex
-					skippy, err := protohelpers.Skip(dAtA[iNdEx:])
-					if err != nil {
-						return err
-					}
-					if (skippy < 0) || (iNdEx+skippy) < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if (iNdEx + skippy) > postIndex {
-						return io.ErrUnexpectedEOF
-					}
-					iNdEx += skippy
-				}
-			}
-			m.Metadata[mapkey] = mapvalue
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -5411,7 +5490,7 @@ func (m *HostChangeStateRequest) UnmarshalVT(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *HostChangeStateResponse) UnmarshalVT(dAtA []byte) error {
+func (m *ChangeHostStateResponse) UnmarshalVT(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5434,17 +5513,17 @@ func (m *HostChangeStateResponse) UnmarshalVT(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: HostChangeStateResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: ChangeHostStateResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: HostChangeStateResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ChangeHostStateResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Success", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentStatus", wireType)
 			}
-			var v int
+			m.CurrentStatus = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -5454,261 +5533,11 @@ func (m *HostChangeStateResponse) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= int(b&0x7F) << shift
+				m.CurrentStatus |= HostStatus(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Success = bool(v != 0)
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ErrorMessage", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.ErrorMessage = &s
-			iNdEx = postIndex
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CurrentState", wireType)
-			}
-			var v HostState
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= HostState(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.CurrentState = &v
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TransitionId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.TransitionId = &s
-			iNdEx = postIndex
-		case 5:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field EstimatedCompletion", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.EstimatedCompletion == nil {
-				m.EstimatedCompletion = &timestamppb.Timestamp{}
-			}
-			if err := (*timestamppb1.Timestamp)(m.EstimatedCompletion).UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 6:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Metadata", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Metadata == nil {
-				m.Metadata = make(map[string]string)
-			}
-			var mapkey string
-			var mapvalue string
-			for iNdEx < postIndex {
-				entryPreIndex := iNdEx
-				var wire uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protohelpers.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					wire |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				fieldNum := int32(wire >> 3)
-				if fieldNum == 1 {
-					var stringLenmapkey uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return protohelpers.ErrIntOverflow
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapkey |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapkey := int(stringLenmapkey)
-					if intStringLenmapkey < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					postStringIndexmapkey := iNdEx + intStringLenmapkey
-					if postStringIndexmapkey < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if postStringIndexmapkey > l {
-						return io.ErrUnexpectedEOF
-					}
-					mapkey = string(dAtA[iNdEx:postStringIndexmapkey])
-					iNdEx = postStringIndexmapkey
-				} else if fieldNum == 2 {
-					var stringLenmapvalue uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return protohelpers.ErrIntOverflow
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapvalue |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapvalue := int(stringLenmapvalue)
-					if intStringLenmapvalue < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					postStringIndexmapvalue := iNdEx + intStringLenmapvalue
-					if postStringIndexmapvalue < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if postStringIndexmapvalue > l {
-						return io.ErrUnexpectedEOF
-					}
-					mapvalue = string(dAtA[iNdEx:postStringIndexmapvalue])
-					iNdEx = postStringIndexmapvalue
-				} else {
-					iNdEx = entryPreIndex
-					skippy, err := protohelpers.Skip(dAtA[iNdEx:])
-					if err != nil {
-						return err
-					}
-					if (skippy < 0) || (iNdEx+skippy) < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if (iNdEx + skippy) > postIndex {
-						return io.ErrUnexpectedEOF
-					}
-					iNdEx += skippy
-				}
-			}
-			m.Metadata[mapkey] = mapvalue
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -5891,9 +5720,9 @@ func (m *Host) UnmarshalVTUnsafe(dAtA []byte) error {
 			m.Type = &v
 		case 5:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CurrentState", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
-			var v HostState
+			var v HostStatus
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -5903,17 +5732,17 @@ func (m *Host) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= HostState(b&0x7F) << shift
+				v |= HostStatus(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.CurrentState = &v
+			m.Status = &v
 		case 6:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field RequestedTransition", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field RequestedAction", wireType)
 			}
-			var v HostTransition
+			var v HostAction
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -5923,33 +5752,13 @@ func (m *Host) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= HostTransition(b&0x7F) << shift
+				v |= HostAction(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.RequestedTransition = &v
+			m.RequestedAction = &v
 		case 7:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LastRestartCause", wireType)
-			}
-			var v HostRestartCause
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= HostRestartCause(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.LastRestartCause = &v
-		case 8:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
 			}
@@ -5985,7 +5794,7 @@ func (m *Host) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 9:
+		case 8:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Firmware", wireType)
 			}
@@ -6021,7 +5830,7 @@ func (m *Host) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 10:
+		case 9:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field OperatingSystem", wireType)
 			}
@@ -6057,7 +5866,7 @@ func (m *Host) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 11:
+		case 10:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BootProgress", wireType)
 			}
@@ -6093,7 +5902,7 @@ func (m *Host) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 12:
+		case 11:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LastReboot", wireType)
 			}
@@ -6129,7 +5938,7 @@ func (m *Host) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 13:
+		case 12:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UpdatedAt", wireType)
 			}
@@ -6165,7 +5974,7 @@ func (m *Host) UnmarshalVTUnsafe(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 14:
+		case 13:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Metadata", wireType)
 			}
@@ -6299,6 +6108,186 @@ func (m *Host) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.Metadata[mapkey] = mapvalue
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *HostStateChange) UnmarshalVTUnsafe(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return protohelpers.ErrIntOverflow
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: HostStateChange: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: HostStateChange: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field HostName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var stringValue string
+			if intStringLen > 0 {
+				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
+			}
+			m.HostName = stringValue
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PreviousStatus", wireType)
+			}
+			m.PreviousStatus = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.PreviousStatus |= HostStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentStatus", wireType)
+			}
+			m.CurrentStatus = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CurrentStatus |= HostStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Cause", wireType)
+			}
+			m.Cause = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Cause |= HostAction(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChangedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.ChangedAt == nil {
+				m.ChangedAt = &timestamppb.Timestamp{}
+			}
+			if err := (*timestamppb1.Timestamp)(m.ChangedAt).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -6881,7 +6870,7 @@ func (m *HostRebootInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field RebootCause", wireType)
 			}
-			var v HostRestartCause
+			var v HostRebootCause
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -6891,7 +6880,7 @@ func (m *HostRebootInfo) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= HostRestartCause(b&0x7F) << shift
+				v |= HostRebootCause(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -7042,42 +7031,6 @@ func (m *GetHostRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field HostId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			var stringValue string
-			if intStringLen > 0 {
-				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
-			}
-			m.Identifier = &GetHostRequest_HostId{HostId: stringValue}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
@@ -7112,7 +7065,7 @@ func (m *GetHostRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			}
 			m.Identifier = &GetHostRequest_Name{Name: stringValue}
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
 			}
@@ -7132,11 +7085,11 @@ func (m *GetHostRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 			}
 			m.Identifier = &GetHostRequest_Type{Type: v}
-		case 4:
+		case 3:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field State", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
-			var v HostState
+			var v HostStatus
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -7146,13 +7099,13 @@ func (m *GetHostRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= HostState(b&0x7F) << shift
+				v |= HostStatus(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Identifier = &GetHostRequest_State{State: v}
-		case 5:
+			m.Identifier = &GetHostRequest_Status{Status: v}
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
 			}
@@ -7193,7 +7146,7 @@ func (m *GetHostRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 				m.Identifier = &GetHostRequest_Location{Location: v}
 			}
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
 			}
@@ -7384,12 +7337,12 @@ func (m *ListHostsRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 					break
 				}
 			}
-			m.Type = &v
+			m.Identifier = &ListHostsRequest_Type{Type: v}
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field State", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
-			var v HostState
+			var v HostStatus
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -7399,13 +7352,54 @@ func (m *ListHostsRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= HostState(b&0x7F) << shift
+				v |= HostStatus(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.State = &v
+			m.Identifier = &ListHostsRequest_Status{Status: v}
 		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Location", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protohelpers.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return protohelpers.ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Identifier.(*ListHostsRequest_Location); ok {
+				if err := oneof.Location.UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &Location{}
+				if err := v.UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Identifier = &ListHostsRequest_Location{Location: v}
+			}
+			iNdEx = postIndex
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FieldMask", wireType)
 			}
@@ -7579,7 +7573,7 @@ func (m *UpdateHostRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field HostId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field HostName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -7611,7 +7605,7 @@ func (m *UpdateHostRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.HostId = stringValue
+			m.HostName = stringValue
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -7794,7 +7788,7 @@ func (m *UpdateHostResponse) UnmarshalVTUnsafe(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *HostChangeStateRequest) UnmarshalVTUnsafe(dAtA []byte) error {
+func (m *ChangeHostStateRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -7817,15 +7811,15 @@ func (m *HostChangeStateRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: HostChangeStateRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: ChangeHostStateRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: HostChangeStateRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ChangeHostStateRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field HostId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field HostName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -7857,13 +7851,13 @@ func (m *HostChangeStateRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 			if intStringLen > 0 {
 				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
 			}
-			m.HostId = stringValue
+			m.HostName = stringValue
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Transition", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Action", wireType)
 			}
-			m.Transition = 0
+			m.Action = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -7873,167 +7867,11 @@ func (m *HostChangeStateRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Transition |= HostTransition(b&0x7F) << shift
+				m.Action |= HostAction(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Force", wireType)
-			}
-			var v int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			b := bool(v != 0)
-			m.Force = &b
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Metadata", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Metadata == nil {
-				m.Metadata = make(map[string]string)
-			}
-			var mapkey string
-			var mapvalue string
-			for iNdEx < postIndex {
-				entryPreIndex := iNdEx
-				var wire uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protohelpers.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					wire |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				fieldNum := int32(wire >> 3)
-				if fieldNum == 1 {
-					var stringLenmapkey uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return protohelpers.ErrIntOverflow
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapkey |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapkey := int(stringLenmapkey)
-					if intStringLenmapkey < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					postStringIndexmapkey := iNdEx + intStringLenmapkey
-					if postStringIndexmapkey < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if postStringIndexmapkey > l {
-						return io.ErrUnexpectedEOF
-					}
-					if intStringLenmapkey == 0 {
-						mapkey = ""
-					} else {
-						mapkey = unsafe.String(&dAtA[iNdEx], intStringLenmapkey)
-					}
-					iNdEx = postStringIndexmapkey
-				} else if fieldNum == 2 {
-					var stringLenmapvalue uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return protohelpers.ErrIntOverflow
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapvalue |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapvalue := int(stringLenmapvalue)
-					if intStringLenmapvalue < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					postStringIndexmapvalue := iNdEx + intStringLenmapvalue
-					if postStringIndexmapvalue < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if postStringIndexmapvalue > l {
-						return io.ErrUnexpectedEOF
-					}
-					if intStringLenmapvalue == 0 {
-						mapvalue = ""
-					} else {
-						mapvalue = unsafe.String(&dAtA[iNdEx], intStringLenmapvalue)
-					}
-					iNdEx = postStringIndexmapvalue
-				} else {
-					iNdEx = entryPreIndex
-					skippy, err := protohelpers.Skip(dAtA[iNdEx:])
-					if err != nil {
-						return err
-					}
-					if (skippy < 0) || (iNdEx+skippy) < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if (iNdEx + skippy) > postIndex {
-						return io.ErrUnexpectedEOF
-					}
-					iNdEx += skippy
-				}
-			}
-			m.Metadata[mapkey] = mapvalue
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])
@@ -8056,7 +7894,7 @@ func (m *HostChangeStateRequest) UnmarshalVTUnsafe(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *HostChangeStateResponse) UnmarshalVTUnsafe(dAtA []byte) error {
+func (m *ChangeHostStateResponse) UnmarshalVTUnsafe(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -8079,17 +7917,17 @@ func (m *HostChangeStateResponse) UnmarshalVTUnsafe(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: HostChangeStateResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: ChangeHostStateResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: HostChangeStateResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ChangeHostStateResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Success", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentStatus", wireType)
 			}
-			var v int
+			m.CurrentStatus = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return protohelpers.ErrIntOverflow
@@ -8099,277 +7937,11 @@ func (m *HostChangeStateResponse) UnmarshalVTUnsafe(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= int(b&0x7F) << shift
+				m.CurrentStatus |= HostStatus(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Success = bool(v != 0)
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ErrorMessage", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			var stringValue string
-			if intStringLen > 0 {
-				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
-			}
-			s := stringValue
-			m.ErrorMessage = &s
-			iNdEx = postIndex
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CurrentState", wireType)
-			}
-			var v HostState
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= HostState(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.CurrentState = &v
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TransitionId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			var stringValue string
-			if intStringLen > 0 {
-				stringValue = unsafe.String(&dAtA[iNdEx], intStringLen)
-			}
-			s := stringValue
-			m.TransitionId = &s
-			iNdEx = postIndex
-		case 5:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field EstimatedCompletion", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.EstimatedCompletion == nil {
-				m.EstimatedCompletion = &timestamppb.Timestamp{}
-			}
-			if err := (*timestamppb1.Timestamp)(m.EstimatedCompletion).UnmarshalVTUnsafe(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 6:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Metadata", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protohelpers.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return protohelpers.ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Metadata == nil {
-				m.Metadata = make(map[string]string)
-			}
-			var mapkey string
-			var mapvalue string
-			for iNdEx < postIndex {
-				entryPreIndex := iNdEx
-				var wire uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protohelpers.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					wire |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				fieldNum := int32(wire >> 3)
-				if fieldNum == 1 {
-					var stringLenmapkey uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return protohelpers.ErrIntOverflow
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapkey |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapkey := int(stringLenmapkey)
-					if intStringLenmapkey < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					postStringIndexmapkey := iNdEx + intStringLenmapkey
-					if postStringIndexmapkey < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if postStringIndexmapkey > l {
-						return io.ErrUnexpectedEOF
-					}
-					if intStringLenmapkey == 0 {
-						mapkey = ""
-					} else {
-						mapkey = unsafe.String(&dAtA[iNdEx], intStringLenmapkey)
-					}
-					iNdEx = postStringIndexmapkey
-				} else if fieldNum == 2 {
-					var stringLenmapvalue uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return protohelpers.ErrIntOverflow
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapvalue |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapvalue := int(stringLenmapvalue)
-					if intStringLenmapvalue < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					postStringIndexmapvalue := iNdEx + intStringLenmapvalue
-					if postStringIndexmapvalue < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if postStringIndexmapvalue > l {
-						return io.ErrUnexpectedEOF
-					}
-					if intStringLenmapvalue == 0 {
-						mapvalue = ""
-					} else {
-						mapvalue = unsafe.String(&dAtA[iNdEx], intStringLenmapvalue)
-					}
-					iNdEx = postStringIndexmapvalue
-				} else {
-					iNdEx = entryPreIndex
-					skippy, err := protohelpers.Skip(dAtA[iNdEx:])
-					if err != nil {
-						return err
-					}
-					if (skippy < 0) || (iNdEx+skippy) < 0 {
-						return protohelpers.ErrInvalidLength
-					}
-					if (iNdEx + skippy) > postIndex {
-						return io.ErrUnexpectedEOF
-					}
-					iNdEx += skippy
-				}
-			}
-			m.Metadata[mapkey] = mapvalue
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := protohelpers.Skip(dAtA[iNdEx:])

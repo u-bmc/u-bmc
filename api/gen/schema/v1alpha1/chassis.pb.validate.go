@@ -275,8 +275,8 @@ func (m *Chassis) validate(all bool) error {
 		// no validation rules for Status
 	}
 
-	if m.RequestedTransition != nil {
-		// no validation rules for RequestedTransition
+	if m.RequestedAction != nil {
+		// no validation rules for RequestedAction
 	}
 
 	if m.Location != nil {
@@ -520,6 +520,145 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ChassisValidationError{}
+
+// Validate checks the field values on ChassisStateChange with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ChassisStateChange) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ChassisStateChange with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ChassisStateChangeMultiError, or nil if none found.
+func (m *ChassisStateChange) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ChassisStateChange) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for ChassisName
+
+	// no validation rules for PreviousStatus
+
+	// no validation rules for CurrentStatus
+
+	// no validation rules for Cause
+
+	if all {
+		switch v := interface{}(m.GetChangedAt()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ChassisStateChangeValidationError{
+					field:  "ChangedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ChassisStateChangeValidationError{
+					field:  "ChangedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetChangedAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ChassisStateChangeValidationError{
+				field:  "ChangedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return ChassisStateChangeMultiError(errors)
+	}
+
+	return nil
+}
+
+// ChassisStateChangeMultiError is an error wrapping multiple validation errors
+// returned by ChassisStateChange.ValidateAll() if the designated constraints
+// aren't met.
+type ChassisStateChangeMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ChassisStateChangeMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ChassisStateChangeMultiError) AllErrors() []error { return m }
+
+// ChassisStateChangeValidationError is the validation error returned by
+// ChassisStateChange.Validate if the designated constraints aren't met.
+type ChassisStateChangeValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ChassisStateChangeValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ChassisStateChangeValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ChassisStateChangeValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ChassisStateChangeValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ChassisStateChangeValidationError) ErrorName() string {
+	return "ChassisStateChangeValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ChassisStateChangeValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sChassisStateChange.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ChassisStateChangeValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ChassisStateChangeValidationError{}
 
 // Validate checks the field values on ChassisPowerInfo with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -2987,318 +3126,22 @@ var _ interface {
 	ErrorName() string
 } = UpdateChassisResponseValidationError{}
 
-// Validate checks the field values on ChassisChangeStateRequest with the rules
+// Validate checks the field values on ChangeChassisStateRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ChassisChangeStateRequest) Validate() error {
+func (m *ChangeChassisStateRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ChassisChangeStateRequest with the
+// ValidateAll checks the field values on ChangeChassisStateRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ChassisChangeStateRequestMultiError, or nil if none found.
-func (m *ChassisChangeStateRequest) ValidateAll() error {
+// ChangeChassisStateRequestMultiError, or nil if none found.
+func (m *ChangeChassisStateRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ChassisChangeStateRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for ChassisName
-
-	// no validation rules for Transition
-
-	// no validation rules for Metadata
-
-	if m.Force != nil {
-		// no validation rules for Force
-	}
-
-	if m.FieldMask != nil {
-
-		if all {
-			switch v := interface{}(m.GetFieldMask()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ChassisChangeStateRequestValidationError{
-						field:  "FieldMask",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ChassisChangeStateRequestValidationError{
-						field:  "FieldMask",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetFieldMask()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ChassisChangeStateRequestValidationError{
-					field:  "FieldMask",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return ChassisChangeStateRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// ChassisChangeStateRequestMultiError is an error wrapping multiple validation
-// errors returned by ChassisChangeStateRequest.ValidateAll() if the
-// designated constraints aren't met.
-type ChassisChangeStateRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ChassisChangeStateRequestMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ChassisChangeStateRequestMultiError) AllErrors() []error { return m }
-
-// ChassisChangeStateRequestValidationError is the validation error returned by
-// ChassisChangeStateRequest.Validate if the designated constraints aren't met.
-type ChassisChangeStateRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ChassisChangeStateRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ChassisChangeStateRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ChassisChangeStateRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ChassisChangeStateRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ChassisChangeStateRequestValidationError) ErrorName() string {
-	return "ChassisChangeStateRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ChassisChangeStateRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sChassisChangeStateRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ChassisChangeStateRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ChassisChangeStateRequestValidationError{}
-
-// Validate checks the field values on ChassisChangeStateResponse with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ChassisChangeStateResponse) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ChassisChangeStateResponse with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ChassisChangeStateResponseMultiError, or nil if none found.
-func (m *ChassisChangeStateResponse) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ChassisChangeStateResponse) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Success
-
-	// no validation rules for Metadata
-
-	if m.ErrorMessage != nil {
-		// no validation rules for ErrorMessage
-	}
-
-	if m.Status != nil {
-		// no validation rules for Status
-	}
-
-	if m.TransitionId != nil {
-		// no validation rules for TransitionId
-	}
-
-	if m.EstimatedCompletion != nil {
-
-		if all {
-			switch v := interface{}(m.GetEstimatedCompletion()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ChassisChangeStateResponseValidationError{
-						field:  "EstimatedCompletion",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ChassisChangeStateResponseValidationError{
-						field:  "EstimatedCompletion",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetEstimatedCompletion()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ChassisChangeStateResponseValidationError{
-					field:  "EstimatedCompletion",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return ChassisChangeStateResponseMultiError(errors)
-	}
-
-	return nil
-}
-
-// ChassisChangeStateResponseMultiError is an error wrapping multiple
-// validation errors returned by ChassisChangeStateResponse.ValidateAll() if
-// the designated constraints aren't met.
-type ChassisChangeStateResponseMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ChassisChangeStateResponseMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ChassisChangeStateResponseMultiError) AllErrors() []error { return m }
-
-// ChassisChangeStateResponseValidationError is the validation error returned
-// by ChassisChangeStateResponse.Validate if the designated constraints aren't met.
-type ChassisChangeStateResponseValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ChassisChangeStateResponseValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ChassisChangeStateResponseValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ChassisChangeStateResponseValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ChassisChangeStateResponseValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ChassisChangeStateResponseValidationError) ErrorName() string {
-	return "ChassisChangeStateResponseValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ChassisChangeStateResponseValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sChassisChangeStateResponse.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ChassisChangeStateResponseValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ChassisChangeStateResponseValidationError{}
-
-// Validate checks the field values on ChassisControlRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ChassisControlRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ChassisControlRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ChassisControlRequestMultiError, or nil if none found.
-func (m *ChassisControlRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ChassisControlRequest) validate(all bool) error {
+func (m *ChangeChassisStateRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -3309,59 +3152,20 @@ func (m *ChassisControlRequest) validate(all bool) error {
 
 	// no validation rules for Action
 
-	// no validation rules for Parameters
-
-	if m.Force != nil {
-		// no validation rules for Force
-	}
-
-	if m.FieldMask != nil {
-
-		if all {
-			switch v := interface{}(m.GetFieldMask()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ChassisControlRequestValidationError{
-						field:  "FieldMask",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ChassisControlRequestValidationError{
-						field:  "FieldMask",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetFieldMask()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ChassisControlRequestValidationError{
-					field:  "FieldMask",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
 	if len(errors) > 0 {
-		return ChassisControlRequestMultiError(errors)
+		return ChangeChassisStateRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// ChassisControlRequestMultiError is an error wrapping multiple validation
-// errors returned by ChassisControlRequest.ValidateAll() if the designated
-// constraints aren't met.
-type ChassisControlRequestMultiError []error
+// ChangeChassisStateRequestMultiError is an error wrapping multiple validation
+// errors returned by ChangeChassisStateRequest.ValidateAll() if the
+// designated constraints aren't met.
+type ChangeChassisStateRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ChassisControlRequestMultiError) Error() string {
+func (m ChangeChassisStateRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -3370,11 +3174,11 @@ func (m ChassisControlRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ChassisControlRequestMultiError) AllErrors() []error { return m }
+func (m ChangeChassisStateRequestMultiError) AllErrors() []error { return m }
 
-// ChassisControlRequestValidationError is the validation error returned by
-// ChassisControlRequest.Validate if the designated constraints aren't met.
-type ChassisControlRequestValidationError struct {
+// ChangeChassisStateRequestValidationError is the validation error returned by
+// ChangeChassisStateRequest.Validate if the designated constraints aren't met.
+type ChangeChassisStateRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -3382,24 +3186,24 @@ type ChassisControlRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e ChassisControlRequestValidationError) Field() string { return e.field }
+func (e ChangeChassisStateRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ChassisControlRequestValidationError) Reason() string { return e.reason }
+func (e ChangeChassisStateRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ChassisControlRequestValidationError) Cause() error { return e.cause }
+func (e ChangeChassisStateRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ChassisControlRequestValidationError) Key() bool { return e.key }
+func (e ChangeChassisStateRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ChassisControlRequestValidationError) ErrorName() string {
-	return "ChassisControlRequestValidationError"
+func (e ChangeChassisStateRequestValidationError) ErrorName() string {
+	return "ChangeChassisStateRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ChassisControlRequestValidationError) Error() string {
+func (e ChangeChassisStateRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -3411,14 +3215,14 @@ func (e ChassisControlRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sChassisControlRequest.%s: %s%s",
+		"invalid %sChangeChassisStateRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ChassisControlRequestValidationError{}
+var _ error = ChangeChassisStateRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -3426,54 +3230,46 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ChassisControlRequestValidationError{}
+} = ChangeChassisStateRequestValidationError{}
 
-// Validate checks the field values on ChassisControlResponse with the rules
-// defined in the proto definition for this message. If any rules are
+// Validate checks the field values on ChangeChassisStateResponse with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ChassisControlResponse) Validate() error {
+func (m *ChangeChassisStateResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ChassisControlResponse with the rules
-// defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on ChangeChassisStateResponse with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ChassisControlResponseMultiError, or nil if none found.
-func (m *ChassisControlResponse) ValidateAll() error {
+// ChangeChassisStateResponseMultiError, or nil if none found.
+func (m *ChangeChassisStateResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ChassisControlResponse) validate(all bool) error {
+func (m *ChangeChassisStateResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	// no validation rules for Success
-
-	if m.ErrorMessage != nil {
-		// no validation rules for ErrorMessage
-	}
-
-	if m.Status != nil {
-		// no validation rules for Status
-	}
+	// no validation rules for CurrentStatus
 
 	if len(errors) > 0 {
-		return ChassisControlResponseMultiError(errors)
+		return ChangeChassisStateResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// ChassisControlResponseMultiError is an error wrapping multiple validation
-// errors returned by ChassisControlResponse.ValidateAll() if the designated
-// constraints aren't met.
-type ChassisControlResponseMultiError []error
+// ChangeChassisStateResponseMultiError is an error wrapping multiple
+// validation errors returned by ChangeChassisStateResponse.ValidateAll() if
+// the designated constraints aren't met.
+type ChangeChassisStateResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ChassisControlResponseMultiError) Error() string {
+func (m ChangeChassisStateResponseMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -3482,11 +3278,11 @@ func (m ChassisControlResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ChassisControlResponseMultiError) AllErrors() []error { return m }
+func (m ChangeChassisStateResponseMultiError) AllErrors() []error { return m }
 
-// ChassisControlResponseValidationError is the validation error returned by
-// ChassisControlResponse.Validate if the designated constraints aren't met.
-type ChassisControlResponseValidationError struct {
+// ChangeChassisStateResponseValidationError is the validation error returned
+// by ChangeChassisStateResponse.Validate if the designated constraints aren't met.
+type ChangeChassisStateResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -3494,24 +3290,24 @@ type ChassisControlResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e ChassisControlResponseValidationError) Field() string { return e.field }
+func (e ChangeChassisStateResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ChassisControlResponseValidationError) Reason() string { return e.reason }
+func (e ChangeChassisStateResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ChassisControlResponseValidationError) Cause() error { return e.cause }
+func (e ChangeChassisStateResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ChassisControlResponseValidationError) Key() bool { return e.key }
+func (e ChangeChassisStateResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ChassisControlResponseValidationError) ErrorName() string {
-	return "ChassisControlResponseValidationError"
+func (e ChangeChassisStateResponseValidationError) ErrorName() string {
+	return "ChangeChassisStateResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ChassisControlResponseValidationError) Error() string {
+func (e ChangeChassisStateResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -3523,14 +3319,14 @@ func (e ChassisControlResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sChassisControlResponse.%s: %s%s",
+		"invalid %sChangeChassisStateResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ChassisControlResponseValidationError{}
+var _ error = ChangeChassisStateResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -3538,4 +3334,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ChassisControlResponseValidationError{}
+} = ChangeChassisStateResponseValidationError{}

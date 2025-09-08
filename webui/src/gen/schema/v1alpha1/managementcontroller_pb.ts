@@ -21,7 +21,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file schema/v1alpha1/managementcontroller.proto.
  */
 export const file_schema_v1alpha1_managementcontroller: GenFile = /*@__PURE__*/
-  fileDesc("CipzY2hlbWEvdjFhbHBoYTEvbWFuYWdlbWVudGNvbnRyb2xsZXIucHJvdG8SD3NjaGVtYS52MWFscGhhMSLGCAoUTWFuYWdlbWVudENvbnRyb2xsZXISFQoEbmFtZRgBIAEoCUIHukgEcgIQARIpCgVhc3NldBgCIAEoCzIaLnNjaGVtYS52MWFscGhhMS5Bc3NldEluZm8SGAoLZGVzY3JpcHRpb24YAyABKAlIAIgBARJGCgR0eXBlGAQgASgOMikuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyVHlwZUIIukgFggECEAFIAYgBARJQCg1jdXJyZW50X3N0YXRlGAUgASgOMiouc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyU3RhdGVCCLpIBYIBAhABSAKIAQESXAoUcmVxdWVzdGVkX3RyYW5zaXRpb24YBiABKA4yLy5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJUcmFuc2l0aW9uQgi6SAWCAQIQAUgDiAEBEkoKBnN0YXR1cxgHIAEoDjIrLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlclN0YXR1c0IIukgFggECEAFIBIgBARIwCghsb2NhdGlvbhgIIAEoCzIZLnNjaGVtYS52MWFscGhhMS5Mb2NhdGlvbkgFiAEBEkQKCGhhcmR3YXJlGAkgASgLMi0uc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVySGFyZHdhcmVIBogBARIwCghmaXJtd2FyZRgKIAEoCzIZLnNjaGVtYS52MWFscGhhMS5GaXJtd2FyZUgHiAEBEkgKCnJlZHVuZGFuY3kYCyABKAsyLy5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJSZWR1bmRhbmN5SAiIAQESSQoLbGFzdF9yZWJvb3QYDCABKAsyLy5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJSZWJvb3RJbmZvSAmIAQESMwoKdXBkYXRlZF9hdBgNIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBICogBARJFCghtZXRhZGF0YRgOIAMoCzIzLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlci5NZXRhZGF0YUVudHJ5Gi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIOCgxfZGVzY3JpcHRpb25CBwoFX3R5cGVCEAoOX2N1cnJlbnRfc3RhdGVCFwoVX3JlcXVlc3RlZF90cmFuc2l0aW9uQgkKB19zdGF0dXNCCwoJX2xvY2F0aW9uQgsKCV9oYXJkd2FyZUILCglfZmlybXdhcmVCDQoLX3JlZHVuZGFuY3lCDgoMX2xhc3RfcmVib290Qg0KC191cGRhdGVkX2F0Iv8BChxNYW5hZ2VtZW50Q29udHJvbGxlckhhcmR3YXJlEjoKA2NwdRgBIAEoCzIoLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlckNQVUgAiAEBEkAKBm1lbW9yeRgCIAEoCzIrLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlck1lbW9yeUgBiAEBEkIKB3N0b3JhZ2UYAyABKAsyLC5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJTdG9yYWdlSAKIAQFCBgoEX2NwdUIJCgdfbWVtb3J5QgoKCF9zdG9yYWdlIvUBChdNYW5hZ2VtZW50Q29udHJvbGxlckNQVRISCgVtb2RlbBgBIAEoCUgAiAEBEhkKDG1hbnVmYWN0dXJlchgCIAEoCUgBiAEBEhsKBWNvcmVzGAMgASgNQge6SAQqAigBSAKIAQESJwoRbWF4X2ZyZXF1ZW5jeV9taHoYBCABKA1CB7pIBCoCIABIA4gBARIZCgxhcmNoaXRlY3R1cmUYBSABKAlIBIgBAUIICgZfbW9kZWxCDwoNX21hbnVmYWN0dXJlckIICgZfY29yZXNCFAoSX21heF9mcmVxdWVuY3lfbWh6Qg8KDV9hcmNoaXRlY3R1cmUi2QEKGk1hbmFnZW1lbnRDb250cm9sbGVyTWVtb3J5Ej8KC21lbW9yeV90eXBlGAEgASgOMhsuc2NoZW1hLnYxYWxwaGExLk1lbW9yeVR5cGVCCLpIBYIBAhABSACIAQESHgoIY2FwYWNpdHkYAiABKARCB7pIBDICIABIAYgBARInChFtYXhfZnJlcXVlbmN5X21oehgDIAEoDUIHukgEKgIgAEgCiAEBQg4KDF9tZW1vcnlfdHlwZUILCglfY2FwYWNpdHlCFAoSX21heF9mcmVxdWVuY3lfbWh6Ip4BChtNYW5hZ2VtZW50Q29udHJvbGxlclN0b3JhZ2USQQoMc3RvcmFnZV90eXBlGAEgASgOMhwuc2NoZW1hLnYxYWxwaGExLlN0b3JhZ2VUeXBlQgi6SAWCAQIQAUgAiAEBEh4KCGNhcGFjaXR5GAIgASgEQge6SAQyAiAASAGIAQFCDwoNX3N0b3JhZ2VfdHlwZUILCglfY2FwYWNpdHkijAMKHk1hbmFnZW1lbnRDb250cm9sbGVyUmVkdW5kYW5jeRJGCgRyb2xlGAEgASgOMikuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyUm9sZUIIukgFggECEAFIAIgBARIaChJyZWR1bmRhbmN5X2VuYWJsZWQYAiABKAgSKAobZGlzYWJsZV9yZWR1bmRhbmN5X292ZXJyaWRlGAMgASgISAGIAQESHQoQZmFpbG92ZXJzX3BhdXNlZBgEIAEoCEgCiAEBEhwKD3JlZHVuZGFuY3lfbW9kZRgFIAEoCUgDiAEBEhsKE3BhcnRuZXJfY29udHJvbGxlcnMYBiADKAkSHAoPZmFpbG92ZXJfc3RhdHVzGAcgASgJSASIAQFCBwoFX3JvbGVCHgocX2Rpc2FibGVfcmVkdW5kYW5jeV9vdmVycmlkZUITChFfZmFpbG92ZXJzX3BhdXNlZEISChBfcmVkdW5kYW5jeV9tb2RlQhIKEF9mYWlsb3Zlcl9zdGF0dXMigAMKHk1hbmFnZW1lbnRDb250cm9sbGVyUmVib290SW5mbxI5ChBsYXN0X3JlYm9vdF90aW1lGAEgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgAiAEBElUKDHJlYm9vdF9jYXVzZRgCIAEoDjIwLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlclJlYm9vdENhdXNlQgi6SAWCAQIQAUgBiAEBEhkKDHJlYm9vdF9jb3VudBgDIAEoDUgCiAEBEi4KBnVwdGltZRgEIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbkgDiAEBEjEKCWJvb3RfdGltZRgFIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbkgEiAEBQhMKEV9sYXN0X3JlYm9vdF90aW1lQg8KDV9yZWJvb3RfY2F1c2VCDwoNX3JlYm9vdF9jb3VudEIJCgdfdXB0aW1lQgwKCl9ib290X3RpbWUiywIKHkdldE1hbmFnZW1lbnRDb250cm9sbGVyUmVxdWVzdBIXCg1jb250cm9sbGVyX2lkGAEgASgJSAASDgoEbmFtZRgCIAEoCUgAEjkKBHR5cGUYAyABKA4yKS5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJUeXBlSAASPQoGc3RhdHVzGAQgASgOMisuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyU3RhdHVzSAASLQoIbG9jYXRpb24YBSABKAsyGS5zY2hlbWEudjFhbHBoYTEuTG9jYXRpb25IABIzCgpmaWVsZF9tYXNrGAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLkZpZWxkTWFza0gBiAEBQhMKCmlkZW50aWZpZXISBbpIAggBQg0KC19maWVsZF9tYXNrIl0KH0dldE1hbmFnZW1lbnRDb250cm9sbGVyUmVzcG9uc2USOgoLY29udHJvbGxlcnMYASADKAsyJS5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXIijgIKIExpc3RNYW5hZ2VtZW50Q29udHJvbGxlcnNSZXF1ZXN0EkYKBHR5cGUYASABKA4yKS5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJUeXBlQgi6SAWCAQIQAUgAiAEBEkoKBnN0YXR1cxgCIAEoDjIrLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlclN0YXR1c0IIukgFggECEAFIAYgBARIzCgpmaWVsZF9tYXNrGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLkZpZWxkTWFza0gCiAEBQgcKBV90eXBlQgkKB19zdGF0dXNCDQoLX2ZpZWxkX21hc2siXwohTGlzdE1hbmFnZW1lbnRDb250cm9sbGVyc1Jlc3BvbnNlEjoKC2NvbnRyb2xsZXJzGAEgAygLMiUuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyIrYBCiFVcGRhdGVNYW5hZ2VtZW50Q29udHJvbGxlclJlcXVlc3QSHgoNY29udHJvbGxlcl9pZBgBIAEoCUIHukgEcgIQARJBCgpjb250cm9sbGVyGAIgASgLMiUuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyQga6SAPIAQESLgoKZmllbGRfbWFzaxgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2siXwoiVXBkYXRlTWFuYWdlbWVudENvbnRyb2xsZXJSZXNwb25zZRI5Cgpjb250cm9sbGVyGAEgASgLMiUuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyIrUCCiJNYW5hZ2VtZW50Q29udHJvbGxlckNvbnRyb2xSZXF1ZXN0Eh4KDWNvbnRyb2xsZXJfaWQYASABKAlCB7pIBHICEAESRQoGYWN0aW9uGAIgASgOMisuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyQWN0aW9uQgi6SAWCAQIQARISCgVmb3JjZRgDIAEoCEgAiAEBElcKCnBhcmFtZXRlcnMYBCADKAsyQy5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJDb250cm9sUmVxdWVzdC5QYXJhbWV0ZXJzRW50cnkaMQoPUGFyYW1ldGVyc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAFCCAoGX2ZvcmNlIqACCiNNYW5hZ2VtZW50Q29udHJvbGxlckNvbnRyb2xSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIElAKDWN1cnJlbnRfc3RhdGUYAiABKA4yKi5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJTdGF0ZUIIukgFggECEAFIAIgBARIaCg1lcnJvcl9tZXNzYWdlGAMgASgJSAGIAQESPQoUZXN0aW1hdGVkX2NvbXBsZXRpb24YBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAKIAQFCEAoOX2N1cnJlbnRfc3RhdGVCEAoOX2Vycm9yX21lc3NhZ2VCFwoVX2VzdGltYXRlZF9jb21wbGV0aW9uKqcCChhNYW5hZ2VtZW50Q29udHJvbGxlclR5cGUSKgomTUFOQUdFTUVOVF9DT05UUk9MTEVSX1RZUEVfVU5TUEVDSUZJRUQQABIiCh5NQU5BR0VNRU5UX0NPTlRST0xMRVJfVFlQRV9CTUMQARIoCiRNQU5BR0VNRU5UX0NPTlRST0xMRVJfVFlQRV9TQVRFTExJVEUQAhIxCi1NQU5BR0VNRU5UX0NPTlRST0xMRVJfVFlQRV9DSEFTU0lTX0NPTlRST0xMRVIQAxIuCipNQU5BR0VNRU5UX0NPTlRST0xMRVJfVFlQRV9OT0RFX0NPTlRST0xMRVIQBBIuCipNQU5BR0VNRU5UX0NPTlRST0xMRVJfVFlQRV9SQUNLX0NPTlRST0xMRVIQBSqnAgoaTWFuYWdlbWVudENvbnRyb2xsZXJTdGF0dXMSLAooTUFOQUdFTUVOVF9DT05UUk9MTEVSX1NUQVRVU19VTlNQRUNJRklFRBAAEigKJE1BTkFHRU1FTlRfQ09OVFJPTExFUl9TVEFUVVNfRU5BQkxFRBABEikKJU1BTkFHRU1FTlRfQ09OVFJPTExFUl9TVEFUVVNfRElTQUJMRUQQAhI0CjBNQU5BR0VNRU5UX0NPTlRST0xMRVJfU1RBVFVTX1VOQVZBSUxBQkxFX09GRkxJTkUQAxIoCiRNQU5BR0VNRU5UX0NPTlRST0xMRVJfU1RBVFVTX0lOX1RFU1QQBBImCiJNQU5BR0VNRU5UX0NPTlRST0xMRVJfU1RBVFVTX0VSUk9SEAUqmgEKGU1hbmFnZW1lbnRDb250cm9sbGVyU3RhdGUSKwonTUFOQUdFTUVOVF9DT05UUk9MTEVSX1NUQVRFX1VOU1BFQ0lGSUVEEAASJQohTUFOQUdFTUVOVF9DT05UUk9MTEVSX1NUQVRFX1JFQURZEAESKQolTUFOQUdFTUVOVF9DT05UUk9MTEVSX1NUQVRFX05PVF9SRUFEWRACKuEBCh5NYW5hZ2VtZW50Q29udHJvbGxlclRyYW5zaXRpb24SMAosTUFOQUdFTUVOVF9DT05UUk9MTEVSX1RSQU5TSVRJT05fVU5TUEVDSUZJRUQQABIrCidNQU5BR0VNRU5UX0NPTlRST0xMRVJfVFJBTlNJVElPTl9SRUJPT1QQARIvCitNQU5BR0VNRU5UX0NPTlRST0xMRVJfVFJBTlNJVElPTl9XQVJNX1JFU0VUEAISLworTUFOQUdFTUVOVF9DT05UUk9MTEVSX1RSQU5TSVRJT05fQ09MRF9SRVNFVBADKtECCh9NYW5hZ2VtZW50Q29udHJvbGxlclJlYm9vdENhdXNlEjIKLk1BTkFHRU1FTlRfQ09OVFJPTExFUl9SRUJPT1RfQ0FVU0VfVU5TUEVDSUZJRUQQABIzCi9NQU5BR0VNRU5UX0NPTlRST0xMRVJfUkVCT09UX0NBVVNFX1BPV0VSX0JVVFRPThABEjMKL01BTkFHRU1FTlRfQ09OVFJPTExFUl9SRUJPT1RfQ0FVU0VfUkVTRVRfQlVUVE9OEAISLworTUFOQUdFTUVOVF9DT05UUk9MTEVSX1JFQk9PVF9DQVVTRV9XQVRDSERPRxADEjEKLU1BTkFHRU1FTlRfQ09OVFJPTExFUl9SRUJPT1RfQ0FVU0VfU09GVF9SRVNFVBAEEiwKKE1BTkFHRU1FTlRfQ09OVFJPTExFUl9SRUJPT1RfQ0FVU0VfT1RIRVIQBSq9AQoYTWFuYWdlbWVudENvbnRyb2xsZXJSb2xlEioKJk1BTkFHRU1FTlRfQ09OVFJPTExFUl9ST0xFX1VOU1BFQ0lGSUVEEAASJgoiTUFOQUdFTUVOVF9DT05UUk9MTEVSX1JPTEVfUFJJTUFSWRABEiUKIU1BTkFHRU1FTlRfQ09OVFJPTExFUl9ST0xFX0JBQ0tVUBACEiYKIk1BTkFHRU1FTlRfQ09OVFJPTExFUl9ST0xFX1NUQU5EQlkQAyqQAwoaTWFuYWdlbWVudENvbnRyb2xsZXJBY3Rpb24SLAooTUFOQUdFTUVOVF9DT05UUk9MTEVSX0FDVElPTl9VTlNQRUNJRklFRBAAEicKI01BTkFHRU1FTlRfQ09OVFJPTExFUl9BQ1RJT05fUkVCT09UEAESKwonTUFOQUdFTUVOVF9DT05UUk9MTEVSX0FDVElPTl9IQVJEX1JFU0VUEAISLgoqTUFOQUdFTUVOVF9DT05UUk9MTEVSX0FDVElPTl9GQUNUT1JZX1JFU0VUEAMSKwonTUFOQUdFTUVOVF9DT05UUk9MTEVSX0FDVElPTl9DTEVBUl9MT0dTEAQSLgoqTUFOQUdFTUVOVF9DT05UUk9MTEVSX0FDVElPTl9CQUNLVVBfQ09ORklHEAUSLworTUFOQUdFTUVOVF9DT05UUk9MTEVSX0FDVElPTl9SRVNUT1JFX0NPTkZJRxAGEjAKLE1BTkFHRU1FTlRfQ09OVFJPTExFUl9BQ1RJT05fVVBEQVRFX0ZJUk1XQVJFEAcq4QEKCk1lbW9yeVR5cGUSGwoXTUVNT1JZX1RZUEVfVU5TUEVDSUZJRUQQABIUChBNRU1PUllfVFlQRV9ERFIyEAESFAoQTUVNT1JZX1RZUEVfRERSMxACEhQKEE1FTU9SWV9UWVBFX0REUjQQAxIUChBNRU1PUllfVFlQRV9ERFI1EAQSFgoSTUVNT1JZX1RZUEVfTFBERFIyEAUSFgoSTUVNT1JZX1RZUEVfTFBERFIzEAYSFgoSTUVNT1JZX1RZUEVfTFBERFI0EAcSFgoSTUVNT1JZX1RZUEVfTFBERFI1EAgqcAoLU3RvcmFnZVR5cGUSHAoYU1RPUkFHRV9UWVBFX1VOU1BFQ0lGSUVEEAASFQoRU1RPUkFHRV9UWVBFX0VNTUMQARIUChBTVE9SQUdFX1RZUEVfU1NEEAISFgoSU1RPUkFHRV9UWVBFX0ZMQVNIEANCzAEKE2NvbS5zY2hlbWEudjFhbHBoYTFCGU1hbmFnZW1lbnRjb250cm9sbGVyUHJvdG9QAVo9Z2l0aHViLmNvbS91LWJtYy91LWJtYy9hcGkvZ2VuL3NjaGVtYS92MWFscGhhMTtzY2hlbWF2MWFscGhhMaICA1NYWKoCD1NjaGVtYS5WMWFscGhhMcoCD1NjaGVtYVxWMWFscGhhMeICG1NjaGVtYVxWMWFscGhhMVxHUEJNZXRhZGF0YeoCEFNjaGVtYTo6VjFhbHBoYTFiBnByb3RvMw", [file_buf_validate_validate, file_google_protobuf_field_mask, file_google_protobuf_timestamp, file_google_protobuf_duration, file_schema_v1alpha1_asset, file_schema_v1alpha1_firmware, file_schema_v1alpha1_location]);
+  fileDesc("CipzY2hlbWEvdjFhbHBoYTEvbWFuYWdlbWVudGNvbnRyb2xsZXIucHJvdG8SD3NjaGVtYS52MWFscGhhMSLWBwoUTWFuYWdlbWVudENvbnRyb2xsZXISFQoEbmFtZRgBIAEoCUIHukgEcgIQARIpCgVhc3NldBgCIAEoCzIaLnNjaGVtYS52MWFscGhhMS5Bc3NldEluZm8SGAoLZGVzY3JpcHRpb24YAyABKAlIAIgBARJGCgR0eXBlGAQgASgOMikuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyVHlwZUIIukgFggECEAFIAYgBARJKCgZzdGF0dXMYBSABKA4yKy5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJTdGF0dXNCCLpIBYIBAhABSAKIAQESVAoQcmVxdWVzdGVkX2FjdGlvbhgGIAEoDjIrLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlckFjdGlvbkIIukgFggECEAFIA4gBARIwCghsb2NhdGlvbhgHIAEoCzIZLnNjaGVtYS52MWFscGhhMS5Mb2NhdGlvbkgEiAEBEkQKCGhhcmR3YXJlGAggASgLMi0uc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVySGFyZHdhcmVIBYgBARIwCghmaXJtd2FyZRgJIAEoCzIZLnNjaGVtYS52MWFscGhhMS5GaXJtd2FyZUgGiAEBEkgKCnJlZHVuZGFuY3kYCiABKAsyLy5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJSZWR1bmRhbmN5SAeIAQESSQoLbGFzdF9yZWJvb3QYCyABKAsyLy5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJSZWJvb3RJbmZvSAiIAQESMwoKdXBkYXRlZF9hdBgMIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBICYgBARJFCghtZXRhZGF0YRgNIAMoCzIzLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlci5NZXRhZGF0YUVudHJ5Gi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIOCgxfZGVzY3JpcHRpb25CBwoFX3R5cGVCCQoHX3N0YXR1c0ITChFfcmVxdWVzdGVkX2FjdGlvbkILCglfbG9jYXRpb25CCwoJX2hhcmR3YXJlQgsKCV9maXJtd2FyZUINCgtfcmVkdW5kYW5jeUIOCgxfbGFzdF9yZWJvb3RCDQoLX3VwZGF0ZWRfYXQi/wEKHE1hbmFnZW1lbnRDb250cm9sbGVySGFyZHdhcmUSOgoDY3B1GAEgASgLMiguc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyQ1BVSACIAQESQAoGbWVtb3J5GAIgASgLMisuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyTWVtb3J5SAGIAQESQgoHc3RvcmFnZRgDIAEoCzIsLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlclN0b3JhZ2VIAogBAUIGCgRfY3B1QgkKB19tZW1vcnlCCgoIX3N0b3JhZ2Ui9QEKF01hbmFnZW1lbnRDb250cm9sbGVyQ1BVEhIKBW1vZGVsGAEgASgJSACIAQESGQoMbWFudWZhY3R1cmVyGAIgASgJSAGIAQESGwoFY29yZXMYAyABKA1CB7pIBCoCKAFIAogBARInChFtYXhfZnJlcXVlbmN5X21oehgEIAEoDUIHukgEKgIgAEgDiAEBEhkKDGFyY2hpdGVjdHVyZRgFIAEoCUgEiAEBQggKBl9tb2RlbEIPCg1fbWFudWZhY3R1cmVyQggKBl9jb3Jlc0IUChJfbWF4X2ZyZXF1ZW5jeV9taHpCDwoNX2FyY2hpdGVjdHVyZSLZAQoaTWFuYWdlbWVudENvbnRyb2xsZXJNZW1vcnkSPwoLbWVtb3J5X3R5cGUYASABKA4yGy5zY2hlbWEudjFhbHBoYTEuTWVtb3J5VHlwZUIIukgFggECEAFIAIgBARIeCghjYXBhY2l0eRgCIAEoBEIHukgEMgIgAEgBiAEBEicKEW1heF9mcmVxdWVuY3lfbWh6GAMgASgNQge6SAQqAiAASAKIAQFCDgoMX21lbW9yeV90eXBlQgsKCV9jYXBhY2l0eUIUChJfbWF4X2ZyZXF1ZW5jeV9taHoingEKG01hbmFnZW1lbnRDb250cm9sbGVyU3RvcmFnZRJBCgxzdG9yYWdlX3R5cGUYASABKA4yHC5zY2hlbWEudjFhbHBoYTEuU3RvcmFnZVR5cGVCCLpIBYIBAhABSACIAQESHgoIY2FwYWNpdHkYAiABKARCB7pIBDICIABIAYgBAUIPCg1fc3RvcmFnZV90eXBlQgsKCV9jYXBhY2l0eSKMAwoeTWFuYWdlbWVudENvbnRyb2xsZXJSZWR1bmRhbmN5EhoKEnJlZHVuZGFuY3lfZW5hYmxlZBgBIAEoCBJGCgRyb2xlGAIgASgOMikuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyUm9sZUIIukgFggECEAFIAIgBARIoChtkaXNhYmxlX3JlZHVuZGFuY3lfb3ZlcnJpZGUYAyABKAhIAYgBARIdChBmYWlsb3ZlcnNfcGF1c2VkGAQgASgISAKIAQESHAoPcmVkdW5kYW5jeV9tb2RlGAUgASgJSAOIAQESGwoTcGFydG5lcl9jb250cm9sbGVycxgGIAMoCRIcCg9mYWlsb3Zlcl9zdGF0dXMYByABKAlIBIgBAUIHCgVfcm9sZUIeChxfZGlzYWJsZV9yZWR1bmRhbmN5X292ZXJyaWRlQhMKEV9mYWlsb3ZlcnNfcGF1c2VkQhIKEF9yZWR1bmRhbmN5X21vZGVCEgoQX2ZhaWxvdmVyX3N0YXR1cyKAAwoeTWFuYWdlbWVudENvbnRyb2xsZXJSZWJvb3RJbmZvEjkKEGxhc3RfcmVib290X3RpbWUYASABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSACIAQESVQoMcmVib290X2NhdXNlGAIgASgOMjAuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyUmVib290Q2F1c2VCCLpIBYIBAhABSAGIAQESGQoMcmVib290X2NvdW50GAMgASgNSAKIAQESLgoGdXB0aW1lGAQgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uSAOIAQESMQoJYm9vdF90aW1lGAUgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uSASIAQFCEwoRX2xhc3RfcmVib290X3RpbWVCDwoNX3JlYm9vdF9jYXVzZUIPCg1fcmVib290X2NvdW50QgkKB191cHRpbWVCDAoKX2Jvb3RfdGltZSLYAgofTWFuYWdlbWVudENvbnRyb2xsZXJTdGF0ZUNoYW5nZRIgCg9jb250cm9sbGVyX25hbWUYASABKAlCB7pIBHICEAESTgoPcHJldmlvdXNfc3RhdHVzGAIgASgOMisuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyU3RhdHVzQgi6SAWCAQIQARJNCg5jdXJyZW50X3N0YXR1cxgDIAEoDjIrLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlclN0YXR1c0IIukgFggECEAESRAoFY2F1c2UYBCABKA4yKy5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJBY3Rpb25CCLpIBYIBAhABEi4KCmNoYW5nZWRfYXQYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIu0CCh5HZXRNYW5hZ2VtZW50Q29udHJvbGxlclJlcXVlc3QSDgoEbmFtZRgBIAEoCUgAEjkKBHR5cGUYAiABKA4yKS5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJUeXBlSAASPQoGc3RhdHVzGAMgASgOMisuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyU3RhdHVzSAASLQoIbG9jYXRpb24YBCABKAsyGS5zY2hlbWEudjFhbHBoYTEuTG9jYXRpb25IABI5CgRyb2xlGAUgASgOMikuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyUm9sZUgAEjMKCmZpZWxkX21hc2sYBiABKAsyGi5nb29nbGUucHJvdG9idWYuRmllbGRNYXNrSAGIAQFCEwoKaWRlbnRpZmllchIFukgCCAFCDQoLX2ZpZWxkX21hc2siXQofR2V0TWFuYWdlbWVudENvbnRyb2xsZXJSZXNwb25zZRI6Cgtjb250cm9sbGVycxgBIAMoCzIlLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlciLYAgogTGlzdE1hbmFnZW1lbnRDb250cm9sbGVyc1JlcXVlc3QSOQoEdHlwZRgBIAEoDjIpLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlclR5cGVIABI9CgZzdGF0dXMYAiABKA4yKy5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJTdGF0dXNIABItCghsb2NhdGlvbhgDIAEoCzIZLnNjaGVtYS52MWFscGhhMS5Mb2NhdGlvbkgAEjkKBHJvbGUYBCABKA4yKS5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJSb2xlSAASMwoKZmllbGRfbWFzaxgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2tIAYgBAUIMCgppZGVudGlmaWVyQg0KC19maWVsZF9tYXNrIl8KIUxpc3RNYW5hZ2VtZW50Q29udHJvbGxlcnNSZXNwb25zZRI6Cgtjb250cm9sbGVycxgBIAMoCzIlLnNjaGVtYS52MWFscGhhMS5NYW5hZ2VtZW50Q29udHJvbGxlciK4AQohVXBkYXRlTWFuYWdlbWVudENvbnRyb2xsZXJSZXF1ZXN0EiAKD2NvbnRyb2xsZXJfbmFtZRgBIAEoCUIHukgEcgIQARJBCgpjb250cm9sbGVyGAIgASgLMiUuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyQga6SAPIAQESLgoKZmllbGRfbWFzaxgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2siXwoiVXBkYXRlTWFuYWdlbWVudENvbnRyb2xsZXJSZXNwb25zZRI5Cgpjb250cm9sbGVyGAEgASgLMiUuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyIpEBCiZDaGFuZ2VNYW5hZ2VtZW50Q29udHJvbGxlclN0YXRlUmVxdWVzdBIgCg9jb250cm9sbGVyX25hbWUYASABKAlCB7pIBHICEAESRQoGYWN0aW9uGAIgASgOMisuc2NoZW1hLnYxYWxwaGExLk1hbmFnZW1lbnRDb250cm9sbGVyQWN0aW9uQgi6SAWCAQIQASJ4CidDaGFuZ2VNYW5hZ2VtZW50Q29udHJvbGxlclN0YXRlUmVzcG9uc2USTQoOY3VycmVudF9zdGF0dXMYASABKA4yKy5zY2hlbWEudjFhbHBoYTEuTWFuYWdlbWVudENvbnRyb2xsZXJTdGF0dXNCCLpIBYIBAhABKqcCChhNYW5hZ2VtZW50Q29udHJvbGxlclR5cGUSKgomTUFOQUdFTUVOVF9DT05UUk9MTEVSX1RZUEVfVU5TUEVDSUZJRUQQABIiCh5NQU5BR0VNRU5UX0NPTlRST0xMRVJfVFlQRV9CTUMQARIoCiRNQU5BR0VNRU5UX0NPTlRST0xMRVJfVFlQRV9TQVRFTExJVEUQAhIxCi1NQU5BR0VNRU5UX0NPTlRST0xMRVJfVFlQRV9DSEFTU0lTX0NPTlRST0xMRVIQAxIuCipNQU5BR0VNRU5UX0NPTlRST0xMRVJfVFlQRV9OT0RFX0NPTlRST0xMRVIQBBIuCipNQU5BR0VNRU5UX0NPTlRST0xMRVJfVFlQRV9SQUNLX0NPTlRST0xMRVIQBSrJAgoaTWFuYWdlbWVudENvbnRyb2xsZXJTdGF0dXMSLAooTUFOQUdFTUVOVF9DT05UUk9MTEVSX1NUQVRVU19VTlNQRUNJRklFRBAAEiYKIk1BTkFHRU1FTlRfQ09OVFJPTExFUl9TVEFUVVNfUkVBRFkQARIqCiZNQU5BR0VNRU5UX0NPTlRST0xMRVJfU1RBVFVTX05PVF9SRUFEWRACEikKJU1BTkFHRU1FTlRfQ09OVFJPTExFUl9TVEFUVVNfRElTQUJMRUQQAxIpCiVNQU5BR0VNRU5UX0NPTlRST0xMRVJfU1RBVFVTX1FVSUVTQ0VEEAQSKwonTUFOQUdFTUVOVF9DT05UUk9MTEVSX1NUQVRVU19ESUFHTk9TVElDEAUSJgoiTUFOQUdFTUVOVF9DT05UUk9MTEVSX1NUQVRVU19FUlJPUhAGKr0EChpNYW5hZ2VtZW50Q29udHJvbGxlckFjdGlvbhIsCihNQU5BR0VNRU5UX0NPTlRST0xMRVJfQUNUSU9OX1VOU1BFQ0lGSUVEEAASJwojTUFOQUdFTUVOVF9DT05UUk9MTEVSX0FDVElPTl9FTkFCTEUQARIoCiRNQU5BR0VNRU5UX0NPTlRST0xMRVJfQUNUSU9OX0RJU0FCTEUQAhInCiNNQU5BR0VNRU5UX0NPTlRST0xMRVJfQUNUSU9OX1JFQk9PVBADEisKJ01BTkFHRU1FTlRfQ09OVFJPTExFUl9BQ1RJT05fV0FSTV9SRVNFVBAEEisKJ01BTkFHRU1FTlRfQ09OVFJPTExFUl9BQ1RJT05fQ09MRF9SRVNFVBAFEisKJ01BTkFHRU1FTlRfQ09OVFJPTExFUl9BQ1RJT05fSEFSRF9SRVNFVBAGEi4KKk1BTkFHRU1FTlRfQ09OVFJPTExFUl9BQ1RJT05fRkFDVE9SWV9SRVNFVBAHEisKJ01BTkFHRU1FTlRfQ09OVFJPTExFUl9BQ1RJT05fQ0xFQVJfTE9HUxAIEi4KKk1BTkFHRU1FTlRfQ09OVFJPTExFUl9BQ1RJT05fQkFDS1VQX0NPTkZJRxAJEi8KK01BTkFHRU1FTlRfQ09OVFJPTExFUl9BQ1RJT05fUkVTVE9SRV9DT05GSUcQChIwCixNQU5BR0VNRU5UX0NPTlRST0xMRVJfQUNUSU9OX1VQREFURV9GSVJNV0FSRRALKtECCh9NYW5hZ2VtZW50Q29udHJvbGxlclJlYm9vdENhdXNlEjIKLk1BTkFHRU1FTlRfQ09OVFJPTExFUl9SRUJPT1RfQ0FVU0VfVU5TUEVDSUZJRUQQABIzCi9NQU5BR0VNRU5UX0NPTlRST0xMRVJfUkVCT09UX0NBVVNFX1BPV0VSX0JVVFRPThABEjMKL01BTkFHRU1FTlRfQ09OVFJPTExFUl9SRUJPT1RfQ0FVU0VfUkVTRVRfQlVUVE9OEAISLworTUFOQUdFTUVOVF9DT05UUk9MTEVSX1JFQk9PVF9DQVVTRV9XQVRDSERPRxADEjEKLU1BTkFHRU1FTlRfQ09OVFJPTExFUl9SRUJPT1RfQ0FVU0VfU09GVF9SRVNFVBAEEiwKKE1BTkFHRU1FTlRfQ09OVFJPTExFUl9SRUJPT1RfQ0FVU0VfT1RIRVIQBSq9AQoYTWFuYWdlbWVudENvbnRyb2xsZXJSb2xlEioKJk1BTkFHRU1FTlRfQ09OVFJPTExFUl9ST0xFX1VOU1BFQ0lGSUVEEAASJgoiTUFOQUdFTUVOVF9DT05UUk9MTEVSX1JPTEVfUFJJTUFSWRABEiUKIU1BTkFHRU1FTlRfQ09OVFJPTExFUl9ST0xFX0JBQ0tVUBACEiYKIk1BTkFHRU1FTlRfQ09OVFJPTExFUl9ST0xFX1NUQU5EQlkQAyrhAQoKTWVtb3J5VHlwZRIbChdNRU1PUllfVFlQRV9VTlNQRUNJRklFRBAAEhQKEE1FTU9SWV9UWVBFX0REUjIQARIUChBNRU1PUllfVFlQRV9ERFIzEAISFAoQTUVNT1JZX1RZUEVfRERSNBADEhQKEE1FTU9SWV9UWVBFX0REUjUQBBIWChJNRU1PUllfVFlQRV9MUEREUjIQBRIWChJNRU1PUllfVFlQRV9MUEREUjMQBhIWChJNRU1PUllfVFlQRV9MUEREUjQQBxIWChJNRU1PUllfVFlQRV9MUEREUjUQCCpwCgtTdG9yYWdlVHlwZRIcChhTVE9SQUdFX1RZUEVfVU5TUEVDSUZJRUQQABIVChFTVE9SQUdFX1RZUEVfRU1NQxABEhQKEFNUT1JBR0VfVFlQRV9TU0QQAhIWChJTVE9SQUdFX1RZUEVfRkxBU0gQA0LMAQoTY29tLnNjaGVtYS52MWFscGhhMUIZTWFuYWdlbWVudGNvbnRyb2xsZXJQcm90b1ABWj1naXRodWIuY29tL3UtYm1jL3UtYm1jL2FwaS9nZW4vc2NoZW1hL3YxYWxwaGExO3NjaGVtYXYxYWxwaGExogIDU1hYqgIPU2NoZW1hLlYxYWxwaGExygIPU2NoZW1hXFYxYWxwaGEx4gIbU2NoZW1hXFYxYWxwaGExXEdQQk1ldGFkYXRh6gIQU2NoZW1hOjpWMWFscGhhMWIGcHJvdG8z", [file_buf_validate_validate, file_google_protobuf_field_mask, file_google_protobuf_timestamp, file_google_protobuf_duration, file_schema_v1alpha1_asset, file_schema_v1alpha1_firmware, file_schema_v1alpha1_location]);
 
 /**
  * @generated from message schema.v1alpha1.ManagementController
@@ -48,52 +48,47 @@ export type ManagementController = Message<"schema.v1alpha1.ManagementController
   type?: ManagementControllerType;
 
   /**
-   * @generated from field: optional schema.v1alpha1.ManagementControllerState current_state = 5;
-   */
-  currentState?: ManagementControllerState;
-
-  /**
-   * @generated from field: optional schema.v1alpha1.ManagementControllerTransition requested_transition = 6;
-   */
-  requestedTransition?: ManagementControllerTransition;
-
-  /**
-   * @generated from field: optional schema.v1alpha1.ManagementControllerStatus status = 7;
+   * @generated from field: optional schema.v1alpha1.ManagementControllerStatus status = 5;
    */
   status?: ManagementControllerStatus;
 
   /**
-   * @generated from field: optional schema.v1alpha1.Location location = 8;
+   * @generated from field: optional schema.v1alpha1.ManagementControllerAction requested_action = 6;
+   */
+  requestedAction?: ManagementControllerAction;
+
+  /**
+   * @generated from field: optional schema.v1alpha1.Location location = 7;
    */
   location?: Location;
 
   /**
-   * @generated from field: optional schema.v1alpha1.ManagementControllerHardware hardware = 9;
+   * @generated from field: optional schema.v1alpha1.ManagementControllerHardware hardware = 8;
    */
   hardware?: ManagementControllerHardware;
 
   /**
-   * @generated from field: optional schema.v1alpha1.Firmware firmware = 10;
+   * @generated from field: optional schema.v1alpha1.Firmware firmware = 9;
    */
   firmware?: Firmware;
 
   /**
-   * @generated from field: optional schema.v1alpha1.ManagementControllerRedundancy redundancy = 11;
+   * @generated from field: optional schema.v1alpha1.ManagementControllerRedundancy redundancy = 10;
    */
   redundancy?: ManagementControllerRedundancy;
 
   /**
-   * @generated from field: optional schema.v1alpha1.ManagementControllerRebootInfo last_reboot = 12;
+   * @generated from field: optional schema.v1alpha1.ManagementControllerRebootInfo last_reboot = 11;
    */
   lastReboot?: ManagementControllerRebootInfo;
 
   /**
-   * @generated from field: optional google.protobuf.Timestamp updated_at = 13;
+   * @generated from field: optional google.protobuf.Timestamp updated_at = 12;
    */
   updatedAt?: Timestamp;
 
   /**
-   * @generated from field: map<string, string> metadata = 14;
+   * @generated from field: map<string, string> metadata = 13;
    */
   metadata: { [key: string]: string };
 };
@@ -223,14 +218,14 @@ export const ManagementControllerStorageSchema: GenMessage<ManagementControllerS
  */
 export type ManagementControllerRedundancy = Message<"schema.v1alpha1.ManagementControllerRedundancy"> & {
   /**
-   * @generated from field: optional schema.v1alpha1.ManagementControllerRole role = 1;
-   */
-  role?: ManagementControllerRole;
-
-  /**
-   * @generated from field: bool redundancy_enabled = 2;
+   * @generated from field: bool redundancy_enabled = 1;
    */
   redundancyEnabled: boolean;
+
+  /**
+   * @generated from field: optional schema.v1alpha1.ManagementControllerRole role = 2;
+   */
+  role?: ManagementControllerRole;
 
   /**
    * @generated from field: optional bool disable_redundancy_override = 3;
@@ -303,6 +298,43 @@ export const ManagementControllerRebootInfoSchema: GenMessage<ManagementControll
   messageDesc(file_schema_v1alpha1_managementcontroller, 6);
 
 /**
+ * @generated from message schema.v1alpha1.ManagementControllerStateChange
+ */
+export type ManagementControllerStateChange = Message<"schema.v1alpha1.ManagementControllerStateChange"> & {
+  /**
+   * @generated from field: string controller_name = 1;
+   */
+  controllerName: string;
+
+  /**
+   * @generated from field: schema.v1alpha1.ManagementControllerStatus previous_status = 2;
+   */
+  previousStatus: ManagementControllerStatus;
+
+  /**
+   * @generated from field: schema.v1alpha1.ManagementControllerStatus current_status = 3;
+   */
+  currentStatus: ManagementControllerStatus;
+
+  /**
+   * @generated from field: schema.v1alpha1.ManagementControllerAction cause = 4;
+   */
+  cause: ManagementControllerAction;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp changed_at = 5;
+   */
+  changedAt?: Timestamp;
+};
+
+/**
+ * Describes the message schema.v1alpha1.ManagementControllerStateChange.
+ * Use `create(ManagementControllerStateChangeSchema)` to create a new message.
+ */
+export const ManagementControllerStateChangeSchema: GenMessage<ManagementControllerStateChange> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_managementcontroller, 7);
+
+/**
  * @generated from message schema.v1alpha1.GetManagementControllerRequest
  */
 export type GetManagementControllerRequest = Message<"schema.v1alpha1.GetManagementControllerRequest"> & {
@@ -311,34 +343,34 @@ export type GetManagementControllerRequest = Message<"schema.v1alpha1.GetManagem
    */
   identifier: {
     /**
-     * @generated from field: string controller_id = 1;
-     */
-    value: string;
-    case: "controllerId";
-  } | {
-    /**
-     * @generated from field: string name = 2;
+     * @generated from field: string name = 1;
      */
     value: string;
     case: "name";
   } | {
     /**
-     * @generated from field: schema.v1alpha1.ManagementControllerType type = 3;
+     * @generated from field: schema.v1alpha1.ManagementControllerType type = 2;
      */
     value: ManagementControllerType;
     case: "type";
   } | {
     /**
-     * @generated from field: schema.v1alpha1.ManagementControllerStatus status = 4;
+     * @generated from field: schema.v1alpha1.ManagementControllerStatus status = 3;
      */
     value: ManagementControllerStatus;
     case: "status";
   } | {
     /**
-     * @generated from field: schema.v1alpha1.Location location = 5;
+     * @generated from field: schema.v1alpha1.Location location = 4;
      */
     value: Location;
     case: "location";
+  } | {
+    /**
+     * @generated from field: schema.v1alpha1.ManagementControllerRole role = 5;
+     */
+    value: ManagementControllerRole;
+    case: "role";
   } | { case: undefined; value?: undefined };
 
   /**
@@ -352,7 +384,7 @@ export type GetManagementControllerRequest = Message<"schema.v1alpha1.GetManagem
  * Use `create(GetManagementControllerRequestSchema)` to create a new message.
  */
 export const GetManagementControllerRequestSchema: GenMessage<GetManagementControllerRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_managementcontroller, 7);
+  messageDesc(file_schema_v1alpha1_managementcontroller, 8);
 
 /**
  * @generated from message schema.v1alpha1.GetManagementControllerResponse
@@ -369,24 +401,43 @@ export type GetManagementControllerResponse = Message<"schema.v1alpha1.GetManage
  * Use `create(GetManagementControllerResponseSchema)` to create a new message.
  */
 export const GetManagementControllerResponseSchema: GenMessage<GetManagementControllerResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_managementcontroller, 8);
+  messageDesc(file_schema_v1alpha1_managementcontroller, 9);
 
 /**
  * @generated from message schema.v1alpha1.ListManagementControllersRequest
  */
 export type ListManagementControllersRequest = Message<"schema.v1alpha1.ListManagementControllersRequest"> & {
   /**
-   * @generated from field: optional schema.v1alpha1.ManagementControllerType type = 1;
+   * @generated from oneof schema.v1alpha1.ListManagementControllersRequest.identifier
    */
-  type?: ManagementControllerType;
+  identifier: {
+    /**
+     * @generated from field: schema.v1alpha1.ManagementControllerType type = 1;
+     */
+    value: ManagementControllerType;
+    case: "type";
+  } | {
+    /**
+     * @generated from field: schema.v1alpha1.ManagementControllerStatus status = 2;
+     */
+    value: ManagementControllerStatus;
+    case: "status";
+  } | {
+    /**
+     * @generated from field: schema.v1alpha1.Location location = 3;
+     */
+    value: Location;
+    case: "location";
+  } | {
+    /**
+     * @generated from field: schema.v1alpha1.ManagementControllerRole role = 4;
+     */
+    value: ManagementControllerRole;
+    case: "role";
+  } | { case: undefined; value?: undefined };
 
   /**
-   * @generated from field: optional schema.v1alpha1.ManagementControllerStatus status = 2;
-   */
-  status?: ManagementControllerStatus;
-
-  /**
-   * @generated from field: optional google.protobuf.FieldMask field_mask = 3;
+   * @generated from field: optional google.protobuf.FieldMask field_mask = 5;
    */
   fieldMask?: FieldMask;
 };
@@ -396,7 +447,7 @@ export type ListManagementControllersRequest = Message<"schema.v1alpha1.ListMana
  * Use `create(ListManagementControllersRequestSchema)` to create a new message.
  */
 export const ListManagementControllersRequestSchema: GenMessage<ListManagementControllersRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_managementcontroller, 9);
+  messageDesc(file_schema_v1alpha1_managementcontroller, 10);
 
 /**
  * @generated from message schema.v1alpha1.ListManagementControllersResponse
@@ -413,16 +464,16 @@ export type ListManagementControllersResponse = Message<"schema.v1alpha1.ListMan
  * Use `create(ListManagementControllersResponseSchema)` to create a new message.
  */
 export const ListManagementControllersResponseSchema: GenMessage<ListManagementControllersResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_managementcontroller, 10);
+  messageDesc(file_schema_v1alpha1_managementcontroller, 11);
 
 /**
  * @generated from message schema.v1alpha1.UpdateManagementControllerRequest
  */
 export type UpdateManagementControllerRequest = Message<"schema.v1alpha1.UpdateManagementControllerRequest"> & {
   /**
-   * @generated from field: string controller_id = 1;
+   * @generated from field: string controller_name = 1;
    */
-  controllerId: string;
+  controllerName: string;
 
   /**
    * @generated from field: schema.v1alpha1.ManagementController controller = 2;
@@ -440,7 +491,7 @@ export type UpdateManagementControllerRequest = Message<"schema.v1alpha1.UpdateM
  * Use `create(UpdateManagementControllerRequestSchema)` to create a new message.
  */
 export const UpdateManagementControllerRequestSchema: GenMessage<UpdateManagementControllerRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_managementcontroller, 11);
+  messageDesc(file_schema_v1alpha1_managementcontroller, 12);
 
 /**
  * @generated from message schema.v1alpha1.UpdateManagementControllerResponse
@@ -457,71 +508,46 @@ export type UpdateManagementControllerResponse = Message<"schema.v1alpha1.Update
  * Use `create(UpdateManagementControllerResponseSchema)` to create a new message.
  */
 export const UpdateManagementControllerResponseSchema: GenMessage<UpdateManagementControllerResponse> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_managementcontroller, 12);
+  messageDesc(file_schema_v1alpha1_managementcontroller, 13);
 
 /**
- * @generated from message schema.v1alpha1.ManagementControllerControlRequest
+ * @generated from message schema.v1alpha1.ChangeManagementControllerStateRequest
  */
-export type ManagementControllerControlRequest = Message<"schema.v1alpha1.ManagementControllerControlRequest"> & {
+export type ChangeManagementControllerStateRequest = Message<"schema.v1alpha1.ChangeManagementControllerStateRequest"> & {
   /**
-   * @generated from field: string controller_id = 1;
+   * @generated from field: string controller_name = 1;
    */
-  controllerId: string;
+  controllerName: string;
 
   /**
    * @generated from field: schema.v1alpha1.ManagementControllerAction action = 2;
    */
   action: ManagementControllerAction;
-
-  /**
-   * @generated from field: optional bool force = 3;
-   */
-  force?: boolean;
-
-  /**
-   * @generated from field: map<string, string> parameters = 4;
-   */
-  parameters: { [key: string]: string };
 };
 
 /**
- * Describes the message schema.v1alpha1.ManagementControllerControlRequest.
- * Use `create(ManagementControllerControlRequestSchema)` to create a new message.
+ * Describes the message schema.v1alpha1.ChangeManagementControllerStateRequest.
+ * Use `create(ChangeManagementControllerStateRequestSchema)` to create a new message.
  */
-export const ManagementControllerControlRequestSchema: GenMessage<ManagementControllerControlRequest> = /*@__PURE__*/
-  messageDesc(file_schema_v1alpha1_managementcontroller, 13);
-
-/**
- * @generated from message schema.v1alpha1.ManagementControllerControlResponse
- */
-export type ManagementControllerControlResponse = Message<"schema.v1alpha1.ManagementControllerControlResponse"> & {
-  /**
-   * @generated from field: bool success = 1;
-   */
-  success: boolean;
-
-  /**
-   * @generated from field: optional schema.v1alpha1.ManagementControllerState current_state = 2;
-   */
-  currentState?: ManagementControllerState;
-
-  /**
-   * @generated from field: optional string error_message = 3;
-   */
-  errorMessage?: string;
-
-  /**
-   * @generated from field: optional google.protobuf.Timestamp estimated_completion = 4;
-   */
-  estimatedCompletion?: Timestamp;
-};
-
-/**
- * Describes the message schema.v1alpha1.ManagementControllerControlResponse.
- * Use `create(ManagementControllerControlResponseSchema)` to create a new message.
- */
-export const ManagementControllerControlResponseSchema: GenMessage<ManagementControllerControlResponse> = /*@__PURE__*/
+export const ChangeManagementControllerStateRequestSchema: GenMessage<ChangeManagementControllerStateRequest> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_managementcontroller, 14);
+
+/**
+ * @generated from message schema.v1alpha1.ChangeManagementControllerStateResponse
+ */
+export type ChangeManagementControllerStateResponse = Message<"schema.v1alpha1.ChangeManagementControllerStateResponse"> & {
+  /**
+   * @generated from field: schema.v1alpha1.ManagementControllerStatus current_status = 1;
+   */
+  currentStatus: ManagementControllerStatus;
+};
+
+/**
+ * Describes the message schema.v1alpha1.ChangeManagementControllerStateResponse.
+ * Use `create(ChangeManagementControllerStateResponseSchema)` to create a new message.
+ */
+export const ChangeManagementControllerStateResponseSchema: GenMessage<ChangeManagementControllerStateResponse> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_managementcontroller, 15);
 
 /**
  * @generated from enum schema.v1alpha1.ManagementControllerType
@@ -574,29 +600,34 @@ export enum ManagementControllerStatus {
   UNSPECIFIED = 0,
 
   /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_ENABLED = 1;
+   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_READY = 1;
    */
-  ENABLED = 1,
+  READY = 1,
 
   /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_DISABLED = 2;
+   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_NOT_READY = 2;
    */
-  DISABLED = 2,
+  NOT_READY = 2,
 
   /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_UNAVAILABLE_OFFLINE = 3;
+   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_DISABLED = 3;
    */
-  UNAVAILABLE_OFFLINE = 3,
+  DISABLED = 3,
 
   /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_IN_TEST = 4;
+   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_QUIESCED = 4;
    */
-  IN_TEST = 4,
+  QUIESCED = 4,
 
   /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_ERROR = 5;
+   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC = 5;
    */
-  ERROR = 5,
+  DIAGNOSTIC = 5,
+
+  /**
+   * @generated from enum value: MANAGEMENT_CONTROLLER_STATUS_ERROR = 6;
+   */
+  ERROR = 6,
 }
 
 /**
@@ -606,61 +637,75 @@ export const ManagementControllerStatusSchema: GenEnum<ManagementControllerStatu
   enumDesc(file_schema_v1alpha1_managementcontroller, 1);
 
 /**
- * @generated from enum schema.v1alpha1.ManagementControllerState
+ * @generated from enum schema.v1alpha1.ManagementControllerAction
  */
-export enum ManagementControllerState {
+export enum ManagementControllerAction {
   /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_STATE_UNSPECIFIED = 0;
+   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED = 0;
    */
   UNSPECIFIED = 0,
 
   /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_STATE_READY = 1;
+   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_ENABLE = 1;
    */
-  READY = 1,
+  ENABLE = 1,
 
   /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_STATE_NOT_READY = 2;
+   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_DISABLE = 2;
    */
-  NOT_READY = 2,
+  DISABLE = 2,
+
+  /**
+   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_REBOOT = 3;
+   */
+  REBOOT = 3,
+
+  /**
+   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_WARM_RESET = 4;
+   */
+  WARM_RESET = 4,
+
+  /**
+   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_COLD_RESET = 5;
+   */
+  COLD_RESET = 5,
+
+  /**
+   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_HARD_RESET = 6;
+   */
+  HARD_RESET = 6,
+
+  /**
+   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET = 7;
+   */
+  FACTORY_RESET = 7,
+
+  /**
+   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_CLEAR_LOGS = 8;
+   */
+  CLEAR_LOGS = 8,
+
+  /**
+   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_BACKUP_CONFIG = 9;
+   */
+  BACKUP_CONFIG = 9,
+
+  /**
+   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_RESTORE_CONFIG = 10;
+   */
+  RESTORE_CONFIG = 10,
+
+  /**
+   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_UPDATE_FIRMWARE = 11;
+   */
+  UPDATE_FIRMWARE = 11,
 }
 
 /**
- * Describes the enum schema.v1alpha1.ManagementControllerState.
+ * Describes the enum schema.v1alpha1.ManagementControllerAction.
  */
-export const ManagementControllerStateSchema: GenEnum<ManagementControllerState> = /*@__PURE__*/
+export const ManagementControllerActionSchema: GenEnum<ManagementControllerAction> = /*@__PURE__*/
   enumDesc(file_schema_v1alpha1_managementcontroller, 2);
-
-/**
- * @generated from enum schema.v1alpha1.ManagementControllerTransition
- */
-export enum ManagementControllerTransition {
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_TRANSITION_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_TRANSITION_REBOOT = 1;
-   */
-  REBOOT = 1,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_TRANSITION_WARM_RESET = 2;
-   */
-  WARM_RESET = 2,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_TRANSITION_COLD_RESET = 3;
-   */
-  COLD_RESET = 3,
-}
-
-/**
- * Describes the enum schema.v1alpha1.ManagementControllerTransition.
- */
-export const ManagementControllerTransitionSchema: GenEnum<ManagementControllerTransition> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_managementcontroller, 3);
 
 /**
  * @generated from enum schema.v1alpha1.ManagementControllerRebootCause
@@ -701,7 +746,7 @@ export enum ManagementControllerRebootCause {
  * Describes the enum schema.v1alpha1.ManagementControllerRebootCause.
  */
 export const ManagementControllerRebootCauseSchema: GenEnum<ManagementControllerRebootCause> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_managementcontroller, 4);
+  enumDesc(file_schema_v1alpha1_managementcontroller, 3);
 
 /**
  * @generated from enum schema.v1alpha1.ManagementControllerRole
@@ -732,58 +777,7 @@ export enum ManagementControllerRole {
  * Describes the enum schema.v1alpha1.ManagementControllerRole.
  */
 export const ManagementControllerRoleSchema: GenEnum<ManagementControllerRole> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_managementcontroller, 5);
-
-/**
- * @generated from enum schema.v1alpha1.ManagementControllerAction
- */
-export enum ManagementControllerAction {
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_REBOOT = 1;
-   */
-  REBOOT = 1,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_HARD_RESET = 2;
-   */
-  HARD_RESET = 2,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET = 3;
-   */
-  FACTORY_RESET = 3,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_CLEAR_LOGS = 4;
-   */
-  CLEAR_LOGS = 4,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_BACKUP_CONFIG = 5;
-   */
-  BACKUP_CONFIG = 5,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_RESTORE_CONFIG = 6;
-   */
-  RESTORE_CONFIG = 6,
-
-  /**
-   * @generated from enum value: MANAGEMENT_CONTROLLER_ACTION_UPDATE_FIRMWARE = 7;
-   */
-  UPDATE_FIRMWARE = 7,
-}
-
-/**
- * Describes the enum schema.v1alpha1.ManagementControllerAction.
- */
-export const ManagementControllerActionSchema: GenEnum<ManagementControllerAction> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_managementcontroller, 6);
+  enumDesc(file_schema_v1alpha1_managementcontroller, 4);
 
 /**
  * @generated from enum schema.v1alpha1.MemoryType
@@ -839,7 +833,7 @@ export enum MemoryType {
  * Describes the enum schema.v1alpha1.MemoryType.
  */
 export const MemoryTypeSchema: GenEnum<MemoryType> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_managementcontroller, 7);
+  enumDesc(file_schema_v1alpha1_managementcontroller, 5);
 
 /**
  * @generated from enum schema.v1alpha1.StorageType
@@ -870,5 +864,5 @@ export enum StorageType {
  * Describes the enum schema.v1alpha1.StorageType.
  */
 export const StorageTypeSchema: GenEnum<StorageType> = /*@__PURE__*/
-  enumDesc(file_schema_v1alpha1_managementcontroller, 8);
+  enumDesc(file_schema_v1alpha1_managementcontroller, 6);
 

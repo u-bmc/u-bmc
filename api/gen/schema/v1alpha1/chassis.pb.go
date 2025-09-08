@@ -224,55 +224,64 @@ func (ChassisStatus) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{2}
 }
 
-type ChassisTransition int32
+type ChassisAction int32
 
 const (
-	ChassisTransition_CHASSIS_TRANSITION_UNSPECIFIED ChassisTransition = 0
-	ChassisTransition_CHASSIS_TRANSITION_ON          ChassisTransition = 1
-	ChassisTransition_CHASSIS_TRANSITION_OFF         ChassisTransition = 2
-	ChassisTransition_CHASSIS_TRANSITION_POWER_CYCLE ChassisTransition = 3
+	ChassisAction_CHASSIS_ACTION_UNSPECIFIED        ChassisAction = 0
+	ChassisAction_CHASSIS_ACTION_ON                 ChassisAction = 1
+	ChassisAction_CHASSIS_ACTION_OFF                ChassisAction = 2
+	ChassisAction_CHASSIS_ACTION_POWER_CYCLE        ChassisAction = 3
+	ChassisAction_CHASSIS_ACTION_IDENTIFY_ON        ChassisAction = 4
+	ChassisAction_CHASSIS_ACTION_IDENTIFY_OFF       ChassisAction = 5
+	ChassisAction_CHASSIS_ACTION_EMERGENCY_SHUTDOWN ChassisAction = 6
 )
 
-// Enum value maps for ChassisTransition.
+// Enum value maps for ChassisAction.
 var (
-	ChassisTransition_name = map[int32]string{
-		0: "CHASSIS_TRANSITION_UNSPECIFIED",
-		1: "CHASSIS_TRANSITION_ON",
-		2: "CHASSIS_TRANSITION_OFF",
-		3: "CHASSIS_TRANSITION_POWER_CYCLE",
+	ChassisAction_name = map[int32]string{
+		0: "CHASSIS_ACTION_UNSPECIFIED",
+		1: "CHASSIS_ACTION_ON",
+		2: "CHASSIS_ACTION_OFF",
+		3: "CHASSIS_ACTION_POWER_CYCLE",
+		4: "CHASSIS_ACTION_IDENTIFY_ON",
+		5: "CHASSIS_ACTION_IDENTIFY_OFF",
+		6: "CHASSIS_ACTION_EMERGENCY_SHUTDOWN",
 	}
-	ChassisTransition_value = map[string]int32{
-		"CHASSIS_TRANSITION_UNSPECIFIED": 0,
-		"CHASSIS_TRANSITION_ON":          1,
-		"CHASSIS_TRANSITION_OFF":         2,
-		"CHASSIS_TRANSITION_POWER_CYCLE": 3,
+	ChassisAction_value = map[string]int32{
+		"CHASSIS_ACTION_UNSPECIFIED":        0,
+		"CHASSIS_ACTION_ON":                 1,
+		"CHASSIS_ACTION_OFF":                2,
+		"CHASSIS_ACTION_POWER_CYCLE":        3,
+		"CHASSIS_ACTION_IDENTIFY_ON":        4,
+		"CHASSIS_ACTION_IDENTIFY_OFF":       5,
+		"CHASSIS_ACTION_EMERGENCY_SHUTDOWN": 6,
 	}
 )
 
-func (x ChassisTransition) Enum() *ChassisTransition {
-	p := new(ChassisTransition)
+func (x ChassisAction) Enum() *ChassisAction {
+	p := new(ChassisAction)
 	*p = x
 	return p
 }
 
-func (x ChassisTransition) String() string {
+func (x ChassisAction) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (ChassisTransition) Descriptor() protoreflect.EnumDescriptor {
+func (ChassisAction) Descriptor() protoreflect.EnumDescriptor {
 	return file_schema_v1alpha1_chassis_proto_enumTypes[3].Descriptor()
 }
 
-func (ChassisTransition) Type() protoreflect.EnumType {
+func (ChassisAction) Type() protoreflect.EnumType {
 	return &file_schema_v1alpha1_chassis_proto_enumTypes[3]
 }
 
-func (x ChassisTransition) Number() protoreflect.EnumNumber {
+func (x ChassisAction) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use ChassisTransition.Descriptor instead.
-func (ChassisTransition) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use ChassisAction.Descriptor instead.
+func (ChassisAction) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{3}
 }
 
@@ -505,70 +514,6 @@ func (ChassisLEDType) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{7}
 }
 
-type ChassisControlAction int32
-
-const (
-	ChassisControlAction_CHASSIS_CONTROL_ACTION_UNSPECIFIED        ChassisControlAction = 0
-	ChassisControlAction_CHASSIS_CONTROL_ACTION_POWER_ON           ChassisControlAction = 1
-	ChassisControlAction_CHASSIS_CONTROL_ACTION_POWER_OFF          ChassisControlAction = 2
-	ChassisControlAction_CHASSIS_CONTROL_ACTION_POWER_CYCLE        ChassisControlAction = 3
-	ChassisControlAction_CHASSIS_CONTROL_ACTION_RESET              ChassisControlAction = 4
-	ChassisControlAction_CHASSIS_CONTROL_ACTION_IDENTIFY_ON        ChassisControlAction = 5
-	ChassisControlAction_CHASSIS_CONTROL_ACTION_IDENTIFY_OFF       ChassisControlAction = 6
-	ChassisControlAction_CHASSIS_CONTROL_ACTION_EMERGENCY_SHUTDOWN ChassisControlAction = 7
-)
-
-// Enum value maps for ChassisControlAction.
-var (
-	ChassisControlAction_name = map[int32]string{
-		0: "CHASSIS_CONTROL_ACTION_UNSPECIFIED",
-		1: "CHASSIS_CONTROL_ACTION_POWER_ON",
-		2: "CHASSIS_CONTROL_ACTION_POWER_OFF",
-		3: "CHASSIS_CONTROL_ACTION_POWER_CYCLE",
-		4: "CHASSIS_CONTROL_ACTION_RESET",
-		5: "CHASSIS_CONTROL_ACTION_IDENTIFY_ON",
-		6: "CHASSIS_CONTROL_ACTION_IDENTIFY_OFF",
-		7: "CHASSIS_CONTROL_ACTION_EMERGENCY_SHUTDOWN",
-	}
-	ChassisControlAction_value = map[string]int32{
-		"CHASSIS_CONTROL_ACTION_UNSPECIFIED":        0,
-		"CHASSIS_CONTROL_ACTION_POWER_ON":           1,
-		"CHASSIS_CONTROL_ACTION_POWER_OFF":          2,
-		"CHASSIS_CONTROL_ACTION_POWER_CYCLE":        3,
-		"CHASSIS_CONTROL_ACTION_RESET":              4,
-		"CHASSIS_CONTROL_ACTION_IDENTIFY_ON":        5,
-		"CHASSIS_CONTROL_ACTION_IDENTIFY_OFF":       6,
-		"CHASSIS_CONTROL_ACTION_EMERGENCY_SHUTDOWN": 7,
-	}
-)
-
-func (x ChassisControlAction) Enum() *ChassisControlAction {
-	p := new(ChassisControlAction)
-	*p = x
-	return p
-}
-
-func (x ChassisControlAction) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ChassisControlAction) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_chassis_proto_enumTypes[8].Descriptor()
-}
-
-func (ChassisControlAction) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_chassis_proto_enumTypes[8]
-}
-
-func (x ChassisControlAction) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ChassisControlAction.Descriptor instead.
-func (ChassisControlAction) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{8}
-}
-
 type Chassis struct {
 	state                   protoimpl.MessageState `protogen:"open.v1"`
 	Name                    string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -577,7 +522,7 @@ type Chassis struct {
 	Type                    *ChassisType           `protobuf:"varint,4,opt,name=type,proto3,enum=schema.v1alpha1.ChassisType,oneof" json:"type,omitempty"`
 	FormFactor              *ChassisFormFactor     `protobuf:"varint,5,opt,name=form_factor,json=formFactor,proto3,enum=schema.v1alpha1.ChassisFormFactor,oneof" json:"form_factor,omitempty"`
 	Status                  *ChassisStatus         `protobuf:"varint,6,opt,name=status,proto3,enum=schema.v1alpha1.ChassisStatus,oneof" json:"status,omitempty"`
-	RequestedTransition     *ChassisTransition     `protobuf:"varint,7,opt,name=requested_transition,json=requestedTransition,proto3,enum=schema.v1alpha1.ChassisTransition,oneof" json:"requested_transition,omitempty"`
+	RequestedAction         *ChassisAction         `protobuf:"varint,7,opt,name=requested_action,json=requestedAction,proto3,enum=schema.v1alpha1.ChassisAction,oneof" json:"requested_action,omitempty"`
 	Location                *Location              `protobuf:"bytes,8,opt,name=location,proto3,oneof" json:"location,omitempty"`
 	Dimensions              *PhysicalDimensions    `protobuf:"bytes,9,opt,name=dimensions,proto3,oneof" json:"dimensions,omitempty"`
 	PowerInfo               *ChassisPowerInfo      `protobuf:"bytes,10,opt,name=power_info,json=powerInfo,proto3,oneof" json:"power_info,omitempty"`
@@ -667,11 +612,11 @@ func (x *Chassis) GetStatus() ChassisStatus {
 	return ChassisStatus_CHASSIS_STATUS_UNSPECIFIED
 }
 
-func (x *Chassis) GetRequestedTransition() ChassisTransition {
-	if x != nil && x.RequestedTransition != nil {
-		return *x.RequestedTransition
+func (x *Chassis) GetRequestedAction() ChassisAction {
+	if x != nil && x.RequestedAction != nil {
+		return *x.RequestedAction
 	}
-	return ChassisTransition_CHASSIS_TRANSITION_UNSPECIFIED
+	return ChassisAction_CHASSIS_ACTION_UNSPECIFIED
 }
 
 func (x *Chassis) GetLocation() *Location {
@@ -765,6 +710,82 @@ func (x *Chassis) GetMetadata() map[string]string {
 	return nil
 }
 
+type ChassisStateChange struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	ChassisName    string                 `protobuf:"bytes,1,opt,name=chassis_name,json=chassisName,proto3" json:"chassis_name,omitempty"`
+	PreviousStatus ChassisStatus          `protobuf:"varint,2,opt,name=previous_status,json=previousStatus,proto3,enum=schema.v1alpha1.ChassisStatus" json:"previous_status,omitempty"`
+	CurrentStatus  ChassisStatus          `protobuf:"varint,3,opt,name=current_status,json=currentStatus,proto3,enum=schema.v1alpha1.ChassisStatus" json:"current_status,omitempty"`
+	Cause          ChassisAction          `protobuf:"varint,4,opt,name=cause,proto3,enum=schema.v1alpha1.ChassisAction" json:"cause,omitempty"`
+	ChangedAt      *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=changed_at,json=changedAt,proto3" json:"changed_at,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *ChassisStateChange) Reset() {
+	*x = ChassisStateChange{}
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChassisStateChange) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChassisStateChange) ProtoMessage() {}
+
+func (x *ChassisStateChange) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChassisStateChange.ProtoReflect.Descriptor instead.
+func (*ChassisStateChange) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ChassisStateChange) GetChassisName() string {
+	if x != nil {
+		return x.ChassisName
+	}
+	return ""
+}
+
+func (x *ChassisStateChange) GetPreviousStatus() ChassisStatus {
+	if x != nil {
+		return x.PreviousStatus
+	}
+	return ChassisStatus_CHASSIS_STATUS_UNSPECIFIED
+}
+
+func (x *ChassisStateChange) GetCurrentStatus() ChassisStatus {
+	if x != nil {
+		return x.CurrentStatus
+	}
+	return ChassisStatus_CHASSIS_STATUS_UNSPECIFIED
+}
+
+func (x *ChassisStateChange) GetCause() ChassisAction {
+	if x != nil {
+		return x.Cause
+	}
+	return ChassisAction_CHASSIS_ACTION_UNSPECIFIED
+}
+
+func (x *ChassisStateChange) GetChangedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.ChangedAt
+	}
+	return nil
+}
+
 type ChassisPowerInfo struct {
 	state              protoimpl.MessageState      `protogen:"open.v1"`
 	PowerCapacityWatts *uint32                     `protobuf:"varint,1,opt,name=power_capacity_watts,json=powerCapacityWatts,proto3,oneof" json:"power_capacity_watts,omitempty"`
@@ -779,7 +800,7 @@ type ChassisPowerInfo struct {
 
 func (x *ChassisPowerInfo) Reset() {
 	*x = ChassisPowerInfo{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[1]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -791,7 +812,7 @@ func (x *ChassisPowerInfo) String() string {
 func (*ChassisPowerInfo) ProtoMessage() {}
 
 func (x *ChassisPowerInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[1]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -804,7 +825,7 @@ func (x *ChassisPowerInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChassisPowerInfo.ProtoReflect.Descriptor instead.
 func (*ChassisPowerInfo) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{1}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ChassisPowerInfo) GetPowerCapacityWatts() uint32 {
@@ -873,7 +894,7 @@ type ChassisPowerSupply struct {
 
 func (x *ChassisPowerSupply) Reset() {
 	*x = ChassisPowerSupply{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[2]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -885,7 +906,7 @@ func (x *ChassisPowerSupply) String() string {
 func (*ChassisPowerSupply) ProtoMessage() {}
 
 func (x *ChassisPowerSupply) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[2]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -898,7 +919,7 @@ func (x *ChassisPowerSupply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChassisPowerSupply.ProtoReflect.Descriptor instead.
 func (*ChassisPowerSupply) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{2}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ChassisPowerSupply) GetName() string {
@@ -1025,7 +1046,7 @@ type ChassisPowerDistribution struct {
 
 func (x *ChassisPowerDistribution) Reset() {
 	*x = ChassisPowerDistribution{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[3]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1037,7 +1058,7 @@ func (x *ChassisPowerDistribution) String() string {
 func (*ChassisPowerDistribution) ProtoMessage() {}
 
 func (x *ChassisPowerDistribution) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[3]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1050,7 +1071,7 @@ func (x *ChassisPowerDistribution) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChassisPowerDistribution.ProtoReflect.Descriptor instead.
 func (*ChassisPowerDistribution) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{3}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ChassisPowerDistribution) GetName() string {
@@ -1095,7 +1116,7 @@ type PowerCircuit struct {
 
 func (x *PowerCircuit) Reset() {
 	*x = PowerCircuit{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[4]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1107,7 +1128,7 @@ func (x *PowerCircuit) String() string {
 func (*PowerCircuit) ProtoMessage() {}
 
 func (x *PowerCircuit) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[4]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1120,7 +1141,7 @@ func (x *PowerCircuit) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PowerCircuit.ProtoReflect.Descriptor instead.
 func (*PowerCircuit) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{4}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *PowerCircuit) GetName() string {
@@ -1178,7 +1199,7 @@ type ChassisPowerRedundancy struct {
 
 func (x *ChassisPowerRedundancy) Reset() {
 	*x = ChassisPowerRedundancy{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[5]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1190,7 +1211,7 @@ func (x *ChassisPowerRedundancy) String() string {
 func (*ChassisPowerRedundancy) ProtoMessage() {}
 
 func (x *ChassisPowerRedundancy) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[5]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1203,7 +1224,7 @@ func (x *ChassisPowerRedundancy) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChassisPowerRedundancy.ProtoReflect.Descriptor instead.
 func (*ChassisPowerRedundancy) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{5}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ChassisPowerRedundancy) GetEnabled() bool {
@@ -1254,7 +1275,7 @@ type ChassisPowerBudget struct {
 
 func (x *ChassisPowerBudget) Reset() {
 	*x = ChassisPowerBudget{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[6]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1266,7 +1287,7 @@ func (x *ChassisPowerBudget) String() string {
 func (*ChassisPowerBudget) ProtoMessage() {}
 
 func (x *ChassisPowerBudget) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[6]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1279,7 +1300,7 @@ func (x *ChassisPowerBudget) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChassisPowerBudget.ProtoReflect.Descriptor instead.
 func (*ChassisPowerBudget) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{6}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ChassisPowerBudget) GetAllocatedTo() string {
@@ -1331,7 +1352,7 @@ type ChassisLED struct {
 
 func (x *ChassisLED) Reset() {
 	*x = ChassisLED{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[7]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1343,7 +1364,7 @@ func (x *ChassisLED) String() string {
 func (*ChassisLED) ProtoMessage() {}
 
 func (x *ChassisLED) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[7]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1356,7 +1377,7 @@ func (x *ChassisLED) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChassisLED.ProtoReflect.Descriptor instead.
 func (*ChassisLED) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{7}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ChassisLED) GetName() string {
@@ -1415,7 +1436,7 @@ type ChassisIntrusion struct {
 
 func (x *ChassisIntrusion) Reset() {
 	*x = ChassisIntrusion{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[8]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1427,7 +1448,7 @@ func (x *ChassisIntrusion) String() string {
 func (*ChassisIntrusion) ProtoMessage() {}
 
 func (x *ChassisIntrusion) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[8]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1440,7 +1461,7 @@ func (x *ChassisIntrusion) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChassisIntrusion.ProtoReflect.Descriptor instead.
 func (*ChassisIntrusion) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{8}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ChassisIntrusion) GetEnabled() bool {
@@ -1498,7 +1519,7 @@ type ExpansionBay struct {
 
 func (x *ExpansionBay) Reset() {
 	*x = ExpansionBay{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[9]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1510,7 +1531,7 @@ func (x *ExpansionBay) String() string {
 func (*ExpansionBay) ProtoMessage() {}
 
 func (x *ExpansionBay) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[9]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1523,7 +1544,7 @@ func (x *ExpansionBay) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExpansionBay.ProtoReflect.Descriptor instead.
 func (*ExpansionBay) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{9}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ExpansionBay) GetName() string {
@@ -1574,7 +1595,7 @@ type Slot struct {
 
 func (x *Slot) Reset() {
 	*x = Slot{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[10]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1586,7 +1607,7 @@ func (x *Slot) String() string {
 func (*Slot) ProtoMessage() {}
 
 func (x *Slot) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[10]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1599,7 +1620,7 @@ func (x *Slot) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Slot.ProtoReflect.Descriptor instead.
 func (*Slot) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{10}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *Slot) GetName() string {
@@ -1653,7 +1674,7 @@ type GetChassisRequest struct {
 
 func (x *GetChassisRequest) Reset() {
 	*x = GetChassisRequest{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[11]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1665,7 +1686,7 @@ func (x *GetChassisRequest) String() string {
 func (*GetChassisRequest) ProtoMessage() {}
 
 func (x *GetChassisRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[11]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1678,7 +1699,7 @@ func (x *GetChassisRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetChassisRequest.ProtoReflect.Descriptor instead.
 func (*GetChassisRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{11}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GetChassisRequest) GetIdentifier() isGetChassisRequest_Identifier {
@@ -1768,7 +1789,7 @@ type GetChassisResponse struct {
 
 func (x *GetChassisResponse) Reset() {
 	*x = GetChassisResponse{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[12]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1780,7 +1801,7 @@ func (x *GetChassisResponse) String() string {
 func (*GetChassisResponse) ProtoMessage() {}
 
 func (x *GetChassisResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[12]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1793,7 +1814,7 @@ func (x *GetChassisResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetChassisResponse.ProtoReflect.Descriptor instead.
 func (*GetChassisResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{12}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GetChassisResponse) GetChassis() []*Chassis {
@@ -1816,7 +1837,7 @@ type ListChassisRequest struct {
 
 func (x *ListChassisRequest) Reset() {
 	*x = ListChassisRequest{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[13]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1828,7 +1849,7 @@ func (x *ListChassisRequest) String() string {
 func (*ListChassisRequest) ProtoMessage() {}
 
 func (x *ListChassisRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[13]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1841,7 +1862,7 @@ func (x *ListChassisRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListChassisRequest.ProtoReflect.Descriptor instead.
 func (*ListChassisRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{13}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ListChassisRequest) GetType() ChassisType {
@@ -1890,7 +1911,7 @@ type ListChassisResponse struct {
 
 func (x *ListChassisResponse) Reset() {
 	*x = ListChassisResponse{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[14]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1902,7 +1923,7 @@ func (x *ListChassisResponse) String() string {
 func (*ListChassisResponse) ProtoMessage() {}
 
 func (x *ListChassisResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[14]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1915,7 +1936,7 @@ func (x *ListChassisResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListChassisResponse.ProtoReflect.Descriptor instead.
 func (*ListChassisResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{14}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ListChassisResponse) GetChassis() []*Chassis {
@@ -1950,7 +1971,7 @@ type UpdateChassisRequest struct {
 
 func (x *UpdateChassisRequest) Reset() {
 	*x = UpdateChassisRequest{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[15]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1962,7 +1983,7 @@ func (x *UpdateChassisRequest) String() string {
 func (*UpdateChassisRequest) ProtoMessage() {}
 
 func (x *UpdateChassisRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[15]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1975,7 +1996,7 @@ func (x *UpdateChassisRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateChassisRequest.ProtoReflect.Descriptor instead.
 func (*UpdateChassisRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{15}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *UpdateChassisRequest) GetChassisName() string {
@@ -2008,7 +2029,7 @@ type UpdateChassisResponse struct {
 
 func (x *UpdateChassisResponse) Reset() {
 	*x = UpdateChassisResponse{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[16]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2020,7 +2041,7 @@ func (x *UpdateChassisResponse) String() string {
 func (*UpdateChassisResponse) ProtoMessage() {}
 
 func (x *UpdateChassisResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[16]
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2033,7 +2054,7 @@ func (x *UpdateChassisResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateChassisResponse.ProtoReflect.Descriptor instead.
 func (*UpdateChassisResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{16}
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *UpdateChassisResponse) GetChassis() *Chassis {
@@ -2043,108 +2064,28 @@ func (x *UpdateChassisResponse) GetChassis() *Chassis {
 	return nil
 }
 
-type ChassisChangeStateRequest struct {
+type ChangeChassisStateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ChassisName   string                 `protobuf:"bytes,1,opt,name=chassis_name,json=chassisName,proto3" json:"chassis_name,omitempty"`
-	Transition    ChassisTransition      `protobuf:"varint,2,opt,name=transition,proto3,enum=schema.v1alpha1.ChassisTransition" json:"transition,omitempty"`
-	Force         *bool                  `protobuf:"varint,3,opt,name=force,proto3,oneof" json:"force,omitempty"`
-	FieldMask     *fieldmaskpb.FieldMask `protobuf:"bytes,4,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
-	Metadata      map[string]string      `protobuf:"bytes,5,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Action        ChassisAction          `protobuf:"varint,2,opt,name=action,proto3,enum=schema.v1alpha1.ChassisAction" json:"action,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ChassisChangeStateRequest) Reset() {
-	*x = ChassisChangeStateRequest{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[17]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ChassisChangeStateRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ChassisChangeStateRequest) ProtoMessage() {}
-
-func (x *ChassisChangeStateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[17]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ChassisChangeStateRequest.ProtoReflect.Descriptor instead.
-func (*ChassisChangeStateRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{17}
-}
-
-func (x *ChassisChangeStateRequest) GetChassisName() string {
-	if x != nil {
-		return x.ChassisName
-	}
-	return ""
-}
-
-func (x *ChassisChangeStateRequest) GetTransition() ChassisTransition {
-	if x != nil {
-		return x.Transition
-	}
-	return ChassisTransition_CHASSIS_TRANSITION_UNSPECIFIED
-}
-
-func (x *ChassisChangeStateRequest) GetForce() bool {
-	if x != nil && x.Force != nil {
-		return *x.Force
-	}
-	return false
-}
-
-func (x *ChassisChangeStateRequest) GetFieldMask() *fieldmaskpb.FieldMask {
-	if x != nil {
-		return x.FieldMask
-	}
-	return nil
-}
-
-func (x *ChassisChangeStateRequest) GetMetadata() map[string]string {
-	if x != nil {
-		return x.Metadata
-	}
-	return nil
-}
-
-type ChassisChangeStateResponse struct {
-	state               protoimpl.MessageState `protogen:"open.v1"`
-	Success             bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	ErrorMessage        *string                `protobuf:"bytes,2,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
-	Status              *ChassisStatus         `protobuf:"varint,3,opt,name=status,proto3,enum=schema.v1alpha1.ChassisStatus,oneof" json:"status,omitempty"`
-	TransitionId        *string                `protobuf:"bytes,4,opt,name=transition_id,json=transitionId,proto3,oneof" json:"transition_id,omitempty"`
-	EstimatedCompletion *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=estimated_completion,json=estimatedCompletion,proto3,oneof" json:"estimated_completion,omitempty"`
-	Metadata            map[string]string      `protobuf:"bytes,6,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
-}
-
-func (x *ChassisChangeStateResponse) Reset() {
-	*x = ChassisChangeStateResponse{}
+func (x *ChangeChassisStateRequest) Reset() {
+	*x = ChangeChassisStateRequest{}
 	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ChassisChangeStateResponse) String() string {
+func (x *ChangeChassisStateRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ChassisChangeStateResponse) ProtoMessage() {}
+func (*ChangeChassisStateRequest) ProtoMessage() {}
 
-func (x *ChassisChangeStateResponse) ProtoReflect() protoreflect.Message {
+func (x *ChangeChassisStateRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2156,153 +2097,47 @@ func (x *ChassisChangeStateResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ChassisChangeStateResponse.ProtoReflect.Descriptor instead.
-func (*ChassisChangeStateResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ChangeChassisStateRequest.ProtoReflect.Descriptor instead.
+func (*ChangeChassisStateRequest) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{18}
 }
 
-func (x *ChassisChangeStateResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
-	}
-	return false
-}
-
-func (x *ChassisChangeStateResponse) GetErrorMessage() string {
-	if x != nil && x.ErrorMessage != nil {
-		return *x.ErrorMessage
-	}
-	return ""
-}
-
-func (x *ChassisChangeStateResponse) GetStatus() ChassisStatus {
-	if x != nil && x.Status != nil {
-		return *x.Status
-	}
-	return ChassisStatus_CHASSIS_STATUS_UNSPECIFIED
-}
-
-func (x *ChassisChangeStateResponse) GetTransitionId() string {
-	if x != nil && x.TransitionId != nil {
-		return *x.TransitionId
-	}
-	return ""
-}
-
-func (x *ChassisChangeStateResponse) GetEstimatedCompletion() *timestamppb.Timestamp {
-	if x != nil {
-		return x.EstimatedCompletion
-	}
-	return nil
-}
-
-func (x *ChassisChangeStateResponse) GetMetadata() map[string]string {
-	if x != nil {
-		return x.Metadata
-	}
-	return nil
-}
-
-type ChassisControlRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	ChassisName   string                 `protobuf:"bytes,1,opt,name=chassis_name,json=chassisName,proto3" json:"chassis_name,omitempty"`
-	Action        ChassisControlAction   `protobuf:"varint,2,opt,name=action,proto3,enum=schema.v1alpha1.ChassisControlAction" json:"action,omitempty"`
-	Force         *bool                  `protobuf:"varint,3,opt,name=force,proto3,oneof" json:"force,omitempty"`
-	FieldMask     *fieldmaskpb.FieldMask `protobuf:"bytes,4,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
-	Parameters    map[string]string      `protobuf:"bytes,5,rep,name=parameters,proto3" json:"parameters,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ChassisControlRequest) Reset() {
-	*x = ChassisControlRequest{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[19]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ChassisControlRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ChassisControlRequest) ProtoMessage() {}
-
-func (x *ChassisControlRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[19]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ChassisControlRequest.ProtoReflect.Descriptor instead.
-func (*ChassisControlRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *ChassisControlRequest) GetChassisName() string {
+func (x *ChangeChassisStateRequest) GetChassisName() string {
 	if x != nil {
 		return x.ChassisName
 	}
 	return ""
 }
 
-func (x *ChassisControlRequest) GetAction() ChassisControlAction {
+func (x *ChangeChassisStateRequest) GetAction() ChassisAction {
 	if x != nil {
 		return x.Action
 	}
-	return ChassisControlAction_CHASSIS_CONTROL_ACTION_UNSPECIFIED
+	return ChassisAction_CHASSIS_ACTION_UNSPECIFIED
 }
 
-func (x *ChassisControlRequest) GetForce() bool {
-	if x != nil && x.Force != nil {
-		return *x.Force
-	}
-	return false
-}
-
-func (x *ChassisControlRequest) GetFieldMask() *fieldmaskpb.FieldMask {
-	if x != nil {
-		return x.FieldMask
-	}
-	return nil
-}
-
-func (x *ChassisControlRequest) GetParameters() map[string]string {
-	if x != nil {
-		return x.Parameters
-	}
-	return nil
-}
-
-type ChassisControlResponse struct {
+type ChangeChassisStateResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	ErrorMessage  *string                `protobuf:"bytes,2,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
-	Status        *ChassisStatus         `protobuf:"varint,3,opt,name=status,proto3,enum=schema.v1alpha1.ChassisStatus,oneof" json:"status,omitempty"`
+	CurrentStatus ChassisStatus          `protobuf:"varint,1,opt,name=current_status,json=currentStatus,proto3,enum=schema.v1alpha1.ChassisStatus" json:"current_status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ChassisControlResponse) Reset() {
-	*x = ChassisControlResponse{}
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[20]
+func (x *ChangeChassisStateResponse) Reset() {
+	*x = ChangeChassisStateResponse{}
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ChassisControlResponse) String() string {
+func (x *ChangeChassisStateResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ChassisControlResponse) ProtoMessage() {}
+func (*ChangeChassisStateResponse) ProtoMessage() {}
 
-func (x *ChassisControlResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[20]
+func (x *ChangeChassisStateResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_chassis_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2313,28 +2148,14 @@ func (x *ChassisControlResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ChassisControlResponse.ProtoReflect.Descriptor instead.
-func (*ChassisControlResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{20}
+// Deprecated: Use ChangeChassisStateResponse.ProtoReflect.Descriptor instead.
+func (*ChangeChassisStateResponse) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_chassis_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *ChassisControlResponse) GetSuccess() bool {
+func (x *ChangeChassisStateResponse) GetCurrentStatus() ChassisStatus {
 	if x != nil {
-		return x.Success
-	}
-	return false
-}
-
-func (x *ChassisControlResponse) GetErrorMessage() string {
-	if x != nil && x.ErrorMessage != nil {
-		return *x.ErrorMessage
-	}
-	return ""
-}
-
-func (x *ChassisControlResponse) GetStatus() ChassisStatus {
-	if x != nil && x.Status != nil {
-		return *x.Status
+		return x.CurrentStatus
 	}
 	return ChassisStatus_CHASSIS_STATUS_UNSPECIFIED
 }
@@ -2343,7 +2164,7 @@ var File_schema_v1alpha1_chassis_proto protoreflect.FileDescriptor
 
 const file_schema_v1alpha1_chassis_proto_rawDesc = "" +
 	"\n" +
-	"\x1dschema/v1alpha1/chassis.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bschema/v1alpha1/asset.proto\x1a\x1eschema/v1alpha1/location.proto\x1a\x1cschema/v1alpha1/sensor.proto\x1a\x1bschema/v1alpha1/specs.proto\x1a\x1dschema/v1alpha1/thermal.proto\"\xe8\r\n" +
+	"\x1dschema/v1alpha1/chassis.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bschema/v1alpha1/asset.proto\x1a\x1eschema/v1alpha1/location.proto\x1a\x1cschema/v1alpha1/sensor.proto\x1a\x1bschema/v1alpha1/specs.proto\x1a\x1dschema/v1alpha1/thermal.proto\"\xd8\r\n" +
 	"\aChassis\x12\x1b\n" +
 	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x128\n" +
 	"\x05asset\x18\x02 \x01(\v2\x1a.schema.v1alpha1.AssetInfoB\x06\xbaH\x03\xc8\x01\x01R\x05asset\x12%\n" +
@@ -2351,8 +2172,8 @@ const file_schema_v1alpha1_chassis_proto_rawDesc = "" +
 	"\x04type\x18\x04 \x01(\x0e2\x1c.schema.v1alpha1.ChassisTypeB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\x04type\x88\x01\x01\x12R\n" +
 	"\vform_factor\x18\x05 \x01(\x0e2\".schema.v1alpha1.ChassisFormFactorB\b\xbaH\x05\x82\x01\x02\x10\x01H\x02R\n" +
 	"formFactor\x88\x01\x01\x12E\n" +
-	"\x06status\x18\x06 \x01(\x0e2\x1e.schema.v1alpha1.ChassisStatusB\b\xbaH\x05\x82\x01\x02\x10\x01H\x03R\x06status\x88\x01\x01\x12d\n" +
-	"\x14requested_transition\x18\a \x01(\x0e2\".schema.v1alpha1.ChassisTransitionB\b\xbaH\x05\x82\x01\x02\x10\x01H\x04R\x13requestedTransition\x88\x01\x01\x12:\n" +
+	"\x06status\x18\x06 \x01(\x0e2\x1e.schema.v1alpha1.ChassisStatusB\b\xbaH\x05\x82\x01\x02\x10\x01H\x03R\x06status\x88\x01\x01\x12X\n" +
+	"\x10requested_action\x18\a \x01(\x0e2\x1e.schema.v1alpha1.ChassisActionB\b\xbaH\x05\x82\x01\x02\x10\x01H\x04R\x0frequestedAction\x88\x01\x01\x12:\n" +
 	"\blocation\x18\b \x01(\v2\x19.schema.v1alpha1.LocationH\x05R\blocation\x88\x01\x01\x12H\n" +
 	"\n" +
 	"dimensions\x18\t \x01(\v2#.schema.v1alpha1.PhysicalDimensionsH\x06R\n" +
@@ -2379,14 +2200,21 @@ const file_schema_v1alpha1_chassis_proto_rawDesc = "" +
 	"\f_descriptionB\a\n" +
 	"\x05_typeB\x0e\n" +
 	"\f_form_factorB\t\n" +
-	"\a_statusB\x17\n" +
-	"\x15_requested_transitionB\v\n" +
+	"\a_statusB\x13\n" +
+	"\x11_requested_actionB\v\n" +
 	"\t_locationB\r\n" +
 	"\v_dimensionsB\r\n" +
 	"\v_power_infoB\f\n" +
 	"\n" +
 	"_intrusionB\r\n" +
-	"\v_updated_at\"\xec\x05\n" +
+	"\v_updated_at\"\xdf\x02\n" +
+	"\x12ChassisStateChange\x12*\n" +
+	"\fchassis_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vchassisName\x12Q\n" +
+	"\x0fprevious_status\x18\x02 \x01(\x0e2\x1e.schema.v1alpha1.ChassisStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\x0epreviousStatus\x12O\n" +
+	"\x0ecurrent_status\x18\x03 \x01(\x0e2\x1e.schema.v1alpha1.ChassisStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\rcurrentStatus\x12>\n" +
+	"\x05cause\x18\x04 \x01(\x0e2\x1e.schema.v1alpha1.ChassisActionB\b\xbaH\x05\x82\x01\x02\x10\x01R\x05cause\x129\n" +
+	"\n" +
+	"changed_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tchangedAt\"\xec\x05\n" +
 	"\x10ChassisPowerInfo\x12>\n" +
 	"\x14power_capacity_watts\x18\x01 \x01(\rB\a\xbaH\x04*\x02 \x00H\x00R\x12powerCapacityWatts\x88\x01\x01\x12>\n" +
 	"\x14power_consumed_watts\x18\x02 \x01(\rB\a\xbaH\x04*\x02(\x00H\x01R\x12powerConsumedWatts\x88\x01\x01\x12J\n" +
@@ -2564,55 +2392,12 @@ const file_schema_v1alpha1_chassis_proto_rawDesc = "" +
 	"\n" +
 	"field_mask\x18\x03 \x01(\v2\x1a.google.protobuf.FieldMaskR\tfieldMask\"K\n" +
 	"\x15UpdateChassisResponse\x122\n" +
-	"\achassis\x18\x01 \x01(\v2\x18.schema.v1alpha1.ChassisR\achassis\"\x9c\x03\n" +
-	"\x19ChassisChangeStateRequest\x12*\n" +
-	"\fchassis_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vchassisName\x12L\n" +
-	"\n" +
-	"transition\x18\x02 \x01(\x0e2\".schema.v1alpha1.ChassisTransitionB\b\xbaH\x05\x82\x01\x02\x10\x01R\n" +
-	"transition\x12\x19\n" +
-	"\x05force\x18\x03 \x01(\bH\x00R\x05force\x88\x01\x01\x12>\n" +
-	"\n" +
-	"field_mask\x18\x04 \x01(\v2\x1a.google.protobuf.FieldMaskH\x01R\tfieldMask\x88\x01\x01\x12T\n" +
-	"\bmetadata\x18\x05 \x03(\v28.schema.v1alpha1.ChassisChangeStateRequest.MetadataEntryR\bmetadata\x1a;\n" +
-	"\rMetadataEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\b\n" +
-	"\x06_forceB\r\n" +
-	"\v_field_mask\"\x81\x04\n" +
-	"\x1aChassisChangeStateResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\x12(\n" +
-	"\rerror_message\x18\x02 \x01(\tH\x00R\ferrorMessage\x88\x01\x01\x12E\n" +
-	"\x06status\x18\x03 \x01(\x0e2\x1e.schema.v1alpha1.ChassisStatusB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\x06status\x88\x01\x01\x12(\n" +
-	"\rtransition_id\x18\x04 \x01(\tH\x02R\ftransitionId\x88\x01\x01\x12R\n" +
-	"\x14estimated_completion\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampH\x03R\x13estimatedCompletion\x88\x01\x01\x12U\n" +
-	"\bmetadata\x18\x06 \x03(\v29.schema.v1alpha1.ChassisChangeStateResponse.MetadataEntryR\bmetadata\x1a;\n" +
-	"\rMetadataEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\x10\n" +
-	"\x0e_error_messageB\t\n" +
-	"\a_statusB\x10\n" +
-	"\x0e_transition_idB\x17\n" +
-	"\x15_estimated_completion\"\x97\x03\n" +
-	"\x15ChassisControlRequest\x12*\n" +
-	"\fchassis_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vchassisName\x12G\n" +
-	"\x06action\x18\x02 \x01(\x0e2%.schema.v1alpha1.ChassisControlActionB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06action\x12\x19\n" +
-	"\x05force\x18\x03 \x01(\bH\x00R\x05force\x88\x01\x01\x12>\n" +
-	"\n" +
-	"field_mask\x18\x04 \x01(\v2\x1a.google.protobuf.FieldMaskH\x01R\tfieldMask\x88\x01\x01\x12V\n" +
-	"\n" +
-	"parameters\x18\x05 \x03(\v26.schema.v1alpha1.ChassisControlRequest.ParametersEntryR\n" +
-	"parameters\x1a=\n" +
-	"\x0fParametersEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\b\n" +
-	"\x06_forceB\r\n" +
-	"\v_field_mask\"\xc0\x01\n" +
-	"\x16ChassisControlResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\x12(\n" +
-	"\rerror_message\x18\x02 \x01(\tH\x00R\ferrorMessage\x88\x01\x01\x12E\n" +
-	"\x06status\x18\x03 \x01(\x0e2\x1e.schema.v1alpha1.ChassisStatusB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\x06status\x88\x01\x01B\x10\n" +
-	"\x0e_error_messageB\t\n" +
-	"\a_status*\xe2\x01\n" +
+	"\achassis\x18\x01 \x01(\v2\x18.schema.v1alpha1.ChassisR\achassis\"\x89\x01\n" +
+	"\x19ChangeChassisStateRequest\x12*\n" +
+	"\fchassis_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vchassisName\x12@\n" +
+	"\x06action\x18\x02 \x01(\x0e2\x1e.schema.v1alpha1.ChassisActionB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06action\"m\n" +
+	"\x1aChangeChassisStateResponse\x12O\n" +
+	"\x0ecurrent_status\x18\x01 \x01(\x0e2\x1e.schema.v1alpha1.ChassisStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\rcurrentStatus*\xe2\x01\n" +
 	"\vChassisType\x12\x1c\n" +
 	"\x18CHASSIS_TYPE_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17CHASSIS_TYPE_RACK_MOUNT\x10\x01\x12\x16\n" +
@@ -2641,12 +2426,15 @@ const file_schema_v1alpha1_chassis_proto_rawDesc = "" +
 	"\x16CHASSIS_STATUS_WARNING\x10\x04\x12\x1b\n" +
 	"\x17CHASSIS_STATUS_CRITICAL\x10\x05\x12\x19\n" +
 	"\x15CHASSIS_STATUS_FAILED\x10\x06\x12\x1a\n" +
-	"\x16CHASSIS_STATUS_UNKNOWN\x10\a*\x92\x01\n" +
-	"\x11ChassisTransition\x12\"\n" +
-	"\x1eCHASSIS_TRANSITION_UNSPECIFIED\x10\x00\x12\x19\n" +
-	"\x15CHASSIS_TRANSITION_ON\x10\x01\x12\x1a\n" +
-	"\x16CHASSIS_TRANSITION_OFF\x10\x02\x12\"\n" +
-	"\x1eCHASSIS_TRANSITION_POWER_CYCLE\x10\x03*\xd3\x01\n" +
+	"\x16CHASSIS_STATUS_UNKNOWN\x10\a*\xe6\x01\n" +
+	"\rChassisAction\x12\x1e\n" +
+	"\x1aCHASSIS_ACTION_UNSPECIFIED\x10\x00\x12\x15\n" +
+	"\x11CHASSIS_ACTION_ON\x10\x01\x12\x16\n" +
+	"\x12CHASSIS_ACTION_OFF\x10\x02\x12\x1e\n" +
+	"\x1aCHASSIS_ACTION_POWER_CYCLE\x10\x03\x12\x1e\n" +
+	"\x1aCHASSIS_ACTION_IDENTIFY_ON\x10\x04\x12\x1f\n" +
+	"\x1bCHASSIS_ACTION_IDENTIFY_OFF\x10\x05\x12%\n" +
+	"!CHASSIS_ACTION_EMERGENCY_SHUTDOWN\x10\x06*\xd3\x01\n" +
 	"\x16ChassisPowerSupplyType\x12)\n" +
 	"%CHASSIS_POWER_SUPPLY_TYPE_UNSPECIFIED\x10\x00\x12 \n" +
 	"\x1cCHASSIS_POWER_SUPPLY_TYPE_AC\x10\x01\x12 \n" +
@@ -2673,16 +2461,7 @@ const file_schema_v1alpha1_chassis_proto_rawDesc = "" +
 	"\x16CHASSIS_LED_TYPE_FAULT\x10\x02\x12\x1d\n" +
 	"\x19CHASSIS_LED_TYPE_IDENTIFY\x10\x03\x12\x1b\n" +
 	"\x17CHASSIS_LED_TYPE_STATUS\x10\x04\x12\x1e\n" +
-	"\x1aCHASSIS_LED_TYPE_HEARTBEAT\x10\x05*\xd3\x02\n" +
-	"\x14ChassisControlAction\x12&\n" +
-	"\"CHASSIS_CONTROL_ACTION_UNSPECIFIED\x10\x00\x12#\n" +
-	"\x1fCHASSIS_CONTROL_ACTION_POWER_ON\x10\x01\x12$\n" +
-	" CHASSIS_CONTROL_ACTION_POWER_OFF\x10\x02\x12&\n" +
-	"\"CHASSIS_CONTROL_ACTION_POWER_CYCLE\x10\x03\x12 \n" +
-	"\x1cCHASSIS_CONTROL_ACTION_RESET\x10\x04\x12&\n" +
-	"\"CHASSIS_CONTROL_ACTION_IDENTIFY_ON\x10\x05\x12'\n" +
-	"#CHASSIS_CONTROL_ACTION_IDENTIFY_OFF\x10\x06\x12-\n" +
-	")CHASSIS_CONTROL_ACTION_EMERGENCY_SHUTDOWN\x10\aB\xbf\x01\n" +
+	"\x1aCHASSIS_LED_TYPE_HEARTBEAT\x10\x05B\xbf\x01\n" +
 	"\x13com.schema.v1alpha1B\fChassisProtoP\x01Z=github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1;schemav1alpha1\xa2\x02\x03SXX\xaa\x02\x0fSchema.V1alpha1\xca\x02\x0fSchema\\V1alpha1\xe2\x02\x1bSchema\\V1alpha1\\GPBMetadata\xea\x02\x10Schema::V1alpha1b\x06proto3"
 
 var (
@@ -2697,19 +2476,19 @@ func file_schema_v1alpha1_chassis_proto_rawDescGZIP() []byte {
 	return file_schema_v1alpha1_chassis_proto_rawDescData
 }
 
-var file_schema_v1alpha1_chassis_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
-var file_schema_v1alpha1_chassis_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
+var file_schema_v1alpha1_chassis_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
+var file_schema_v1alpha1_chassis_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_schema_v1alpha1_chassis_proto_goTypes = []any{
 	(ChassisType)(0),                   // 0: schema.v1alpha1.ChassisType
 	(ChassisFormFactor)(0),             // 1: schema.v1alpha1.ChassisFormFactor
 	(ChassisStatus)(0),                 // 2: schema.v1alpha1.ChassisStatus
-	(ChassisTransition)(0),             // 3: schema.v1alpha1.ChassisTransition
+	(ChassisAction)(0),                 // 3: schema.v1alpha1.ChassisAction
 	(ChassisPowerSupplyType)(0),        // 4: schema.v1alpha1.ChassisPowerSupplyType
 	(ChassisPowerSupplyStatus)(0),      // 5: schema.v1alpha1.ChassisPowerSupplyStatus
 	(ChassisLEDState)(0),               // 6: schema.v1alpha1.ChassisLEDState
 	(ChassisLEDType)(0),                // 7: schema.v1alpha1.ChassisLEDType
-	(ChassisControlAction)(0),          // 8: schema.v1alpha1.ChassisControlAction
-	(*Chassis)(nil),                    // 9: schema.v1alpha1.Chassis
+	(*Chassis)(nil),                    // 8: schema.v1alpha1.Chassis
+	(*ChassisStateChange)(nil),         // 9: schema.v1alpha1.ChassisStateChange
 	(*ChassisPowerInfo)(nil),           // 10: schema.v1alpha1.ChassisPowerInfo
 	(*ChassisPowerSupply)(nil),         // 11: schema.v1alpha1.ChassisPowerSupply
 	(*ChassisPowerDistribution)(nil),   // 12: schema.v1alpha1.ChassisPowerDistribution
@@ -2726,81 +2505,72 @@ var file_schema_v1alpha1_chassis_proto_goTypes = []any{
 	(*ListChassisResponse)(nil),        // 23: schema.v1alpha1.ListChassisResponse
 	(*UpdateChassisRequest)(nil),       // 24: schema.v1alpha1.UpdateChassisRequest
 	(*UpdateChassisResponse)(nil),      // 25: schema.v1alpha1.UpdateChassisResponse
-	(*ChassisChangeStateRequest)(nil),  // 26: schema.v1alpha1.ChassisChangeStateRequest
-	(*ChassisChangeStateResponse)(nil), // 27: schema.v1alpha1.ChassisChangeStateResponse
-	(*ChassisControlRequest)(nil),      // 28: schema.v1alpha1.ChassisControlRequest
-	(*ChassisControlResponse)(nil),     // 29: schema.v1alpha1.ChassisControlResponse
-	nil,                                // 30: schema.v1alpha1.Chassis.MetadataEntry
-	nil,                                // 31: schema.v1alpha1.ChassisChangeStateRequest.MetadataEntry
-	nil,                                // 32: schema.v1alpha1.ChassisChangeStateResponse.MetadataEntry
-	nil,                                // 33: schema.v1alpha1.ChassisControlRequest.ParametersEntry
-	(*AssetInfo)(nil),                  // 34: schema.v1alpha1.AssetInfo
-	(*Location)(nil),                   // 35: schema.v1alpha1.Location
-	(*PhysicalDimensions)(nil),         // 36: schema.v1alpha1.PhysicalDimensions
-	(*Sensor)(nil),                     // 37: schema.v1alpha1.Sensor
-	(*ThermalZone)(nil),                // 38: schema.v1alpha1.ThermalZone
-	(*CoolingDevice)(nil),              // 39: schema.v1alpha1.CoolingDevice
-	(*timestamppb.Timestamp)(nil),      // 40: google.protobuf.Timestamp
-	(*fieldmaskpb.FieldMask)(nil),      // 41: google.protobuf.FieldMask
+	(*ChangeChassisStateRequest)(nil),  // 26: schema.v1alpha1.ChangeChassisStateRequest
+	(*ChangeChassisStateResponse)(nil), // 27: schema.v1alpha1.ChangeChassisStateResponse
+	nil,                                // 28: schema.v1alpha1.Chassis.MetadataEntry
+	(*AssetInfo)(nil),                  // 29: schema.v1alpha1.AssetInfo
+	(*Location)(nil),                   // 30: schema.v1alpha1.Location
+	(*PhysicalDimensions)(nil),         // 31: schema.v1alpha1.PhysicalDimensions
+	(*Sensor)(nil),                     // 32: schema.v1alpha1.Sensor
+	(*ThermalZone)(nil),                // 33: schema.v1alpha1.ThermalZone
+	(*CoolingDevice)(nil),              // 34: schema.v1alpha1.CoolingDevice
+	(*timestamppb.Timestamp)(nil),      // 35: google.protobuf.Timestamp
+	(*fieldmaskpb.FieldMask)(nil),      // 36: google.protobuf.FieldMask
 }
 var file_schema_v1alpha1_chassis_proto_depIdxs = []int32{
-	34, // 0: schema.v1alpha1.Chassis.asset:type_name -> schema.v1alpha1.AssetInfo
+	29, // 0: schema.v1alpha1.Chassis.asset:type_name -> schema.v1alpha1.AssetInfo
 	0,  // 1: schema.v1alpha1.Chassis.type:type_name -> schema.v1alpha1.ChassisType
 	1,  // 2: schema.v1alpha1.Chassis.form_factor:type_name -> schema.v1alpha1.ChassisFormFactor
 	2,  // 3: schema.v1alpha1.Chassis.status:type_name -> schema.v1alpha1.ChassisStatus
-	3,  // 4: schema.v1alpha1.Chassis.requested_transition:type_name -> schema.v1alpha1.ChassisTransition
-	35, // 5: schema.v1alpha1.Chassis.location:type_name -> schema.v1alpha1.Location
-	36, // 6: schema.v1alpha1.Chassis.dimensions:type_name -> schema.v1alpha1.PhysicalDimensions
+	3,  // 4: schema.v1alpha1.Chassis.requested_action:type_name -> schema.v1alpha1.ChassisAction
+	30, // 5: schema.v1alpha1.Chassis.location:type_name -> schema.v1alpha1.Location
+	31, // 6: schema.v1alpha1.Chassis.dimensions:type_name -> schema.v1alpha1.PhysicalDimensions
 	10, // 7: schema.v1alpha1.Chassis.power_info:type_name -> schema.v1alpha1.ChassisPowerInfo
-	37, // 8: schema.v1alpha1.Chassis.sensors:type_name -> schema.v1alpha1.Sensor
-	38, // 9: schema.v1alpha1.Chassis.thermal_zones:type_name -> schema.v1alpha1.ThermalZone
-	39, // 10: schema.v1alpha1.Chassis.cooling_devices:type_name -> schema.v1alpha1.CoolingDevice
+	32, // 8: schema.v1alpha1.Chassis.sensors:type_name -> schema.v1alpha1.Sensor
+	33, // 9: schema.v1alpha1.Chassis.thermal_zones:type_name -> schema.v1alpha1.ThermalZone
+	34, // 10: schema.v1alpha1.Chassis.cooling_devices:type_name -> schema.v1alpha1.CoolingDevice
 	16, // 11: schema.v1alpha1.Chassis.leds:type_name -> schema.v1alpha1.ChassisLED
 	17, // 12: schema.v1alpha1.Chassis.intrusion:type_name -> schema.v1alpha1.ChassisIntrusion
-	34, // 13: schema.v1alpha1.Chassis.contained_assets:type_name -> schema.v1alpha1.AssetInfo
-	40, // 14: schema.v1alpha1.Chassis.updated_at:type_name -> google.protobuf.Timestamp
-	30, // 15: schema.v1alpha1.Chassis.metadata:type_name -> schema.v1alpha1.Chassis.MetadataEntry
-	11, // 16: schema.v1alpha1.ChassisPowerInfo.power_supplies:type_name -> schema.v1alpha1.ChassisPowerSupply
-	12, // 17: schema.v1alpha1.ChassisPowerInfo.power_distribution:type_name -> schema.v1alpha1.ChassisPowerDistribution
-	14, // 18: schema.v1alpha1.ChassisPowerInfo.redundancy:type_name -> schema.v1alpha1.ChassisPowerRedundancy
-	15, // 19: schema.v1alpha1.ChassisPowerInfo.power_budgets:type_name -> schema.v1alpha1.ChassisPowerBudget
-	34, // 20: schema.v1alpha1.ChassisPowerSupply.asset:type_name -> schema.v1alpha1.AssetInfo
-	4,  // 21: schema.v1alpha1.ChassisPowerSupply.type:type_name -> schema.v1alpha1.ChassisPowerSupplyType
-	5,  // 22: schema.v1alpha1.ChassisPowerSupply.status:type_name -> schema.v1alpha1.ChassisPowerSupplyStatus
-	35, // 23: schema.v1alpha1.ChassisPowerSupply.location:type_name -> schema.v1alpha1.Location
-	13, // 24: schema.v1alpha1.ChassisPowerDistribution.circuits:type_name -> schema.v1alpha1.PowerCircuit
-	7,  // 25: schema.v1alpha1.ChassisLED.type:type_name -> schema.v1alpha1.ChassisLEDType
-	6,  // 26: schema.v1alpha1.ChassisLED.state:type_name -> schema.v1alpha1.ChassisLEDState
-	40, // 27: schema.v1alpha1.ChassisIntrusion.last_intrusion:type_name -> google.protobuf.Timestamp
-	35, // 28: schema.v1alpha1.ExpansionBay.location:type_name -> schema.v1alpha1.Location
-	35, // 29: schema.v1alpha1.Slot.location:type_name -> schema.v1alpha1.Location
-	0,  // 30: schema.v1alpha1.GetChassisRequest.type:type_name -> schema.v1alpha1.ChassisType
-	2,  // 31: schema.v1alpha1.GetChassisRequest.status:type_name -> schema.v1alpha1.ChassisStatus
-	35, // 32: schema.v1alpha1.GetChassisRequest.location:type_name -> schema.v1alpha1.Location
-	41, // 33: schema.v1alpha1.GetChassisRequest.field_mask:type_name -> google.protobuf.FieldMask
-	9,  // 34: schema.v1alpha1.GetChassisResponse.chassis:type_name -> schema.v1alpha1.Chassis
-	0,  // 35: schema.v1alpha1.ListChassisRequest.type:type_name -> schema.v1alpha1.ChassisType
-	2,  // 36: schema.v1alpha1.ListChassisRequest.status:type_name -> schema.v1alpha1.ChassisStatus
-	41, // 37: schema.v1alpha1.ListChassisRequest.field_mask:type_name -> google.protobuf.FieldMask
-	9,  // 38: schema.v1alpha1.ListChassisResponse.chassis:type_name -> schema.v1alpha1.Chassis
-	9,  // 39: schema.v1alpha1.UpdateChassisRequest.chassis:type_name -> schema.v1alpha1.Chassis
-	41, // 40: schema.v1alpha1.UpdateChassisRequest.field_mask:type_name -> google.protobuf.FieldMask
-	9,  // 41: schema.v1alpha1.UpdateChassisResponse.chassis:type_name -> schema.v1alpha1.Chassis
-	3,  // 42: schema.v1alpha1.ChassisChangeStateRequest.transition:type_name -> schema.v1alpha1.ChassisTransition
-	41, // 43: schema.v1alpha1.ChassisChangeStateRequest.field_mask:type_name -> google.protobuf.FieldMask
-	31, // 44: schema.v1alpha1.ChassisChangeStateRequest.metadata:type_name -> schema.v1alpha1.ChassisChangeStateRequest.MetadataEntry
-	2,  // 45: schema.v1alpha1.ChassisChangeStateResponse.status:type_name -> schema.v1alpha1.ChassisStatus
-	40, // 46: schema.v1alpha1.ChassisChangeStateResponse.estimated_completion:type_name -> google.protobuf.Timestamp
-	32, // 47: schema.v1alpha1.ChassisChangeStateResponse.metadata:type_name -> schema.v1alpha1.ChassisChangeStateResponse.MetadataEntry
-	8,  // 48: schema.v1alpha1.ChassisControlRequest.action:type_name -> schema.v1alpha1.ChassisControlAction
-	41, // 49: schema.v1alpha1.ChassisControlRequest.field_mask:type_name -> google.protobuf.FieldMask
-	33, // 50: schema.v1alpha1.ChassisControlRequest.parameters:type_name -> schema.v1alpha1.ChassisControlRequest.ParametersEntry
-	2,  // 51: schema.v1alpha1.ChassisControlResponse.status:type_name -> schema.v1alpha1.ChassisStatus
-	52, // [52:52] is the sub-list for method output_type
-	52, // [52:52] is the sub-list for method input_type
-	52, // [52:52] is the sub-list for extension type_name
-	52, // [52:52] is the sub-list for extension extendee
-	0,  // [0:52] is the sub-list for field type_name
+	29, // 13: schema.v1alpha1.Chassis.contained_assets:type_name -> schema.v1alpha1.AssetInfo
+	35, // 14: schema.v1alpha1.Chassis.updated_at:type_name -> google.protobuf.Timestamp
+	28, // 15: schema.v1alpha1.Chassis.metadata:type_name -> schema.v1alpha1.Chassis.MetadataEntry
+	2,  // 16: schema.v1alpha1.ChassisStateChange.previous_status:type_name -> schema.v1alpha1.ChassisStatus
+	2,  // 17: schema.v1alpha1.ChassisStateChange.current_status:type_name -> schema.v1alpha1.ChassisStatus
+	3,  // 18: schema.v1alpha1.ChassisStateChange.cause:type_name -> schema.v1alpha1.ChassisAction
+	35, // 19: schema.v1alpha1.ChassisStateChange.changed_at:type_name -> google.protobuf.Timestamp
+	11, // 20: schema.v1alpha1.ChassisPowerInfo.power_supplies:type_name -> schema.v1alpha1.ChassisPowerSupply
+	12, // 21: schema.v1alpha1.ChassisPowerInfo.power_distribution:type_name -> schema.v1alpha1.ChassisPowerDistribution
+	14, // 22: schema.v1alpha1.ChassisPowerInfo.redundancy:type_name -> schema.v1alpha1.ChassisPowerRedundancy
+	15, // 23: schema.v1alpha1.ChassisPowerInfo.power_budgets:type_name -> schema.v1alpha1.ChassisPowerBudget
+	29, // 24: schema.v1alpha1.ChassisPowerSupply.asset:type_name -> schema.v1alpha1.AssetInfo
+	4,  // 25: schema.v1alpha1.ChassisPowerSupply.type:type_name -> schema.v1alpha1.ChassisPowerSupplyType
+	5,  // 26: schema.v1alpha1.ChassisPowerSupply.status:type_name -> schema.v1alpha1.ChassisPowerSupplyStatus
+	30, // 27: schema.v1alpha1.ChassisPowerSupply.location:type_name -> schema.v1alpha1.Location
+	13, // 28: schema.v1alpha1.ChassisPowerDistribution.circuits:type_name -> schema.v1alpha1.PowerCircuit
+	7,  // 29: schema.v1alpha1.ChassisLED.type:type_name -> schema.v1alpha1.ChassisLEDType
+	6,  // 30: schema.v1alpha1.ChassisLED.state:type_name -> schema.v1alpha1.ChassisLEDState
+	35, // 31: schema.v1alpha1.ChassisIntrusion.last_intrusion:type_name -> google.protobuf.Timestamp
+	30, // 32: schema.v1alpha1.ExpansionBay.location:type_name -> schema.v1alpha1.Location
+	30, // 33: schema.v1alpha1.Slot.location:type_name -> schema.v1alpha1.Location
+	0,  // 34: schema.v1alpha1.GetChassisRequest.type:type_name -> schema.v1alpha1.ChassisType
+	2,  // 35: schema.v1alpha1.GetChassisRequest.status:type_name -> schema.v1alpha1.ChassisStatus
+	30, // 36: schema.v1alpha1.GetChassisRequest.location:type_name -> schema.v1alpha1.Location
+	36, // 37: schema.v1alpha1.GetChassisRequest.field_mask:type_name -> google.protobuf.FieldMask
+	8,  // 38: schema.v1alpha1.GetChassisResponse.chassis:type_name -> schema.v1alpha1.Chassis
+	0,  // 39: schema.v1alpha1.ListChassisRequest.type:type_name -> schema.v1alpha1.ChassisType
+	2,  // 40: schema.v1alpha1.ListChassisRequest.status:type_name -> schema.v1alpha1.ChassisStatus
+	36, // 41: schema.v1alpha1.ListChassisRequest.field_mask:type_name -> google.protobuf.FieldMask
+	8,  // 42: schema.v1alpha1.ListChassisResponse.chassis:type_name -> schema.v1alpha1.Chassis
+	8,  // 43: schema.v1alpha1.UpdateChassisRequest.chassis:type_name -> schema.v1alpha1.Chassis
+	36, // 44: schema.v1alpha1.UpdateChassisRequest.field_mask:type_name -> google.protobuf.FieldMask
+	8,  // 45: schema.v1alpha1.UpdateChassisResponse.chassis:type_name -> schema.v1alpha1.Chassis
+	3,  // 46: schema.v1alpha1.ChangeChassisStateRequest.action:type_name -> schema.v1alpha1.ChassisAction
+	2,  // 47: schema.v1alpha1.ChangeChassisStateResponse.current_status:type_name -> schema.v1alpha1.ChassisStatus
+	48, // [48:48] is the sub-list for method output_type
+	48, // [48:48] is the sub-list for method input_type
+	48, // [48:48] is the sub-list for extension type_name
+	48, // [48:48] is the sub-list for extension extendee
+	0,  // [0:48] is the sub-list for field type_name
 }
 
 func init() { file_schema_v1alpha1_chassis_proto_init() }
@@ -2814,7 +2584,6 @@ func file_schema_v1alpha1_chassis_proto_init() {
 	file_schema_v1alpha1_specs_proto_init()
 	file_schema_v1alpha1_thermal_proto_init()
 	file_schema_v1alpha1_chassis_proto_msgTypes[0].OneofWrappers = []any{}
-	file_schema_v1alpha1_chassis_proto_msgTypes[1].OneofWrappers = []any{}
 	file_schema_v1alpha1_chassis_proto_msgTypes[2].OneofWrappers = []any{}
 	file_schema_v1alpha1_chassis_proto_msgTypes[3].OneofWrappers = []any{}
 	file_schema_v1alpha1_chassis_proto_msgTypes[4].OneofWrappers = []any{}
@@ -2824,25 +2593,22 @@ func file_schema_v1alpha1_chassis_proto_init() {
 	file_schema_v1alpha1_chassis_proto_msgTypes[8].OneofWrappers = []any{}
 	file_schema_v1alpha1_chassis_proto_msgTypes[9].OneofWrappers = []any{}
 	file_schema_v1alpha1_chassis_proto_msgTypes[10].OneofWrappers = []any{}
-	file_schema_v1alpha1_chassis_proto_msgTypes[11].OneofWrappers = []any{
+	file_schema_v1alpha1_chassis_proto_msgTypes[11].OneofWrappers = []any{}
+	file_schema_v1alpha1_chassis_proto_msgTypes[12].OneofWrappers = []any{
 		(*GetChassisRequest_Name)(nil),
 		(*GetChassisRequest_Type)(nil),
 		(*GetChassisRequest_Status)(nil),
 		(*GetChassisRequest_Location)(nil),
 	}
-	file_schema_v1alpha1_chassis_proto_msgTypes[13].OneofWrappers = []any{}
 	file_schema_v1alpha1_chassis_proto_msgTypes[14].OneofWrappers = []any{}
-	file_schema_v1alpha1_chassis_proto_msgTypes[17].OneofWrappers = []any{}
-	file_schema_v1alpha1_chassis_proto_msgTypes[18].OneofWrappers = []any{}
-	file_schema_v1alpha1_chassis_proto_msgTypes[19].OneofWrappers = []any{}
-	file_schema_v1alpha1_chassis_proto_msgTypes[20].OneofWrappers = []any{}
+	file_schema_v1alpha1_chassis_proto_msgTypes[15].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_schema_v1alpha1_chassis_proto_rawDesc), len(file_schema_v1alpha1_chassis_proto_rawDesc)),
-			NumEnums:      9,
-			NumMessages:   25,
+			NumEnums:      8,
+			NumMessages:   21,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
