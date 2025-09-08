@@ -97,16 +97,12 @@ func (m *Host) validate(all bool) error {
 		// no validation rules for Type
 	}
 
-	if m.CurrentState != nil {
-		// no validation rules for CurrentState
+	if m.Status != nil {
+		// no validation rules for Status
 	}
 
-	if m.RequestedTransition != nil {
-		// no validation rules for RequestedTransition
-	}
-
-	if m.LastRestartCause != nil {
-		// no validation rules for LastRestartCause
+	if m.RequestedAction != nil {
+		// no validation rules for RequestedAction
 	}
 
 	if m.Location != nil {
@@ -383,6 +379,143 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = HostValidationError{}
+
+// Validate checks the field values on HostStateChange with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *HostStateChange) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HostStateChange with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HostStateChangeMultiError, or nil if none found.
+func (m *HostStateChange) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HostStateChange) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for HostName
+
+	// no validation rules for PreviousStatus
+
+	// no validation rules for CurrentStatus
+
+	// no validation rules for Cause
+
+	if all {
+		switch v := interface{}(m.GetChangedAt()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HostStateChangeValidationError{
+					field:  "ChangedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HostStateChangeValidationError{
+					field:  "ChangedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetChangedAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HostStateChangeValidationError{
+				field:  "ChangedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return HostStateChangeMultiError(errors)
+	}
+
+	return nil
+}
+
+// HostStateChangeMultiError is an error wrapping multiple validation errors
+// returned by HostStateChange.ValidateAll() if the designated constraints
+// aren't met.
+type HostStateChangeMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HostStateChangeMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HostStateChangeMultiError) AllErrors() []error { return m }
+
+// HostStateChangeValidationError is the validation error returned by
+// HostStateChange.Validate if the designated constraints aren't met.
+type HostStateChangeValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HostStateChangeValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HostStateChangeValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HostStateChangeValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HostStateChangeValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HostStateChangeValidationError) ErrorName() string { return "HostStateChangeValidationError" }
+
+// Error satisfies the builtin error interface
+func (e HostStateChangeValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHostStateChange.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HostStateChangeValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HostStateChangeValidationError{}
 
 // Validate checks the field values on HostOperatingSystem with the rules
 // defined in the proto definition for this message. If any rules are
@@ -946,18 +1079,6 @@ func (m *GetHostRequest) validate(all bool) error {
 	var errors []error
 
 	switch v := m.Identifier.(type) {
-	case *GetHostRequest_HostId:
-		if v == nil {
-			err := GetHostRequestValidationError{
-				field:  "Identifier",
-				reason: "oneof value cannot be a typed-nil",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-		// no validation rules for HostId
 	case *GetHostRequest_Name:
 		if v == nil {
 			err := GetHostRequestValidationError{
@@ -982,7 +1103,7 @@ func (m *GetHostRequest) validate(all bool) error {
 			errors = append(errors, err)
 		}
 		// no validation rules for Type
-	case *GetHostRequest_State:
+	case *GetHostRequest_Status:
 		if v == nil {
 			err := GetHostRequestValidationError{
 				field:  "Identifier",
@@ -993,7 +1114,7 @@ func (m *GetHostRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
-		// no validation rules for State
+		// no validation rules for Status
 	case *GetHostRequest_Location:
 		if v == nil {
 			err := GetHostRequestValidationError{
@@ -1306,12 +1427,74 @@ func (m *ListHostsRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Type != nil {
+	switch v := m.Identifier.(type) {
+	case *ListHostsRequest_Type:
+		if v == nil {
+			err := ListHostsRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
 		// no validation rules for Type
-	}
+	case *ListHostsRequest_Status:
+		if v == nil {
+			err := ListHostsRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Status
+	case *ListHostsRequest_Location:
+		if v == nil {
+			err := ListHostsRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
 
-	if m.State != nil {
-		// no validation rules for State
+		if all {
+			switch v := interface{}(m.GetLocation()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListHostsRequestValidationError{
+						field:  "Location",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListHostsRequestValidationError{
+						field:  "Location",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetLocation()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListHostsRequestValidationError{
+					field:  "Location",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	default:
+		_ = v // ensures v is used
 	}
 
 	if m.FieldMask != nil {
@@ -1583,7 +1766,7 @@ func (m *UpdateHostRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for HostId
+	// no validation rules for HostName
 
 	if all {
 		switch v := interface{}(m.GetHost()).(type) {
@@ -1854,52 +2037,46 @@ var _ interface {
 	ErrorName() string
 } = UpdateHostResponseValidationError{}
 
-// Validate checks the field values on HostChangeStateRequest with the rules
+// Validate checks the field values on ChangeHostStateRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HostChangeStateRequest) Validate() error {
+func (m *ChangeHostStateRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on HostChangeStateRequest with the rules
+// ValidateAll checks the field values on ChangeHostStateRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// HostChangeStateRequestMultiError, or nil if none found.
-func (m *HostChangeStateRequest) ValidateAll() error {
+// ChangeHostStateRequestMultiError, or nil if none found.
+func (m *ChangeHostStateRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *HostChangeStateRequest) validate(all bool) error {
+func (m *ChangeHostStateRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	// no validation rules for HostId
+	// no validation rules for HostName
 
-	// no validation rules for Transition
-
-	// no validation rules for Metadata
-
-	if m.Force != nil {
-		// no validation rules for Force
-	}
+	// no validation rules for Action
 
 	if len(errors) > 0 {
-		return HostChangeStateRequestMultiError(errors)
+		return ChangeHostStateRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// HostChangeStateRequestMultiError is an error wrapping multiple validation
-// errors returned by HostChangeStateRequest.ValidateAll() if the designated
+// ChangeHostStateRequestMultiError is an error wrapping multiple validation
+// errors returned by ChangeHostStateRequest.ValidateAll() if the designated
 // constraints aren't met.
-type HostChangeStateRequestMultiError []error
+type ChangeHostStateRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m HostChangeStateRequestMultiError) Error() string {
+func (m ChangeHostStateRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1908,11 +2085,11 @@ func (m HostChangeStateRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m HostChangeStateRequestMultiError) AllErrors() []error { return m }
+func (m ChangeHostStateRequestMultiError) AllErrors() []error { return m }
 
-// HostChangeStateRequestValidationError is the validation error returned by
-// HostChangeStateRequest.Validate if the designated constraints aren't met.
-type HostChangeStateRequestValidationError struct {
+// ChangeHostStateRequestValidationError is the validation error returned by
+// ChangeHostStateRequest.Validate if the designated constraints aren't met.
+type ChangeHostStateRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1920,24 +2097,24 @@ type HostChangeStateRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e HostChangeStateRequestValidationError) Field() string { return e.field }
+func (e ChangeHostStateRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e HostChangeStateRequestValidationError) Reason() string { return e.reason }
+func (e ChangeHostStateRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e HostChangeStateRequestValidationError) Cause() error { return e.cause }
+func (e ChangeHostStateRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e HostChangeStateRequestValidationError) Key() bool { return e.key }
+func (e ChangeHostStateRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e HostChangeStateRequestValidationError) ErrorName() string {
-	return "HostChangeStateRequestValidationError"
+func (e ChangeHostStateRequestValidationError) ErrorName() string {
+	return "ChangeHostStateRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e HostChangeStateRequestValidationError) Error() string {
+func (e ChangeHostStateRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1949,14 +2126,14 @@ func (e HostChangeStateRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sHostChangeStateRequest.%s: %s%s",
+		"invalid %sChangeHostStateRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = HostChangeStateRequestValidationError{}
+var _ error = ChangeHostStateRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1964,93 +2141,46 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = HostChangeStateRequestValidationError{}
+} = ChangeHostStateRequestValidationError{}
 
-// Validate checks the field values on HostChangeStateResponse with the rules
+// Validate checks the field values on ChangeHostStateResponse with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HostChangeStateResponse) Validate() error {
+func (m *ChangeHostStateResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on HostChangeStateResponse with the
+// ValidateAll checks the field values on ChangeHostStateResponse with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// HostChangeStateResponseMultiError, or nil if none found.
-func (m *HostChangeStateResponse) ValidateAll() error {
+// ChangeHostStateResponseMultiError, or nil if none found.
+func (m *ChangeHostStateResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *HostChangeStateResponse) validate(all bool) error {
+func (m *ChangeHostStateResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	// no validation rules for Success
-
-	// no validation rules for Metadata
-
-	if m.ErrorMessage != nil {
-		// no validation rules for ErrorMessage
-	}
-
-	if m.CurrentState != nil {
-		// no validation rules for CurrentState
-	}
-
-	if m.TransitionId != nil {
-		// no validation rules for TransitionId
-	}
-
-	if m.EstimatedCompletion != nil {
-
-		if all {
-			switch v := interface{}(m.GetEstimatedCompletion()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, HostChangeStateResponseValidationError{
-						field:  "EstimatedCompletion",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, HostChangeStateResponseValidationError{
-						field:  "EstimatedCompletion",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetEstimatedCompletion()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return HostChangeStateResponseValidationError{
-					field:  "EstimatedCompletion",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
+	// no validation rules for CurrentStatus
 
 	if len(errors) > 0 {
-		return HostChangeStateResponseMultiError(errors)
+		return ChangeHostStateResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// HostChangeStateResponseMultiError is an error wrapping multiple validation
-// errors returned by HostChangeStateResponse.ValidateAll() if the designated
+// ChangeHostStateResponseMultiError is an error wrapping multiple validation
+// errors returned by ChangeHostStateResponse.ValidateAll() if the designated
 // constraints aren't met.
-type HostChangeStateResponseMultiError []error
+type ChangeHostStateResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m HostChangeStateResponseMultiError) Error() string {
+func (m ChangeHostStateResponseMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -2059,11 +2189,11 @@ func (m HostChangeStateResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m HostChangeStateResponseMultiError) AllErrors() []error { return m }
+func (m ChangeHostStateResponseMultiError) AllErrors() []error { return m }
 
-// HostChangeStateResponseValidationError is the validation error returned by
-// HostChangeStateResponse.Validate if the designated constraints aren't met.
-type HostChangeStateResponseValidationError struct {
+// ChangeHostStateResponseValidationError is the validation error returned by
+// ChangeHostStateResponse.Validate if the designated constraints aren't met.
+type ChangeHostStateResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -2071,24 +2201,24 @@ type HostChangeStateResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e HostChangeStateResponseValidationError) Field() string { return e.field }
+func (e ChangeHostStateResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e HostChangeStateResponseValidationError) Reason() string { return e.reason }
+func (e ChangeHostStateResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e HostChangeStateResponseValidationError) Cause() error { return e.cause }
+func (e ChangeHostStateResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e HostChangeStateResponseValidationError) Key() bool { return e.key }
+func (e ChangeHostStateResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e HostChangeStateResponseValidationError) ErrorName() string {
-	return "HostChangeStateResponseValidationError"
+func (e ChangeHostStateResponseValidationError) ErrorName() string {
+	return "ChangeHostStateResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e HostChangeStateResponseValidationError) Error() string {
+func (e ChangeHostStateResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2100,14 +2230,14 @@ func (e HostChangeStateResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sHostChangeStateResponse.%s: %s%s",
+		"invalid %sChangeHostStateResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = HostChangeStateResponseValidationError{}
+var _ error = ChangeHostStateResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -2115,4 +2245,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = HostChangeStateResponseValidationError{}
+} = ChangeHostStateResponseValidationError{}

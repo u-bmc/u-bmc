@@ -98,16 +98,12 @@ func (m *ManagementController) validate(all bool) error {
 		// no validation rules for Type
 	}
 
-	if m.CurrentState != nil {
-		// no validation rules for CurrentState
-	}
-
-	if m.RequestedTransition != nil {
-		// no validation rules for RequestedTransition
-	}
-
 	if m.Status != nil {
 		// no validation rules for Status
+	}
+
+	if m.RequestedAction != nil {
+		// no validation rules for RequestedAction
 	}
 
 	if m.Location != nil {
@@ -1272,6 +1268,146 @@ var _ interface {
 	ErrorName() string
 } = ManagementControllerRebootInfoValidationError{}
 
+// Validate checks the field values on ManagementControllerStateChange with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ManagementControllerStateChange) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ManagementControllerStateChange with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// ManagementControllerStateChangeMultiError, or nil if none found.
+func (m *ManagementControllerStateChange) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ManagementControllerStateChange) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for ControllerName
+
+	// no validation rules for PreviousStatus
+
+	// no validation rules for CurrentStatus
+
+	// no validation rules for Cause
+
+	if all {
+		switch v := interface{}(m.GetChangedAt()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ManagementControllerStateChangeValidationError{
+					field:  "ChangedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ManagementControllerStateChangeValidationError{
+					field:  "ChangedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetChangedAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ManagementControllerStateChangeValidationError{
+				field:  "ChangedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return ManagementControllerStateChangeMultiError(errors)
+	}
+
+	return nil
+}
+
+// ManagementControllerStateChangeMultiError is an error wrapping multiple
+// validation errors returned by ManagementControllerStateChange.ValidateAll()
+// if the designated constraints aren't met.
+type ManagementControllerStateChangeMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ManagementControllerStateChangeMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ManagementControllerStateChangeMultiError) AllErrors() []error { return m }
+
+// ManagementControllerStateChangeValidationError is the validation error
+// returned by ManagementControllerStateChange.Validate if the designated
+// constraints aren't met.
+type ManagementControllerStateChangeValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ManagementControllerStateChangeValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ManagementControllerStateChangeValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ManagementControllerStateChangeValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ManagementControllerStateChangeValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ManagementControllerStateChangeValidationError) ErrorName() string {
+	return "ManagementControllerStateChangeValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ManagementControllerStateChangeValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sManagementControllerStateChange.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ManagementControllerStateChangeValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ManagementControllerStateChangeValidationError{}
+
 // Validate checks the field values on GetManagementControllerRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1295,18 +1431,6 @@ func (m *GetManagementControllerRequest) validate(all bool) error {
 	var errors []error
 
 	switch v := m.Identifier.(type) {
-	case *GetManagementControllerRequest_ControllerId:
-		if v == nil {
-			err := GetManagementControllerRequestValidationError{
-				field:  "Identifier",
-				reason: "oneof value cannot be a typed-nil",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-		// no validation rules for ControllerId
 	case *GetManagementControllerRequest_Name:
 		if v == nil {
 			err := GetManagementControllerRequestValidationError{
@@ -1384,6 +1508,18 @@ func (m *GetManagementControllerRequest) validate(all bool) error {
 			}
 		}
 
+	case *GetManagementControllerRequest_Role:
+		if v == nil {
+			err := GetManagementControllerRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Role
 	default:
 		_ = v // ensures v is used
 	}
@@ -1662,12 +1798,86 @@ func (m *ListManagementControllersRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Type != nil {
+	switch v := m.Identifier.(type) {
+	case *ListManagementControllersRequest_Type:
+		if v == nil {
+			err := ListManagementControllersRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
 		// no validation rules for Type
-	}
-
-	if m.Status != nil {
+	case *ListManagementControllersRequest_Status:
+		if v == nil {
+			err := ListManagementControllersRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
 		// no validation rules for Status
+	case *ListManagementControllersRequest_Location:
+		if v == nil {
+			err := ListManagementControllersRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if all {
+			switch v := interface{}(m.GetLocation()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListManagementControllersRequestValidationError{
+						field:  "Location",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListManagementControllersRequestValidationError{
+						field:  "Location",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetLocation()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListManagementControllersRequestValidationError{
+					field:  "Location",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	case *ListManagementControllersRequest_Role:
+		if v == nil {
+			err := ListManagementControllersRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Role
+	default:
+		_ = v // ensures v is used
 	}
 
 	if m.FieldMask != nil {
@@ -1947,7 +2157,7 @@ func (m *UpdateManagementControllerRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for ControllerId
+	// no validation rules for ControllerName
 
 	if all {
 		switch v := interface{}(m.GetController()).(type) {
@@ -2223,54 +2433,49 @@ var _ interface {
 	ErrorName() string
 } = UpdateManagementControllerResponseValidationError{}
 
-// Validate checks the field values on ManagementControllerControlRequest with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the first error encountered is returned, or nil if there are
-// no violations.
-func (m *ManagementControllerControlRequest) Validate() error {
+// Validate checks the field values on ChangeManagementControllerStateRequest
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the first error encountered is returned, or nil if
+// there are no violations.
+func (m *ChangeManagementControllerStateRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ManagementControllerControlRequest
-// with the rules defined in the proto definition for this message. If any
-// rules are violated, the result is a list of violation errors wrapped in
-// ManagementControllerControlRequestMultiError, or nil if none found.
-func (m *ManagementControllerControlRequest) ValidateAll() error {
+// ValidateAll checks the field values on
+// ChangeManagementControllerStateRequest with the rules defined in the proto
+// definition for this message. If any rules are violated, the result is a
+// list of violation errors wrapped in
+// ChangeManagementControllerStateRequestMultiError, or nil if none found.
+func (m *ChangeManagementControllerStateRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ManagementControllerControlRequest) validate(all bool) error {
+func (m *ChangeManagementControllerStateRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	// no validation rules for ControllerId
+	// no validation rules for ControllerName
 
 	// no validation rules for Action
 
-	// no validation rules for Parameters
-
-	if m.Force != nil {
-		// no validation rules for Force
-	}
-
 	if len(errors) > 0 {
-		return ManagementControllerControlRequestMultiError(errors)
+		return ChangeManagementControllerStateRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// ManagementControllerControlRequestMultiError is an error wrapping multiple
-// validation errors returned by
-// ManagementControllerControlRequest.ValidateAll() if the designated
+// ChangeManagementControllerStateRequestMultiError is an error wrapping
+// multiple validation errors returned by
+// ChangeManagementControllerStateRequest.ValidateAll() if the designated
 // constraints aren't met.
-type ManagementControllerControlRequestMultiError []error
+type ChangeManagementControllerStateRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ManagementControllerControlRequestMultiError) Error() string {
+func (m ChangeManagementControllerStateRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -2279,12 +2484,12 @@ func (m ManagementControllerControlRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ManagementControllerControlRequestMultiError) AllErrors() []error { return m }
+func (m ChangeManagementControllerStateRequestMultiError) AllErrors() []error { return m }
 
-// ManagementControllerControlRequestValidationError is the validation error
-// returned by ManagementControllerControlRequest.Validate if the designated
-// constraints aren't met.
-type ManagementControllerControlRequestValidationError struct {
+// ChangeManagementControllerStateRequestValidationError is the validation
+// error returned by ChangeManagementControllerStateRequest.Validate if the
+// designated constraints aren't met.
+type ChangeManagementControllerStateRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -2292,24 +2497,24 @@ type ManagementControllerControlRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e ManagementControllerControlRequestValidationError) Field() string { return e.field }
+func (e ChangeManagementControllerStateRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ManagementControllerControlRequestValidationError) Reason() string { return e.reason }
+func (e ChangeManagementControllerStateRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ManagementControllerControlRequestValidationError) Cause() error { return e.cause }
+func (e ChangeManagementControllerStateRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ManagementControllerControlRequestValidationError) Key() bool { return e.key }
+func (e ChangeManagementControllerStateRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ManagementControllerControlRequestValidationError) ErrorName() string {
-	return "ManagementControllerControlRequestValidationError"
+func (e ChangeManagementControllerStateRequestValidationError) ErrorName() string {
+	return "ChangeManagementControllerStateRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ManagementControllerControlRequestValidationError) Error() string {
+func (e ChangeManagementControllerStateRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2321,14 +2526,14 @@ func (e ManagementControllerControlRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sManagementControllerControlRequest.%s: %s%s",
+		"invalid %sChangeManagementControllerStateRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ManagementControllerControlRequestValidationError{}
+var _ error = ChangeManagementControllerStateRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -2336,89 +2541,49 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ManagementControllerControlRequestValidationError{}
+} = ChangeManagementControllerStateRequestValidationError{}
 
-// Validate checks the field values on ManagementControllerControlResponse with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the first error encountered is returned, or nil if there are
-// no violations.
-func (m *ManagementControllerControlResponse) Validate() error {
+// Validate checks the field values on ChangeManagementControllerStateResponse
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the first error encountered is returned, or nil if
+// there are no violations.
+func (m *ChangeManagementControllerStateResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ManagementControllerControlResponse
-// with the rules defined in the proto definition for this message. If any
-// rules are violated, the result is a list of violation errors wrapped in
-// ManagementControllerControlResponseMultiError, or nil if none found.
-func (m *ManagementControllerControlResponse) ValidateAll() error {
+// ValidateAll checks the field values on
+// ChangeManagementControllerStateResponse with the rules defined in the proto
+// definition for this message. If any rules are violated, the result is a
+// list of violation errors wrapped in
+// ChangeManagementControllerStateResponseMultiError, or nil if none found.
+func (m *ChangeManagementControllerStateResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ManagementControllerControlResponse) validate(all bool) error {
+func (m *ChangeManagementControllerStateResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	// no validation rules for Success
-
-	if m.CurrentState != nil {
-		// no validation rules for CurrentState
-	}
-
-	if m.ErrorMessage != nil {
-		// no validation rules for ErrorMessage
-	}
-
-	if m.EstimatedCompletion != nil {
-
-		if all {
-			switch v := interface{}(m.GetEstimatedCompletion()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ManagementControllerControlResponseValidationError{
-						field:  "EstimatedCompletion",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ManagementControllerControlResponseValidationError{
-						field:  "EstimatedCompletion",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetEstimatedCompletion()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ManagementControllerControlResponseValidationError{
-					field:  "EstimatedCompletion",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
+	// no validation rules for CurrentStatus
 
 	if len(errors) > 0 {
-		return ManagementControllerControlResponseMultiError(errors)
+		return ChangeManagementControllerStateResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// ManagementControllerControlResponseMultiError is an error wrapping multiple
-// validation errors returned by
-// ManagementControllerControlResponse.ValidateAll() if the designated
+// ChangeManagementControllerStateResponseMultiError is an error wrapping
+// multiple validation errors returned by
+// ChangeManagementControllerStateResponse.ValidateAll() if the designated
 // constraints aren't met.
-type ManagementControllerControlResponseMultiError []error
+type ChangeManagementControllerStateResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ManagementControllerControlResponseMultiError) Error() string {
+func (m ChangeManagementControllerStateResponseMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -2427,12 +2592,12 @@ func (m ManagementControllerControlResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ManagementControllerControlResponseMultiError) AllErrors() []error { return m }
+func (m ChangeManagementControllerStateResponseMultiError) AllErrors() []error { return m }
 
-// ManagementControllerControlResponseValidationError is the validation error
-// returned by ManagementControllerControlResponse.Validate if the designated
-// constraints aren't met.
-type ManagementControllerControlResponseValidationError struct {
+// ChangeManagementControllerStateResponseValidationError is the validation
+// error returned by ChangeManagementControllerStateResponse.Validate if the
+// designated constraints aren't met.
+type ChangeManagementControllerStateResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -2440,24 +2605,24 @@ type ManagementControllerControlResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e ManagementControllerControlResponseValidationError) Field() string { return e.field }
+func (e ChangeManagementControllerStateResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ManagementControllerControlResponseValidationError) Reason() string { return e.reason }
+func (e ChangeManagementControllerStateResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ManagementControllerControlResponseValidationError) Cause() error { return e.cause }
+func (e ChangeManagementControllerStateResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ManagementControllerControlResponseValidationError) Key() bool { return e.key }
+func (e ChangeManagementControllerStateResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ManagementControllerControlResponseValidationError) ErrorName() string {
-	return "ManagementControllerControlResponseValidationError"
+func (e ChangeManagementControllerStateResponseValidationError) ErrorName() string {
+	return "ChangeManagementControllerStateResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ManagementControllerControlResponseValidationError) Error() string {
+func (e ChangeManagementControllerStateResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2469,14 +2634,14 @@ func (e ManagementControllerControlResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sManagementControllerControlResponse.%s: %s%s",
+		"invalid %sChangeManagementControllerStateResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ManagementControllerControlResponseValidationError{}
+var _ error = ChangeManagementControllerStateResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -2484,4 +2649,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ManagementControllerControlResponseValidationError{}
+} = ChangeManagementControllerStateResponseValidationError{}

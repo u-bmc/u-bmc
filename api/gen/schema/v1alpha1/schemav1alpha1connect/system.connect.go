@@ -51,21 +51,18 @@ const (
 	// BMCServiceUpdateChassisProcedure is the fully-qualified name of the BMCService's UpdateChassis
 	// RPC.
 	BMCServiceUpdateChassisProcedure = "/schema.v1alpha1.BMCService/UpdateChassis"
-	// BMCServiceChassisChangeStateProcedure is the fully-qualified name of the BMCService's
-	// ChassisChangeState RPC.
-	BMCServiceChassisChangeStateProcedure = "/schema.v1alpha1.BMCService/ChassisChangeState"
-	// BMCServiceChassisControlProcedure is the fully-qualified name of the BMCService's ChassisControl
-	// RPC.
-	BMCServiceChassisControlProcedure = "/schema.v1alpha1.BMCService/ChassisControl"
+	// BMCServiceChangeChassisStateProcedure is the fully-qualified name of the BMCService's
+	// ChangeChassisState RPC.
+	BMCServiceChangeChassisStateProcedure = "/schema.v1alpha1.BMCService/ChangeChassisState"
 	// BMCServiceGetHostProcedure is the fully-qualified name of the BMCService's GetHost RPC.
 	BMCServiceGetHostProcedure = "/schema.v1alpha1.BMCService/GetHost"
 	// BMCServiceListHostsProcedure is the fully-qualified name of the BMCService's ListHosts RPC.
 	BMCServiceListHostsProcedure = "/schema.v1alpha1.BMCService/ListHosts"
 	// BMCServiceUpdateHostProcedure is the fully-qualified name of the BMCService's UpdateHost RPC.
 	BMCServiceUpdateHostProcedure = "/schema.v1alpha1.BMCService/UpdateHost"
-	// BMCServiceHostChangeStateProcedure is the fully-qualified name of the BMCService's
-	// HostChangeState RPC.
-	BMCServiceHostChangeStateProcedure = "/schema.v1alpha1.BMCService/HostChangeState"
+	// BMCServiceChangeHostStateProcedure is the fully-qualified name of the BMCService's
+	// ChangeHostState RPC.
+	BMCServiceChangeHostStateProcedure = "/schema.v1alpha1.BMCService/ChangeHostState"
 	// BMCServiceGetManagementControllerProcedure is the fully-qualified name of the BMCService's
 	// GetManagementController RPC.
 	BMCServiceGetManagementControllerProcedure = "/schema.v1alpha1.BMCService/GetManagementController"
@@ -75,9 +72,9 @@ const (
 	// BMCServiceUpdateManagementControllerProcedure is the fully-qualified name of the BMCService's
 	// UpdateManagementController RPC.
 	BMCServiceUpdateManagementControllerProcedure = "/schema.v1alpha1.BMCService/UpdateManagementController"
-	// BMCServiceManagementControllerControlProcedure is the fully-qualified name of the BMCService's
-	// ManagementControllerControl RPC.
-	BMCServiceManagementControllerControlProcedure = "/schema.v1alpha1.BMCService/ManagementControllerControl"
+	// BMCServiceChangeManagementControllerStateProcedure is the fully-qualified name of the
+	// BMCService's ChangeManagementControllerState RPC.
+	BMCServiceChangeManagementControllerStateProcedure = "/schema.v1alpha1.BMCService/ChangeManagementControllerState"
 	// BMCServiceListSensorsProcedure is the fully-qualified name of the BMCService's ListSensors RPC.
 	BMCServiceListSensorsProcedure = "/schema.v1alpha1.BMCService/ListSensors"
 	// BMCServiceGetSensorProcedure is the fully-qualified name of the BMCService's GetSensor RPC.
@@ -121,16 +118,15 @@ type BMCServiceClient interface {
 	GetChassis(context.Context, *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error)
 	ListChassis(context.Context, *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error)
 	UpdateChassis(context.Context, *connect.Request[v1alpha1.UpdateChassisRequest]) (*connect.Response[v1alpha1.UpdateChassisResponse], error)
-	ChassisChangeState(context.Context, *connect.Request[v1alpha1.ChassisChangeStateRequest]) (*connect.Response[v1alpha1.ChassisChangeStateResponse], error)
-	ChassisControl(context.Context, *connect.Request[v1alpha1.ChassisControlRequest]) (*connect.Response[v1alpha1.ChassisControlResponse], error)
+	ChangeChassisState(context.Context, *connect.Request[v1alpha1.ChangeChassisStateRequest]) (*connect.Response[v1alpha1.ChangeChassisStateResponse], error)
 	GetHost(context.Context, *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error)
 	ListHosts(context.Context, *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error)
 	UpdateHost(context.Context, *connect.Request[v1alpha1.UpdateHostRequest]) (*connect.Response[v1alpha1.UpdateHostResponse], error)
-	HostChangeState(context.Context, *connect.Request[v1alpha1.HostChangeStateRequest]) (*connect.Response[v1alpha1.HostChangeStateResponse], error)
+	ChangeHostState(context.Context, *connect.Request[v1alpha1.ChangeHostStateRequest]) (*connect.Response[v1alpha1.ChangeHostStateResponse], error)
 	GetManagementController(context.Context, *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error)
 	ListManagementControllers(context.Context, *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error)
 	UpdateManagementController(context.Context, *connect.Request[v1alpha1.UpdateManagementControllerRequest]) (*connect.Response[v1alpha1.UpdateManagementControllerResponse], error)
-	ManagementControllerControl(context.Context, *connect.Request[v1alpha1.ManagementControllerControlRequest]) (*connect.Response[v1alpha1.ManagementControllerControlResponse], error)
+	ChangeManagementControllerState(context.Context, *connect.Request[v1alpha1.ChangeManagementControllerStateRequest]) (*connect.Response[v1alpha1.ChangeManagementControllerStateResponse], error)
 	ListSensors(context.Context, *connect.Request[v1alpha1.ListSensorsRequest]) (*connect.Response[v1alpha1.ListSensorsResponse], error)
 	GetSensor(context.Context, *connect.Request[v1alpha1.GetSensorRequest]) (*connect.Response[v1alpha1.GetSensorResponse], error)
 	GetThermalZone(context.Context, *connect.Request[v1alpha1.GetThermalZoneRequest]) (*connect.Response[v1alpha1.GetThermalZoneResponse], error)
@@ -199,16 +195,10 @@ func NewBMCServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...
 			connect.WithSchema(bMCServiceMethods.ByName("UpdateChassis")),
 			connect.WithClientOptions(opts...),
 		),
-		chassisChangeState: connect.NewClient[v1alpha1.ChassisChangeStateRequest, v1alpha1.ChassisChangeStateResponse](
+		changeChassisState: connect.NewClient[v1alpha1.ChangeChassisStateRequest, v1alpha1.ChangeChassisStateResponse](
 			httpClient,
-			baseURL+BMCServiceChassisChangeStateProcedure,
-			connect.WithSchema(bMCServiceMethods.ByName("ChassisChangeState")),
-			connect.WithClientOptions(opts...),
-		),
-		chassisControl: connect.NewClient[v1alpha1.ChassisControlRequest, v1alpha1.ChassisControlResponse](
-			httpClient,
-			baseURL+BMCServiceChassisControlProcedure,
-			connect.WithSchema(bMCServiceMethods.ByName("ChassisControl")),
+			baseURL+BMCServiceChangeChassisStateProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("ChangeChassisState")),
 			connect.WithClientOptions(opts...),
 		),
 		getHost: connect.NewClient[v1alpha1.GetHostRequest, v1alpha1.GetHostResponse](
@@ -229,10 +219,10 @@ func NewBMCServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...
 			connect.WithSchema(bMCServiceMethods.ByName("UpdateHost")),
 			connect.WithClientOptions(opts...),
 		),
-		hostChangeState: connect.NewClient[v1alpha1.HostChangeStateRequest, v1alpha1.HostChangeStateResponse](
+		changeHostState: connect.NewClient[v1alpha1.ChangeHostStateRequest, v1alpha1.ChangeHostStateResponse](
 			httpClient,
-			baseURL+BMCServiceHostChangeStateProcedure,
-			connect.WithSchema(bMCServiceMethods.ByName("HostChangeState")),
+			baseURL+BMCServiceChangeHostStateProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("ChangeHostState")),
 			connect.WithClientOptions(opts...),
 		),
 		getManagementController: connect.NewClient[v1alpha1.GetManagementControllerRequest, v1alpha1.GetManagementControllerResponse](
@@ -253,10 +243,10 @@ func NewBMCServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...
 			connect.WithSchema(bMCServiceMethods.ByName("UpdateManagementController")),
 			connect.WithClientOptions(opts...),
 		),
-		managementControllerControl: connect.NewClient[v1alpha1.ManagementControllerControlRequest, v1alpha1.ManagementControllerControlResponse](
+		changeManagementControllerState: connect.NewClient[v1alpha1.ChangeManagementControllerStateRequest, v1alpha1.ChangeManagementControllerStateResponse](
 			httpClient,
-			baseURL+BMCServiceManagementControllerControlProcedure,
-			connect.WithSchema(bMCServiceMethods.ByName("ManagementControllerControl")),
+			baseURL+BMCServiceChangeManagementControllerStateProcedure,
+			connect.WithSchema(bMCServiceMethods.ByName("ChangeManagementControllerState")),
 			connect.WithClientOptions(opts...),
 		),
 		listSensors: connect.NewClient[v1alpha1.ListSensorsRequest, v1alpha1.ListSensorsResponse](
@@ -342,36 +332,35 @@ func NewBMCServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...
 
 // bMCServiceClient implements BMCServiceClient.
 type bMCServiceClient struct {
-	getSystemInfo               *connect.Client[v1alpha1.GetSystemInfoRequest, v1alpha1.GetSystemInfoResponse]
-	getHealth                   *connect.Client[v1alpha1.GetHealthRequest, v1alpha1.GetHealthResponse]
-	getAssetInfo                *connect.Client[v1alpha1.GetAssetInfoRequest, v1alpha1.GetAssetInfoResponse]
-	setAssetInfo                *connect.Client[v1alpha1.SetAssetInfoRequest, v1alpha1.SetAssetInfoResponse]
-	getChassis                  *connect.Client[v1alpha1.GetChassisRequest, v1alpha1.GetChassisResponse]
-	listChassis                 *connect.Client[v1alpha1.ListChassisRequest, v1alpha1.ListChassisResponse]
-	updateChassis               *connect.Client[v1alpha1.UpdateChassisRequest, v1alpha1.UpdateChassisResponse]
-	chassisChangeState          *connect.Client[v1alpha1.ChassisChangeStateRequest, v1alpha1.ChassisChangeStateResponse]
-	chassisControl              *connect.Client[v1alpha1.ChassisControlRequest, v1alpha1.ChassisControlResponse]
-	getHost                     *connect.Client[v1alpha1.GetHostRequest, v1alpha1.GetHostResponse]
-	listHosts                   *connect.Client[v1alpha1.ListHostsRequest, v1alpha1.ListHostsResponse]
-	updateHost                  *connect.Client[v1alpha1.UpdateHostRequest, v1alpha1.UpdateHostResponse]
-	hostChangeState             *connect.Client[v1alpha1.HostChangeStateRequest, v1alpha1.HostChangeStateResponse]
-	getManagementController     *connect.Client[v1alpha1.GetManagementControllerRequest, v1alpha1.GetManagementControllerResponse]
-	listManagementControllers   *connect.Client[v1alpha1.ListManagementControllersRequest, v1alpha1.ListManagementControllersResponse]
-	updateManagementController  *connect.Client[v1alpha1.UpdateManagementControllerRequest, v1alpha1.UpdateManagementControllerResponse]
-	managementControllerControl *connect.Client[v1alpha1.ManagementControllerControlRequest, v1alpha1.ManagementControllerControlResponse]
-	listSensors                 *connect.Client[v1alpha1.ListSensorsRequest, v1alpha1.ListSensorsResponse]
-	getSensor                   *connect.Client[v1alpha1.GetSensorRequest, v1alpha1.GetSensorResponse]
-	getThermalZone              *connect.Client[v1alpha1.GetThermalZoneRequest, v1alpha1.GetThermalZoneResponse]
-	setThermalZone              *connect.Client[v1alpha1.SetThermalZoneRequest, v1alpha1.SetThermalZoneResponse]
-	listThermalZones            *connect.Client[v1alpha1.ListThermalZonesRequest, v1alpha1.ListThermalZonesResponse]
-	createUser                  *connect.Client[v1alpha1.CreateUserRequest, v1alpha1.CreateUserResponse]
-	getUser                     *connect.Client[v1alpha1.GetUserRequest, v1alpha1.GetUserResponse]
-	updateUser                  *connect.Client[v1alpha1.UpdateUserRequest, v1alpha1.UpdateUserResponse]
-	deleteUser                  *connect.Client[v1alpha1.DeleteUserRequest, v1alpha1.DeleteUserResponse]
-	listUsers                   *connect.Client[v1alpha1.ListUsersRequest, v1alpha1.ListUsersResponse]
-	changePassword              *connect.Client[v1alpha1.ChangePasswordRequest, v1alpha1.ChangePasswordResponse]
-	resetPassword               *connect.Client[v1alpha1.ResetPasswordRequest, v1alpha1.ResetPasswordResponse]
-	authenticateUser            *connect.Client[v1alpha1.AuthenticateUserRequest, v1alpha1.AuthenticateUserResponse]
+	getSystemInfo                   *connect.Client[v1alpha1.GetSystemInfoRequest, v1alpha1.GetSystemInfoResponse]
+	getHealth                       *connect.Client[v1alpha1.GetHealthRequest, v1alpha1.GetHealthResponse]
+	getAssetInfo                    *connect.Client[v1alpha1.GetAssetInfoRequest, v1alpha1.GetAssetInfoResponse]
+	setAssetInfo                    *connect.Client[v1alpha1.SetAssetInfoRequest, v1alpha1.SetAssetInfoResponse]
+	getChassis                      *connect.Client[v1alpha1.GetChassisRequest, v1alpha1.GetChassisResponse]
+	listChassis                     *connect.Client[v1alpha1.ListChassisRequest, v1alpha1.ListChassisResponse]
+	updateChassis                   *connect.Client[v1alpha1.UpdateChassisRequest, v1alpha1.UpdateChassisResponse]
+	changeChassisState              *connect.Client[v1alpha1.ChangeChassisStateRequest, v1alpha1.ChangeChassisStateResponse]
+	getHost                         *connect.Client[v1alpha1.GetHostRequest, v1alpha1.GetHostResponse]
+	listHosts                       *connect.Client[v1alpha1.ListHostsRequest, v1alpha1.ListHostsResponse]
+	updateHost                      *connect.Client[v1alpha1.UpdateHostRequest, v1alpha1.UpdateHostResponse]
+	changeHostState                 *connect.Client[v1alpha1.ChangeHostStateRequest, v1alpha1.ChangeHostStateResponse]
+	getManagementController         *connect.Client[v1alpha1.GetManagementControllerRequest, v1alpha1.GetManagementControllerResponse]
+	listManagementControllers       *connect.Client[v1alpha1.ListManagementControllersRequest, v1alpha1.ListManagementControllersResponse]
+	updateManagementController      *connect.Client[v1alpha1.UpdateManagementControllerRequest, v1alpha1.UpdateManagementControllerResponse]
+	changeManagementControllerState *connect.Client[v1alpha1.ChangeManagementControllerStateRequest, v1alpha1.ChangeManagementControllerStateResponse]
+	listSensors                     *connect.Client[v1alpha1.ListSensorsRequest, v1alpha1.ListSensorsResponse]
+	getSensor                       *connect.Client[v1alpha1.GetSensorRequest, v1alpha1.GetSensorResponse]
+	getThermalZone                  *connect.Client[v1alpha1.GetThermalZoneRequest, v1alpha1.GetThermalZoneResponse]
+	setThermalZone                  *connect.Client[v1alpha1.SetThermalZoneRequest, v1alpha1.SetThermalZoneResponse]
+	listThermalZones                *connect.Client[v1alpha1.ListThermalZonesRequest, v1alpha1.ListThermalZonesResponse]
+	createUser                      *connect.Client[v1alpha1.CreateUserRequest, v1alpha1.CreateUserResponse]
+	getUser                         *connect.Client[v1alpha1.GetUserRequest, v1alpha1.GetUserResponse]
+	updateUser                      *connect.Client[v1alpha1.UpdateUserRequest, v1alpha1.UpdateUserResponse]
+	deleteUser                      *connect.Client[v1alpha1.DeleteUserRequest, v1alpha1.DeleteUserResponse]
+	listUsers                       *connect.Client[v1alpha1.ListUsersRequest, v1alpha1.ListUsersResponse]
+	changePassword                  *connect.Client[v1alpha1.ChangePasswordRequest, v1alpha1.ChangePasswordResponse]
+	resetPassword                   *connect.Client[v1alpha1.ResetPasswordRequest, v1alpha1.ResetPasswordResponse]
+	authenticateUser                *connect.Client[v1alpha1.AuthenticateUserRequest, v1alpha1.AuthenticateUserResponse]
 }
 
 // GetSystemInfo calls schema.v1alpha1.BMCService.GetSystemInfo.
@@ -409,14 +398,9 @@ func (c *bMCServiceClient) UpdateChassis(ctx context.Context, req *connect.Reque
 	return c.updateChassis.CallUnary(ctx, req)
 }
 
-// ChassisChangeState calls schema.v1alpha1.BMCService.ChassisChangeState.
-func (c *bMCServiceClient) ChassisChangeState(ctx context.Context, req *connect.Request[v1alpha1.ChassisChangeStateRequest]) (*connect.Response[v1alpha1.ChassisChangeStateResponse], error) {
-	return c.chassisChangeState.CallUnary(ctx, req)
-}
-
-// ChassisControl calls schema.v1alpha1.BMCService.ChassisControl.
-func (c *bMCServiceClient) ChassisControl(ctx context.Context, req *connect.Request[v1alpha1.ChassisControlRequest]) (*connect.Response[v1alpha1.ChassisControlResponse], error) {
-	return c.chassisControl.CallUnary(ctx, req)
+// ChangeChassisState calls schema.v1alpha1.BMCService.ChangeChassisState.
+func (c *bMCServiceClient) ChangeChassisState(ctx context.Context, req *connect.Request[v1alpha1.ChangeChassisStateRequest]) (*connect.Response[v1alpha1.ChangeChassisStateResponse], error) {
+	return c.changeChassisState.CallUnary(ctx, req)
 }
 
 // GetHost calls schema.v1alpha1.BMCService.GetHost.
@@ -434,9 +418,9 @@ func (c *bMCServiceClient) UpdateHost(ctx context.Context, req *connect.Request[
 	return c.updateHost.CallUnary(ctx, req)
 }
 
-// HostChangeState calls schema.v1alpha1.BMCService.HostChangeState.
-func (c *bMCServiceClient) HostChangeState(ctx context.Context, req *connect.Request[v1alpha1.HostChangeStateRequest]) (*connect.Response[v1alpha1.HostChangeStateResponse], error) {
-	return c.hostChangeState.CallUnary(ctx, req)
+// ChangeHostState calls schema.v1alpha1.BMCService.ChangeHostState.
+func (c *bMCServiceClient) ChangeHostState(ctx context.Context, req *connect.Request[v1alpha1.ChangeHostStateRequest]) (*connect.Response[v1alpha1.ChangeHostStateResponse], error) {
+	return c.changeHostState.CallUnary(ctx, req)
 }
 
 // GetManagementController calls schema.v1alpha1.BMCService.GetManagementController.
@@ -454,9 +438,9 @@ func (c *bMCServiceClient) UpdateManagementController(ctx context.Context, req *
 	return c.updateManagementController.CallUnary(ctx, req)
 }
 
-// ManagementControllerControl calls schema.v1alpha1.BMCService.ManagementControllerControl.
-func (c *bMCServiceClient) ManagementControllerControl(ctx context.Context, req *connect.Request[v1alpha1.ManagementControllerControlRequest]) (*connect.Response[v1alpha1.ManagementControllerControlResponse], error) {
-	return c.managementControllerControl.CallUnary(ctx, req)
+// ChangeManagementControllerState calls schema.v1alpha1.BMCService.ChangeManagementControllerState.
+func (c *bMCServiceClient) ChangeManagementControllerState(ctx context.Context, req *connect.Request[v1alpha1.ChangeManagementControllerStateRequest]) (*connect.Response[v1alpha1.ChangeManagementControllerStateResponse], error) {
+	return c.changeManagementControllerState.CallUnary(ctx, req)
 }
 
 // ListSensors calls schema.v1alpha1.BMCService.ListSensors.
@@ -533,16 +517,15 @@ type BMCServiceHandler interface {
 	GetChassis(context.Context, *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error)
 	ListChassis(context.Context, *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error)
 	UpdateChassis(context.Context, *connect.Request[v1alpha1.UpdateChassisRequest]) (*connect.Response[v1alpha1.UpdateChassisResponse], error)
-	ChassisChangeState(context.Context, *connect.Request[v1alpha1.ChassisChangeStateRequest]) (*connect.Response[v1alpha1.ChassisChangeStateResponse], error)
-	ChassisControl(context.Context, *connect.Request[v1alpha1.ChassisControlRequest]) (*connect.Response[v1alpha1.ChassisControlResponse], error)
+	ChangeChassisState(context.Context, *connect.Request[v1alpha1.ChangeChassisStateRequest]) (*connect.Response[v1alpha1.ChangeChassisStateResponse], error)
 	GetHost(context.Context, *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error)
 	ListHosts(context.Context, *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error)
 	UpdateHost(context.Context, *connect.Request[v1alpha1.UpdateHostRequest]) (*connect.Response[v1alpha1.UpdateHostResponse], error)
-	HostChangeState(context.Context, *connect.Request[v1alpha1.HostChangeStateRequest]) (*connect.Response[v1alpha1.HostChangeStateResponse], error)
+	ChangeHostState(context.Context, *connect.Request[v1alpha1.ChangeHostStateRequest]) (*connect.Response[v1alpha1.ChangeHostStateResponse], error)
 	GetManagementController(context.Context, *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error)
 	ListManagementControllers(context.Context, *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error)
 	UpdateManagementController(context.Context, *connect.Request[v1alpha1.UpdateManagementControllerRequest]) (*connect.Response[v1alpha1.UpdateManagementControllerResponse], error)
-	ManagementControllerControl(context.Context, *connect.Request[v1alpha1.ManagementControllerControlRequest]) (*connect.Response[v1alpha1.ManagementControllerControlResponse], error)
+	ChangeManagementControllerState(context.Context, *connect.Request[v1alpha1.ChangeManagementControllerStateRequest]) (*connect.Response[v1alpha1.ChangeManagementControllerStateResponse], error)
 	ListSensors(context.Context, *connect.Request[v1alpha1.ListSensorsRequest]) (*connect.Response[v1alpha1.ListSensorsResponse], error)
 	GetSensor(context.Context, *connect.Request[v1alpha1.GetSensorRequest]) (*connect.Response[v1alpha1.GetSensorResponse], error)
 	GetThermalZone(context.Context, *connect.Request[v1alpha1.GetThermalZoneRequest]) (*connect.Response[v1alpha1.GetThermalZoneResponse], error)
@@ -607,16 +590,10 @@ func NewBMCServiceHandler(svc BMCServiceHandler, opts ...connect.HandlerOption) 
 		connect.WithSchema(bMCServiceMethods.ByName("UpdateChassis")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceChassisChangeStateHandler := connect.NewUnaryHandler(
-		BMCServiceChassisChangeStateProcedure,
-		svc.ChassisChangeState,
-		connect.WithSchema(bMCServiceMethods.ByName("ChassisChangeState")),
-		connect.WithHandlerOptions(opts...),
-	)
-	bMCServiceChassisControlHandler := connect.NewUnaryHandler(
-		BMCServiceChassisControlProcedure,
-		svc.ChassisControl,
-		connect.WithSchema(bMCServiceMethods.ByName("ChassisControl")),
+	bMCServiceChangeChassisStateHandler := connect.NewUnaryHandler(
+		BMCServiceChangeChassisStateProcedure,
+		svc.ChangeChassisState,
+		connect.WithSchema(bMCServiceMethods.ByName("ChangeChassisState")),
 		connect.WithHandlerOptions(opts...),
 	)
 	bMCServiceGetHostHandler := connect.NewUnaryHandler(
@@ -637,10 +614,10 @@ func NewBMCServiceHandler(svc BMCServiceHandler, opts ...connect.HandlerOption) 
 		connect.WithSchema(bMCServiceMethods.ByName("UpdateHost")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceHostChangeStateHandler := connect.NewUnaryHandler(
-		BMCServiceHostChangeStateProcedure,
-		svc.HostChangeState,
-		connect.WithSchema(bMCServiceMethods.ByName("HostChangeState")),
+	bMCServiceChangeHostStateHandler := connect.NewUnaryHandler(
+		BMCServiceChangeHostStateProcedure,
+		svc.ChangeHostState,
+		connect.WithSchema(bMCServiceMethods.ByName("ChangeHostState")),
 		connect.WithHandlerOptions(opts...),
 	)
 	bMCServiceGetManagementControllerHandler := connect.NewUnaryHandler(
@@ -661,10 +638,10 @@ func NewBMCServiceHandler(svc BMCServiceHandler, opts ...connect.HandlerOption) 
 		connect.WithSchema(bMCServiceMethods.ByName("UpdateManagementController")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceManagementControllerControlHandler := connect.NewUnaryHandler(
-		BMCServiceManagementControllerControlProcedure,
-		svc.ManagementControllerControl,
-		connect.WithSchema(bMCServiceMethods.ByName("ManagementControllerControl")),
+	bMCServiceChangeManagementControllerStateHandler := connect.NewUnaryHandler(
+		BMCServiceChangeManagementControllerStateProcedure,
+		svc.ChangeManagementControllerState,
+		connect.WithSchema(bMCServiceMethods.ByName("ChangeManagementControllerState")),
 		connect.WithHandlerOptions(opts...),
 	)
 	bMCServiceListSensorsHandler := connect.NewUnaryHandler(
@@ -761,26 +738,24 @@ func NewBMCServiceHandler(svc BMCServiceHandler, opts ...connect.HandlerOption) 
 			bMCServiceListChassisHandler.ServeHTTP(w, r)
 		case BMCServiceUpdateChassisProcedure:
 			bMCServiceUpdateChassisHandler.ServeHTTP(w, r)
-		case BMCServiceChassisChangeStateProcedure:
-			bMCServiceChassisChangeStateHandler.ServeHTTP(w, r)
-		case BMCServiceChassisControlProcedure:
-			bMCServiceChassisControlHandler.ServeHTTP(w, r)
+		case BMCServiceChangeChassisStateProcedure:
+			bMCServiceChangeChassisStateHandler.ServeHTTP(w, r)
 		case BMCServiceGetHostProcedure:
 			bMCServiceGetHostHandler.ServeHTTP(w, r)
 		case BMCServiceListHostsProcedure:
 			bMCServiceListHostsHandler.ServeHTTP(w, r)
 		case BMCServiceUpdateHostProcedure:
 			bMCServiceUpdateHostHandler.ServeHTTP(w, r)
-		case BMCServiceHostChangeStateProcedure:
-			bMCServiceHostChangeStateHandler.ServeHTTP(w, r)
+		case BMCServiceChangeHostStateProcedure:
+			bMCServiceChangeHostStateHandler.ServeHTTP(w, r)
 		case BMCServiceGetManagementControllerProcedure:
 			bMCServiceGetManagementControllerHandler.ServeHTTP(w, r)
 		case BMCServiceListManagementControllersProcedure:
 			bMCServiceListManagementControllersHandler.ServeHTTP(w, r)
 		case BMCServiceUpdateManagementControllerProcedure:
 			bMCServiceUpdateManagementControllerHandler.ServeHTTP(w, r)
-		case BMCServiceManagementControllerControlProcedure:
-			bMCServiceManagementControllerControlHandler.ServeHTTP(w, r)
+		case BMCServiceChangeManagementControllerStateProcedure:
+			bMCServiceChangeManagementControllerStateHandler.ServeHTTP(w, r)
 		case BMCServiceListSensorsProcedure:
 			bMCServiceListSensorsHandler.ServeHTTP(w, r)
 		case BMCServiceGetSensorProcedure:
@@ -844,12 +819,8 @@ func (UnimplementedBMCServiceHandler) UpdateChassis(context.Context, *connect.Re
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.UpdateChassis is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) ChassisChangeState(context.Context, *connect.Request[v1alpha1.ChassisChangeStateRequest]) (*connect.Response[v1alpha1.ChassisChangeStateResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ChassisChangeState is not implemented"))
-}
-
-func (UnimplementedBMCServiceHandler) ChassisControl(context.Context, *connect.Request[v1alpha1.ChassisControlRequest]) (*connect.Response[v1alpha1.ChassisControlResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ChassisControl is not implemented"))
+func (UnimplementedBMCServiceHandler) ChangeChassisState(context.Context, *connect.Request[v1alpha1.ChangeChassisStateRequest]) (*connect.Response[v1alpha1.ChangeChassisStateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ChangeChassisState is not implemented"))
 }
 
 func (UnimplementedBMCServiceHandler) GetHost(context.Context, *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error) {
@@ -864,8 +835,8 @@ func (UnimplementedBMCServiceHandler) UpdateHost(context.Context, *connect.Reque
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.UpdateHost is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) HostChangeState(context.Context, *connect.Request[v1alpha1.HostChangeStateRequest]) (*connect.Response[v1alpha1.HostChangeStateResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.HostChangeState is not implemented"))
+func (UnimplementedBMCServiceHandler) ChangeHostState(context.Context, *connect.Request[v1alpha1.ChangeHostStateRequest]) (*connect.Response[v1alpha1.ChangeHostStateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ChangeHostState is not implemented"))
 }
 
 func (UnimplementedBMCServiceHandler) GetManagementController(context.Context, *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error) {
@@ -880,8 +851,8 @@ func (UnimplementedBMCServiceHandler) UpdateManagementController(context.Context
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.UpdateManagementController is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) ManagementControllerControl(context.Context, *connect.Request[v1alpha1.ManagementControllerControlRequest]) (*connect.Response[v1alpha1.ManagementControllerControlResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ManagementControllerControl is not implemented"))
+func (UnimplementedBMCServiceHandler) ChangeManagementControllerState(context.Context, *connect.Request[v1alpha1.ChangeManagementControllerStateRequest]) (*connect.Response[v1alpha1.ChangeManagementControllerStateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ChangeManagementControllerState is not implemented"))
 }
 
 func (UnimplementedBMCServiceHandler) ListSensors(context.Context, *connect.Request[v1alpha1.ListSensorsRequest]) (*connect.Response[v1alpha1.ListSensorsResponse], error) {

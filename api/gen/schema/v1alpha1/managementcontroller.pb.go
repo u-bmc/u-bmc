@@ -88,31 +88,34 @@ func (ManagementControllerType) EnumDescriptor() ([]byte, []int) {
 type ManagementControllerStatus int32
 
 const (
-	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED         ManagementControllerStatus = 0
-	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ENABLED             ManagementControllerStatus = 1
-	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DISABLED            ManagementControllerStatus = 2
-	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_UNAVAILABLE_OFFLINE ManagementControllerStatus = 3
-	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_IN_TEST             ManagementControllerStatus = 4
-	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR               ManagementControllerStatus = 5
+	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED ManagementControllerStatus = 0
+	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY       ManagementControllerStatus = 1
+	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY   ManagementControllerStatus = 2
+	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DISABLED    ManagementControllerStatus = 3
+	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_QUIESCED    ManagementControllerStatus = 4
+	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC  ManagementControllerStatus = 5
+	ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR       ManagementControllerStatus = 6
 )
 
 // Enum value maps for ManagementControllerStatus.
 var (
 	ManagementControllerStatus_name = map[int32]string{
 		0: "MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED",
-		1: "MANAGEMENT_CONTROLLER_STATUS_ENABLED",
-		2: "MANAGEMENT_CONTROLLER_STATUS_DISABLED",
-		3: "MANAGEMENT_CONTROLLER_STATUS_UNAVAILABLE_OFFLINE",
-		4: "MANAGEMENT_CONTROLLER_STATUS_IN_TEST",
-		5: "MANAGEMENT_CONTROLLER_STATUS_ERROR",
+		1: "MANAGEMENT_CONTROLLER_STATUS_READY",
+		2: "MANAGEMENT_CONTROLLER_STATUS_NOT_READY",
+		3: "MANAGEMENT_CONTROLLER_STATUS_DISABLED",
+		4: "MANAGEMENT_CONTROLLER_STATUS_QUIESCED",
+		5: "MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC",
+		6: "MANAGEMENT_CONTROLLER_STATUS_ERROR",
 	}
 	ManagementControllerStatus_value = map[string]int32{
-		"MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED":         0,
-		"MANAGEMENT_CONTROLLER_STATUS_ENABLED":             1,
-		"MANAGEMENT_CONTROLLER_STATUS_DISABLED":            2,
-		"MANAGEMENT_CONTROLLER_STATUS_UNAVAILABLE_OFFLINE": 3,
-		"MANAGEMENT_CONTROLLER_STATUS_IN_TEST":             4,
-		"MANAGEMENT_CONTROLLER_STATUS_ERROR":               5,
+		"MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED": 0,
+		"MANAGEMENT_CONTROLLER_STATUS_READY":       1,
+		"MANAGEMENT_CONTROLLER_STATUS_NOT_READY":   2,
+		"MANAGEMENT_CONTROLLER_STATUS_DISABLED":    3,
+		"MANAGEMENT_CONTROLLER_STATUS_QUIESCED":    4,
+		"MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC":  5,
+		"MANAGEMENT_CONTROLLER_STATUS_ERROR":       6,
 	}
 )
 
@@ -143,105 +146,80 @@ func (ManagementControllerStatus) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{1}
 }
 
-type ManagementControllerState int32
+type ManagementControllerAction int32
 
 const (
-	ManagementControllerState_MANAGEMENT_CONTROLLER_STATE_UNSPECIFIED ManagementControllerState = 0
-	ManagementControllerState_MANAGEMENT_CONTROLLER_STATE_READY       ManagementControllerState = 1
-	ManagementControllerState_MANAGEMENT_CONTROLLER_STATE_NOT_READY   ManagementControllerState = 2
+	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED     ManagementControllerAction = 0
+	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE          ManagementControllerAction = 1
+	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_DISABLE         ManagementControllerAction = 2
+	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_REBOOT          ManagementControllerAction = 3
+	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_WARM_RESET      ManagementControllerAction = 4
+	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_COLD_RESET      ManagementControllerAction = 5
+	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_HARD_RESET      ManagementControllerAction = 6
+	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET   ManagementControllerAction = 7
+	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_CLEAR_LOGS      ManagementControllerAction = 8
+	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_BACKUP_CONFIG   ManagementControllerAction = 9
+	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_RESTORE_CONFIG  ManagementControllerAction = 10
+	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_UPDATE_FIRMWARE ManagementControllerAction = 11
 )
 
-// Enum value maps for ManagementControllerState.
+// Enum value maps for ManagementControllerAction.
 var (
-	ManagementControllerState_name = map[int32]string{
-		0: "MANAGEMENT_CONTROLLER_STATE_UNSPECIFIED",
-		1: "MANAGEMENT_CONTROLLER_STATE_READY",
-		2: "MANAGEMENT_CONTROLLER_STATE_NOT_READY",
+	ManagementControllerAction_name = map[int32]string{
+		0:  "MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED",
+		1:  "MANAGEMENT_CONTROLLER_ACTION_ENABLE",
+		2:  "MANAGEMENT_CONTROLLER_ACTION_DISABLE",
+		3:  "MANAGEMENT_CONTROLLER_ACTION_REBOOT",
+		4:  "MANAGEMENT_CONTROLLER_ACTION_WARM_RESET",
+		5:  "MANAGEMENT_CONTROLLER_ACTION_COLD_RESET",
+		6:  "MANAGEMENT_CONTROLLER_ACTION_HARD_RESET",
+		7:  "MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET",
+		8:  "MANAGEMENT_CONTROLLER_ACTION_CLEAR_LOGS",
+		9:  "MANAGEMENT_CONTROLLER_ACTION_BACKUP_CONFIG",
+		10: "MANAGEMENT_CONTROLLER_ACTION_RESTORE_CONFIG",
+		11: "MANAGEMENT_CONTROLLER_ACTION_UPDATE_FIRMWARE",
 	}
-	ManagementControllerState_value = map[string]int32{
-		"MANAGEMENT_CONTROLLER_STATE_UNSPECIFIED": 0,
-		"MANAGEMENT_CONTROLLER_STATE_READY":       1,
-		"MANAGEMENT_CONTROLLER_STATE_NOT_READY":   2,
+	ManagementControllerAction_value = map[string]int32{
+		"MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED":     0,
+		"MANAGEMENT_CONTROLLER_ACTION_ENABLE":          1,
+		"MANAGEMENT_CONTROLLER_ACTION_DISABLE":         2,
+		"MANAGEMENT_CONTROLLER_ACTION_REBOOT":          3,
+		"MANAGEMENT_CONTROLLER_ACTION_WARM_RESET":      4,
+		"MANAGEMENT_CONTROLLER_ACTION_COLD_RESET":      5,
+		"MANAGEMENT_CONTROLLER_ACTION_HARD_RESET":      6,
+		"MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET":   7,
+		"MANAGEMENT_CONTROLLER_ACTION_CLEAR_LOGS":      8,
+		"MANAGEMENT_CONTROLLER_ACTION_BACKUP_CONFIG":   9,
+		"MANAGEMENT_CONTROLLER_ACTION_RESTORE_CONFIG":  10,
+		"MANAGEMENT_CONTROLLER_ACTION_UPDATE_FIRMWARE": 11,
 	}
 )
 
-func (x ManagementControllerState) Enum() *ManagementControllerState {
-	p := new(ManagementControllerState)
+func (x ManagementControllerAction) Enum() *ManagementControllerAction {
+	p := new(ManagementControllerAction)
 	*p = x
 	return p
 }
 
-func (x ManagementControllerState) String() string {
+func (x ManagementControllerAction) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (ManagementControllerState) Descriptor() protoreflect.EnumDescriptor {
+func (ManagementControllerAction) Descriptor() protoreflect.EnumDescriptor {
 	return file_schema_v1alpha1_managementcontroller_proto_enumTypes[2].Descriptor()
 }
 
-func (ManagementControllerState) Type() protoreflect.EnumType {
+func (ManagementControllerAction) Type() protoreflect.EnumType {
 	return &file_schema_v1alpha1_managementcontroller_proto_enumTypes[2]
 }
 
-func (x ManagementControllerState) Number() protoreflect.EnumNumber {
+func (x ManagementControllerAction) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use ManagementControllerState.Descriptor instead.
-func (ManagementControllerState) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use ManagementControllerAction.Descriptor instead.
+func (ManagementControllerAction) EnumDescriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{2}
-}
-
-type ManagementControllerTransition int32
-
-const (
-	ManagementControllerTransition_MANAGEMENT_CONTROLLER_TRANSITION_UNSPECIFIED ManagementControllerTransition = 0
-	ManagementControllerTransition_MANAGEMENT_CONTROLLER_TRANSITION_REBOOT      ManagementControllerTransition = 1
-	ManagementControllerTransition_MANAGEMENT_CONTROLLER_TRANSITION_WARM_RESET  ManagementControllerTransition = 2
-	ManagementControllerTransition_MANAGEMENT_CONTROLLER_TRANSITION_COLD_RESET  ManagementControllerTransition = 3
-)
-
-// Enum value maps for ManagementControllerTransition.
-var (
-	ManagementControllerTransition_name = map[int32]string{
-		0: "MANAGEMENT_CONTROLLER_TRANSITION_UNSPECIFIED",
-		1: "MANAGEMENT_CONTROLLER_TRANSITION_REBOOT",
-		2: "MANAGEMENT_CONTROLLER_TRANSITION_WARM_RESET",
-		3: "MANAGEMENT_CONTROLLER_TRANSITION_COLD_RESET",
-	}
-	ManagementControllerTransition_value = map[string]int32{
-		"MANAGEMENT_CONTROLLER_TRANSITION_UNSPECIFIED": 0,
-		"MANAGEMENT_CONTROLLER_TRANSITION_REBOOT":      1,
-		"MANAGEMENT_CONTROLLER_TRANSITION_WARM_RESET":  2,
-		"MANAGEMENT_CONTROLLER_TRANSITION_COLD_RESET":  3,
-	}
-)
-
-func (x ManagementControllerTransition) Enum() *ManagementControllerTransition {
-	p := new(ManagementControllerTransition)
-	*p = x
-	return p
-}
-
-func (x ManagementControllerTransition) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ManagementControllerTransition) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_managementcontroller_proto_enumTypes[3].Descriptor()
-}
-
-func (ManagementControllerTransition) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_managementcontroller_proto_enumTypes[3]
-}
-
-func (x ManagementControllerTransition) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ManagementControllerTransition.Descriptor instead.
-func (ManagementControllerTransition) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{3}
 }
 
 type ManagementControllerRebootCause int32
@@ -286,11 +264,11 @@ func (x ManagementControllerRebootCause) String() string {
 }
 
 func (ManagementControllerRebootCause) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_managementcontroller_proto_enumTypes[4].Descriptor()
+	return file_schema_v1alpha1_managementcontroller_proto_enumTypes[3].Descriptor()
 }
 
 func (ManagementControllerRebootCause) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_managementcontroller_proto_enumTypes[4]
+	return &file_schema_v1alpha1_managementcontroller_proto_enumTypes[3]
 }
 
 func (x ManagementControllerRebootCause) Number() protoreflect.EnumNumber {
@@ -299,7 +277,7 @@ func (x ManagementControllerRebootCause) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ManagementControllerRebootCause.Descriptor instead.
 func (ManagementControllerRebootCause) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{4}
+	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{3}
 }
 
 type ManagementControllerRole int32
@@ -338,11 +316,11 @@ func (x ManagementControllerRole) String() string {
 }
 
 func (ManagementControllerRole) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_managementcontroller_proto_enumTypes[5].Descriptor()
+	return file_schema_v1alpha1_managementcontroller_proto_enumTypes[4].Descriptor()
 }
 
 func (ManagementControllerRole) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_managementcontroller_proto_enumTypes[5]
+	return &file_schema_v1alpha1_managementcontroller_proto_enumTypes[4]
 }
 
 func (x ManagementControllerRole) Number() protoreflect.EnumNumber {
@@ -351,71 +329,7 @@ func (x ManagementControllerRole) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ManagementControllerRole.Descriptor instead.
 func (ManagementControllerRole) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{5}
-}
-
-type ManagementControllerAction int32
-
-const (
-	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED     ManagementControllerAction = 0
-	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_REBOOT          ManagementControllerAction = 1
-	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_HARD_RESET      ManagementControllerAction = 2
-	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET   ManagementControllerAction = 3
-	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_CLEAR_LOGS      ManagementControllerAction = 4
-	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_BACKUP_CONFIG   ManagementControllerAction = 5
-	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_RESTORE_CONFIG  ManagementControllerAction = 6
-	ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_UPDATE_FIRMWARE ManagementControllerAction = 7
-)
-
-// Enum value maps for ManagementControllerAction.
-var (
-	ManagementControllerAction_name = map[int32]string{
-		0: "MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED",
-		1: "MANAGEMENT_CONTROLLER_ACTION_REBOOT",
-		2: "MANAGEMENT_CONTROLLER_ACTION_HARD_RESET",
-		3: "MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET",
-		4: "MANAGEMENT_CONTROLLER_ACTION_CLEAR_LOGS",
-		5: "MANAGEMENT_CONTROLLER_ACTION_BACKUP_CONFIG",
-		6: "MANAGEMENT_CONTROLLER_ACTION_RESTORE_CONFIG",
-		7: "MANAGEMENT_CONTROLLER_ACTION_UPDATE_FIRMWARE",
-	}
-	ManagementControllerAction_value = map[string]int32{
-		"MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED":     0,
-		"MANAGEMENT_CONTROLLER_ACTION_REBOOT":          1,
-		"MANAGEMENT_CONTROLLER_ACTION_HARD_RESET":      2,
-		"MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET":   3,
-		"MANAGEMENT_CONTROLLER_ACTION_CLEAR_LOGS":      4,
-		"MANAGEMENT_CONTROLLER_ACTION_BACKUP_CONFIG":   5,
-		"MANAGEMENT_CONTROLLER_ACTION_RESTORE_CONFIG":  6,
-		"MANAGEMENT_CONTROLLER_ACTION_UPDATE_FIRMWARE": 7,
-	}
-)
-
-func (x ManagementControllerAction) Enum() *ManagementControllerAction {
-	p := new(ManagementControllerAction)
-	*p = x
-	return p
-}
-
-func (x ManagementControllerAction) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ManagementControllerAction) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_managementcontroller_proto_enumTypes[6].Descriptor()
-}
-
-func (ManagementControllerAction) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_managementcontroller_proto_enumTypes[6]
-}
-
-func (x ManagementControllerAction) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ManagementControllerAction.Descriptor instead.
-func (ManagementControllerAction) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{6}
+	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{4}
 }
 
 type MemoryType int32
@@ -469,11 +383,11 @@ func (x MemoryType) String() string {
 }
 
 func (MemoryType) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_managementcontroller_proto_enumTypes[7].Descriptor()
+	return file_schema_v1alpha1_managementcontroller_proto_enumTypes[5].Descriptor()
 }
 
 func (MemoryType) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_managementcontroller_proto_enumTypes[7]
+	return &file_schema_v1alpha1_managementcontroller_proto_enumTypes[5]
 }
 
 func (x MemoryType) Number() protoreflect.EnumNumber {
@@ -482,7 +396,7 @@ func (x MemoryType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use MemoryType.Descriptor instead.
 func (MemoryType) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{7}
+	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{5}
 }
 
 type StorageType int32
@@ -521,11 +435,11 @@ func (x StorageType) String() string {
 }
 
 func (StorageType) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_v1alpha1_managementcontroller_proto_enumTypes[8].Descriptor()
+	return file_schema_v1alpha1_managementcontroller_proto_enumTypes[6].Descriptor()
 }
 
 func (StorageType) Type() protoreflect.EnumType {
-	return &file_schema_v1alpha1_managementcontroller_proto_enumTypes[8]
+	return &file_schema_v1alpha1_managementcontroller_proto_enumTypes[6]
 }
 
 func (x StorageType) Number() protoreflect.EnumNumber {
@@ -534,27 +448,26 @@ func (x StorageType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StorageType.Descriptor instead.
 func (StorageType) EnumDescriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{8}
+	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{6}
 }
 
 type ManagementController struct {
-	state               protoimpl.MessageState          `protogen:"open.v1"`
-	Name                string                          `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Asset               *AssetInfo                      `protobuf:"bytes,2,opt,name=asset,proto3" json:"asset,omitempty"`
-	Description         *string                         `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
-	Type                *ManagementControllerType       `protobuf:"varint,4,opt,name=type,proto3,enum=schema.v1alpha1.ManagementControllerType,oneof" json:"type,omitempty"`
-	CurrentState        *ManagementControllerState      `protobuf:"varint,5,opt,name=current_state,json=currentState,proto3,enum=schema.v1alpha1.ManagementControllerState,oneof" json:"current_state,omitempty"`
-	RequestedTransition *ManagementControllerTransition `protobuf:"varint,6,opt,name=requested_transition,json=requestedTransition,proto3,enum=schema.v1alpha1.ManagementControllerTransition,oneof" json:"requested_transition,omitempty"`
-	Status              *ManagementControllerStatus     `protobuf:"varint,7,opt,name=status,proto3,enum=schema.v1alpha1.ManagementControllerStatus,oneof" json:"status,omitempty"`
-	Location            *Location                       `protobuf:"bytes,8,opt,name=location,proto3,oneof" json:"location,omitempty"`
-	Hardware            *ManagementControllerHardware   `protobuf:"bytes,9,opt,name=hardware,proto3,oneof" json:"hardware,omitempty"`
-	Firmware            *Firmware                       `protobuf:"bytes,10,opt,name=firmware,proto3,oneof" json:"firmware,omitempty"`
-	Redundancy          *ManagementControllerRedundancy `protobuf:"bytes,11,opt,name=redundancy,proto3,oneof" json:"redundancy,omitempty"`
-	LastReboot          *ManagementControllerRebootInfo `protobuf:"bytes,12,opt,name=last_reboot,json=lastReboot,proto3,oneof" json:"last_reboot,omitempty"`
-	UpdatedAt           *timestamppb.Timestamp          `protobuf:"bytes,13,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
-	Metadata            map[string]string               `protobuf:"bytes,14,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+	state           protoimpl.MessageState          `protogen:"open.v1"`
+	Name            string                          `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Asset           *AssetInfo                      `protobuf:"bytes,2,opt,name=asset,proto3" json:"asset,omitempty"`
+	Description     *string                         `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	Type            *ManagementControllerType       `protobuf:"varint,4,opt,name=type,proto3,enum=schema.v1alpha1.ManagementControllerType,oneof" json:"type,omitempty"`
+	Status          *ManagementControllerStatus     `protobuf:"varint,5,opt,name=status,proto3,enum=schema.v1alpha1.ManagementControllerStatus,oneof" json:"status,omitempty"`
+	RequestedAction *ManagementControllerAction     `protobuf:"varint,6,opt,name=requested_action,json=requestedAction,proto3,enum=schema.v1alpha1.ManagementControllerAction,oneof" json:"requested_action,omitempty"`
+	Location        *Location                       `protobuf:"bytes,7,opt,name=location,proto3,oneof" json:"location,omitempty"`
+	Hardware        *ManagementControllerHardware   `protobuf:"bytes,8,opt,name=hardware,proto3,oneof" json:"hardware,omitempty"`
+	Firmware        *Firmware                       `protobuf:"bytes,9,opt,name=firmware,proto3,oneof" json:"firmware,omitempty"`
+	Redundancy      *ManagementControllerRedundancy `protobuf:"bytes,10,opt,name=redundancy,proto3,oneof" json:"redundancy,omitempty"`
+	LastReboot      *ManagementControllerRebootInfo `protobuf:"bytes,11,opt,name=last_reboot,json=lastReboot,proto3,oneof" json:"last_reboot,omitempty"`
+	UpdatedAt       *timestamppb.Timestamp          `protobuf:"bytes,12,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
+	Metadata        map[string]string               `protobuf:"bytes,13,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *ManagementController) Reset() {
@@ -615,25 +528,18 @@ func (x *ManagementController) GetType() ManagementControllerType {
 	return ManagementControllerType_MANAGEMENT_CONTROLLER_TYPE_UNSPECIFIED
 }
 
-func (x *ManagementController) GetCurrentState() ManagementControllerState {
-	if x != nil && x.CurrentState != nil {
-		return *x.CurrentState
-	}
-	return ManagementControllerState_MANAGEMENT_CONTROLLER_STATE_UNSPECIFIED
-}
-
-func (x *ManagementController) GetRequestedTransition() ManagementControllerTransition {
-	if x != nil && x.RequestedTransition != nil {
-		return *x.RequestedTransition
-	}
-	return ManagementControllerTransition_MANAGEMENT_CONTROLLER_TRANSITION_UNSPECIFIED
-}
-
 func (x *ManagementController) GetStatus() ManagementControllerStatus {
 	if x != nil && x.Status != nil {
 		return *x.Status
 	}
 	return ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED
+}
+
+func (x *ManagementController) GetRequestedAction() ManagementControllerAction {
+	if x != nil && x.RequestedAction != nil {
+		return *x.RequestedAction
+	}
+	return ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED
 }
 
 func (x *ManagementController) GetLocation() *Location {
@@ -935,8 +841,8 @@ func (x *ManagementControllerStorage) GetCapacity() uint64 {
 
 type ManagementControllerRedundancy struct {
 	state                     protoimpl.MessageState    `protogen:"open.v1"`
-	Role                      *ManagementControllerRole `protobuf:"varint,1,opt,name=role,proto3,enum=schema.v1alpha1.ManagementControllerRole,oneof" json:"role,omitempty"`
-	RedundancyEnabled         bool                      `protobuf:"varint,2,opt,name=redundancy_enabled,json=redundancyEnabled,proto3" json:"redundancy_enabled,omitempty"`
+	RedundancyEnabled         bool                      `protobuf:"varint,1,opt,name=redundancy_enabled,json=redundancyEnabled,proto3" json:"redundancy_enabled,omitempty"`
+	Role                      *ManagementControllerRole `protobuf:"varint,2,opt,name=role,proto3,enum=schema.v1alpha1.ManagementControllerRole,oneof" json:"role,omitempty"`
 	DisableRedundancyOverride *bool                     `protobuf:"varint,3,opt,name=disable_redundancy_override,json=disableRedundancyOverride,proto3,oneof" json:"disable_redundancy_override,omitempty"`
 	FailoversPaused           *bool                     `protobuf:"varint,4,opt,name=failovers_paused,json=failoversPaused,proto3,oneof" json:"failovers_paused,omitempty"`
 	RedundancyMode            *string                   `protobuf:"bytes,5,opt,name=redundancy_mode,json=redundancyMode,proto3,oneof" json:"redundancy_mode,omitempty"`
@@ -976,18 +882,18 @@ func (*ManagementControllerRedundancy) Descriptor() ([]byte, []int) {
 	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *ManagementControllerRedundancy) GetRole() ManagementControllerRole {
-	if x != nil && x.Role != nil {
-		return *x.Role
-	}
-	return ManagementControllerRole_MANAGEMENT_CONTROLLER_ROLE_UNSPECIFIED
-}
-
 func (x *ManagementControllerRedundancy) GetRedundancyEnabled() bool {
 	if x != nil {
 		return x.RedundancyEnabled
 	}
 	return false
+}
+
+func (x *ManagementControllerRedundancy) GetRole() ManagementControllerRole {
+	if x != nil && x.Role != nil {
+		return *x.Role
+	}
+	return ManagementControllerRole_MANAGEMENT_CONTROLLER_ROLE_UNSPECIFIED
 }
 
 func (x *ManagementControllerRedundancy) GetDisableRedundancyOverride() bool {
@@ -1101,15 +1007,91 @@ func (x *ManagementControllerRebootInfo) GetBootTime() *durationpb.Duration {
 	return nil
 }
 
+type ManagementControllerStateChange struct {
+	state          protoimpl.MessageState     `protogen:"open.v1"`
+	ControllerName string                     `protobuf:"bytes,1,opt,name=controller_name,json=controllerName,proto3" json:"controller_name,omitempty"`
+	PreviousStatus ManagementControllerStatus `protobuf:"varint,2,opt,name=previous_status,json=previousStatus,proto3,enum=schema.v1alpha1.ManagementControllerStatus" json:"previous_status,omitempty"`
+	CurrentStatus  ManagementControllerStatus `protobuf:"varint,3,opt,name=current_status,json=currentStatus,proto3,enum=schema.v1alpha1.ManagementControllerStatus" json:"current_status,omitempty"`
+	Cause          ManagementControllerAction `protobuf:"varint,4,opt,name=cause,proto3,enum=schema.v1alpha1.ManagementControllerAction" json:"cause,omitempty"`
+	ChangedAt      *timestamppb.Timestamp     `protobuf:"bytes,5,opt,name=changed_at,json=changedAt,proto3" json:"changed_at,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *ManagementControllerStateChange) Reset() {
+	*x = ManagementControllerStateChange{}
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ManagementControllerStateChange) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ManagementControllerStateChange) ProtoMessage() {}
+
+func (x *ManagementControllerStateChange) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ManagementControllerStateChange.ProtoReflect.Descriptor instead.
+func (*ManagementControllerStateChange) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ManagementControllerStateChange) GetControllerName() string {
+	if x != nil {
+		return x.ControllerName
+	}
+	return ""
+}
+
+func (x *ManagementControllerStateChange) GetPreviousStatus() ManagementControllerStatus {
+	if x != nil {
+		return x.PreviousStatus
+	}
+	return ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED
+}
+
+func (x *ManagementControllerStateChange) GetCurrentStatus() ManagementControllerStatus {
+	if x != nil {
+		return x.CurrentStatus
+	}
+	return ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED
+}
+
+func (x *ManagementControllerStateChange) GetCause() ManagementControllerAction {
+	if x != nil {
+		return x.Cause
+	}
+	return ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED
+}
+
+func (x *ManagementControllerStateChange) GetChangedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.ChangedAt
+	}
+	return nil
+}
+
 type GetManagementControllerRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to Identifier:
 	//
-	//	*GetManagementControllerRequest_ControllerId
 	//	*GetManagementControllerRequest_Name
 	//	*GetManagementControllerRequest_Type
 	//	*GetManagementControllerRequest_Status
 	//	*GetManagementControllerRequest_Location
+	//	*GetManagementControllerRequest_Role
 	Identifier    isGetManagementControllerRequest_Identifier `protobuf_oneof:"identifier"`
 	FieldMask     *fieldmaskpb.FieldMask                      `protobuf:"bytes,6,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1118,7 +1100,7 @@ type GetManagementControllerRequest struct {
 
 func (x *GetManagementControllerRequest) Reset() {
 	*x = GetManagementControllerRequest{}
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[7]
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1130,7 +1112,7 @@ func (x *GetManagementControllerRequest) String() string {
 func (*GetManagementControllerRequest) ProtoMessage() {}
 
 func (x *GetManagementControllerRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[7]
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1143,7 +1125,7 @@ func (x *GetManagementControllerRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetManagementControllerRequest.ProtoReflect.Descriptor instead.
 func (*GetManagementControllerRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{7}
+	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *GetManagementControllerRequest) GetIdentifier() isGetManagementControllerRequest_Identifier {
@@ -1151,15 +1133,6 @@ func (x *GetManagementControllerRequest) GetIdentifier() isGetManagementControll
 		return x.Identifier
 	}
 	return nil
-}
-
-func (x *GetManagementControllerRequest) GetControllerId() string {
-	if x != nil {
-		if x, ok := x.Identifier.(*GetManagementControllerRequest_ControllerId); ok {
-			return x.ControllerId
-		}
-	}
-	return ""
 }
 
 func (x *GetManagementControllerRequest) GetName() string {
@@ -1198,6 +1171,15 @@ func (x *GetManagementControllerRequest) GetLocation() *Location {
 	return nil
 }
 
+func (x *GetManagementControllerRequest) GetRole() ManagementControllerRole {
+	if x != nil {
+		if x, ok := x.Identifier.(*GetManagementControllerRequest_Role); ok {
+			return x.Role
+		}
+	}
+	return ManagementControllerRole_MANAGEMENT_CONTROLLER_ROLE_UNSPECIFIED
+}
+
 func (x *GetManagementControllerRequest) GetFieldMask() *fieldmaskpb.FieldMask {
 	if x != nil {
 		return x.FieldMask
@@ -1209,27 +1191,25 @@ type isGetManagementControllerRequest_Identifier interface {
 	isGetManagementControllerRequest_Identifier()
 }
 
-type GetManagementControllerRequest_ControllerId struct {
-	ControllerId string `protobuf:"bytes,1,opt,name=controller_id,json=controllerId,proto3,oneof"`
-}
-
 type GetManagementControllerRequest_Name struct {
-	Name string `protobuf:"bytes,2,opt,name=name,proto3,oneof"`
+	Name string `protobuf:"bytes,1,opt,name=name,proto3,oneof"`
 }
 
 type GetManagementControllerRequest_Type struct {
-	Type ManagementControllerType `protobuf:"varint,3,opt,name=type,proto3,enum=schema.v1alpha1.ManagementControllerType,oneof"`
+	Type ManagementControllerType `protobuf:"varint,2,opt,name=type,proto3,enum=schema.v1alpha1.ManagementControllerType,oneof"`
 }
 
 type GetManagementControllerRequest_Status struct {
-	Status ManagementControllerStatus `protobuf:"varint,4,opt,name=status,proto3,enum=schema.v1alpha1.ManagementControllerStatus,oneof"`
+	Status ManagementControllerStatus `protobuf:"varint,3,opt,name=status,proto3,enum=schema.v1alpha1.ManagementControllerStatus,oneof"`
 }
 
 type GetManagementControllerRequest_Location struct {
-	Location *Location `protobuf:"bytes,5,opt,name=location,proto3,oneof"`
+	Location *Location `protobuf:"bytes,4,opt,name=location,proto3,oneof"`
 }
 
-func (*GetManagementControllerRequest_ControllerId) isGetManagementControllerRequest_Identifier() {}
+type GetManagementControllerRequest_Role struct {
+	Role ManagementControllerRole `protobuf:"varint,5,opt,name=role,proto3,enum=schema.v1alpha1.ManagementControllerRole,oneof"`
+}
 
 func (*GetManagementControllerRequest_Name) isGetManagementControllerRequest_Identifier() {}
 
@@ -1238,6 +1218,8 @@ func (*GetManagementControllerRequest_Type) isGetManagementControllerRequest_Ide
 func (*GetManagementControllerRequest_Status) isGetManagementControllerRequest_Identifier() {}
 
 func (*GetManagementControllerRequest_Location) isGetManagementControllerRequest_Identifier() {}
+
+func (*GetManagementControllerRequest_Role) isGetManagementControllerRequest_Identifier() {}
 
 type GetManagementControllerResponse struct {
 	state         protoimpl.MessageState  `protogen:"open.v1"`
@@ -1248,7 +1230,7 @@ type GetManagementControllerResponse struct {
 
 func (x *GetManagementControllerResponse) Reset() {
 	*x = GetManagementControllerResponse{}
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[8]
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1260,7 +1242,7 @@ func (x *GetManagementControllerResponse) String() string {
 func (*GetManagementControllerResponse) ProtoMessage() {}
 
 func (x *GetManagementControllerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[8]
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1273,7 +1255,7 @@ func (x *GetManagementControllerResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetManagementControllerResponse.ProtoReflect.Descriptor instead.
 func (*GetManagementControllerResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{8}
+	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *GetManagementControllerResponse) GetControllers() []*ManagementController {
@@ -1284,17 +1266,22 @@ func (x *GetManagementControllerResponse) GetControllers() []*ManagementControll
 }
 
 type ListManagementControllersRequest struct {
-	state         protoimpl.MessageState      `protogen:"open.v1"`
-	Type          *ManagementControllerType   `protobuf:"varint,1,opt,name=type,proto3,enum=schema.v1alpha1.ManagementControllerType,oneof" json:"type,omitempty"`
-	Status        *ManagementControllerStatus `protobuf:"varint,2,opt,name=status,proto3,enum=schema.v1alpha1.ManagementControllerStatus,oneof" json:"status,omitempty"`
-	FieldMask     *fieldmaskpb.FieldMask      `protobuf:"bytes,3,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Identifier:
+	//
+	//	*ListManagementControllersRequest_Type
+	//	*ListManagementControllersRequest_Status
+	//	*ListManagementControllersRequest_Location
+	//	*ListManagementControllersRequest_Role
+	Identifier    isListManagementControllersRequest_Identifier `protobuf_oneof:"identifier"`
+	FieldMask     *fieldmaskpb.FieldMask                        `protobuf:"bytes,5,opt,name=field_mask,json=fieldMask,proto3,oneof" json:"field_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListManagementControllersRequest) Reset() {
 	*x = ListManagementControllersRequest{}
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[9]
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1306,7 +1293,7 @@ func (x *ListManagementControllersRequest) String() string {
 func (*ListManagementControllersRequest) ProtoMessage() {}
 
 func (x *ListManagementControllersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[9]
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1319,21 +1306,50 @@ func (x *ListManagementControllersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListManagementControllersRequest.ProtoReflect.Descriptor instead.
 func (*ListManagementControllersRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{9}
+	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *ListManagementControllersRequest) GetIdentifier() isListManagementControllersRequest_Identifier {
+	if x != nil {
+		return x.Identifier
+	}
+	return nil
 }
 
 func (x *ListManagementControllersRequest) GetType() ManagementControllerType {
-	if x != nil && x.Type != nil {
-		return *x.Type
+	if x != nil {
+		if x, ok := x.Identifier.(*ListManagementControllersRequest_Type); ok {
+			return x.Type
+		}
 	}
 	return ManagementControllerType_MANAGEMENT_CONTROLLER_TYPE_UNSPECIFIED
 }
 
 func (x *ListManagementControllersRequest) GetStatus() ManagementControllerStatus {
-	if x != nil && x.Status != nil {
-		return *x.Status
+	if x != nil {
+		if x, ok := x.Identifier.(*ListManagementControllersRequest_Status); ok {
+			return x.Status
+		}
 	}
 	return ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED
+}
+
+func (x *ListManagementControllersRequest) GetLocation() *Location {
+	if x != nil {
+		if x, ok := x.Identifier.(*ListManagementControllersRequest_Location); ok {
+			return x.Location
+		}
+	}
+	return nil
+}
+
+func (x *ListManagementControllersRequest) GetRole() ManagementControllerRole {
+	if x != nil {
+		if x, ok := x.Identifier.(*ListManagementControllersRequest_Role); ok {
+			return x.Role
+		}
+	}
+	return ManagementControllerRole_MANAGEMENT_CONTROLLER_ROLE_UNSPECIFIED
 }
 
 func (x *ListManagementControllersRequest) GetFieldMask() *fieldmaskpb.FieldMask {
@@ -1342,6 +1358,34 @@ func (x *ListManagementControllersRequest) GetFieldMask() *fieldmaskpb.FieldMask
 	}
 	return nil
 }
+
+type isListManagementControllersRequest_Identifier interface {
+	isListManagementControllersRequest_Identifier()
+}
+
+type ListManagementControllersRequest_Type struct {
+	Type ManagementControllerType `protobuf:"varint,1,opt,name=type,proto3,enum=schema.v1alpha1.ManagementControllerType,oneof"`
+}
+
+type ListManagementControllersRequest_Status struct {
+	Status ManagementControllerStatus `protobuf:"varint,2,opt,name=status,proto3,enum=schema.v1alpha1.ManagementControllerStatus,oneof"`
+}
+
+type ListManagementControllersRequest_Location struct {
+	Location *Location `protobuf:"bytes,3,opt,name=location,proto3,oneof"`
+}
+
+type ListManagementControllersRequest_Role struct {
+	Role ManagementControllerRole `protobuf:"varint,4,opt,name=role,proto3,enum=schema.v1alpha1.ManagementControllerRole,oneof"`
+}
+
+func (*ListManagementControllersRequest_Type) isListManagementControllersRequest_Identifier() {}
+
+func (*ListManagementControllersRequest_Status) isListManagementControllersRequest_Identifier() {}
+
+func (*ListManagementControllersRequest_Location) isListManagementControllersRequest_Identifier() {}
+
+func (*ListManagementControllersRequest_Role) isListManagementControllersRequest_Identifier() {}
 
 type ListManagementControllersResponse struct {
 	state         protoimpl.MessageState  `protogen:"open.v1"`
@@ -1352,7 +1396,7 @@ type ListManagementControllersResponse struct {
 
 func (x *ListManagementControllersResponse) Reset() {
 	*x = ListManagementControllersResponse{}
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[10]
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1364,7 +1408,7 @@ func (x *ListManagementControllersResponse) String() string {
 func (*ListManagementControllersResponse) ProtoMessage() {}
 
 func (x *ListManagementControllersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[10]
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1377,7 +1421,7 @@ func (x *ListManagementControllersResponse) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use ListManagementControllersResponse.ProtoReflect.Descriptor instead.
 func (*ListManagementControllersResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{10}
+	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ListManagementControllersResponse) GetControllers() []*ManagementController {
@@ -1388,17 +1432,17 @@ func (x *ListManagementControllersResponse) GetControllers() []*ManagementContro
 }
 
 type UpdateManagementControllerRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	ControllerId  string                 `protobuf:"bytes,1,opt,name=controller_id,json=controllerId,proto3" json:"controller_id,omitempty"`
-	Controller    *ManagementController  `protobuf:"bytes,2,opt,name=controller,proto3" json:"controller,omitempty"`
-	FieldMask     *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=field_mask,json=fieldMask,proto3" json:"field_mask,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	ControllerName string                 `protobuf:"bytes,1,opt,name=controller_name,json=controllerName,proto3" json:"controller_name,omitempty"`
+	Controller     *ManagementController  `protobuf:"bytes,2,opt,name=controller,proto3" json:"controller,omitempty"`
+	FieldMask      *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=field_mask,json=fieldMask,proto3" json:"field_mask,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *UpdateManagementControllerRequest) Reset() {
 	*x = UpdateManagementControllerRequest{}
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[11]
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1410,7 +1454,7 @@ func (x *UpdateManagementControllerRequest) String() string {
 func (*UpdateManagementControllerRequest) ProtoMessage() {}
 
 func (x *UpdateManagementControllerRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[11]
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1423,12 +1467,12 @@ func (x *UpdateManagementControllerRequest) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use UpdateManagementControllerRequest.ProtoReflect.Descriptor instead.
 func (*UpdateManagementControllerRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{11}
+	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *UpdateManagementControllerRequest) GetControllerId() string {
+func (x *UpdateManagementControllerRequest) GetControllerName() string {
 	if x != nil {
-		return x.ControllerId
+		return x.ControllerName
 	}
 	return ""
 }
@@ -1456,7 +1500,7 @@ type UpdateManagementControllerResponse struct {
 
 func (x *UpdateManagementControllerResponse) Reset() {
 	*x = UpdateManagementControllerResponse{}
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[12]
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1468,7 +1512,7 @@ func (x *UpdateManagementControllerResponse) String() string {
 func (*UpdateManagementControllerResponse) ProtoMessage() {}
 
 func (x *UpdateManagementControllerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[12]
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1481,7 +1525,7 @@ func (x *UpdateManagementControllerResponse) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use UpdateManagementControllerResponse.ProtoReflect.Descriptor instead.
 func (*UpdateManagementControllerResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{12}
+	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *UpdateManagementControllerResponse) GetController() *ManagementController {
@@ -1491,31 +1535,29 @@ func (x *UpdateManagementControllerResponse) GetController() *ManagementControll
 	return nil
 }
 
-type ManagementControllerControlRequest struct {
-	state         protoimpl.MessageState     `protogen:"open.v1"`
-	ControllerId  string                     `protobuf:"bytes,1,opt,name=controller_id,json=controllerId,proto3" json:"controller_id,omitempty"`
-	Action        ManagementControllerAction `protobuf:"varint,2,opt,name=action,proto3,enum=schema.v1alpha1.ManagementControllerAction" json:"action,omitempty"`
-	Force         *bool                      `protobuf:"varint,3,opt,name=force,proto3,oneof" json:"force,omitempty"`
-	Parameters    map[string]string          `protobuf:"bytes,4,rep,name=parameters,proto3" json:"parameters,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+type ChangeManagementControllerStateRequest struct {
+	state          protoimpl.MessageState     `protogen:"open.v1"`
+	ControllerName string                     `protobuf:"bytes,1,opt,name=controller_name,json=controllerName,proto3" json:"controller_name,omitempty"`
+	Action         ManagementControllerAction `protobuf:"varint,2,opt,name=action,proto3,enum=schema.v1alpha1.ManagementControllerAction" json:"action,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
-func (x *ManagementControllerControlRequest) Reset() {
-	*x = ManagementControllerControlRequest{}
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[13]
+func (x *ChangeManagementControllerStateRequest) Reset() {
+	*x = ChangeManagementControllerStateRequest{}
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ManagementControllerControlRequest) String() string {
+func (x *ChangeManagementControllerStateRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ManagementControllerControlRequest) ProtoMessage() {}
+func (*ChangeManagementControllerStateRequest) ProtoMessage() {}
 
-func (x *ManagementControllerControlRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[13]
+func (x *ChangeManagementControllerStateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1526,64 +1568,47 @@ func (x *ManagementControllerControlRequest) ProtoReflect() protoreflect.Message
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ManagementControllerControlRequest.ProtoReflect.Descriptor instead.
-func (*ManagementControllerControlRequest) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{13}
+// Deprecated: Use ChangeManagementControllerStateRequest.ProtoReflect.Descriptor instead.
+func (*ChangeManagementControllerStateRequest) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *ManagementControllerControlRequest) GetControllerId() string {
+func (x *ChangeManagementControllerStateRequest) GetControllerName() string {
 	if x != nil {
-		return x.ControllerId
+		return x.ControllerName
 	}
 	return ""
 }
 
-func (x *ManagementControllerControlRequest) GetAction() ManagementControllerAction {
+func (x *ChangeManagementControllerStateRequest) GetAction() ManagementControllerAction {
 	if x != nil {
 		return x.Action
 	}
 	return ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED
 }
 
-func (x *ManagementControllerControlRequest) GetForce() bool {
-	if x != nil && x.Force != nil {
-		return *x.Force
-	}
-	return false
+type ChangeManagementControllerStateResponse struct {
+	state         protoimpl.MessageState     `protogen:"open.v1"`
+	CurrentStatus ManagementControllerStatus `protobuf:"varint,1,opt,name=current_status,json=currentStatus,proto3,enum=schema.v1alpha1.ManagementControllerStatus" json:"current_status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ManagementControllerControlRequest) GetParameters() map[string]string {
-	if x != nil {
-		return x.Parameters
-	}
-	return nil
-}
-
-type ManagementControllerControlResponse struct {
-	state               protoimpl.MessageState     `protogen:"open.v1"`
-	Success             bool                       `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	CurrentState        *ManagementControllerState `protobuf:"varint,2,opt,name=current_state,json=currentState,proto3,enum=schema.v1alpha1.ManagementControllerState,oneof" json:"current_state,omitempty"`
-	ErrorMessage        *string                    `protobuf:"bytes,3,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
-	EstimatedCompletion *timestamppb.Timestamp     `protobuf:"bytes,4,opt,name=estimated_completion,json=estimatedCompletion,proto3,oneof" json:"estimated_completion,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
-}
-
-func (x *ManagementControllerControlResponse) Reset() {
-	*x = ManagementControllerControlResponse{}
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[14]
+func (x *ChangeManagementControllerStateResponse) Reset() {
+	*x = ChangeManagementControllerStateResponse{}
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ManagementControllerControlResponse) String() string {
+func (x *ChangeManagementControllerStateResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ManagementControllerControlResponse) ProtoMessage() {}
+func (*ChangeManagementControllerStateResponse) ProtoMessage() {}
 
-func (x *ManagementControllerControlResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[14]
+func (x *ChangeManagementControllerStateResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_managementcontroller_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1594,73 +1619,49 @@ func (x *ManagementControllerControlResponse) ProtoReflect() protoreflect.Messag
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ManagementControllerControlResponse.ProtoReflect.Descriptor instead.
-func (*ManagementControllerControlResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{14}
+// Deprecated: Use ChangeManagementControllerStateResponse.ProtoReflect.Descriptor instead.
+func (*ChangeManagementControllerStateResponse) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *ManagementControllerControlResponse) GetSuccess() bool {
+func (x *ChangeManagementControllerStateResponse) GetCurrentStatus() ManagementControllerStatus {
 	if x != nil {
-		return x.Success
+		return x.CurrentStatus
 	}
-	return false
-}
-
-func (x *ManagementControllerControlResponse) GetCurrentState() ManagementControllerState {
-	if x != nil && x.CurrentState != nil {
-		return *x.CurrentState
-	}
-	return ManagementControllerState_MANAGEMENT_CONTROLLER_STATE_UNSPECIFIED
-}
-
-func (x *ManagementControllerControlResponse) GetErrorMessage() string {
-	if x != nil && x.ErrorMessage != nil {
-		return *x.ErrorMessage
-	}
-	return ""
-}
-
-func (x *ManagementControllerControlResponse) GetEstimatedCompletion() *timestamppb.Timestamp {
-	if x != nil {
-		return x.EstimatedCompletion
-	}
-	return nil
+	return ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED
 }
 
 var File_schema_v1alpha1_managementcontroller_proto protoreflect.FileDescriptor
 
 const file_schema_v1alpha1_managementcontroller_proto_rawDesc = "" +
 	"\n" +
-	"*schema/v1alpha1/managementcontroller.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bschema/v1alpha1/asset.proto\x1a\x1eschema/v1alpha1/firmware.proto\x1a\x1eschema/v1alpha1/location.proto\"\xe8\t\n" +
+	"*schema/v1alpha1/managementcontroller.proto\x12\x0fschema.v1alpha1\x1a\x1bbuf/validate/validate.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bschema/v1alpha1/asset.proto\x1a\x1eschema/v1alpha1/firmware.proto\x1a\x1eschema/v1alpha1/location.proto\"\xe6\b\n" +
 	"\x14ManagementController\x12\x1b\n" +
 	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x120\n" +
 	"\x05asset\x18\x02 \x01(\v2\x1a.schema.v1alpha1.AssetInfoR\x05asset\x12%\n" +
 	"\vdescription\x18\x03 \x01(\tH\x00R\vdescription\x88\x01\x01\x12L\n" +
-	"\x04type\x18\x04 \x01(\x0e2).schema.v1alpha1.ManagementControllerTypeB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\x04type\x88\x01\x01\x12^\n" +
-	"\rcurrent_state\x18\x05 \x01(\x0e2*.schema.v1alpha1.ManagementControllerStateB\b\xbaH\x05\x82\x01\x02\x10\x01H\x02R\fcurrentState\x88\x01\x01\x12q\n" +
-	"\x14requested_transition\x18\x06 \x01(\x0e2/.schema.v1alpha1.ManagementControllerTransitionB\b\xbaH\x05\x82\x01\x02\x10\x01H\x03R\x13requestedTransition\x88\x01\x01\x12R\n" +
-	"\x06status\x18\a \x01(\x0e2+.schema.v1alpha1.ManagementControllerStatusB\b\xbaH\x05\x82\x01\x02\x10\x01H\x04R\x06status\x88\x01\x01\x12:\n" +
-	"\blocation\x18\b \x01(\v2\x19.schema.v1alpha1.LocationH\x05R\blocation\x88\x01\x01\x12N\n" +
-	"\bhardware\x18\t \x01(\v2-.schema.v1alpha1.ManagementControllerHardwareH\x06R\bhardware\x88\x01\x01\x12:\n" +
-	"\bfirmware\x18\n" +
-	" \x01(\v2\x19.schema.v1alpha1.FirmwareH\aR\bfirmware\x88\x01\x01\x12T\n" +
+	"\x04type\x18\x04 \x01(\x0e2).schema.v1alpha1.ManagementControllerTypeB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\x04type\x88\x01\x01\x12R\n" +
+	"\x06status\x18\x05 \x01(\x0e2+.schema.v1alpha1.ManagementControllerStatusB\b\xbaH\x05\x82\x01\x02\x10\x01H\x02R\x06status\x88\x01\x01\x12e\n" +
+	"\x10requested_action\x18\x06 \x01(\x0e2+.schema.v1alpha1.ManagementControllerActionB\b\xbaH\x05\x82\x01\x02\x10\x01H\x03R\x0frequestedAction\x88\x01\x01\x12:\n" +
+	"\blocation\x18\a \x01(\v2\x19.schema.v1alpha1.LocationH\x04R\blocation\x88\x01\x01\x12N\n" +
+	"\bhardware\x18\b \x01(\v2-.schema.v1alpha1.ManagementControllerHardwareH\x05R\bhardware\x88\x01\x01\x12:\n" +
+	"\bfirmware\x18\t \x01(\v2\x19.schema.v1alpha1.FirmwareH\x06R\bfirmware\x88\x01\x01\x12T\n" +
 	"\n" +
-	"redundancy\x18\v \x01(\v2/.schema.v1alpha1.ManagementControllerRedundancyH\bR\n" +
+	"redundancy\x18\n" +
+	" \x01(\v2/.schema.v1alpha1.ManagementControllerRedundancyH\aR\n" +
 	"redundancy\x88\x01\x01\x12U\n" +
-	"\vlast_reboot\x18\f \x01(\v2/.schema.v1alpha1.ManagementControllerRebootInfoH\tR\n" +
+	"\vlast_reboot\x18\v \x01(\v2/.schema.v1alpha1.ManagementControllerRebootInfoH\bR\n" +
 	"lastReboot\x88\x01\x01\x12>\n" +
 	"\n" +
-	"updated_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampH\n" +
-	"R\tupdatedAt\x88\x01\x01\x12O\n" +
-	"\bmetadata\x18\x0e \x03(\v23.schema.v1alpha1.ManagementController.MetadataEntryR\bmetadata\x1a;\n" +
+	"updated_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampH\tR\tupdatedAt\x88\x01\x01\x12O\n" +
+	"\bmetadata\x18\r \x03(\v23.schema.v1alpha1.ManagementController.MetadataEntryR\bmetadata\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\x0e\n" +
 	"\f_descriptionB\a\n" +
-	"\x05_typeB\x10\n" +
-	"\x0e_current_stateB\x17\n" +
-	"\x15_requested_transitionB\t\n" +
-	"\a_statusB\v\n" +
+	"\x05_typeB\t\n" +
+	"\a_statusB\x13\n" +
+	"\x11_requested_actionB\v\n" +
 	"\t_locationB\v\n" +
 	"\t_hardwareB\v\n" +
 	"\t_firmwareB\r\n" +
@@ -1699,9 +1700,9 @@ const file_schema_v1alpha1_managementcontroller_proto_rawDesc = "" +
 	"\bcapacity\x18\x02 \x01(\x04B\a\xbaH\x042\x02 \x00H\x01R\bcapacity\x88\x01\x01B\x0f\n" +
 	"\r_storage_typeB\v\n" +
 	"\t_capacity\"\x85\x04\n" +
-	"\x1eManagementControllerRedundancy\x12L\n" +
-	"\x04role\x18\x01 \x01(\x0e2).schema.v1alpha1.ManagementControllerRoleB\b\xbaH\x05\x82\x01\x02\x10\x01H\x00R\x04role\x88\x01\x01\x12-\n" +
-	"\x12redundancy_enabled\x18\x02 \x01(\bR\x11redundancyEnabled\x12C\n" +
+	"\x1eManagementControllerRedundancy\x12-\n" +
+	"\x12redundancy_enabled\x18\x01 \x01(\bR\x11redundancyEnabled\x12L\n" +
+	"\x04role\x18\x02 \x01(\x0e2).schema.v1alpha1.ManagementControllerRoleB\b\xbaH\x05\x82\x01\x02\x10\x01H\x00R\x04role\x88\x01\x01\x12C\n" +
 	"\x1bdisable_redundancy_override\x18\x03 \x01(\bH\x01R\x19disableRedundancyOverride\x88\x01\x01\x12.\n" +
 	"\x10failovers_paused\x18\x04 \x01(\bH\x02R\x0ffailoversPaused\x88\x01\x01\x12,\n" +
 	"\x0fredundancy_mode\x18\x05 \x01(\tH\x03R\x0eredundancyMode\x88\x01\x01\x12/\n" +
@@ -1723,32 +1724,41 @@ const file_schema_v1alpha1_managementcontroller_proto_rawDesc = "" +
 	"\r_reboot_countB\t\n" +
 	"\a_uptimeB\f\n" +
 	"\n" +
-	"_boot_time\"\x82\x03\n" +
-	"\x1eGetManagementControllerRequest\x12%\n" +
-	"\rcontroller_id\x18\x01 \x01(\tH\x00R\fcontrollerId\x12\x14\n" +
-	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x12?\n" +
-	"\x04type\x18\x03 \x01(\x0e2).schema.v1alpha1.ManagementControllerTypeH\x00R\x04type\x12E\n" +
-	"\x06status\x18\x04 \x01(\x0e2+.schema.v1alpha1.ManagementControllerStatusH\x00R\x06status\x127\n" +
-	"\blocation\x18\x05 \x01(\v2\x19.schema.v1alpha1.LocationH\x00R\blocation\x12>\n" +
+	"_boot_time\"\x99\x03\n" +
+	"\x1fManagementControllerStateChange\x120\n" +
+	"\x0fcontroller_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0econtrollerName\x12^\n" +
+	"\x0fprevious_status\x18\x02 \x01(\x0e2+.schema.v1alpha1.ManagementControllerStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\x0epreviousStatus\x12\\\n" +
+	"\x0ecurrent_status\x18\x03 \x01(\x0e2+.schema.v1alpha1.ManagementControllerStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\rcurrentStatus\x12K\n" +
+	"\x05cause\x18\x04 \x01(\x0e2+.schema.v1alpha1.ManagementControllerActionB\b\xbaH\x05\x82\x01\x02\x10\x01R\x05cause\x129\n" +
+	"\n" +
+	"changed_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tchangedAt\"\x9c\x03\n" +
+	"\x1eGetManagementControllerRequest\x12\x14\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x12?\n" +
+	"\x04type\x18\x02 \x01(\x0e2).schema.v1alpha1.ManagementControllerTypeH\x00R\x04type\x12E\n" +
+	"\x06status\x18\x03 \x01(\x0e2+.schema.v1alpha1.ManagementControllerStatusH\x00R\x06status\x127\n" +
+	"\blocation\x18\x04 \x01(\v2\x19.schema.v1alpha1.LocationH\x00R\blocation\x12?\n" +
+	"\x04role\x18\x05 \x01(\x0e2).schema.v1alpha1.ManagementControllerRoleH\x00R\x04role\x12>\n" +
 	"\n" +
 	"field_mask\x18\x06 \x01(\v2\x1a.google.protobuf.FieldMaskH\x01R\tfieldMask\x88\x01\x01B\x13\n" +
 	"\n" +
 	"identifier\x12\x05\xbaH\x02\b\x01B\r\n" +
 	"\v_field_mask\"j\n" +
 	"\x1fGetManagementControllerResponse\x12G\n" +
-	"\vcontrollers\x18\x01 \x03(\v2%.schema.v1alpha1.ManagementControllerR\vcontrollers\"\xa7\x02\n" +
-	" ListManagementControllersRequest\x12L\n" +
-	"\x04type\x18\x01 \x01(\x0e2).schema.v1alpha1.ManagementControllerTypeB\b\xbaH\x05\x82\x01\x02\x10\x01H\x00R\x04type\x88\x01\x01\x12R\n" +
-	"\x06status\x18\x02 \x01(\x0e2+.schema.v1alpha1.ManagementControllerStatusB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\x06status\x88\x01\x01\x12>\n" +
+	"\vcontrollers\x18\x01 \x03(\v2%.schema.v1alpha1.ManagementControllerR\vcontrollers\"\x81\x03\n" +
+	" ListManagementControllersRequest\x12?\n" +
+	"\x04type\x18\x01 \x01(\x0e2).schema.v1alpha1.ManagementControllerTypeH\x00R\x04type\x12E\n" +
+	"\x06status\x18\x02 \x01(\x0e2+.schema.v1alpha1.ManagementControllerStatusH\x00R\x06status\x127\n" +
+	"\blocation\x18\x03 \x01(\v2\x19.schema.v1alpha1.LocationH\x00R\blocation\x12?\n" +
+	"\x04role\x18\x04 \x01(\x0e2).schema.v1alpha1.ManagementControllerRoleH\x00R\x04role\x12>\n" +
 	"\n" +
-	"field_mask\x18\x03 \x01(\v2\x1a.google.protobuf.FieldMaskH\x02R\tfieldMask\x88\x01\x01B\a\n" +
-	"\x05_typeB\t\n" +
-	"\a_statusB\r\n" +
+	"field_mask\x18\x05 \x01(\v2\x1a.google.protobuf.FieldMaskH\x01R\tfieldMask\x88\x01\x01B\f\n" +
+	"\n" +
+	"identifierB\r\n" +
 	"\v_field_mask\"l\n" +
 	"!ListManagementControllersResponse\x12G\n" +
-	"\vcontrollers\x18\x01 \x03(\v2%.schema.v1alpha1.ManagementControllerR\vcontrollers\"\xdb\x01\n" +
-	"!UpdateManagementControllerRequest\x12,\n" +
-	"\rcontroller_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\fcontrollerId\x12M\n" +
+	"\vcontrollers\x18\x01 \x03(\v2%.schema.v1alpha1.ManagementControllerR\vcontrollers\"\xdf\x01\n" +
+	"!UpdateManagementControllerRequest\x120\n" +
+	"\x0fcontroller_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0econtrollerName\x12M\n" +
 	"\n" +
 	"controller\x18\x02 \x01(\v2%.schema.v1alpha1.ManagementControllerB\x06\xbaH\x03\xc8\x01\x01R\n" +
 	"controller\x129\n" +
@@ -1757,49 +1767,41 @@ const file_schema_v1alpha1_managementcontroller_proto_rawDesc = "" +
 	"\"UpdateManagementControllerResponse\x12E\n" +
 	"\n" +
 	"controller\x18\x01 \x01(\v2%.schema.v1alpha1.ManagementControllerR\n" +
-	"controller\"\xea\x02\n" +
-	"\"ManagementControllerControlRequest\x12,\n" +
-	"\rcontroller_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\fcontrollerId\x12M\n" +
-	"\x06action\x18\x02 \x01(\x0e2+.schema.v1alpha1.ManagementControllerActionB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06action\x12\x19\n" +
-	"\x05force\x18\x03 \x01(\bH\x00R\x05force\x88\x01\x01\x12c\n" +
-	"\n" +
-	"parameters\x18\x04 \x03(\v2C.schema.v1alpha1.ManagementControllerControlRequest.ParametersEntryR\n" +
-	"parameters\x1a=\n" +
-	"\x0fParametersEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\b\n" +
-	"\x06_force\"\xda\x02\n" +
-	"#ManagementControllerControlResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\x12^\n" +
-	"\rcurrent_state\x18\x02 \x01(\x0e2*.schema.v1alpha1.ManagementControllerStateB\b\xbaH\x05\x82\x01\x02\x10\x01H\x00R\fcurrentState\x88\x01\x01\x12(\n" +
-	"\rerror_message\x18\x03 \x01(\tH\x01R\ferrorMessage\x88\x01\x01\x12R\n" +
-	"\x14estimated_completion\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampH\x02R\x13estimatedCompletion\x88\x01\x01B\x10\n" +
-	"\x0e_current_stateB\x10\n" +
-	"\x0e_error_messageB\x17\n" +
-	"\x15_estimated_completion*\xa7\x02\n" +
+	"controller\"\xa9\x01\n" +
+	"&ChangeManagementControllerStateRequest\x120\n" +
+	"\x0fcontroller_name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0econtrollerName\x12M\n" +
+	"\x06action\x18\x02 \x01(\x0e2+.schema.v1alpha1.ManagementControllerActionB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06action\"\x87\x01\n" +
+	"'ChangeManagementControllerStateResponse\x12\\\n" +
+	"\x0ecurrent_status\x18\x01 \x01(\x0e2+.schema.v1alpha1.ManagementControllerStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\rcurrentStatus*\xa7\x02\n" +
 	"\x18ManagementControllerType\x12*\n" +
 	"&MANAGEMENT_CONTROLLER_TYPE_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eMANAGEMENT_CONTROLLER_TYPE_BMC\x10\x01\x12(\n" +
 	"$MANAGEMENT_CONTROLLER_TYPE_SATELLITE\x10\x02\x121\n" +
 	"-MANAGEMENT_CONTROLLER_TYPE_CHASSIS_CONTROLLER\x10\x03\x12.\n" +
 	"*MANAGEMENT_CONTROLLER_TYPE_NODE_CONTROLLER\x10\x04\x12.\n" +
-	"*MANAGEMENT_CONTROLLER_TYPE_RACK_CONTROLLER\x10\x05*\xa7\x02\n" +
+	"*MANAGEMENT_CONTROLLER_TYPE_RACK_CONTROLLER\x10\x05*\xc9\x02\n" +
 	"\x1aManagementControllerStatus\x12,\n" +
-	"(MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED\x10\x00\x12(\n" +
-	"$MANAGEMENT_CONTROLLER_STATUS_ENABLED\x10\x01\x12)\n" +
-	"%MANAGEMENT_CONTROLLER_STATUS_DISABLED\x10\x02\x124\n" +
-	"0MANAGEMENT_CONTROLLER_STATUS_UNAVAILABLE_OFFLINE\x10\x03\x12(\n" +
-	"$MANAGEMENT_CONTROLLER_STATUS_IN_TEST\x10\x04\x12&\n" +
-	"\"MANAGEMENT_CONTROLLER_STATUS_ERROR\x10\x05*\x9a\x01\n" +
-	"\x19ManagementControllerState\x12+\n" +
-	"'MANAGEMENT_CONTROLLER_STATE_UNSPECIFIED\x10\x00\x12%\n" +
-	"!MANAGEMENT_CONTROLLER_STATE_READY\x10\x01\x12)\n" +
-	"%MANAGEMENT_CONTROLLER_STATE_NOT_READY\x10\x02*\xe1\x01\n" +
-	"\x1eManagementControllerTransition\x120\n" +
-	",MANAGEMENT_CONTROLLER_TRANSITION_UNSPECIFIED\x10\x00\x12+\n" +
-	"'MANAGEMENT_CONTROLLER_TRANSITION_REBOOT\x10\x01\x12/\n" +
-	"+MANAGEMENT_CONTROLLER_TRANSITION_WARM_RESET\x10\x02\x12/\n" +
-	"+MANAGEMENT_CONTROLLER_TRANSITION_COLD_RESET\x10\x03*\xd1\x02\n" +
+	"(MANAGEMENT_CONTROLLER_STATUS_UNSPECIFIED\x10\x00\x12&\n" +
+	"\"MANAGEMENT_CONTROLLER_STATUS_READY\x10\x01\x12*\n" +
+	"&MANAGEMENT_CONTROLLER_STATUS_NOT_READY\x10\x02\x12)\n" +
+	"%MANAGEMENT_CONTROLLER_STATUS_DISABLED\x10\x03\x12)\n" +
+	"%MANAGEMENT_CONTROLLER_STATUS_QUIESCED\x10\x04\x12+\n" +
+	"'MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC\x10\x05\x12&\n" +
+	"\"MANAGEMENT_CONTROLLER_STATUS_ERROR\x10\x06*\xbd\x04\n" +
+	"\x1aManagementControllerAction\x12,\n" +
+	"(MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED\x10\x00\x12'\n" +
+	"#MANAGEMENT_CONTROLLER_ACTION_ENABLE\x10\x01\x12(\n" +
+	"$MANAGEMENT_CONTROLLER_ACTION_DISABLE\x10\x02\x12'\n" +
+	"#MANAGEMENT_CONTROLLER_ACTION_REBOOT\x10\x03\x12+\n" +
+	"'MANAGEMENT_CONTROLLER_ACTION_WARM_RESET\x10\x04\x12+\n" +
+	"'MANAGEMENT_CONTROLLER_ACTION_COLD_RESET\x10\x05\x12+\n" +
+	"'MANAGEMENT_CONTROLLER_ACTION_HARD_RESET\x10\x06\x12.\n" +
+	"*MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET\x10\a\x12+\n" +
+	"'MANAGEMENT_CONTROLLER_ACTION_CLEAR_LOGS\x10\b\x12.\n" +
+	"*MANAGEMENT_CONTROLLER_ACTION_BACKUP_CONFIG\x10\t\x12/\n" +
+	"+MANAGEMENT_CONTROLLER_ACTION_RESTORE_CONFIG\x10\n" +
+	"\x120\n" +
+	",MANAGEMENT_CONTROLLER_ACTION_UPDATE_FIRMWARE\x10\v*\xd1\x02\n" +
 	"\x1fManagementControllerRebootCause\x122\n" +
 	".MANAGEMENT_CONTROLLER_REBOOT_CAUSE_UNSPECIFIED\x10\x00\x123\n" +
 	"/MANAGEMENT_CONTROLLER_REBOOT_CAUSE_POWER_BUTTON\x10\x01\x123\n" +
@@ -1811,16 +1813,7 @@ const file_schema_v1alpha1_managementcontroller_proto_rawDesc = "" +
 	"&MANAGEMENT_CONTROLLER_ROLE_UNSPECIFIED\x10\x00\x12&\n" +
 	"\"MANAGEMENT_CONTROLLER_ROLE_PRIMARY\x10\x01\x12%\n" +
 	"!MANAGEMENT_CONTROLLER_ROLE_BACKUP\x10\x02\x12&\n" +
-	"\"MANAGEMENT_CONTROLLER_ROLE_STANDBY\x10\x03*\x90\x03\n" +
-	"\x1aManagementControllerAction\x12,\n" +
-	"(MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED\x10\x00\x12'\n" +
-	"#MANAGEMENT_CONTROLLER_ACTION_REBOOT\x10\x01\x12+\n" +
-	"'MANAGEMENT_CONTROLLER_ACTION_HARD_RESET\x10\x02\x12.\n" +
-	"*MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET\x10\x03\x12+\n" +
-	"'MANAGEMENT_CONTROLLER_ACTION_CLEAR_LOGS\x10\x04\x12.\n" +
-	"*MANAGEMENT_CONTROLLER_ACTION_BACKUP_CONFIG\x10\x05\x12/\n" +
-	"+MANAGEMENT_CONTROLLER_ACTION_RESTORE_CONFIG\x10\x06\x120\n" +
-	",MANAGEMENT_CONTROLLER_ACTION_UPDATE_FIRMWARE\x10\a*\xe1\x01\n" +
+	"\"MANAGEMENT_CONTROLLER_ROLE_STANDBY\x10\x03*\xe1\x01\n" +
 	"\n" +
 	"MemoryType\x12\x1b\n" +
 	"\x17MEMORY_TYPE_UNSPECIFIED\x10\x00\x12\x14\n" +
@@ -1851,86 +1844,88 @@ func file_schema_v1alpha1_managementcontroller_proto_rawDescGZIP() []byte {
 	return file_schema_v1alpha1_managementcontroller_proto_rawDescData
 }
 
-var file_schema_v1alpha1_managementcontroller_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
+var file_schema_v1alpha1_managementcontroller_proto_enumTypes = make([]protoimpl.EnumInfo, 7)
 var file_schema_v1alpha1_managementcontroller_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_schema_v1alpha1_managementcontroller_proto_goTypes = []any{
-	(ManagementControllerType)(0),               // 0: schema.v1alpha1.ManagementControllerType
-	(ManagementControllerStatus)(0),             // 1: schema.v1alpha1.ManagementControllerStatus
-	(ManagementControllerState)(0),              // 2: schema.v1alpha1.ManagementControllerState
-	(ManagementControllerTransition)(0),         // 3: schema.v1alpha1.ManagementControllerTransition
-	(ManagementControllerRebootCause)(0),        // 4: schema.v1alpha1.ManagementControllerRebootCause
-	(ManagementControllerRole)(0),               // 5: schema.v1alpha1.ManagementControllerRole
-	(ManagementControllerAction)(0),             // 6: schema.v1alpha1.ManagementControllerAction
-	(MemoryType)(0),                             // 7: schema.v1alpha1.MemoryType
-	(StorageType)(0),                            // 8: schema.v1alpha1.StorageType
-	(*ManagementController)(nil),                // 9: schema.v1alpha1.ManagementController
-	(*ManagementControllerHardware)(nil),        // 10: schema.v1alpha1.ManagementControllerHardware
-	(*ManagementControllerCPU)(nil),             // 11: schema.v1alpha1.ManagementControllerCPU
-	(*ManagementControllerMemory)(nil),          // 12: schema.v1alpha1.ManagementControllerMemory
-	(*ManagementControllerStorage)(nil),         // 13: schema.v1alpha1.ManagementControllerStorage
-	(*ManagementControllerRedundancy)(nil),      // 14: schema.v1alpha1.ManagementControllerRedundancy
-	(*ManagementControllerRebootInfo)(nil),      // 15: schema.v1alpha1.ManagementControllerRebootInfo
-	(*GetManagementControllerRequest)(nil),      // 16: schema.v1alpha1.GetManagementControllerRequest
-	(*GetManagementControllerResponse)(nil),     // 17: schema.v1alpha1.GetManagementControllerResponse
-	(*ListManagementControllersRequest)(nil),    // 18: schema.v1alpha1.ListManagementControllersRequest
-	(*ListManagementControllersResponse)(nil),   // 19: schema.v1alpha1.ListManagementControllersResponse
-	(*UpdateManagementControllerRequest)(nil),   // 20: schema.v1alpha1.UpdateManagementControllerRequest
-	(*UpdateManagementControllerResponse)(nil),  // 21: schema.v1alpha1.UpdateManagementControllerResponse
-	(*ManagementControllerControlRequest)(nil),  // 22: schema.v1alpha1.ManagementControllerControlRequest
-	(*ManagementControllerControlResponse)(nil), // 23: schema.v1alpha1.ManagementControllerControlResponse
-	nil,                           // 24: schema.v1alpha1.ManagementController.MetadataEntry
-	nil,                           // 25: schema.v1alpha1.ManagementControllerControlRequest.ParametersEntry
-	(*AssetInfo)(nil),             // 26: schema.v1alpha1.AssetInfo
-	(*Location)(nil),              // 27: schema.v1alpha1.Location
-	(*Firmware)(nil),              // 28: schema.v1alpha1.Firmware
-	(*timestamppb.Timestamp)(nil), // 29: google.protobuf.Timestamp
-	(*durationpb.Duration)(nil),   // 30: google.protobuf.Duration
-	(*fieldmaskpb.FieldMask)(nil), // 31: google.protobuf.FieldMask
+	(ManagementControllerType)(0),                   // 0: schema.v1alpha1.ManagementControllerType
+	(ManagementControllerStatus)(0),                 // 1: schema.v1alpha1.ManagementControllerStatus
+	(ManagementControllerAction)(0),                 // 2: schema.v1alpha1.ManagementControllerAction
+	(ManagementControllerRebootCause)(0),            // 3: schema.v1alpha1.ManagementControllerRebootCause
+	(ManagementControllerRole)(0),                   // 4: schema.v1alpha1.ManagementControllerRole
+	(MemoryType)(0),                                 // 5: schema.v1alpha1.MemoryType
+	(StorageType)(0),                                // 6: schema.v1alpha1.StorageType
+	(*ManagementController)(nil),                    // 7: schema.v1alpha1.ManagementController
+	(*ManagementControllerHardware)(nil),            // 8: schema.v1alpha1.ManagementControllerHardware
+	(*ManagementControllerCPU)(nil),                 // 9: schema.v1alpha1.ManagementControllerCPU
+	(*ManagementControllerMemory)(nil),              // 10: schema.v1alpha1.ManagementControllerMemory
+	(*ManagementControllerStorage)(nil),             // 11: schema.v1alpha1.ManagementControllerStorage
+	(*ManagementControllerRedundancy)(nil),          // 12: schema.v1alpha1.ManagementControllerRedundancy
+	(*ManagementControllerRebootInfo)(nil),          // 13: schema.v1alpha1.ManagementControllerRebootInfo
+	(*ManagementControllerStateChange)(nil),         // 14: schema.v1alpha1.ManagementControllerStateChange
+	(*GetManagementControllerRequest)(nil),          // 15: schema.v1alpha1.GetManagementControllerRequest
+	(*GetManagementControllerResponse)(nil),         // 16: schema.v1alpha1.GetManagementControllerResponse
+	(*ListManagementControllersRequest)(nil),        // 17: schema.v1alpha1.ListManagementControllersRequest
+	(*ListManagementControllersResponse)(nil),       // 18: schema.v1alpha1.ListManagementControllersResponse
+	(*UpdateManagementControllerRequest)(nil),       // 19: schema.v1alpha1.UpdateManagementControllerRequest
+	(*UpdateManagementControllerResponse)(nil),      // 20: schema.v1alpha1.UpdateManagementControllerResponse
+	(*ChangeManagementControllerStateRequest)(nil),  // 21: schema.v1alpha1.ChangeManagementControllerStateRequest
+	(*ChangeManagementControllerStateResponse)(nil), // 22: schema.v1alpha1.ChangeManagementControllerStateResponse
+	nil,                           // 23: schema.v1alpha1.ManagementController.MetadataEntry
+	(*AssetInfo)(nil),             // 24: schema.v1alpha1.AssetInfo
+	(*Location)(nil),              // 25: schema.v1alpha1.Location
+	(*Firmware)(nil),              // 26: schema.v1alpha1.Firmware
+	(*timestamppb.Timestamp)(nil), // 27: google.protobuf.Timestamp
+	(*durationpb.Duration)(nil),   // 28: google.protobuf.Duration
+	(*fieldmaskpb.FieldMask)(nil), // 29: google.protobuf.FieldMask
 }
 var file_schema_v1alpha1_managementcontroller_proto_depIdxs = []int32{
-	26, // 0: schema.v1alpha1.ManagementController.asset:type_name -> schema.v1alpha1.AssetInfo
+	24, // 0: schema.v1alpha1.ManagementController.asset:type_name -> schema.v1alpha1.AssetInfo
 	0,  // 1: schema.v1alpha1.ManagementController.type:type_name -> schema.v1alpha1.ManagementControllerType
-	2,  // 2: schema.v1alpha1.ManagementController.current_state:type_name -> schema.v1alpha1.ManagementControllerState
-	3,  // 3: schema.v1alpha1.ManagementController.requested_transition:type_name -> schema.v1alpha1.ManagementControllerTransition
-	1,  // 4: schema.v1alpha1.ManagementController.status:type_name -> schema.v1alpha1.ManagementControllerStatus
-	27, // 5: schema.v1alpha1.ManagementController.location:type_name -> schema.v1alpha1.Location
-	10, // 6: schema.v1alpha1.ManagementController.hardware:type_name -> schema.v1alpha1.ManagementControllerHardware
-	28, // 7: schema.v1alpha1.ManagementController.firmware:type_name -> schema.v1alpha1.Firmware
-	14, // 8: schema.v1alpha1.ManagementController.redundancy:type_name -> schema.v1alpha1.ManagementControllerRedundancy
-	15, // 9: schema.v1alpha1.ManagementController.last_reboot:type_name -> schema.v1alpha1.ManagementControllerRebootInfo
-	29, // 10: schema.v1alpha1.ManagementController.updated_at:type_name -> google.protobuf.Timestamp
-	24, // 11: schema.v1alpha1.ManagementController.metadata:type_name -> schema.v1alpha1.ManagementController.MetadataEntry
-	11, // 12: schema.v1alpha1.ManagementControllerHardware.cpu:type_name -> schema.v1alpha1.ManagementControllerCPU
-	12, // 13: schema.v1alpha1.ManagementControllerHardware.memory:type_name -> schema.v1alpha1.ManagementControllerMemory
-	13, // 14: schema.v1alpha1.ManagementControllerHardware.storage:type_name -> schema.v1alpha1.ManagementControllerStorage
-	7,  // 15: schema.v1alpha1.ManagementControllerMemory.memory_type:type_name -> schema.v1alpha1.MemoryType
-	8,  // 16: schema.v1alpha1.ManagementControllerStorage.storage_type:type_name -> schema.v1alpha1.StorageType
-	5,  // 17: schema.v1alpha1.ManagementControllerRedundancy.role:type_name -> schema.v1alpha1.ManagementControllerRole
-	29, // 18: schema.v1alpha1.ManagementControllerRebootInfo.last_reboot_time:type_name -> google.protobuf.Timestamp
-	4,  // 19: schema.v1alpha1.ManagementControllerRebootInfo.reboot_cause:type_name -> schema.v1alpha1.ManagementControllerRebootCause
-	30, // 20: schema.v1alpha1.ManagementControllerRebootInfo.uptime:type_name -> google.protobuf.Duration
-	30, // 21: schema.v1alpha1.ManagementControllerRebootInfo.boot_time:type_name -> google.protobuf.Duration
-	0,  // 22: schema.v1alpha1.GetManagementControllerRequest.type:type_name -> schema.v1alpha1.ManagementControllerType
-	1,  // 23: schema.v1alpha1.GetManagementControllerRequest.status:type_name -> schema.v1alpha1.ManagementControllerStatus
-	27, // 24: schema.v1alpha1.GetManagementControllerRequest.location:type_name -> schema.v1alpha1.Location
-	31, // 25: schema.v1alpha1.GetManagementControllerRequest.field_mask:type_name -> google.protobuf.FieldMask
-	9,  // 26: schema.v1alpha1.GetManagementControllerResponse.controllers:type_name -> schema.v1alpha1.ManagementController
-	0,  // 27: schema.v1alpha1.ListManagementControllersRequest.type:type_name -> schema.v1alpha1.ManagementControllerType
-	1,  // 28: schema.v1alpha1.ListManagementControllersRequest.status:type_name -> schema.v1alpha1.ManagementControllerStatus
-	31, // 29: schema.v1alpha1.ListManagementControllersRequest.field_mask:type_name -> google.protobuf.FieldMask
-	9,  // 30: schema.v1alpha1.ListManagementControllersResponse.controllers:type_name -> schema.v1alpha1.ManagementController
-	9,  // 31: schema.v1alpha1.UpdateManagementControllerRequest.controller:type_name -> schema.v1alpha1.ManagementController
-	31, // 32: schema.v1alpha1.UpdateManagementControllerRequest.field_mask:type_name -> google.protobuf.FieldMask
-	9,  // 33: schema.v1alpha1.UpdateManagementControllerResponse.controller:type_name -> schema.v1alpha1.ManagementController
-	6,  // 34: schema.v1alpha1.ManagementControllerControlRequest.action:type_name -> schema.v1alpha1.ManagementControllerAction
-	25, // 35: schema.v1alpha1.ManagementControllerControlRequest.parameters:type_name -> schema.v1alpha1.ManagementControllerControlRequest.ParametersEntry
-	2,  // 36: schema.v1alpha1.ManagementControllerControlResponse.current_state:type_name -> schema.v1alpha1.ManagementControllerState
-	29, // 37: schema.v1alpha1.ManagementControllerControlResponse.estimated_completion:type_name -> google.protobuf.Timestamp
-	38, // [38:38] is the sub-list for method output_type
-	38, // [38:38] is the sub-list for method input_type
-	38, // [38:38] is the sub-list for extension type_name
-	38, // [38:38] is the sub-list for extension extendee
-	0,  // [0:38] is the sub-list for field type_name
+	1,  // 2: schema.v1alpha1.ManagementController.status:type_name -> schema.v1alpha1.ManagementControllerStatus
+	2,  // 3: schema.v1alpha1.ManagementController.requested_action:type_name -> schema.v1alpha1.ManagementControllerAction
+	25, // 4: schema.v1alpha1.ManagementController.location:type_name -> schema.v1alpha1.Location
+	8,  // 5: schema.v1alpha1.ManagementController.hardware:type_name -> schema.v1alpha1.ManagementControllerHardware
+	26, // 6: schema.v1alpha1.ManagementController.firmware:type_name -> schema.v1alpha1.Firmware
+	12, // 7: schema.v1alpha1.ManagementController.redundancy:type_name -> schema.v1alpha1.ManagementControllerRedundancy
+	13, // 8: schema.v1alpha1.ManagementController.last_reboot:type_name -> schema.v1alpha1.ManagementControllerRebootInfo
+	27, // 9: schema.v1alpha1.ManagementController.updated_at:type_name -> google.protobuf.Timestamp
+	23, // 10: schema.v1alpha1.ManagementController.metadata:type_name -> schema.v1alpha1.ManagementController.MetadataEntry
+	9,  // 11: schema.v1alpha1.ManagementControllerHardware.cpu:type_name -> schema.v1alpha1.ManagementControllerCPU
+	10, // 12: schema.v1alpha1.ManagementControllerHardware.memory:type_name -> schema.v1alpha1.ManagementControllerMemory
+	11, // 13: schema.v1alpha1.ManagementControllerHardware.storage:type_name -> schema.v1alpha1.ManagementControllerStorage
+	5,  // 14: schema.v1alpha1.ManagementControllerMemory.memory_type:type_name -> schema.v1alpha1.MemoryType
+	6,  // 15: schema.v1alpha1.ManagementControllerStorage.storage_type:type_name -> schema.v1alpha1.StorageType
+	4,  // 16: schema.v1alpha1.ManagementControllerRedundancy.role:type_name -> schema.v1alpha1.ManagementControllerRole
+	27, // 17: schema.v1alpha1.ManagementControllerRebootInfo.last_reboot_time:type_name -> google.protobuf.Timestamp
+	3,  // 18: schema.v1alpha1.ManagementControllerRebootInfo.reboot_cause:type_name -> schema.v1alpha1.ManagementControllerRebootCause
+	28, // 19: schema.v1alpha1.ManagementControllerRebootInfo.uptime:type_name -> google.protobuf.Duration
+	28, // 20: schema.v1alpha1.ManagementControllerRebootInfo.boot_time:type_name -> google.protobuf.Duration
+	1,  // 21: schema.v1alpha1.ManagementControllerStateChange.previous_status:type_name -> schema.v1alpha1.ManagementControllerStatus
+	1,  // 22: schema.v1alpha1.ManagementControllerStateChange.current_status:type_name -> schema.v1alpha1.ManagementControllerStatus
+	2,  // 23: schema.v1alpha1.ManagementControllerStateChange.cause:type_name -> schema.v1alpha1.ManagementControllerAction
+	27, // 24: schema.v1alpha1.ManagementControllerStateChange.changed_at:type_name -> google.protobuf.Timestamp
+	0,  // 25: schema.v1alpha1.GetManagementControllerRequest.type:type_name -> schema.v1alpha1.ManagementControllerType
+	1,  // 26: schema.v1alpha1.GetManagementControllerRequest.status:type_name -> schema.v1alpha1.ManagementControllerStatus
+	25, // 27: schema.v1alpha1.GetManagementControllerRequest.location:type_name -> schema.v1alpha1.Location
+	4,  // 28: schema.v1alpha1.GetManagementControllerRequest.role:type_name -> schema.v1alpha1.ManagementControllerRole
+	29, // 29: schema.v1alpha1.GetManagementControllerRequest.field_mask:type_name -> google.protobuf.FieldMask
+	7,  // 30: schema.v1alpha1.GetManagementControllerResponse.controllers:type_name -> schema.v1alpha1.ManagementController
+	0,  // 31: schema.v1alpha1.ListManagementControllersRequest.type:type_name -> schema.v1alpha1.ManagementControllerType
+	1,  // 32: schema.v1alpha1.ListManagementControllersRequest.status:type_name -> schema.v1alpha1.ManagementControllerStatus
+	25, // 33: schema.v1alpha1.ListManagementControllersRequest.location:type_name -> schema.v1alpha1.Location
+	4,  // 34: schema.v1alpha1.ListManagementControllersRequest.role:type_name -> schema.v1alpha1.ManagementControllerRole
+	29, // 35: schema.v1alpha1.ListManagementControllersRequest.field_mask:type_name -> google.protobuf.FieldMask
+	7,  // 36: schema.v1alpha1.ListManagementControllersResponse.controllers:type_name -> schema.v1alpha1.ManagementController
+	7,  // 37: schema.v1alpha1.UpdateManagementControllerRequest.controller:type_name -> schema.v1alpha1.ManagementController
+	29, // 38: schema.v1alpha1.UpdateManagementControllerRequest.field_mask:type_name -> google.protobuf.FieldMask
+	7,  // 39: schema.v1alpha1.UpdateManagementControllerResponse.controller:type_name -> schema.v1alpha1.ManagementController
+	2,  // 40: schema.v1alpha1.ChangeManagementControllerStateRequest.action:type_name -> schema.v1alpha1.ManagementControllerAction
+	1,  // 41: schema.v1alpha1.ChangeManagementControllerStateResponse.current_status:type_name -> schema.v1alpha1.ManagementControllerStatus
+	42, // [42:42] is the sub-list for method output_type
+	42, // [42:42] is the sub-list for method input_type
+	42, // [42:42] is the sub-list for extension type_name
+	42, // [42:42] is the sub-list for extension extendee
+	0,  // [0:42] is the sub-list for field type_name
 }
 
 func init() { file_schema_v1alpha1_managementcontroller_proto_init() }
@@ -1948,22 +1943,25 @@ func file_schema_v1alpha1_managementcontroller_proto_init() {
 	file_schema_v1alpha1_managementcontroller_proto_msgTypes[4].OneofWrappers = []any{}
 	file_schema_v1alpha1_managementcontroller_proto_msgTypes[5].OneofWrappers = []any{}
 	file_schema_v1alpha1_managementcontroller_proto_msgTypes[6].OneofWrappers = []any{}
-	file_schema_v1alpha1_managementcontroller_proto_msgTypes[7].OneofWrappers = []any{
-		(*GetManagementControllerRequest_ControllerId)(nil),
+	file_schema_v1alpha1_managementcontroller_proto_msgTypes[8].OneofWrappers = []any{
 		(*GetManagementControllerRequest_Name)(nil),
 		(*GetManagementControllerRequest_Type)(nil),
 		(*GetManagementControllerRequest_Status)(nil),
 		(*GetManagementControllerRequest_Location)(nil),
+		(*GetManagementControllerRequest_Role)(nil),
 	}
-	file_schema_v1alpha1_managementcontroller_proto_msgTypes[9].OneofWrappers = []any{}
-	file_schema_v1alpha1_managementcontroller_proto_msgTypes[13].OneofWrappers = []any{}
-	file_schema_v1alpha1_managementcontroller_proto_msgTypes[14].OneofWrappers = []any{}
+	file_schema_v1alpha1_managementcontroller_proto_msgTypes[10].OneofWrappers = []any{
+		(*ListManagementControllersRequest_Type)(nil),
+		(*ListManagementControllersRequest_Status)(nil),
+		(*ListManagementControllersRequest_Location)(nil),
+		(*ListManagementControllersRequest_Role)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_schema_v1alpha1_managementcontroller_proto_rawDesc), len(file_schema_v1alpha1_managementcontroller_proto_rawDesc)),
-			NumEnums:      9,
+			NumEnums:      7,
 			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   0,

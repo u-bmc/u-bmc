@@ -48,11 +48,14 @@ enum ChassisStatus {
   CHASSIS_STATUS_UNKNOWN = 7;
 }
 
-enum ChassisTransition {
-  CHASSIS_TRANSITION_UNSPECIFIED = 0;
-  CHASSIS_TRANSITION_ON = 1;
-  CHASSIS_TRANSITION_OFF = 2;
-  CHASSIS_TRANSITION_POWER_CYCLE = 3;
+enum ChassisAction {
+  CHASSIS_ACTION_UNSPECIFIED = 0;
+  CHASSIS_ACTION_ON = 1;
+  CHASSIS_ACTION_OFF = 2;
+  CHASSIS_ACTION_POWER_CYCLE = 3;
+  CHASSIS_ACTION_IDENTIFY_ON = 4;
+  CHASSIS_ACTION_IDENTIFY_OFF = 5;
+  CHASSIS_ACTION_EMERGENCY_SHUTDOWN = 6;
 }
 
 enum ChassisPowerSupplyType {
@@ -90,17 +93,6 @@ enum ChassisLEDType {
   CHASSIS_LED_TYPE_HEARTBEAT = 5;
 }
 
-enum ChassisControlAction {
-  CHASSIS_CONTROL_ACTION_UNSPECIFIED = 0;
-  CHASSIS_CONTROL_ACTION_POWER_ON = 1;
-  CHASSIS_CONTROL_ACTION_POWER_OFF = 2;
-  CHASSIS_CONTROL_ACTION_POWER_CYCLE = 3;
-  CHASSIS_CONTROL_ACTION_RESET = 4;
-  CHASSIS_CONTROL_ACTION_IDENTIFY_ON = 5;
-  CHASSIS_CONTROL_ACTION_IDENTIFY_OFF = 6;
-  CHASSIS_CONTROL_ACTION_EMERGENCY_SHUTDOWN = 7;
-}
-
 message Chassis {
   option (buf.validate.message).cel = {
     id : "chassis_power_consumption",
@@ -120,7 +112,7 @@ message Chassis {
       [ (buf.validate.field).enum.defined_only = true ];
   optional ChassisStatus status = 6
       [ (buf.validate.field).enum.defined_only = true ];
-  optional ChassisTransition requested_transition = 7
+  optional ChassisAction requested_action = 7
       [ (buf.validate.field).enum.defined_only = true ];
   optional Location location = 8;
   optional PhysicalDimensions dimensions = 9;
@@ -135,6 +127,16 @@ message Chassis {
   repeated AssetInfo contained_assets = 18;
   optional google.protobuf.Timestamp updated_at = 19;
   map<string, string> metadata = 20;
+}
+
+message ChassisStateChange {
+  string chassis_name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  ChassisStatus previous_status = 2
+      [ (buf.validate.field).enum.defined_only = true ];
+  ChassisStatus current_status = 3
+      [ (buf.validate.field).enum.defined_only = true ];
+  ChassisAction cause = 4 [ (buf.validate.field).enum.defined_only = true ];
+  google.protobuf.Timestamp changed_at = 5;
 }
 
 message ChassisPowerInfo {
@@ -297,37 +299,12 @@ message UpdateChassisRequest {
 
 message UpdateChassisResponse { Chassis chassis = 1; }
 
-message ChassisChangeStateRequest {
+message ChangeChassisStateRequest {
   string chassis_name = 1 [ (buf.validate.field).string.min_len = 1 ];
-  ChassisTransition transition = 2
-      [ (buf.validate.field).enum.defined_only = true ];
-  optional bool force = 3;
-  optional google.protobuf.FieldMask field_mask = 4;
-  map<string, string> metadata = 5;
+  ChassisAction action = 2 [ (buf.validate.field).enum.defined_only = true ];
 }
 
-message ChassisChangeStateResponse {
-  bool success = 1;
-  optional string error_message = 2;
-  optional ChassisStatus status = 3
-      [ (buf.validate.field).enum.defined_only = true ];
-  optional string transition_id = 4;
-  optional google.protobuf.Timestamp estimated_completion = 5;
-  map<string, string> metadata = 6;
-}
-
-message ChassisControlRequest {
-  string chassis_name = 1 [ (buf.validate.field).string.min_len = 1 ];
-  ChassisControlAction action = 2
-      [ (buf.validate.field).enum.defined_only = true ];
-  optional bool force = 3;
-  optional google.protobuf.FieldMask field_mask = 4;
-  map<string, string> parameters = 5;
-}
-
-message ChassisControlResponse {
-  bool success = 1;
-  optional string error_message = 2;
-  optional ChassisStatus status = 3
+message ChangeChassisStateResponse {
+  ChassisStatus current_status = 1
       [ (buf.validate.field).enum.defined_only = true ];
 }
