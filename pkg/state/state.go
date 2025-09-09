@@ -137,7 +137,7 @@ func (sm *FSM) Stop(ctx context.Context) error {
 }
 
 // Fire triggers a state transition with the specified trigger.
-func (sm *FSM) Fire(ctx context.Context, trigger string, data map[string]any) error {
+func (sm *FSM) Fire(ctx context.Context, trigger string) error {
 	sm.mu.Lock()
 
 	if !sm.started {
