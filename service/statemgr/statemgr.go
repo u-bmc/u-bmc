@@ -38,7 +38,7 @@ type StateMgr struct {
 	nc            *nats.Conn
 	js            jetstream.JetStream
 	microService  micro.Service
-	stateMachines map[string]*state.FSM
+	stateMachines map[string]*state.Machine
 	mu            sync.RWMutex
 	logger        *slog.Logger
 	tracer        trace.Tracer
@@ -52,7 +52,7 @@ func New(opts ...Option) *StateMgr {
 
 	return &StateMgr{
 		config:        config,
-		stateMachines: make(map[string]*state.FSM),
+		stateMachines: make(map[string]*state.Machine),
 		tracer:        otel.Tracer("statemgr"),
 	}
 }
@@ -190,7 +190,7 @@ func (s *StateMgr) initializeStateMachines(ctx context.Context) error {
 			hostID := i // capture loop variable
 			tasks = append(tasks, func(ctx context.Context, errChan chan error) {
 				hostName := fmt.Sprintf("host.%d", hostID)
-				sm, err := s.createHostStateMachine(ctx, hostName)
+				sm, err := s.createHostStateMachine(hostName)
 				if err != nil {
 					errChan <- err
 					return
@@ -211,7 +211,7 @@ func (s *StateMgr) initializeStateMachines(ctx context.Context) error {
 			chassisID := i // capture loop variable
 			tasks = append(tasks, func(ctx context.Context, errChan chan error) {
 				chassisName := fmt.Sprintf("chassis.%d", chassisID)
-				sm, err := s.createChassisStateMachine(ctx, chassisName)
+				sm, err := s.createChassisStateMachine(chassisName)
 				if err != nil {
 					errChan <- err
 					return
@@ -230,7 +230,7 @@ func (s *StateMgr) initializeStateMachines(ctx context.Context) error {
 	if s.config.EnableBMCManagement {
 		tasks = append(tasks, func(ctx context.Context, errChan chan error) {
 			bmcName := "bmc.0" // Assuming a single BMC for simplicity, can be extended if needed
-			sm, err := s.createManagementControllerStateMachine(ctx, bmcName)
+			sm, err := s.createManagementControllerStateMachine(bmcName)
 			if err != nil {
 				errChan <- err
 				return
@@ -348,7 +348,7 @@ func (s *StateMgr) shutdown(ctx context.Context) {
 }
 
 // getStateMachine safely retrieves a state machine by name.
-func (s *StateMgr) getStateMachine(name string) (*state.FSM, bool) {
+func (s *StateMgr) getStateMachine(name string) (*state.Machine, bool) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	sm, exists := s.stateMachines[name]

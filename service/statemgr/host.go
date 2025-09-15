@@ -27,161 +27,122 @@ const (
 	hostTriggerTransitionTimeout     = "HOST_TRANSITION_TIMEOUT"
 )
 
-func (s *StateMgr) createHostStateMachine(ctx context.Context, hostName string) (*state.FSM, error) {
-	config := state.NewConfig(
+func (s *StateMgr) createHostStateMachine(hostName string) (*state.Machine, error) {
+	sm, err := state.NewStateMachine(
 		state.WithName(hostName),
 		state.WithDescription(fmt.Sprintf("Host %s state machine", hostName)),
 		state.WithInitialState(schemav1alpha1.HostStatus_HOST_STATUS_OFF.String()),
 		state.WithStates(
-			state.StateDefinition{
-				Name:        schemav1alpha1.HostStatus_HOST_STATUS_OFF.String(),
-				Description: "Host is powered off",
-				OnEntry:     s.createHostStatusEntryAction(hostName, schemav1alpha1.HostStatus_HOST_STATUS_OFF),
-				OnExit:      s.createHostStatusExitAction(hostName, schemav1alpha1.HostStatus_HOST_STATUS_OFF),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.HostStatus_HOST_STATUS_ON.String(),
-				Description: "Host is powered on and running",
-				OnEntry:     s.createHostStatusEntryAction(hostName, schemav1alpha1.HostStatus_HOST_STATUS_ON),
-				OnExit:      s.createHostStatusExitAction(hostName, schemav1alpha1.HostStatus_HOST_STATUS_ON),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
-				Description: "Host is transitioning between states",
-				OnEntry:     s.createHostStatusEntryAction(hostName, schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING),
-				OnExit:      s.createHostStatusExitAction(hostName, schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.HostStatus_HOST_STATUS_QUIESCED.String(),
-				Description: "Host is in quiesced state (entered automatically on timeout)",
-				OnEntry:     s.createHostStatusEntryAction(hostName, schemav1alpha1.HostStatus_HOST_STATUS_QUIESCED),
-				OnExit:      s.createHostStatusExitAction(hostName, schemav1alpha1.HostStatus_HOST_STATUS_QUIESCED),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.HostStatus_HOST_STATUS_DIAGNOSTIC.String(),
-				Description: "Host is in diagnostic mode",
-				OnEntry:     s.createHostStatusEntryAction(hostName, schemav1alpha1.HostStatus_HOST_STATUS_DIAGNOSTIC),
-				OnExit:      s.createHostStatusExitAction(hostName, schemav1alpha1.HostStatus_HOST_STATUS_DIAGNOSTIC),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.HostStatus_HOST_STATUS_ERROR.String(),
-				Description: "Host is in error state (entered automatically on error)",
-				OnEntry:     s.createHostStatusEntryAction(hostName, schemav1alpha1.HostStatus_HOST_STATUS_ERROR),
-				OnExit:      s.createHostStatusExitAction(hostName, schemav1alpha1.HostStatus_HOST_STATUS_ERROR),
-			},
+			schemav1alpha1.HostStatus_HOST_STATUS_OFF.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_ON.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_QUIESCED.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_DIAGNOSTIC.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_ERROR.String(),
 		),
-		state.WithTransitions(
-			// API-triggered transitions
-			state.TransitionDefinition{
-				From:    schemav1alpha1.HostStatus_HOST_STATUS_OFF.String(),
-				To:      schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
-				Trigger: schemav1alpha1.HostAction_HOST_ACTION_ON.String(),
-				Action:  s.createHostTransitionAction(hostName, schemav1alpha1.HostAction_HOST_ACTION_ON),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.HostStatus_HOST_STATUS_ON.String(),
-				To:      schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
-				Trigger: schemav1alpha1.HostAction_HOST_ACTION_OFF.String(),
-				Action:  s.createHostTransitionAction(hostName, schemav1alpha1.HostAction_HOST_ACTION_OFF),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.HostStatus_HOST_STATUS_ON.String(),
-				To:      schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
-				Trigger: schemav1alpha1.HostAction_HOST_ACTION_REBOOT.String(),
-				Action:  s.createHostTransitionAction(hostName, schemav1alpha1.HostAction_HOST_ACTION_REBOOT),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.HostStatus_HOST_STATUS_ERROR.String(),
-				To:      schemav1alpha1.HostStatus_HOST_STATUS_OFF.String(),
-				Trigger: schemav1alpha1.HostAction_HOST_ACTION_FORCE_OFF.String(),
-				Action:  s.createHostTransitionAction(hostName, schemav1alpha1.HostAction_HOST_ACTION_FORCE_OFF),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.HostStatus_HOST_STATUS_ERROR.String(),
-				To:      schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
-				Trigger: schemav1alpha1.HostAction_HOST_ACTION_FORCE_RESTART.String(),
-				Action:  s.createHostTransitionAction(hostName, schemav1alpha1.HostAction_HOST_ACTION_FORCE_RESTART),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.HostStatus_HOST_STATUS_QUIESCED.String(),
-				To:      schemav1alpha1.HostStatus_HOST_STATUS_OFF.String(),
-				Trigger: schemav1alpha1.HostAction_HOST_ACTION_OFF.String(),
-				Action:  s.createHostTransitionAction(hostName, schemav1alpha1.HostAction_HOST_ACTION_OFF),
-			},
-			// Internal transitions (not exposed via API)
-			state.TransitionDefinition{
-				From:    schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
-				To:      schemav1alpha1.HostStatus_HOST_STATUS_ON.String(),
-				Trigger: hostTriggerTransitionCompleteOn,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
-				To:      schemav1alpha1.HostStatus_HOST_STATUS_OFF.String(),
-				Trigger: hostTriggerTransitionCompleteOff,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
-				To:      schemav1alpha1.HostStatus_HOST_STATUS_ERROR.String(),
-				Trigger: hostTriggerTransitionError,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
-				To:      schemav1alpha1.HostStatus_HOST_STATUS_QUIESCED.String(),
-				Trigger: hostTriggerTransitionTimeout,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.HostStatus_HOST_STATUS_QUIESCED.String(),
-				To:      schemav1alpha1.HostStatus_HOST_STATUS_ON.String(),
-				Trigger: hostTriggerTransitionResume,
-			},
+		// API-triggered transitions
+		state.WithActionTransition(
+			schemav1alpha1.HostStatus_HOST_STATUS_OFF.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.HostAction_HOST_ACTION_ON.String(),
+			s.createHostTransitionAction(hostName, schemav1alpha1.HostAction_HOST_ACTION_ON),
 		),
-		state.WithPersistState(s.config.PersistStateChanges),
+		state.WithActionTransition(
+			schemav1alpha1.HostStatus_HOST_STATUS_ON.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.HostAction_HOST_ACTION_OFF.String(),
+			s.createHostTransitionAction(hostName, schemav1alpha1.HostAction_HOST_ACTION_OFF),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.HostStatus_HOST_STATUS_ON.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.HostAction_HOST_ACTION_REBOOT.String(),
+			s.createHostTransitionAction(hostName, schemav1alpha1.HostAction_HOST_ACTION_REBOOT),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.HostStatus_HOST_STATUS_ERROR.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_OFF.String(),
+			schemav1alpha1.HostAction_HOST_ACTION_FORCE_OFF.String(),
+			s.createHostTransitionAction(hostName, schemav1alpha1.HostAction_HOST_ACTION_FORCE_OFF),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.HostStatus_HOST_STATUS_ERROR.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.HostAction_HOST_ACTION_FORCE_RESTART.String(),
+			s.createHostTransitionAction(hostName, schemav1alpha1.HostAction_HOST_ACTION_FORCE_RESTART),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.HostStatus_HOST_STATUS_QUIESCED.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_OFF.String(),
+			schemav1alpha1.HostAction_HOST_ACTION_OFF.String(),
+			s.createHostTransitionAction(hostName, schemav1alpha1.HostAction_HOST_ACTION_OFF),
+		),
+		// Internal transitions (not exposed via API)
+		state.WithTransition(
+			schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_ON.String(),
+			hostTriggerTransitionCompleteOn,
+		),
+		state.WithTransition(
+			schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_OFF.String(),
+			hostTriggerTransitionCompleteOff,
+		),
+		state.WithTransition(
+			schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_ERROR.String(),
+			hostTriggerTransitionError,
+		),
+		state.WithTransition(
+			schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_QUIESCED.String(),
+			hostTriggerTransitionTimeout,
+		),
+		state.WithTransition(
+			schemav1alpha1.HostStatus_HOST_STATUS_QUIESCED.String(),
+			schemav1alpha1.HostStatus_HOST_STATUS_ON.String(),
+			hostTriggerTransitionResume,
+		),
 		state.WithStateTimeout(s.config.StateTimeout),
-		state.WithMetrics(s.config.EnableMetrics),
-		state.WithTracing(s.config.EnableTracing),
+		state.WithStateEntry(s.createHostStatusEntryCallback(hostName)),
+		state.WithStateExit(s.createHostStatusExitCallback(hostName)),
+		state.WithPersistence(s.createHostPersistenceCallback(hostName)),
+		state.WithBroadcast(s.createHostBroadcastCallback(hostName)),
 	)
 
-	sm, err := state.New(config)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create host %s state machine: %w", hostName, err)
-	}
-
-	if err := sm.SetPersistenceCallback(s.createHostPersistenceCallback(ctx, hostName)); err != nil {
-		return nil, fmt.Errorf("failed to set persistence callback: %w", err)
-	}
-	if err := sm.SetBroadcastCallback(s.createHostBroadcastCallback(ctx, hostName)); err != nil {
-		return nil, fmt.Errorf("failed to set broadcast callback: %w", err)
 	}
 
 	return sm, nil
 }
 
-func (s *StateMgr) createHostStatusEntryAction(hostName string, hostStatus schemav1alpha1.HostStatus) state.StateAction {
-	return func(ctx context.Context) error {
+func (s *StateMgr) createHostStatusEntryCallback(hostName string) state.StateEntryCallback {
+	return func(machineName, stateName string) error {
 		if s.logger != nil {
-			s.logger.InfoContext(ctx, "Host entering state",
+			s.logger.Info("Host entering state",
 				"host_name", hostName,
-				"state", hostStatus.String())
+				"state", stateName)
 		}
 		return nil
 	}
 }
 
-func (s *StateMgr) createHostStatusExitAction(hostName string, hostStatus schemav1alpha1.HostStatus) state.StateAction {
-	return func(ctx context.Context) error {
+func (s *StateMgr) createHostStatusExitCallback(hostName string) state.StateExitCallback {
+	return func(machineName, stateName string) error {
 		if s.logger != nil {
-			s.logger.InfoContext(ctx, "Host exiting state",
+			s.logger.Info("Host exiting state",
 				"host_name", hostName,
-				"state", hostStatus.String())
+				"state", stateName)
 		}
 		return nil
 	}
 }
 
-func (s *StateMgr) createHostTransitionAction(hostName string, action schemav1alpha1.HostAction) state.TransitionAction {
-	return func(ctx context.Context, from, to string) error {
+func (s *StateMgr) createHostTransitionAction(hostName string, action schemav1alpha1.HostAction) state.ActionFunc {
+	return func(from, to, trigger string) error {
 		if s.logger != nil {
-			s.logger.InfoContext(ctx, "Host state transition",
+			s.logger.Info("Host state transition",
 				"host_name", hostName,
 				"from", from,
 				"to", to,
@@ -191,7 +152,7 @@ func (s *StateMgr) createHostTransitionAction(hostName string, action schemav1al
 	}
 }
 
-func (s *StateMgr) createHostPersistenceCallback(ctx context.Context, componentName string) state.PersistenceCallback {
+func (s *StateMgr) createHostPersistenceCallback(componentName string) state.PersistenceCallback {
 	return func(machineName, state string) error {
 		if !s.config.PersistStateChanges || s.js == nil {
 			return nil
@@ -210,7 +171,7 @@ func (s *StateMgr) createHostPersistenceCallback(ctx context.Context, componentN
 			return fmt.Errorf("failed to marshal state event: %w", err)
 		}
 
-		ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 
 		if _, err = s.js.Publish(ctx, subject, dataBytes); err != nil {
@@ -221,7 +182,7 @@ func (s *StateMgr) createHostPersistenceCallback(ctx context.Context, componentN
 	}
 }
 
-func (s *StateMgr) createHostBroadcastCallback(ctx context.Context, componentName string) state.BroadcastCallback {
+func (s *StateMgr) createHostBroadcastCallback(componentName string) state.BroadcastCallback {
 	return func(machineName, previousState, currentState string, trigger string) error {
 		if !s.config.BroadcastStateChanges || s.nc == nil {
 			return nil
@@ -287,7 +248,7 @@ func (s *StateMgr) handleGetHostState(ctx context.Context, req micro.Request, ho
 		return
 	}
 
-	currentState := sm.CurrentState()
+	currentState := sm.State()
 	statusEnum := hostStatusStringToEnum(currentState)
 
 	response := &schemav1alpha1.GetHostResponse{
@@ -360,7 +321,7 @@ func (s *StateMgr) handleHostControl(ctx context.Context, req micro.Request, hos
 		}
 	}
 
-	currentState := sm.CurrentState()
+	currentState := sm.State()
 	statusEnum := hostStatusStringToEnum(currentState)
 
 	response := &schemav1alpha1.ChangeHostStateResponse{
@@ -385,7 +346,7 @@ func (s *StateMgr) handleGetHostInfo(ctx context.Context, req micro.Request, hos
 		return
 	}
 
-	currentState := sm.CurrentState()
+	currentState := sm.State()
 	statusEnum := hostStatusStringToEnum(currentState)
 
 	response := &schemav1alpha1.Host{

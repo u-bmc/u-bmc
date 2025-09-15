@@ -27,187 +27,148 @@ const (
 	chassisTriggerTransitionClear       = "CHASSIS_TRANSITION_CLEAR"
 )
 
-func (s *StateMgr) createChassisStateMachine(ctx context.Context, chassisName string) (*state.FSM, error) {
-	config := state.NewConfig(
+func (s *StateMgr) createChassisStateMachine(chassisName string) (*state.Machine, error) {
+	sm, err := state.NewStateMachine(
 		state.WithName(chassisName),
 		state.WithDescription(fmt.Sprintf("Chassis %s state machine", chassisName)),
 		state.WithInitialState(schemav1alpha1.ChassisStatus_CHASSIS_STATUS_OFF.String()),
 		state.WithStates(
-			state.StateDefinition{
-				Name:        schemav1alpha1.ChassisStatus_CHASSIS_STATUS_OFF.String(),
-				Description: "Chassis is powered off",
-				OnEntry:     s.createChassisStatusEntryAction(chassisName, schemav1alpha1.ChassisStatus_CHASSIS_STATUS_OFF),
-				OnExit:      s.createChassisStatusExitAction(chassisName, schemav1alpha1.ChassisStatus_CHASSIS_STATUS_OFF),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON.String(),
-				Description: "Chassis is powered on",
-				OnEntry:     s.createChassisStatusEntryAction(chassisName, schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON),
-				OnExit:      s.createChassisStatusExitAction(chassisName, schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
-				Description: "Chassis is transitioning between states",
-				OnEntry:     s.createChassisStatusEntryAction(chassisName, schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING),
-				OnExit:      s.createChassisStatusExitAction(chassisName, schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.ChassisStatus_CHASSIS_STATUS_WARNING.String(),
-				Description: "Chassis has a warning condition",
-				OnEntry:     s.createChassisStatusEntryAction(chassisName, schemav1alpha1.ChassisStatus_CHASSIS_STATUS_WARNING),
-				OnExit:      s.createChassisStatusExitAction(chassisName, schemav1alpha1.ChassisStatus_CHASSIS_STATUS_WARNING),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL.String(),
-				Description: "Chassis has a critical condition",
-				OnEntry:     s.createChassisStatusEntryAction(chassisName, schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL),
-				OnExit:      s.createChassisStatusExitAction(chassisName, schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.ChassisStatus_CHASSIS_STATUS_FAILED.String(),
-				Description: "Chassis has failed",
-				OnEntry:     s.createChassisStatusEntryAction(chassisName, schemav1alpha1.ChassisStatus_CHASSIS_STATUS_FAILED),
-				OnExit:      s.createChassisStatusExitAction(chassisName, schemav1alpha1.ChassisStatus_CHASSIS_STATUS_FAILED),
-			},
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_OFF.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_WARNING.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_FAILED.String(),
 		),
-		state.WithTransitions(
-			// API-triggered transitions
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_OFF.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
-				Trigger: schemav1alpha1.ChassisAction_CHASSIS_ACTION_ON.String(),
-				Action:  s.createChassisTransitionAction(chassisName, schemav1alpha1.ChassisAction_CHASSIS_ACTION_ON),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
-				Trigger: schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF.String(),
-				Action:  s.createChassisTransitionAction(chassisName, schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
-				Trigger: schemav1alpha1.ChassisAction_CHASSIS_ACTION_POWER_CYCLE.String(),
-				Action:  s.createChassisTransitionAction(chassisName, schemav1alpha1.ChassisAction_CHASSIS_ACTION_POWER_CYCLE),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_WARNING.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
-				Trigger: schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF.String(),
-				Action:  s.createChassisTransitionAction(chassisName, schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
-				Trigger: schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF.String(),
-				Action:  s.createChassisTransitionAction(chassisName, schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
-				Trigger: schemav1alpha1.ChassisAction_CHASSIS_ACTION_EMERGENCY_SHUTDOWN.String(),
-				Action:  s.createChassisTransitionAction(chassisName, schemav1alpha1.ChassisAction_CHASSIS_ACTION_EMERGENCY_SHUTDOWN),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_FAILED.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
-				Trigger: schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF.String(),
-				Action:  s.createChassisTransitionAction(chassisName, schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF),
-			},
-			// Internal transitions (not exposed via API)
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON.String(),
-				Trigger: chassisTriggerTransitionCompleteOn,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_OFF.String(),
-				Trigger: chassisTriggerTransitionCompleteOff,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_FAILED.String(),
-				Trigger: chassisTriggerTransitionFailed,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_WARNING.String(),
-				Trigger: chassisTriggerTransitionWarning,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL.String(),
-				Trigger: chassisTriggerTransitionCritical,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_WARNING.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON.String(),
-				Trigger: chassisTriggerTransitionClear,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_WARNING.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL.String(),
-				Trigger: chassisTriggerTransitionCritical,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_WARNING.String(),
-				Trigger: chassisTriggerTransitionWarning,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL.String(),
-				To:      schemav1alpha1.ChassisStatus_CHASSIS_STATUS_FAILED.String(),
-				Trigger: chassisTriggerTransitionFailed,
-			},
+		// API-triggered transitions
+		state.WithActionTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_OFF.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.ChassisAction_CHASSIS_ACTION_ON.String(),
+			s.createChassisTransitionAction(chassisName, schemav1alpha1.ChassisAction_CHASSIS_ACTION_ON),
 		),
-		state.WithPersistState(s.config.PersistStateChanges),
+		state.WithActionTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF.String(),
+			s.createChassisTransitionAction(chassisName, schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.ChassisAction_CHASSIS_ACTION_POWER_CYCLE.String(),
+			s.createChassisTransitionAction(chassisName, schemav1alpha1.ChassisAction_CHASSIS_ACTION_POWER_CYCLE),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_WARNING.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF.String(),
+			s.createChassisTransitionAction(chassisName, schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF.String(),
+			s.createChassisTransitionAction(chassisName, schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.ChassisAction_CHASSIS_ACTION_EMERGENCY_SHUTDOWN.String(),
+			s.createChassisTransitionAction(chassisName, schemav1alpha1.ChassisAction_CHASSIS_ACTION_EMERGENCY_SHUTDOWN),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_FAILED.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF.String(),
+			s.createChassisTransitionAction(chassisName, schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF),
+		),
+		// Internal transitions (not exposed via API)
+		state.WithTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON.String(),
+			chassisTriggerTransitionCompleteOn,
+		),
+		state.WithTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_OFF.String(),
+			chassisTriggerTransitionCompleteOff,
+		),
+		state.WithTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_FAILED.String(),
+			chassisTriggerTransitionFailed,
+		),
+		state.WithTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_WARNING.String(),
+			chassisTriggerTransitionWarning,
+		),
+		state.WithTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL.String(),
+			chassisTriggerTransitionCritical,
+		),
+		state.WithTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_WARNING.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_ON.String(),
+			chassisTriggerTransitionClear,
+		),
+		state.WithTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_WARNING.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL.String(),
+			chassisTriggerTransitionCritical,
+		),
+		state.WithTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_WARNING.String(),
+			chassisTriggerTransitionWarning,
+		),
+		state.WithTransition(
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_CRITICAL.String(),
+			schemav1alpha1.ChassisStatus_CHASSIS_STATUS_FAILED.String(),
+			chassisTriggerTransitionFailed,
+		),
 		state.WithStateTimeout(s.config.StateTimeout),
-		state.WithMetrics(s.config.EnableMetrics),
-		state.WithTracing(s.config.EnableTracing),
+		state.WithStateEntry(s.createChassisStatusEntryCallback(chassisName)),
+		state.WithStateExit(s.createChassisStatusExitCallback(chassisName)),
+		state.WithPersistence(s.createChassisPersistenceCallback(chassisName)),
+		state.WithBroadcast(s.createChassisBroadcastCallback(chassisName)),
 	)
 
-	sm, err := state.New(config)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create chassis %s state machine: %w", chassisName, err)
-	}
-
-	if err := sm.SetPersistenceCallback(s.createChassisPersistenceCallback(ctx, chassisName)); err != nil {
-		return nil, fmt.Errorf("failed to set persistence callback: %w", err)
-	}
-	if err := sm.SetBroadcastCallback(s.createChassisBroadcastCallback(ctx, chassisName)); err != nil {
-		return nil, fmt.Errorf("failed to set broadcast callback: %w", err)
 	}
 
 	return sm, nil
 }
 
-func (s *StateMgr) createChassisStatusEntryAction(chassisName string, chassisStatus schemav1alpha1.ChassisStatus) state.StateAction {
-	return func(ctx context.Context) error {
+func (s *StateMgr) createChassisStatusEntryCallback(chassisName string) state.StateEntryCallback {
+	return func(machineName, stateName string) error {
 		if s.logger != nil {
-			s.logger.InfoContext(ctx, "Chassis entering state",
+			s.logger.Info("Chassis entering state",
 				"chassis_name", chassisName,
-				"state", chassisStatus.String())
+				"state", stateName)
 		}
 		return nil
 	}
 }
 
-func (s *StateMgr) createChassisStatusExitAction(chassisName string, chassisStatus schemav1alpha1.ChassisStatus) state.StateAction {
-	return func(ctx context.Context) error {
+func (s *StateMgr) createChassisStatusExitCallback(chassisName string) state.StateExitCallback {
+	return func(machineName, stateName string) error {
 		if s.logger != nil {
-			s.logger.InfoContext(ctx, "Chassis exiting state",
+			s.logger.Info("Chassis exiting state",
 				"chassis_name", chassisName,
-				"state", chassisStatus.String())
+				"state", stateName)
 		}
 		return nil
 	}
 }
 
-func (s *StateMgr) createChassisTransitionAction(chassisName string, action schemav1alpha1.ChassisAction) state.TransitionAction {
-	return func(ctx context.Context, from, to string) error {
+func (s *StateMgr) createChassisTransitionAction(chassisName string, action schemav1alpha1.ChassisAction) state.ActionFunc {
+	return func(from, to, trigger string) error {
 		if s.logger != nil {
-			s.logger.InfoContext(ctx, "Chassis state transition",
+			s.logger.Info("Chassis state transition",
 				"chassis_name", chassisName,
 				"from", from,
 				"to", to,
@@ -217,7 +178,7 @@ func (s *StateMgr) createChassisTransitionAction(chassisName string, action sche
 	}
 }
 
-func (s *StateMgr) createChassisPersistenceCallback(ctx context.Context, componentName string) state.PersistenceCallback {
+func (s *StateMgr) createChassisPersistenceCallback(componentName string) state.PersistenceCallback {
 	return func(machineName, state string) error {
 		if !s.config.PersistStateChanges || s.js == nil {
 			return nil
@@ -236,7 +197,7 @@ func (s *StateMgr) createChassisPersistenceCallback(ctx context.Context, compone
 			return fmt.Errorf("failed to marshal state event: %w", err)
 		}
 
-		ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 
 		if _, err = s.js.Publish(ctx, subject, dataBytes); err != nil {
@@ -247,7 +208,7 @@ func (s *StateMgr) createChassisPersistenceCallback(ctx context.Context, compone
 	}
 }
 
-func (s *StateMgr) createChassisBroadcastCallback(ctx context.Context, componentName string) state.BroadcastCallback {
+func (s *StateMgr) createChassisBroadcastCallback(componentName string) state.BroadcastCallback {
 	return func(machineName, previousState, currentState string, trigger string) error {
 		if !s.config.BroadcastStateChanges || s.nc == nil {
 			return nil
@@ -313,7 +274,7 @@ func (s *StateMgr) handleGetChassisState(ctx context.Context, req micro.Request,
 		return
 	}
 
-	currentState := sm.CurrentState()
+	currentState := sm.State()
 	statusEnum := chassisStatusStringToEnum(currentState)
 
 	response := &schemav1alpha1.GetChassisResponse{
@@ -360,7 +321,7 @@ func (s *StateMgr) handleChassisControl(ctx context.Context, req micro.Request, 
 		return
 	}
 
-	currentState := sm.CurrentState()
+	currentState := sm.State()
 	statusEnum := chassisStatusStringToEnum(currentState)
 
 	response := &schemav1alpha1.ChangeChassisStateResponse{
@@ -385,7 +346,7 @@ func (s *StateMgr) handleGetChassisInfo(ctx context.Context, req micro.Request, 
 		return
 	}
 
-	currentState := sm.CurrentState()
+	currentState := sm.State()
 	statusEnum := chassisStatusStringToEnum(currentState)
 
 	response := &schemav1alpha1.Chassis{
