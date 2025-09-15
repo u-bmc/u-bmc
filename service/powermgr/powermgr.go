@@ -21,23 +21,12 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
-	"google.golang.org/protobuf/types/known/durationpb"
-	"google.golang.org/protobuf/types/known/timestamppb"
-)
-
-const (
-	operationPowerOn          = "power.on"
-	operationPowerOff         = "power.off"
-	operationPowerReset       = "power.reset"
-	operationPowerStatus      = "power.status"
-	operationPowerConsumption = "power.consumption"
-	operationPowerCap         = "power.cap"
 )
 
 var _ service.Service = (*PowerMgr)(nil)
 
-// Backend defines the interface for power control backends.
-type Backend interface {
+// PowerBackend defines the interface for power control backends.
+type PowerBackend interface {
 	// PowerOn powers on the specified component
 	PowerOn(ctx context.Context, componentName string) error
 	// PowerOff powers off the specified component
@@ -46,12 +35,6 @@ type Backend interface {
 	Reset(ctx context.Context, componentName string) error
 	// GetPowerStatus returns the current power status of the component
 	GetPowerStatus(ctx context.Context, componentName string) (bool, error)
-	// GetPowerConsumption returns the current power consumption in watts
-	GetPowerConsumption(ctx context.Context, componentName string) (float64, error)
-	// SetPowerCap sets the power cap for the component
-	SetPowerCap(ctx context.Context, componentName string, capWatts float64) error
-	// GetPowerCap gets the current power cap for the component
-	GetPowerCap(ctx context.Context, componentName string) (float64, error)
 	// Initialize initializes the backend with configuration
 	Initialize(ctx context.Context, config *Config) error
 	// Close closes the backend and cleans up resources
@@ -222,35 +205,6 @@ func (b *GPIOBackend) GetPowerStatus(ctx context.Context, componentName string) 
 	return value == 1, nil
 }
 
-// GetPowerConsumption returns mock power consumption (GPIO doesn't provide this).
-func (b *GPIOBackend) GetPowerConsumption(ctx context.Context, componentName string) (float64, error) {
-	b.mu.RLock()
-	component, exists := b.components[componentName]
-	b.mu.RUnlock()
-
-	if !exists {
-		return 0, fmt.Errorf("%w: component '%s'", ErrComponentNotFound, componentName)
-	}
-
-	if !component.EnablePowerMonitoring {
-		return 0, fmt.Errorf("%w: power monitoring not enabled for component '%s'", ErrPowerMonitoringDisabled, componentName)
-	}
-
-	// GPIO backend doesn't provide actual power consumption
-	// This would be implemented by a dedicated power monitoring backend
-	return 0, ErrPowerDataUnavailable
-}
-
-// SetPowerCap sets power cap (not supported by GPIO backend).
-func (b *GPIOBackend) SetPowerCap(ctx context.Context, componentName string, capWatts float64) error {
-	return ErrPowerCapNotSupported
-}
-
-// GetPowerCap gets power cap (not supported by GPIO backend).
-func (b *GPIOBackend) GetPowerCap(ctx context.Context, componentName string) (float64, error) {
-	return 0, ErrPowerCapNotSupported
-}
-
 // Close closes the GPIO backend.
 func (b *GPIOBackend) Close() error {
 	return b.manager.Close()
@@ -261,7 +215,7 @@ type PowerMgr struct {
 	config       *Config
 	nc           *nats.Conn
 	microService micro.Service
-	backend      Backend
+	backend      PowerBackend
 	logger       *slog.Logger
 	tracer       trace.Tracer
 	cancel       context.CancelFunc
@@ -309,7 +263,6 @@ func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 		return fmt.Errorf("%w: %w", ErrInvalidConfiguration, err)
 	}
 
-	// Add default components if not configured
 	p.config.AddDefaultComponents()
 
 	nc, err := nats.Connect("", nats.InProcessServer(ipcConn))
@@ -320,7 +273,6 @@ func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 	p.nc = nc
 	defer nc.Drain()
 
-	// Initialize GPIO backend as default
 	p.backend = NewGPIOBackend()
 	if err := p.backend.Initialize(ctx, p.config); err != nil {
 		span.RecordError(err)
@@ -367,53 +319,29 @@ func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 func (p *PowerMgr) registerEndpoints(ctx context.Context) error {
 	if p.config.EnableHostManagement {
 		for i := 0; i < p.config.NumHosts; i++ {
-			hostEndpoints := []string{
-				fmt.Sprintf("powermgr.host.%d.power.on", i),
-				fmt.Sprintf("powermgr.host.%d.power.off", i),
-				fmt.Sprintf("powermgr.host.%d.power.reset", i),
-				fmt.Sprintf("powermgr.host.%d.power.status", i),
-				fmt.Sprintf("powermgr.host.%d.power.consumption", i),
-				fmt.Sprintf("powermgr.host.%d.power.cap", i),
-			}
-
-			for _, endpoint := range hostEndpoints {
-				if err := p.microService.AddEndpoint(endpoint,
-					micro.HandlerFunc(p.createRequestHandler(p.handleHostPowerRequest))); err != nil {
-					return fmt.Errorf("failed to register host endpoint %s: %w", endpoint, err)
-				}
+			endpoint := fmt.Sprintf("powermgr.host.%d.action", i)
+			if err := p.microService.AddEndpoint(endpoint,
+				micro.HandlerFunc(p.createRequestHandler(p.handleHostPowerAction))); err != nil {
+				return fmt.Errorf("failed to register host endpoint %s: %w", endpoint, err)
 			}
 		}
 	}
 
 	if p.config.EnableChassisManagement {
 		for i := 0; i < p.config.NumChassis; i++ {
-			chassisEndpoints := []string{
-				fmt.Sprintf("powermgr.chassis.%d.power.on", i),
-				fmt.Sprintf("powermgr.chassis.%d.power.off", i),
-				fmt.Sprintf("powermgr.chassis.%d.power.status", i),
-				fmt.Sprintf("powermgr.chassis.%d.power.consumption", i),
-			}
-
-			for _, endpoint := range chassisEndpoints {
-				if err := p.microService.AddEndpoint(endpoint,
-					micro.HandlerFunc(p.createRequestHandler(p.handleChassisPowerRequest))); err != nil {
-					return fmt.Errorf("failed to register chassis endpoint %s: %w", endpoint, err)
-				}
+			endpoint := fmt.Sprintf("powermgr.chassis.%d.action", i)
+			if err := p.microService.AddEndpoint(endpoint,
+				micro.HandlerFunc(p.createRequestHandler(p.handleChassisPowerAction))); err != nil {
+				return fmt.Errorf("failed to register chassis endpoint %s: %w", endpoint, err)
 			}
 		}
 	}
 
 	if p.config.EnableBMCManagement {
-		bmcEndpoints := []string{
-			"powermgr.bmc.0.power.reset",
-			"powermgr.bmc.0.power.status",
-		}
-
-		for _, endpoint := range bmcEndpoints {
-			if err := p.microService.AddEndpoint(endpoint,
-				micro.HandlerFunc(p.createRequestHandler(p.handleBMCPowerRequest))); err != nil {
-				return fmt.Errorf("failed to register BMC endpoint %s: %w", endpoint, err)
-			}
+		endpoint := "powermgr.bmc.0.action"
+		if err := p.microService.AddEndpoint(endpoint,
+			micro.HandlerFunc(p.createRequestHandler(p.handleBMCPowerAction))); err != nil {
+			return fmt.Errorf("failed to register BMC endpoint %s: %w", endpoint, err)
 		}
 	}
 
@@ -438,127 +366,211 @@ func (p *PowerMgr) createRequestHandler(handler func(context.Context, micro.Requ
 	}
 }
 
-// handleHostPowerRequest handles power requests for host components.
-func (p *PowerMgr) handleHostPowerRequest(ctx context.Context, req micro.Request) {
+// handleHostPowerAction handles power action requests for host components.
+func (p *PowerMgr) handleHostPowerAction(ctx context.Context, req micro.Request) {
 	if p.tracer != nil {
 		var span trace.Span
-		_, span = p.tracer.Start(ctx, "powermgr.handleHostPowerRequest")
+		_, span = p.tracer.Start(ctx, "powermgr.handleHostPowerAction")
 		defer span.End()
 		span.SetAttributes(attribute.String("subject", req.Subject()))
 	}
 
 	parts := strings.Split(req.Subject(), ".")
-	if len(parts) < 5 || parts[0] != "powermgr" || parts[1] != "host" {
+	if len(parts) != 4 || parts[0] != "powermgr" || parts[1] != "host" {
 		ipc.RespondWithError(ctx, req, ErrInvalidRequest, "invalid subject format")
 		return
 	}
 
 	hostID := parts[2]
 	componentName := fmt.Sprintf("host.%s", hostID)
-	operation := strings.Join(parts[3:], ".")
 
-	switch operation {
-	case operationPowerOn:
-		p.handlePowerOn(ctx, req, componentName)
-	case operationPowerOff:
-		p.handlePowerOff(ctx, req, componentName)
-	case operationPowerReset:
-		p.handlePowerReset(ctx, req, componentName)
-	case operationPowerStatus:
-		p.handlePowerStatus(ctx, req, componentName)
-	case operationPowerConsumption:
-		p.handlePowerConsumption(ctx, req, componentName)
-	case operationPowerCap:
-		p.handlePowerCap(ctx, req, componentName)
+	var request schemav1alpha1.ChangeHostStateRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
+		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
+		return
+	}
+
+	if request.Action == schemav1alpha1.HostAction_HOST_ACTION_UNSPECIFIED {
+		ipc.RespondWithError(ctx, req, ErrInvalidPowerAction, "unspecified action")
+		return
+	}
+
+	var err error
+	switch request.Action {
+	case schemav1alpha1.HostAction_HOST_ACTION_ON:
+		err = p.backend.PowerOn(ctx, componentName)
+	case schemav1alpha1.HostAction_HOST_ACTION_OFF:
+		err = p.backend.PowerOff(ctx, componentName, false)
+	case schemav1alpha1.HostAction_HOST_ACTION_FORCE_OFF:
+		err = p.backend.PowerOff(ctx, componentName, true)
+	case schemav1alpha1.HostAction_HOST_ACTION_REBOOT:
+		err = p.backend.Reset(ctx, componentName)
+	case schemav1alpha1.HostAction_HOST_ACTION_FORCE_RESTART:
+		err = p.backend.Reset(ctx, componentName)
 	default:
-		ipc.RespondWithError(ctx, req, ErrInvalidRequest, fmt.Sprintf("unknown operation: %s", operation))
+		ipc.RespondWithError(ctx, req, ErrPowerOperationNotSupported, fmt.Sprintf("unsupported action: %v", request.Action))
+		return
+	}
+
+	if err != nil {
+		ipc.RespondWithError(ctx, req, ErrPowerOperationFailed, err.Error())
+		return
+	}
+
+	response := &schemav1alpha1.ChangeHostStateResponse{
+		CurrentStatus: schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING,
+	}
+
+	resp, marshalErr := response.MarshalVT()
+	if marshalErr != nil {
+		ipc.RespondWithError(ctx, req, ErrMarshalingFailed, marshalErr.Error())
+		return
+	}
+
+	if err := req.Respond(resp); err != nil && p.logger != nil {
+		p.logger.ErrorContext(ctx, "Failed to send response", "error", err)
+	}
+
+	if p.logger != nil {
+		p.logger.InfoContext(ctx, "Host power action completed",
+			"component", componentName,
+			"action", request.Action.String())
 	}
 }
 
-// handleChassisPowerRequest handles power requests for chassis components.
-func (p *PowerMgr) handleChassisPowerRequest(ctx context.Context, req micro.Request) {
+// handleChassisPowerAction handles power action requests for chassis components.
+func (p *PowerMgr) handleChassisPowerAction(ctx context.Context, req micro.Request) {
 	if p.tracer != nil {
 		var span trace.Span
-		_, span = p.tracer.Start(ctx, "powermgr.handleChassisPowerRequest")
+		_, span = p.tracer.Start(ctx, "powermgr.handleChassisPowerAction")
 		defer span.End()
 		span.SetAttributes(attribute.String("subject", req.Subject()))
 	}
 
 	parts := strings.Split(req.Subject(), ".")
-	if len(parts) < 5 || parts[0] != "powermgr" || parts[1] != "chassis" {
+	if len(parts) != 4 || parts[0] != "powermgr" || parts[1] != "chassis" {
 		ipc.RespondWithError(ctx, req, ErrInvalidRequest, "invalid subject format")
 		return
 	}
 
 	chassisID := parts[2]
 	componentName := fmt.Sprintf("chassis.%s", chassisID)
-	operation := strings.Join(parts[3:], ".")
 
-	switch operation {
-	case operationPowerOn:
-		p.handlePowerOn(ctx, req, componentName)
-	case operationPowerOff:
-		p.handlePowerOff(ctx, req, componentName)
-	case operationPowerStatus:
-		p.handlePowerStatus(ctx, req, componentName)
-	case operationPowerConsumption:
-		p.handlePowerConsumption(ctx, req, componentName)
+	var request schemav1alpha1.ChangeChassisStateRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
+		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
+		return
+	}
+
+	if request.Action == schemav1alpha1.ChassisAction_CHASSIS_ACTION_UNSPECIFIED {
+		ipc.RespondWithError(ctx, req, ErrInvalidPowerAction, "unspecified action")
+		return
+	}
+
+	var err error
+	switch request.Action {
+	case schemav1alpha1.ChassisAction_CHASSIS_ACTION_ON:
+		err = p.backend.PowerOn(ctx, componentName)
+	case schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF:
+		err = p.backend.PowerOff(ctx, componentName, false)
+	case schemav1alpha1.ChassisAction_CHASSIS_ACTION_EMERGENCY_SHUTDOWN:
+		err = p.backend.PowerOff(ctx, componentName, true)
+	case schemav1alpha1.ChassisAction_CHASSIS_ACTION_POWER_CYCLE:
+		if powerOffErr := p.backend.PowerOff(ctx, componentName, false); powerOffErr != nil {
+			err = powerOffErr
+		} else {
+			time.Sleep(2 * time.Second)
+			err = p.backend.PowerOn(ctx, componentName)
+		}
 	default:
-		ipc.RespondWithError(ctx, req, ErrInvalidRequest, fmt.Sprintf("unknown operation: %s", operation))
+		ipc.RespondWithError(ctx, req, ErrPowerOperationNotSupported, fmt.Sprintf("unsupported action: %v", request.Action))
+		return
+	}
+
+	if err != nil {
+		ipc.RespondWithError(ctx, req, ErrPowerOperationFailed, err.Error())
+		return
+	}
+
+	response := &schemav1alpha1.ChangeChassisStateResponse{
+		CurrentStatus: schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING,
+	}
+
+	resp, marshalErr := response.MarshalVT()
+	if marshalErr != nil {
+		ipc.RespondWithError(ctx, req, ErrMarshalingFailed, marshalErr.Error())
+		return
+	}
+
+	if err := req.Respond(resp); err != nil && p.logger != nil {
+		p.logger.ErrorContext(ctx, "Failed to send response", "error", err)
+	}
+
+	if p.logger != nil {
+		p.logger.InfoContext(ctx, "Chassis power action completed",
+			"component", componentName,
+			"action", request.Action.String())
 	}
 }
 
-// handleBMCPowerRequest handles power requests for BMC components.
-func (p *PowerMgr) handleBMCPowerRequest(ctx context.Context, req micro.Request) {
+// handleBMCPowerAction handles power action requests for BMC components.
+func (p *PowerMgr) handleBMCPowerAction(ctx context.Context, req micro.Request) {
 	if p.tracer != nil {
 		var span trace.Span
-		_, span = p.tracer.Start(ctx, "powermgr.handleBMCPowerRequest")
+		_, span = p.tracer.Start(ctx, "powermgr.handleBMCPowerAction")
 		defer span.End()
 		span.SetAttributes(attribute.String("subject", req.Subject()))
 	}
 
 	parts := strings.Split(req.Subject(), ".")
-	if len(parts) < 5 || parts[0] != "powermgr" || parts[1] != "bmc" {
+	if len(parts) != 4 || parts[0] != "powermgr" || parts[1] != "bmc" {
 		ipc.RespondWithError(ctx, req, ErrInvalidRequest, "invalid subject format")
 		return
 	}
 
 	bmcID := parts[2]
 	componentName := fmt.Sprintf("bmc.%s", bmcID)
-	operation := strings.Join(parts[3:], ".")
 
-	switch operation {
-	case operationPowerReset:
-		p.handlePowerReset(ctx, req, componentName)
-	case operationPowerStatus:
-		p.handlePowerStatus(ctx, req, componentName)
+	var request schemav1alpha1.ChangeManagementControllerStateRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
+		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
+		return
+	}
+
+	if request.Action == schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED {
+		ipc.RespondWithError(ctx, req, ErrInvalidPowerAction, "unspecified action")
+		return
+	}
+
+	var err error
+	switch request.Action {
+	case schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_REBOOT:
+		err = p.backend.Reset(ctx, componentName)
+	case schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_WARM_RESET:
+		err = p.backend.Reset(ctx, componentName)
+	case schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_COLD_RESET:
+		err = p.backend.Reset(ctx, componentName)
+	case schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_HARD_RESET:
+		err = p.backend.Reset(ctx, componentName)
+	case schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET:
+		err = p.backend.Reset(ctx, componentName)
 	default:
-		ipc.RespondWithError(ctx, req, ErrInvalidRequest, fmt.Sprintf("unknown operation: %s", operation))
-	}
-}
-
-// handlePowerOn handles power on requests.
-func (p *PowerMgr) handlePowerOn(ctx context.Context, req micro.Request, componentName string) {
-	var request schemav1alpha1.PowerOnRequest
-	if err := request.UnmarshalVT(req.Data()); err != nil {
-		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
+		ipc.RespondWithError(ctx, req, ErrPowerOperationNotSupported, fmt.Sprintf("unsupported action: %v", request.Action))
 		return
 	}
 
-	if err := p.backend.PowerOn(ctx, componentName); err != nil {
+	if err != nil {
 		ipc.RespondWithError(ctx, req, ErrPowerOperationFailed, err.Error())
 		return
 	}
 
-	response := &schemav1alpha1.PowerOnResponse{
-		ComponentName: componentName,
-		Success:       true,
-		Timestamp:     timestamppb.New(time.Now().UTC()),
+	response := &schemav1alpha1.ChangeManagementControllerStateResponse{
+		CurrentStatus: schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY,
 	}
 
-	resp, err := response.MarshalVT()
-	if err != nil {
-		ipc.RespondWithError(ctx, req, ErrMarshalingFailed, err.Error())
+	resp, marshalErr := response.MarshalVT()
+	if marshalErr != nil {
+		ipc.RespondWithError(ctx, req, ErrMarshalingFailed, marshalErr.Error())
 		return
 	}
 
@@ -567,192 +579,9 @@ func (p *PowerMgr) handlePowerOn(ctx context.Context, req micro.Request, compone
 	}
 
 	if p.logger != nil {
-		p.logger.InfoContext(ctx, "Power on completed", "component", componentName)
-	}
-}
-
-// handlePowerOff handles power off requests.
-func (p *PowerMgr) handlePowerOff(ctx context.Context, req micro.Request, componentName string) {
-	var request schemav1alpha1.PowerOffRequest
-	if err := request.UnmarshalVT(req.Data()); err != nil {
-		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
-		return
-	}
-
-	force := request.Force
-	if err := p.backend.PowerOff(ctx, componentName, force); err != nil {
-		ipc.RespondWithError(ctx, req, ErrPowerOperationFailed, err.Error())
-		return
-	}
-
-	response := &schemav1alpha1.PowerOffResponse{
-		ComponentName: componentName,
-		Success:       true,
-		Timestamp:     timestamppb.New(time.Now().UTC()),
-	}
-
-	resp, err := response.MarshalVT()
-	if err != nil {
-		ipc.RespondWithError(ctx, req, ErrMarshalingFailed, err.Error())
-		return
-	}
-
-	if err := req.Respond(resp); err != nil && p.logger != nil {
-		p.logger.ErrorContext(ctx, "Failed to send response", "error", err)
-	}
-
-	if p.logger != nil {
-		p.logger.InfoContext(ctx, "Power off completed", "component", componentName, "force", force)
-	}
-}
-
-// handlePowerReset handles reset requests.
-func (p *PowerMgr) handlePowerReset(ctx context.Context, req micro.Request, componentName string) {
-	var request schemav1alpha1.PowerResetRequest
-	if err := request.UnmarshalVT(req.Data()); err != nil {
-		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
-		return
-	}
-
-	if err := p.backend.Reset(ctx, componentName); err != nil {
-		ipc.RespondWithError(ctx, req, ErrPowerOperationFailed, err.Error())
-		return
-	}
-
-	response := &schemav1alpha1.PowerResetResponse{
-		ComponentName: componentName,
-		Success:       true,
-		Timestamp:     timestamppb.New(time.Now().UTC()),
-	}
-
-	resp, err := response.MarshalVT()
-	if err != nil {
-		ipc.RespondWithError(ctx, req, ErrMarshalingFailed, err.Error())
-		return
-	}
-
-	if err := req.Respond(resp); err != nil && p.logger != nil {
-		p.logger.ErrorContext(ctx, "Failed to send response", "error", err)
-	}
-
-	if p.logger != nil {
-		p.logger.InfoContext(ctx, "Reset completed", "component", componentName)
-	}
-}
-
-// handlePowerStatus handles power status requests.
-func (p *PowerMgr) handlePowerStatus(ctx context.Context, req micro.Request, componentName string) {
-	powered, err := p.backend.GetPowerStatus(ctx, componentName)
-	if err != nil {
-		ipc.RespondWithError(ctx, req, ErrPowerOperationFailed, err.Error())
-		return
-	}
-
-	response := &schemav1alpha1.PowerStatusResponse{
-		ComponentName: componentName,
-		Powered:       powered,
-		Timestamp:     timestamppb.New(time.Now().UTC()),
-	}
-
-	resp, err := response.MarshalVT()
-	if err != nil {
-		ipc.RespondWithError(ctx, req, ErrMarshalingFailed, err.Error())
-		return
-	}
-
-	if err := req.Respond(resp); err != nil && p.logger != nil {
-		p.logger.ErrorContext(ctx, "Failed to send response", "error", err)
-	}
-}
-
-// handlePowerConsumption handles power consumption requests.
-func (p *PowerMgr) handlePowerConsumption(ctx context.Context, req micro.Request, componentName string) {
-	consumption, err := p.backend.GetPowerConsumption(ctx, componentName)
-	if err != nil {
-		ipc.RespondWithError(ctx, req, ErrPowerOperationFailed, err.Error())
-		return
-	}
-
-	response := &schemav1alpha1.PowerConsumptionResponse{
-		ComponentName:    componentName,
-		ConsumptionWatts: consumption,
-		Timestamp:        timestamppb.New(time.Now().UTC()),
-	}
-
-	resp, err := response.MarshalVT()
-	if err != nil {
-		ipc.RespondWithError(ctx, req, ErrMarshalingFailed, err.Error())
-		return
-	}
-
-	if err := req.Respond(resp); err != nil && p.logger != nil {
-		p.logger.ErrorContext(ctx, "Failed to send response", "error", err)
-	}
-}
-
-// handlePowerCap handles power cap requests.
-func (p *PowerMgr) handlePowerCap(ctx context.Context, req micro.Request, componentName string) {
-	var request schemav1alpha1.PowerCapRequest
-	if err := request.UnmarshalVT(req.Data()); err != nil {
-		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
-		return
-	}
-
-	if request.GetCap {
-		capWatts, err := p.backend.GetPowerCap(ctx, componentName)
-		if err != nil {
-			ipc.RespondWithError(ctx, req, ErrPowerOperationFailed, err.Error())
-			return
-		}
-
-		response := &schemav1alpha1.PowerCapResponse{
-			ComponentName: componentName,
-			CapWatts:      capWatts,
-			Timestamp:     timestamppb.New(time.Now().UTC()),
-		}
-
-		resp, err := response.MarshalVT()
-		if err != nil {
-			ipc.RespondWithError(ctx, req, ErrMarshalingFailed, err.Error())
-			return
-		}
-
-		if err := req.Respond(resp); err != nil && p.logger != nil {
-			p.logger.ErrorContext(ctx, "Failed to send response", "error", err)
-		}
-	} else {
-		if request.CapWatts == nil {
-			ipc.RespondWithError(ctx, req, ErrInvalidPowerValue, "cap_watts is required for set operation")
-			return
-		}
-
-		capWatts := *request.CapWatts
-		if err := p.backend.SetPowerCap(ctx, componentName, capWatts); err != nil {
-			ipc.RespondWithError(ctx, req, ErrPowerOperationFailed, err.Error())
-			return
-		}
-
-		response := &schemav1alpha1.PowerCapResponse{
-			ComponentName: componentName,
-			CapWatts:      capWatts,
-			Success:       true,
-			Timestamp:     timestamppb.New(time.Now().UTC()),
-			Duration:      durationpb.New(time.Hour), // Default cap duration
-		}
-
-		resp, err := response.MarshalVT()
-		if err != nil {
-			ipc.RespondWithError(ctx, req, ErrMarshalingFailed, err.Error())
-			return
-		}
-
-		if err := req.Respond(resp); err != nil && p.logger != nil {
-			p.logger.ErrorContext(ctx, "Failed to send response", "error", err)
-		}
-
-		if p.logger != nil {
-			p.logger.InfoContext(ctx, "Power cap set", "component", componentName, "cap_watts", capWatts)
-		}
+		p.logger.InfoContext(ctx, "BMC power action completed",
+			"component", componentName,
+			"action", request.Action.String())
 	}
 }
 
@@ -778,4 +607,48 @@ func (p *PowerMgr) shutdown(ctx context.Context) {
 	}
 
 	p.started = false
+}
+
+// CreateGPIOPowerOnCallback creates a GPIO-based power on callback function.
+func CreateGPIOPowerOnCallback(chipPath, lineName string, duration time.Duration, opts ...gpio.Option) func(context.Context) error {
+	manager := gpio.NewManager()
+	return func(ctx context.Context) error {
+		line, err := manager.RequestLine(chipPath, lineName, opts...)
+		if err != nil {
+			return err
+		}
+		defer line.Close()
+		return line.ToggleCtx(ctx, duration)
+	}
+}
+
+// CreateGPIOPowerOffCallback creates a GPIO-based power off callback function.
+func CreateGPIOPowerOffCallback(chipPath, lineName string, duration time.Duration, opts ...gpio.Option) func(context.Context) error {
+	manager := gpio.NewManager()
+	return func(ctx context.Context) error {
+		line, err := manager.RequestLine(chipPath, lineName, opts...)
+		if err != nil {
+			return err
+		}
+		defer line.Close()
+		return line.ToggleCtx(ctx, duration)
+	}
+}
+
+// CreateGPIOResetCallback creates a GPIO-based reset callback function.
+func CreateGPIOResetCallback(chipPath, lineName string, duration time.Duration, opts ...gpio.Option) func(context.Context) error {
+	manager := gpio.NewManager()
+	return func(ctx context.Context) error {
+		line, err := manager.RequestLine(chipPath, lineName, opts...)
+		if err != nil {
+			return err
+		}
+		defer line.Close()
+		return line.ToggleCtx(ctx, duration)
+	}
+}
+
+// CreateGPIOReset creates a stateless GPIO reset action function for compatibility with state machines.
+func CreateGPIOReset(chipPath, lineName string, duration time.Duration, opts ...gpio.Option) func(context.Context, ...any) error {
+	return gpio.CreateToggleAction(gpio.NewManager(), chipPath, lineName, duration, opts...)
 }

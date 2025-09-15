@@ -43,28 +43,8 @@ type GPIOConfig struct {
 	PowerButton GPIOLineConfig
 	// ResetButton configures the reset button GPIO line
 	ResetButton GPIOLineConfig
-	// PowerLED configures the power LED GPIO line
-	PowerLED GPIOLineConfig
 	// PowerStatus configures the power status input GPIO line
 	PowerStatus GPIOLineConfig
-	// PowerEnable configures the power enable output GPIO line
-	PowerEnable GPIOLineConfig
-}
-
-// PowerLimits defines power consumption and safety limits.
-type PowerLimits struct {
-	// MaxPowerWatts is the maximum power consumption allowed
-	MaxPowerWatts float64
-	// DefaultCapWatts is the default power cap when enabled
-	DefaultCapWatts float64
-	// MinCapWatts is the minimum allowed power cap
-	MinCapWatts float64
-	// MaxCapWatts is the maximum allowed power cap
-	MaxCapWatts float64
-	// ThermalLimitCelsius is the thermal shutdown limit
-	ThermalLimitCelsius float64
-	// EmergencyShutdownWatts triggers emergency shutdown
-	EmergencyShutdownWatts float64
 }
 
 // ComponentConfig holds configuration for a single component.
@@ -77,8 +57,6 @@ type ComponentConfig struct {
 	Enabled bool
 	// GPIO holds GPIO-specific configuration
 	GPIO GPIOConfig
-	// PowerLimits defines power consumption limits
-	PowerLimits PowerLimits
 	// OperationTimeout is the timeout for power operations
 	OperationTimeout time.Duration
 	// PowerOnDelay is the duration for power button press (power on)
@@ -89,12 +67,6 @@ type ComponentConfig struct {
 	ResetDelay time.Duration
 	// ForceOffDelay is the duration for force power off (hard shutdown)
 	ForceOffDelay time.Duration
-	// EnablePowerMonitoring enables power consumption monitoring
-	EnablePowerMonitoring bool
-	// EnablePowerCapping enables power capping functionality
-	EnablePowerCapping bool
-	// PowerMonitoringInterval is the interval for power readings
-	PowerMonitoringInterval time.Duration
 }
 
 // Config holds the configuration for the power manager service.
@@ -121,22 +93,10 @@ type Config struct {
 	NumChassis int
 	// DefaultOperationTimeout is the default timeout for power operations
 	DefaultOperationTimeout time.Duration
-	// EnableSafetyChecks enables safety interlock checking
-	EnableSafetyChecks bool
-	// EnableThermalProtection enables thermal protection
-	EnableThermalProtection bool
-	// EnablePowerMonitoring enables global power monitoring
-	EnablePowerMonitoring bool
-	// EnablePowerCapping enables global power capping
-	EnablePowerCapping bool
-	// PowerMonitoringInterval is the default interval for power readings
-	PowerMonitoringInterval time.Duration
 	// EnableMetrics enables metrics collection for power operations
 	EnableMetrics bool
 	// EnableTracing enables distributed tracing for power operations
 	EnableTracing bool
-	// BroadcastPowerEvents enables broadcasting power events via NATS
-	BroadcastPowerEvents bool
 }
 
 // Option represents a configuration option for the power manager.
@@ -292,71 +252,6 @@ func WithDefaultOperationTimeout(timeout time.Duration) Option {
 	return &defaultOperationTimeoutOption{timeout: timeout}
 }
 
-type enableSafetyChecksOption struct {
-	enable bool
-}
-
-func (o *enableSafetyChecksOption) apply(c *Config) {
-	c.EnableSafetyChecks = o.enable
-}
-
-// WithSafetyChecks enables or disables safety interlock checking.
-func WithSafetyChecks(enable bool) Option {
-	return &enableSafetyChecksOption{enable: enable}
-}
-
-type enableThermalProtectionOption struct {
-	enable bool
-}
-
-func (o *enableThermalProtectionOption) apply(c *Config) {
-	c.EnableThermalProtection = o.enable
-}
-
-// WithThermalProtection enables or disables thermal protection.
-func WithThermalProtection(enable bool) Option {
-	return &enableThermalProtectionOption{enable: enable}
-}
-
-type enablePowerMonitoringOption struct {
-	enable bool
-}
-
-func (o *enablePowerMonitoringOption) apply(c *Config) {
-	c.EnablePowerMonitoring = o.enable
-}
-
-// WithPowerMonitoring enables or disables power monitoring.
-func WithPowerMonitoring(enable bool) Option {
-	return &enablePowerMonitoringOption{enable: enable}
-}
-
-type enablePowerCappingOption struct {
-	enable bool
-}
-
-func (o *enablePowerCappingOption) apply(c *Config) {
-	c.EnablePowerCapping = o.enable
-}
-
-// WithPowerCapping enables or disables power capping.
-func WithPowerCapping(enable bool) Option {
-	return &enablePowerCappingOption{enable: enable}
-}
-
-type powerMonitoringIntervalOption struct {
-	interval time.Duration
-}
-
-func (o *powerMonitoringIntervalOption) apply(c *Config) {
-	c.PowerMonitoringInterval = o.interval
-}
-
-// WithPowerMonitoringInterval sets the power monitoring interval.
-func WithPowerMonitoringInterval(interval time.Duration) Option {
-	return &powerMonitoringIntervalOption{interval: interval}
-}
-
 type enableMetricsOption struct {
 	enable bool
 }
@@ -383,19 +278,6 @@ func WithTracing(enable bool) Option {
 	return &enableTracingOption{enable: enable}
 }
 
-type broadcastPowerEventsOption struct {
-	enable bool
-}
-
-func (o *broadcastPowerEventsOption) apply(c *Config) {
-	c.BroadcastPowerEvents = o.enable
-}
-
-// WithBroadcastPowerEvents enables or disables broadcasting power events via NATS.
-func WithBroadcastPowerEvents(enable bool) Option {
-	return &broadcastPowerEventsOption{enable: enable}
-}
-
 // NewConfig creates a new power manager configuration with default values.
 func NewConfig(opts ...Option) *Config {
 	cfg := &Config{
@@ -410,14 +292,8 @@ func NewConfig(opts ...Option) *Config {
 		NumHosts:                1,
 		NumChassis:              1,
 		DefaultOperationTimeout: DefaultOperationTimeout,
-		EnableSafetyChecks:      true,
-		EnableThermalProtection: true,
-		EnablePowerMonitoring:   true,
-		EnablePowerCapping:      true,
-		PowerMonitoringInterval: 5 * time.Second,
 		EnableMetrics:           true,
 		EnableTracing:           true,
-		BroadcastPowerEvents:    true,
 	}
 
 	for _, opt := range opts {
@@ -428,33 +304,18 @@ func NewConfig(opts ...Option) *Config {
 }
 
 // NewComponentConfig creates a new component configuration with default values.
-func NewComponentConfig(name, componentType string, opts ...Option) ComponentConfig {
-	config := ComponentConfig{
-		Name:                    name,
-		Type:                    componentType,
-		Enabled:                 true,
-		GPIO:                    NewDefaultGPIOConfig(),
-		PowerLimits:             NewDefaultPowerLimits(),
-		OperationTimeout:        DefaultOperationTimeout,
-		PowerOnDelay:            DefaultPowerOnDelay,
-		PowerOffDelay:           DefaultPowerOffDelay,
-		ResetDelay:              DefaultResetDelay,
-		ForceOffDelay:           DefaultForceOffDelay,
-		EnablePowerMonitoring:   true,
-		EnablePowerCapping:      true,
-		PowerMonitoringInterval: 5 * time.Second,
+func NewComponentConfig(name, componentType string) ComponentConfig {
+	return ComponentConfig{
+		Name:             name,
+		Type:             componentType,
+		Enabled:          true,
+		GPIO:             NewDefaultGPIOConfig(),
+		OperationTimeout: DefaultOperationTimeout,
+		PowerOnDelay:     DefaultPowerOnDelay,
+		PowerOffDelay:    DefaultPowerOffDelay,
+		ResetDelay:       DefaultResetDelay,
+		ForceOffDelay:    DefaultForceOffDelay,
 	}
-
-	// Apply configuration options through a temporary config
-	tempConfig := &Config{Components: map[string]ComponentConfig{name: config}}
-	for _, opt := range opts {
-		opt.apply(tempConfig)
-	}
-	if updated, exists := tempConfig.Components[name]; exists {
-		config = updated
-	}
-
-	return config
 }
 
 // NewDefaultGPIOConfig creates a default GPIO configuration.
@@ -472,35 +333,11 @@ func NewDefaultGPIOConfig() GPIOConfig {
 			InitialValue: 0,
 			Bias:         gpio.BiasDisabled,
 		},
-		PowerLED: GPIOLineConfig{
-			Direction:    gpio.DirectionOutput,
-			ActiveState:  gpio.ActiveHigh,
-			InitialValue: 0,
-			Bias:         gpio.BiasDisabled,
-		},
 		PowerStatus: GPIOLineConfig{
 			Direction:   gpio.DirectionInput,
 			ActiveState: gpio.ActiveHigh,
 			Bias:        gpio.BiasPullDown,
 		},
-		PowerEnable: GPIOLineConfig{
-			Direction:    gpio.DirectionOutput,
-			ActiveState:  gpio.ActiveHigh,
-			InitialValue: 0,
-			Bias:         gpio.BiasDisabled,
-		},
-	}
-}
-
-// NewDefaultPowerLimits creates default power limits.
-func NewDefaultPowerLimits() PowerLimits {
-	return PowerLimits{
-		MaxPowerWatts:          500.0,
-		DefaultCapWatts:        400.0,
-		MinCapWatts:            50.0,
-		MaxCapWatts:            500.0,
-		ThermalLimitCelsius:    85.0,
-		EmergencyShutdownWatts: 600.0,
 	}
 }
 
@@ -536,10 +373,6 @@ func (c *Config) Validate() error {
 
 	if c.DefaultOperationTimeout <= 0 {
 		return fmt.Errorf("%w: default operation timeout must be positive", ErrInvalidConfiguration)
-	}
-
-	if c.EnablePowerMonitoring && c.PowerMonitoringInterval <= 0 {
-		return fmt.Errorf("%w: power monitoring interval must be positive when monitoring is enabled", ErrInvalidConfiguration)
 	}
 
 	for name, component := range c.Components {
@@ -589,41 +422,8 @@ func (c *Config) validateComponentConfig(name string, component ComponentConfig)
 		return fmt.Errorf("%w: force off delay must be positive for component '%s'", ErrInvalidConfiguration, name)
 	}
 
-	if err := c.validatePowerLimits(name, component.PowerLimits); err != nil {
-		return err
-	}
-
 	if err := c.validateGPIOConfig(name, component.GPIO); err != nil {
 		return err
-	}
-
-	return nil
-}
-
-// validatePowerLimits validates power limits for a component.
-func (c *Config) validatePowerLimits(componentName string, limits PowerLimits) error {
-	if limits.MaxPowerWatts <= 0 {
-		return fmt.Errorf("%w: max power watts must be positive for component '%s'", ErrInvalidConfiguration, componentName)
-	}
-
-	if limits.DefaultCapWatts <= 0 || limits.DefaultCapWatts > limits.MaxPowerWatts {
-		return fmt.Errorf("%w: default cap watts must be positive and <= max power for component '%s'", ErrInvalidConfiguration, componentName)
-	}
-
-	if limits.MinCapWatts <= 0 || limits.MinCapWatts > limits.MaxCapWatts {
-		return fmt.Errorf("%w: min cap watts must be positive and <= max cap for component '%s'", ErrInvalidConfiguration, componentName)
-	}
-
-	if limits.MaxCapWatts <= 0 || limits.MaxCapWatts > limits.MaxPowerWatts {
-		return fmt.Errorf("%w: max cap watts must be positive and <= max power for component '%s'", ErrInvalidConfiguration, componentName)
-	}
-
-	if limits.ThermalLimitCelsius <= 0 {
-		return fmt.Errorf("%w: thermal limit must be positive for component '%s'", ErrInvalidConfiguration, componentName)
-	}
-
-	if limits.EmergencyShutdownWatts <= 0 {
-		return fmt.Errorf("%w: emergency shutdown watts must be positive for component '%s'", ErrInvalidConfiguration, componentName)
 	}
 
 	return nil
@@ -634,9 +434,7 @@ func (c *Config) validateGPIOConfig(componentName string, gpioConfig GPIOConfig)
 	lines := map[string]GPIOLineConfig{
 		"power_button": gpioConfig.PowerButton,
 		"reset_button": gpioConfig.ResetButton,
-		"power_led":    gpioConfig.PowerLED,
 		"power_status": gpioConfig.PowerStatus,
-		"power_enable": gpioConfig.PowerEnable,
 	}
 
 	for lineName, lineConfig := range lines {
@@ -652,7 +450,7 @@ func (c *Config) validateGPIOConfig(componentName string, gpioConfig GPIOConfig)
 			return fmt.Errorf("%w: power status GPIO line for component '%s' must be input", ErrInvalidGPIOConfiguration, componentName)
 		}
 
-		if lineConfig.Direction == gpio.DirectionInput && (lineName == "power_button" || lineName == "reset_button" || lineName == "power_led" || lineName == "power_enable") {
+		if lineConfig.Direction == gpio.DirectionInput && (lineName == "power_button" || lineName == "reset_button") {
 			return fmt.Errorf("%w: control GPIO line '%s' for component '%s' must be output", ErrInvalidGPIOConfiguration, lineName, componentName)
 		}
 	}
