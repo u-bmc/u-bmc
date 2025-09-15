@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"strings"
 	"time"
-
-	"github.com/u-bmc/u-bmc/pkg/gpio"
 )
 
 // Default configuration constants.
@@ -23,18 +21,45 @@ const (
 	DefaultForceOffDelay      = 4 * time.Second
 )
 
+// GPIOActiveState represents the active state of a GPIO line.
+type GPIOActiveState int
+
+const (
+	// ActiveHigh means the line is active when high.
+	ActiveHigh GPIOActiveState = iota
+	// ActiveLow means the line is active when low.
+	ActiveLow
+)
+
+// GPIODirection represents the direction of a GPIO line.
+type GPIODirection int
+
+const (
+	// DirectionInput configures the line as input.
+	DirectionInput GPIODirection = iota
+	// DirectionOutput configures the line as output.
+	DirectionOutput
+)
+
+// GPIOBias represents the bias configuration of a GPIO line.
+type GPIOBias int
+
+const (
+	// BiasDisabled means no bias is applied.
+	BiasDisabled GPIOBias = iota
+	// BiasPullUp enables pull-up resistor.
+	BiasPullUp
+	// BiasPullDown enables pull-down resistor.
+	BiasPullDown
+)
+
 // GPIOLineConfig holds GPIO line configuration for power operations.
 type GPIOLineConfig struct {
-	// Line is the GPIO line name or number identifier
-	Line string
-	// Direction specifies the GPIO direction (input/output)
-	Direction gpio.Direction
-	// ActiveState specifies active high or low behavior
-	ActiveState gpio.ActiveState
-	// InitialValue is the initial value for output lines
+	Line         string
+	Direction    GPIODirection
+	ActiveState  GPIOActiveState
 	InitialValue int
-	// Bias configures pull-up/pull-down resistors
-	Bias gpio.Bias
+	Bias         GPIOBias
 }
 
 // GPIOConfig holds GPIO configuration for a component.
@@ -322,21 +347,21 @@ func NewComponentConfig(name, componentType string) ComponentConfig {
 func NewDefaultGPIOConfig() GPIOConfig {
 	return GPIOConfig{
 		PowerButton: GPIOLineConfig{
-			Direction:    gpio.DirectionOutput,
-			ActiveState:  gpio.ActiveLow,
+			Direction:    DirectionOutput,
+			ActiveState:  ActiveLow,
 			InitialValue: 0,
-			Bias:         gpio.BiasDisabled,
+			Bias:         BiasDisabled,
 		},
 		ResetButton: GPIOLineConfig{
-			Direction:    gpio.DirectionOutput,
-			ActiveState:  gpio.ActiveLow,
+			Direction:    DirectionOutput,
+			ActiveState:  ActiveLow,
 			InitialValue: 0,
-			Bias:         gpio.BiasDisabled,
+			Bias:         BiasDisabled,
 		},
 		PowerStatus: GPIOLineConfig{
-			Direction:   gpio.DirectionInput,
-			ActiveState: gpio.ActiveHigh,
-			Bias:        gpio.BiasPullDown,
+			Direction:   DirectionInput,
+			ActiveState: ActiveHigh,
+			Bias:        BiasPullDown,
 		},
 	}
 }
@@ -446,11 +471,11 @@ func (c *Config) validateGPIOConfig(componentName string, gpioConfig GPIOConfig)
 			return fmt.Errorf("%w: initial value for GPIO line '%s' of component '%s' must be 0 or 1", ErrInvalidGPIOConfiguration, lineName, componentName)
 		}
 
-		if lineConfig.Direction == gpio.DirectionOutput && lineName == "power_status" {
+		if lineConfig.Direction == DirectionOutput && lineName == "power_status" {
 			return fmt.Errorf("%w: power status GPIO line for component '%s' must be input", ErrInvalidGPIOConfiguration, componentName)
 		}
 
-		if lineConfig.Direction == gpio.DirectionInput && (lineName == "power_button" || lineName == "reset_button") {
+		if lineConfig.Direction == DirectionInput && (lineName == "power_button" || lineName == "reset_button") {
 			return fmt.Errorf("%w: control GPIO line '%s' for component '%s' must be output", ErrInvalidGPIOConfiguration, lineName, componentName)
 		}
 	}

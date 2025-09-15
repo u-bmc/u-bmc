@@ -6,15 +6,12 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"strings"
 	"sync"
 	"time"
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/micro"
-	schemav1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
 	"github.com/u-bmc/u-bmc/pkg/gpio"
-	"github.com/u-bmc/u-bmc/pkg/ipc"
 	"github.com/u-bmc/u-bmc/pkg/log"
 	"github.com/u-bmc/u-bmc/pkg/telemetry"
 	"github.com/u-bmc/u-bmc/service"
@@ -27,23 +24,16 @@ var _ service.Service = (*PowerMgr)(nil)
 
 // PowerBackend defines the interface for power control backends.
 type PowerBackend interface {
-	// PowerOn powers on the specified component
 	PowerOn(ctx context.Context, componentName string) error
-	// PowerOff powers off the specified component
 	PowerOff(ctx context.Context, componentName string, force bool) error
-	// Reset resets the specified component
 	Reset(ctx context.Context, componentName string) error
-	// GetPowerStatus returns the current power status of the component
 	GetPowerStatus(ctx context.Context, componentName string) (bool, error)
-	// Initialize initializes the backend with configuration
 	Initialize(ctx context.Context, config *Config) error
-	// Close closes the backend and cleans up resources
 	Close() error
 }
 
 // GPIOBackend implements power control using GPIO lines.
 type GPIOBackend struct {
-	manager    *gpio.Manager
 	config     *Config
 	components map[string]ComponentConfig
 	mu         sync.RWMutex
@@ -52,12 +42,10 @@ type GPIOBackend struct {
 // NewGPIOBackend creates a new GPIO-based power control backend.
 func NewGPIOBackend() *GPIOBackend {
 	return &GPIOBackend{
-		manager:    gpio.NewManager(),
 		components: make(map[string]ComponentConfig),
 	}
 }
 
-// Initialize initializes the GPIO backend.
 func (b *GPIOBackend) Initialize(ctx context.Context, config *Config) error {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -70,7 +58,6 @@ func (b *GPIOBackend) Initialize(ctx context.Context, config *Config) error {
 	return nil
 }
 
-// PowerOn powers on a component using GPIO.
 func (b *GPIOBackend) PowerOn(ctx context.Context, componentName string) error {
 	b.mu.RLock()
 	component, exists := b.components[componentName]
@@ -88,22 +75,14 @@ func (b *GPIOBackend) PowerOn(ctx context.Context, componentName string) error {
 		return fmt.Errorf("%w: power button not configured for component '%s'", ErrGPIONotConfigured, componentName)
 	}
 
-	line, err := b.manager.RequestLine(b.config.GPIOChip, component.GPIO.PowerButton.Line,
-		gpio.WithDirection(component.GPIO.PowerButton.Direction),
-		gpio.WithActiveState(component.GPIO.PowerButton.ActiveState),
-		gpio.WithInitialValue(component.GPIO.PowerButton.InitialValue),
-		gpio.WithBias(component.GPIO.PowerButton.Bias),
-		gpio.WithConsumer("powermgr"),
-	)
-	if err != nil {
-		return fmt.Errorf("%w: failed to request power button GPIO: %w", ErrGPIOOperationFailed, err)
+	var opts []gpio.Option
+	if component.GPIO.PowerButton.ActiveState == ActiveLow {
+		opts = append(opts, gpio.WithActiveLow())
 	}
-	defer line.Close()
 
-	return line.ToggleCtx(ctx, component.PowerOnDelay)
+	return gpio.ToggleGPIOCtx(ctx, b.config.GPIOChip, component.GPIO.PowerButton.Line, component.PowerOnDelay, opts...)
 }
 
-// PowerOff powers off a component using GPIO.
 func (b *GPIOBackend) PowerOff(ctx context.Context, componentName string, force bool) error {
 	b.mu.RLock()
 	component, exists := b.components[componentName]
@@ -121,25 +100,38 @@ func (b *GPIOBackend) PowerOff(ctx context.Context, componentName string, force 
 		return fmt.Errorf("%w: power button not configured for component '%s'", ErrGPIONotConfigured, componentName)
 	}
 
-	line, err := b.manager.RequestLine(b.config.GPIOChip, component.GPIO.PowerButton.Line,
-		gpio.WithDirection(component.GPIO.PowerButton.Direction),
-		gpio.WithActiveState(component.GPIO.PowerButton.ActiveState),
-		gpio.WithInitialValue(component.GPIO.PowerButton.InitialValue),
-		gpio.WithBias(component.GPIO.PowerButton.Bias),
-		gpio.WithConsumer("powermgr"),
-	)
-	if err != nil {
-		return fmt.Errorf("%w: failed to request power button GPIO: %w", ErrGPIOOperationFailed, err)
+	var opts []gpio.Option
+	if component.GPIO.PowerButton.ActiveState == ActiveLow {
+		opts = append(opts, gpio.WithActiveLow())
 	}
-	defer line.Close()
 
 	if force {
-		return line.Hold(ctx, component.ForceOffDelay)
+		line, err := gpio.RequestLine(b.config.GPIOChip, component.GPIO.PowerButton.Line, append(opts, gpio.AsOutput())...)
+		if err != nil {
+			return fmt.Errorf("%w: failed to request power button GPIO: %w", ErrGPIOOperationFailed, err)
+		}
+		defer line.Close()
+
+		if err := line.SetValue(1); err != nil {
+			return fmt.Errorf("%w: failed to set GPIO high: %w", ErrGPIOOperationFailed, err)
+		}
+
+		select {
+		case <-time.After(component.ForceOffDelay):
+		case <-ctx.Done():
+			line.SetValue(0)
+			return ctx.Err()
+		}
+
+		if err := line.SetValue(0); err != nil {
+			return fmt.Errorf("%w: failed to set GPIO low: %w", ErrGPIOOperationFailed, err)
+		}
+		return nil
 	}
-	return line.ToggleCtx(ctx, component.PowerOffDelay)
+
+	return gpio.ToggleGPIOCtx(ctx, b.config.GPIOChip, component.GPIO.PowerButton.Line, component.PowerOffDelay, opts...)
 }
 
-// Reset resets a component using GPIO.
 func (b *GPIOBackend) Reset(ctx context.Context, componentName string) error {
 	b.mu.RLock()
 	component, exists := b.components[componentName]
@@ -157,22 +149,14 @@ func (b *GPIOBackend) Reset(ctx context.Context, componentName string) error {
 		return fmt.Errorf("%w: reset button not configured for component '%s'", ErrGPIONotConfigured, componentName)
 	}
 
-	line, err := b.manager.RequestLine(b.config.GPIOChip, component.GPIO.ResetButton.Line,
-		gpio.WithDirection(component.GPIO.ResetButton.Direction),
-		gpio.WithActiveState(component.GPIO.ResetButton.ActiveState),
-		gpio.WithInitialValue(component.GPIO.ResetButton.InitialValue),
-		gpio.WithBias(component.GPIO.ResetButton.Bias),
-		gpio.WithConsumer("powermgr"),
-	)
-	if err != nil {
-		return fmt.Errorf("%w: failed to request reset button GPIO: %w", ErrGPIOOperationFailed, err)
+	var opts []gpio.Option
+	if component.GPIO.ResetButton.ActiveState == ActiveLow {
+		opts = append(opts, gpio.WithActiveLow())
 	}
-	defer line.Close()
 
-	return line.ToggleCtx(ctx, component.ResetDelay)
+	return gpio.ToggleGPIOCtx(ctx, b.config.GPIOChip, component.GPIO.ResetButton.Line, component.ResetDelay, opts...)
 }
 
-// GetPowerStatus returns the power status using GPIO.
 func (b *GPIOBackend) GetPowerStatus(ctx context.Context, componentName string) (bool, error) {
 	b.mu.RLock()
 	component, exists := b.components[componentName]
@@ -186,18 +170,12 @@ func (b *GPIOBackend) GetPowerStatus(ctx context.Context, componentName string) 
 		return false, fmt.Errorf("%w: power status not configured for component '%s'", ErrGPIONotConfigured, componentName)
 	}
 
-	line, err := b.manager.RequestLine(b.config.GPIOChip, component.GPIO.PowerStatus.Line,
-		gpio.WithDirection(component.GPIO.PowerStatus.Direction),
-		gpio.WithActiveState(component.GPIO.PowerStatus.ActiveState),
-		gpio.WithBias(component.GPIO.PowerStatus.Bias),
-		gpio.WithConsumer("powermgr"),
-	)
-	if err != nil {
-		return false, fmt.Errorf("%w: failed to request power status GPIO: %w", ErrGPIOOperationFailed, err)
+	var opts []gpio.Option
+	if component.GPIO.PowerStatus.ActiveState == ActiveLow {
+		opts = append(opts, gpio.WithActiveLow())
 	}
-	defer line.Close()
 
-	value, err := line.GetValue()
+	value, err := gpio.GetGPIO(b.config.GPIOChip, component.GPIO.PowerStatus.Line, opts...)
 	if err != nil {
 		return false, fmt.Errorf("%w: failed to read power status: %w", ErrGPIOOperationFailed, err)
 	}
@@ -205,9 +183,8 @@ func (b *GPIOBackend) GetPowerStatus(ctx context.Context, componentName string) 
 	return value == 1, nil
 }
 
-// Close closes the GPIO backend.
 func (b *GPIOBackend) Close() error {
-	return b.manager.Close()
+	return nil
 }
 
 // PowerMgr manages power operations for BMC components.
@@ -315,7 +292,6 @@ func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 	return err
 }
 
-// registerEndpoints registers all NATS endpoints for power operations.
 func (p *PowerMgr) registerEndpoints(ctx context.Context) error {
 	if p.config.EnableHostManagement {
 		for i := 0; i < p.config.NumHosts; i++ {
@@ -348,7 +324,6 @@ func (p *PowerMgr) registerEndpoints(ctx context.Context) error {
 	return nil
 }
 
-// createRequestHandler creates a request handler with telemetry support.
 func (p *PowerMgr) createRequestHandler(handler func(context.Context, micro.Request)) micro.HandlerFunc {
 	return func(req micro.Request) {
 		ctx := telemetry.GetCtxFromReq(req)
@@ -366,226 +341,6 @@ func (p *PowerMgr) createRequestHandler(handler func(context.Context, micro.Requ
 	}
 }
 
-// handleHostPowerAction handles power action requests for host components.
-func (p *PowerMgr) handleHostPowerAction(ctx context.Context, req micro.Request) {
-	if p.tracer != nil {
-		var span trace.Span
-		_, span = p.tracer.Start(ctx, "powermgr.handleHostPowerAction")
-		defer span.End()
-		span.SetAttributes(attribute.String("subject", req.Subject()))
-	}
-
-	parts := strings.Split(req.Subject(), ".")
-	if len(parts) != 4 || parts[0] != "powermgr" || parts[1] != "host" {
-		ipc.RespondWithError(ctx, req, ErrInvalidRequest, "invalid subject format")
-		return
-	}
-
-	hostID := parts[2]
-	componentName := fmt.Sprintf("host.%s", hostID)
-
-	var request schemav1alpha1.ChangeHostStateRequest
-	if err := request.UnmarshalVT(req.Data()); err != nil {
-		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
-		return
-	}
-
-	if request.Action == schemav1alpha1.HostAction_HOST_ACTION_UNSPECIFIED {
-		ipc.RespondWithError(ctx, req, ErrInvalidPowerAction, "unspecified action")
-		return
-	}
-
-	var err error
-	switch request.Action {
-	case schemav1alpha1.HostAction_HOST_ACTION_ON:
-		err = p.backend.PowerOn(ctx, componentName)
-	case schemav1alpha1.HostAction_HOST_ACTION_OFF:
-		err = p.backend.PowerOff(ctx, componentName, false)
-	case schemav1alpha1.HostAction_HOST_ACTION_FORCE_OFF:
-		err = p.backend.PowerOff(ctx, componentName, true)
-	case schemav1alpha1.HostAction_HOST_ACTION_REBOOT:
-		err = p.backend.Reset(ctx, componentName)
-	case schemav1alpha1.HostAction_HOST_ACTION_FORCE_RESTART:
-		err = p.backend.Reset(ctx, componentName)
-	default:
-		ipc.RespondWithError(ctx, req, ErrPowerOperationNotSupported, fmt.Sprintf("unsupported action: %v", request.Action))
-		return
-	}
-
-	if err != nil {
-		ipc.RespondWithError(ctx, req, ErrPowerOperationFailed, err.Error())
-		return
-	}
-
-	response := &schemav1alpha1.ChangeHostStateResponse{
-		CurrentStatus: schemav1alpha1.HostStatus_HOST_STATUS_TRANSITIONING,
-	}
-
-	resp, marshalErr := response.MarshalVT()
-	if marshalErr != nil {
-		ipc.RespondWithError(ctx, req, ErrMarshalingFailed, marshalErr.Error())
-		return
-	}
-
-	if err := req.Respond(resp); err != nil && p.logger != nil {
-		p.logger.ErrorContext(ctx, "Failed to send response", "error", err)
-	}
-
-	if p.logger != nil {
-		p.logger.InfoContext(ctx, "Host power action completed",
-			"component", componentName,
-			"action", request.Action.String())
-	}
-}
-
-// handleChassisPowerAction handles power action requests for chassis components.
-func (p *PowerMgr) handleChassisPowerAction(ctx context.Context, req micro.Request) {
-	if p.tracer != nil {
-		var span trace.Span
-		_, span = p.tracer.Start(ctx, "powermgr.handleChassisPowerAction")
-		defer span.End()
-		span.SetAttributes(attribute.String("subject", req.Subject()))
-	}
-
-	parts := strings.Split(req.Subject(), ".")
-	if len(parts) != 4 || parts[0] != "powermgr" || parts[1] != "chassis" {
-		ipc.RespondWithError(ctx, req, ErrInvalidRequest, "invalid subject format")
-		return
-	}
-
-	chassisID := parts[2]
-	componentName := fmt.Sprintf("chassis.%s", chassisID)
-
-	var request schemav1alpha1.ChangeChassisStateRequest
-	if err := request.UnmarshalVT(req.Data()); err != nil {
-		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
-		return
-	}
-
-	if request.Action == schemav1alpha1.ChassisAction_CHASSIS_ACTION_UNSPECIFIED {
-		ipc.RespondWithError(ctx, req, ErrInvalidPowerAction, "unspecified action")
-		return
-	}
-
-	var err error
-	switch request.Action {
-	case schemav1alpha1.ChassisAction_CHASSIS_ACTION_ON:
-		err = p.backend.PowerOn(ctx, componentName)
-	case schemav1alpha1.ChassisAction_CHASSIS_ACTION_OFF:
-		err = p.backend.PowerOff(ctx, componentName, false)
-	case schemav1alpha1.ChassisAction_CHASSIS_ACTION_EMERGENCY_SHUTDOWN:
-		err = p.backend.PowerOff(ctx, componentName, true)
-	case schemav1alpha1.ChassisAction_CHASSIS_ACTION_POWER_CYCLE:
-		if powerOffErr := p.backend.PowerOff(ctx, componentName, false); powerOffErr != nil {
-			err = powerOffErr
-		} else {
-			time.Sleep(2 * time.Second)
-			err = p.backend.PowerOn(ctx, componentName)
-		}
-	default:
-		ipc.RespondWithError(ctx, req, ErrPowerOperationNotSupported, fmt.Sprintf("unsupported action: %v", request.Action))
-		return
-	}
-
-	if err != nil {
-		ipc.RespondWithError(ctx, req, ErrPowerOperationFailed, err.Error())
-		return
-	}
-
-	response := &schemav1alpha1.ChangeChassisStateResponse{
-		CurrentStatus: schemav1alpha1.ChassisStatus_CHASSIS_STATUS_TRANSITIONING,
-	}
-
-	resp, marshalErr := response.MarshalVT()
-	if marshalErr != nil {
-		ipc.RespondWithError(ctx, req, ErrMarshalingFailed, marshalErr.Error())
-		return
-	}
-
-	if err := req.Respond(resp); err != nil && p.logger != nil {
-		p.logger.ErrorContext(ctx, "Failed to send response", "error", err)
-	}
-
-	if p.logger != nil {
-		p.logger.InfoContext(ctx, "Chassis power action completed",
-			"component", componentName,
-			"action", request.Action.String())
-	}
-}
-
-// handleBMCPowerAction handles power action requests for BMC components.
-func (p *PowerMgr) handleBMCPowerAction(ctx context.Context, req micro.Request) {
-	if p.tracer != nil {
-		var span trace.Span
-		_, span = p.tracer.Start(ctx, "powermgr.handleBMCPowerAction")
-		defer span.End()
-		span.SetAttributes(attribute.String("subject", req.Subject()))
-	}
-
-	parts := strings.Split(req.Subject(), ".")
-	if len(parts) != 4 || parts[0] != "powermgr" || parts[1] != "bmc" {
-		ipc.RespondWithError(ctx, req, ErrInvalidRequest, "invalid subject format")
-		return
-	}
-
-	bmcID := parts[2]
-	componentName := fmt.Sprintf("bmc.%s", bmcID)
-
-	var request schemav1alpha1.ChangeManagementControllerStateRequest
-	if err := request.UnmarshalVT(req.Data()); err != nil {
-		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
-		return
-	}
-
-	if request.Action == schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_UNSPECIFIED {
-		ipc.RespondWithError(ctx, req, ErrInvalidPowerAction, "unspecified action")
-		return
-	}
-
-	var err error
-	switch request.Action {
-	case schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_REBOOT:
-		err = p.backend.Reset(ctx, componentName)
-	case schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_WARM_RESET:
-		err = p.backend.Reset(ctx, componentName)
-	case schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_COLD_RESET:
-		err = p.backend.Reset(ctx, componentName)
-	case schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_HARD_RESET:
-		err = p.backend.Reset(ctx, componentName)
-	case schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET:
-		err = p.backend.Reset(ctx, componentName)
-	default:
-		ipc.RespondWithError(ctx, req, ErrPowerOperationNotSupported, fmt.Sprintf("unsupported action: %v", request.Action))
-		return
-	}
-
-	if err != nil {
-		ipc.RespondWithError(ctx, req, ErrPowerOperationFailed, err.Error())
-		return
-	}
-
-	response := &schemav1alpha1.ChangeManagementControllerStateResponse{
-		CurrentStatus: schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY,
-	}
-
-	resp, marshalErr := response.MarshalVT()
-	if marshalErr != nil {
-		ipc.RespondWithError(ctx, req, ErrMarshalingFailed, marshalErr.Error())
-		return
-	}
-
-	if err := req.Respond(resp); err != nil && p.logger != nil {
-		p.logger.ErrorContext(ctx, "Failed to send response", "error", err)
-	}
-
-	if p.logger != nil {
-		p.logger.InfoContext(ctx, "BMC power action completed",
-			"component", componentName,
-			"action", request.Action.String())
-	}
-}
-
-// shutdown gracefully stops the power manager and cleans up resources.
 func (p *PowerMgr) shutdown(ctx context.Context) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
@@ -607,48 +362,4 @@ func (p *PowerMgr) shutdown(ctx context.Context) {
 	}
 
 	p.started = false
-}
-
-// CreateGPIOPowerOnCallback creates a GPIO-based power on callback function.
-func CreateGPIOPowerOnCallback(chipPath, lineName string, duration time.Duration, opts ...gpio.Option) func(context.Context) error {
-	manager := gpio.NewManager()
-	return func(ctx context.Context) error {
-		line, err := manager.RequestLine(chipPath, lineName, opts...)
-		if err != nil {
-			return err
-		}
-		defer line.Close()
-		return line.ToggleCtx(ctx, duration)
-	}
-}
-
-// CreateGPIOPowerOffCallback creates a GPIO-based power off callback function.
-func CreateGPIOPowerOffCallback(chipPath, lineName string, duration time.Duration, opts ...gpio.Option) func(context.Context) error {
-	manager := gpio.NewManager()
-	return func(ctx context.Context) error {
-		line, err := manager.RequestLine(chipPath, lineName, opts...)
-		if err != nil {
-			return err
-		}
-		defer line.Close()
-		return line.ToggleCtx(ctx, duration)
-	}
-}
-
-// CreateGPIOResetCallback creates a GPIO-based reset callback function.
-func CreateGPIOResetCallback(chipPath, lineName string, duration time.Duration, opts ...gpio.Option) func(context.Context) error {
-	manager := gpio.NewManager()
-	return func(ctx context.Context) error {
-		line, err := manager.RequestLine(chipPath, lineName, opts...)
-		if err != nil {
-			return err
-		}
-		defer line.Close()
-		return line.ToggleCtx(ctx, duration)
-	}
-}
-
-// CreateGPIOReset creates a stateless GPIO reset action function for compatibility with state machines.
-func CreateGPIOReset(chipPath, lineName string, duration time.Duration, opts ...gpio.Option) func(context.Context, ...any) error {
-	return gpio.CreateToggleAction(gpio.NewManager(), chipPath, lineName, duration, opts...)
 }

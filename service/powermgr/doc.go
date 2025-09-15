@@ -18,10 +18,10 @@
 //
 // # Component Types
 //
-// The power manager supports three main component types:
-//   - Host: Server/compute nodes that can be powered on, off, or reset
-//   - Chassis: Physical enclosures with power control capabilities
-//   - Management Controller: BMC itself with reset and power management features
+// The power manager supports three main component types, each handled in separate files:
+//   - Host: Server/compute nodes that can be powered on, off, or reset (host.go)
+//   - Chassis: Physical enclosures with power control capabilities (chassis.go)
+//   - Management Controller: BMC itself with reset and power management features (bmc.go)
 //
 // # Power Operations
 //
