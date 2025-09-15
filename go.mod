@@ -9,7 +9,7 @@ require (
 	connectrpc.com/cors v0.1.0
 	connectrpc.com/grpchealth v1.4.0
 	connectrpc.com/grpcreflect v1.3.0
-	connectrpc.com/otelconnect v0.7.2
+	connectrpc.com/otelconnect v0.8.0
 	connectrpc.com/validate v0.3.0
 	connectrpc.com/vanguard v0.3.0
 	github.com/arunsworld/nursery v0.6.0
