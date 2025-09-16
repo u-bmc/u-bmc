@@ -257,6 +257,11 @@ func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 	}
 	defer p.backend.Close()
 
+	if err := p.initializeThermalIntegration(ctx); err != nil {
+		span.RecordError(err)
+		p.logger.WarnContext(ctx, "Thermal integration initialization failed", "error", err)
+	}
+
 	p.microService, err = micro.AddService(nc, micro.Config{
 		Name:        p.config.ServiceName,
 		Description: p.config.ServiceDescription,

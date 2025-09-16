@@ -129,6 +129,11 @@ func (s *SensorMon) Run(ctx context.Context, ipcConn nats.InProcessConnProvider)
 		s.logger.WarnContext(ctx, "Sensor discovery failed", "error", err)
 	}
 
+	if err := s.initializeThermalIntegration(ctx); err != nil {
+		span.RecordError(err)
+		s.logger.WarnContext(ctx, "Thermal integration initialization failed", "error", err)
+	}
+
 	s.microService, err = micro.AddService(nc, micro.Config{
 		Name:        s.config.ServiceName,
 		Description: s.config.ServiceDescription,

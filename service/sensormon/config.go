@@ -62,6 +62,20 @@ type Config struct {
 	MaxConcurrentReads int
 	// SensorDiscoveryTimeout is the timeout for sensor discovery operations
 	SensorDiscoveryTimeout time.Duration
+	// EnableThermalIntegration enables thermal management integration
+	EnableThermalIntegration bool
+	// ThermalMgrEndpoint is the thermal manager service endpoint
+	ThermalMgrEndpoint string
+	// TemperatureUpdateInterval is the interval for sending temperature updates to thermal manager
+	TemperatureUpdateInterval time.Duration
+	// EnableThermalAlerts enables thermal threshold alerting
+	EnableThermalAlerts bool
+	// CriticalTempThreshold is the critical temperature threshold in Celsius
+	CriticalTempThreshold float64
+	// WarningTempThreshold is the warning temperature threshold in Celsius
+	WarningTempThreshold float64
+	// EmergencyResponseDelay is the delay before sending emergency notifications
+	EmergencyResponseDelay time.Duration
 }
 
 // Option represents a configuration option for the sensor monitoring service.
@@ -343,6 +357,86 @@ func WithSensorDiscoveryTimeout(timeout time.Duration) Option {
 	return &sensorDiscoveryTimeoutOption{timeout: timeout}
 }
 
+type enableThermalIntegrationOption struct {
+	enable bool
+}
+
+func (o *enableThermalIntegrationOption) apply(c *Config) {
+	c.EnableThermalIntegration = o.enable
+}
+
+// WithEnableThermalIntegration enables or disables thermal management integration.
+func WithEnableThermalIntegration(enable bool) Option {
+	return &enableThermalIntegrationOption{enable: enable}
+}
+
+type thermalMgrEndpointOption struct {
+	endpoint string
+}
+
+func (o *thermalMgrEndpointOption) apply(c *Config) {
+	c.ThermalMgrEndpoint = o.endpoint
+}
+
+// WithThermalMgrEndpoint sets the thermal manager service endpoint.
+func WithThermalMgrEndpoint(endpoint string) Option {
+	return &thermalMgrEndpointOption{endpoint: endpoint}
+}
+
+type temperatureUpdateIntervalOption struct {
+	interval time.Duration
+}
+
+func (o *temperatureUpdateIntervalOption) apply(c *Config) {
+	c.TemperatureUpdateInterval = o.interval
+}
+
+// WithTemperatureUpdateInterval sets the interval for sending temperature updates to thermal manager.
+func WithTemperatureUpdateInterval(interval time.Duration) Option {
+	return &temperatureUpdateIntervalOption{interval: interval}
+}
+
+type enableThermalAlertsOption struct {
+	enable bool
+}
+
+func (o *enableThermalAlertsOption) apply(c *Config) {
+	c.EnableThermalAlerts = o.enable
+}
+
+// WithEnableThermalAlerts enables or disables thermal threshold alerting.
+func WithEnableThermalAlerts(enable bool) Option {
+	return &enableThermalAlertsOption{enable: enable}
+}
+
+type thermalThresholdsOption struct {
+	warning  float64
+	critical float64
+}
+
+func (o *thermalThresholdsOption) apply(c *Config) {
+	c.WarningTempThreshold = o.warning
+	c.CriticalTempThreshold = o.critical
+}
+
+// WithThermalThresholds sets the warning and critical temperature thresholds in Celsius.
+func WithThermalThresholds(warning, critical float64) Option {
+	return &thermalThresholdsOption{warning: warning, critical: critical}
+}
+
+type emergencyResponseDelayOption struct {
+	delay time.Duration
+}
+
+func (o *emergencyResponseDelayOption) apply(c *Config) {
+	c.EmergencyResponseDelay = o.delay
+}
+
+// WithEmergencyResponseDelay sets the delay before sending emergency thermal notifications.
+func WithEmergencyResponseDelay(delay time.Duration) Option {
+	return &emergencyResponseDelayOption{delay: delay}
+}
+
 // NewConfig creates a new sensor monitoring configuration with default values.
 func NewConfig(opts ...Option) *Config {
 	cfg := &Config{
@@ -366,6 +460,13 @@ func NewConfig(opts ...Option) *Config {
 		StreamRetention:           24 * time.Hour,
 		MaxConcurrentReads:        10,
 		SensorDiscoveryTimeout:    10 * time.Second,
+		EnableThermalIntegration:  false,
+		ThermalMgrEndpoint:        "thermalmgr",
+		TemperatureUpdateInterval: 5 * time.Second,
+		EnableThermalAlerts:       false,
+		CriticalTempThreshold:     85.0,
+		WarningTempThreshold:      75.0,
+		EmergencyResponseDelay:    5 * time.Second,
 	}
 
 	for _, opt := range opts {
@@ -435,6 +536,24 @@ func (c *Config) Validate() error {
 
 	if c.SensorDiscoveryTimeout <= 0 {
 		return fmt.Errorf("sensor discovery timeout must be positive")
+	}
+
+	if c.EnableThermalIntegration {
+		if c.ThermalMgrEndpoint == "" {
+			return fmt.Errorf("thermal manager endpoint cannot be empty when thermal integration is enabled")
+		}
+
+		if c.TemperatureUpdateInterval <= 0 {
+			return fmt.Errorf("temperature update interval must be positive")
+		}
+
+		if c.CriticalTempThreshold <= c.WarningTempThreshold {
+			return fmt.Errorf("critical temperature threshold must be greater than warning threshold")
+		}
+
+		if c.EmergencyResponseDelay <= 0 {
+			return fmt.Errorf("emergency response delay must be positive")
+		}
 	}
 
 	return nil

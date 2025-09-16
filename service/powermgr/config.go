@@ -122,6 +122,20 @@ type Config struct {
 	EnableMetrics bool
 	// EnableTracing enables distributed tracing for power operations
 	EnableTracing bool
+	// EnableThermalResponse enables thermal emergency response
+	EnableThermalResponse bool
+	// EmergencyResponseDelay is the delay before emergency thermal actions
+	EmergencyResponseDelay time.Duration
+	// EnableEmergencyShutdown enables emergency shutdown on thermal events
+	EnableEmergencyShutdown bool
+	// ShutdownTemperatureLimit is the temperature limit for emergency shutdown (Celsius)
+	ShutdownTemperatureLimit float64
+	// ShutdownComponents lists components to shutdown during thermal emergency
+	ShutdownComponents []string
+	// MaxEmergencyAttempts is the maximum retry attempts for emergency operations
+	MaxEmergencyAttempts int
+	// EmergencyAttemptInterval is the interval between emergency operation retries
+	EmergencyAttemptInterval time.Duration
 }
 
 // Option represents a configuration option for the power manager.
@@ -298,27 +312,125 @@ func (o *enableTracingOption) apply(c *Config) {
 	c.EnableTracing = o.enable
 }
 
-// WithTracing enables or disables distributed tracing.
-func WithTracing(enable bool) Option {
+// WithEnableTracing enables or disables distributed tracing.
+func WithEnableTracing(enable bool) Option {
 	return &enableTracingOption{enable: enable}
+}
+
+type enableThermalResponseOption struct {
+	enable bool
+}
+
+func (o *enableThermalResponseOption) apply(c *Config) {
+	c.EnableThermalResponse = o.enable
+}
+
+// WithEnableThermalResponse enables or disables thermal emergency response.
+func WithEnableThermalResponse(enable bool) Option {
+	return &enableThermalResponseOption{enable: enable}
+}
+
+type emergencyResponseDelayOption struct {
+	delay time.Duration
+}
+
+func (o *emergencyResponseDelayOption) apply(c *Config) {
+	c.EmergencyResponseDelay = o.delay
+}
+
+// WithEmergencyResponseDelay sets the delay before emergency thermal actions.
+func WithEmergencyResponseDelay(delay time.Duration) Option {
+	return &emergencyResponseDelayOption{delay: delay}
+}
+
+type enableEmergencyShutdownOption struct {
+	enable bool
+}
+
+func (o *enableEmergencyShutdownOption) apply(c *Config) {
+	c.EnableEmergencyShutdown = o.enable
+}
+
+// WithEnableEmergencyShutdown enables or disables emergency shutdown on thermal events.
+func WithEnableEmergencyShutdown(enable bool) Option {
+	return &enableEmergencyShutdownOption{enable: enable}
+}
+
+type shutdownTemperatureLimitOption struct {
+	limit float64
+}
+
+func (o *shutdownTemperatureLimitOption) apply(c *Config) {
+	c.ShutdownTemperatureLimit = o.limit
+}
+
+// WithShutdownTemperatureLimit sets the temperature limit for emergency shutdown.
+func WithShutdownTemperatureLimit(limit float64) Option {
+	return &shutdownTemperatureLimitOption{limit: limit}
+}
+
+type shutdownComponentsOption struct {
+	components []string
+}
+
+func (o *shutdownComponentsOption) apply(c *Config) {
+	c.ShutdownComponents = o.components
+}
+
+// WithShutdownComponents sets the components to shutdown during thermal emergency.
+func WithShutdownComponents(components []string) Option {
+	return &shutdownComponentsOption{components: components}
+}
+
+type maxEmergencyAttemptsOption struct {
+	max int
+}
+
+func (o *maxEmergencyAttemptsOption) apply(c *Config) {
+	c.MaxEmergencyAttempts = o.max
+}
+
+// WithMaxEmergencyAttempts sets the maximum retry attempts for emergency operations.
+func WithMaxEmergencyAttempts(max int) Option {
+	return &maxEmergencyAttemptsOption{max: max}
+}
+
+type emergencyAttemptIntervalOption struct {
+	interval time.Duration
+}
+
+func (o *emergencyAttemptIntervalOption) apply(c *Config) {
+	c.EmergencyAttemptInterval = o.interval
+}
+
+// WithEmergencyAttemptInterval sets the interval between emergency operation retries.
+func WithEmergencyAttemptInterval(interval time.Duration) Option {
+	return &emergencyAttemptIntervalOption{interval: interval}
 }
 
 // NewConfig creates a new power manager configuration with default values.
 func NewConfig(opts ...Option) *Config {
 	cfg := &Config{
-		ServiceName:             DefaultServiceName,
-		ServiceDescription:      DefaultServiceDescription,
-		ServiceVersion:          DefaultServiceVersion,
-		GPIOChip:                DefaultGPIOChip,
-		Components:              make(map[string]ComponentConfig),
-		EnableHostManagement:    true,
-		EnableChassisManagement: true,
-		EnableBMCManagement:     true,
-		NumHosts:                1,
-		NumChassis:              1,
-		DefaultOperationTimeout: DefaultOperationTimeout,
-		EnableMetrics:           true,
-		EnableTracing:           true,
+		ServiceName:              DefaultServiceName,
+		ServiceDescription:       DefaultServiceDescription,
+		ServiceVersion:           DefaultServiceVersion,
+		GPIOChip:                 DefaultGPIOChip,
+		Components:               make(map[string]ComponentConfig),
+		EnableHostManagement:     true,
+		EnableChassisManagement:  true,
+		EnableBMCManagement:      true,
+		NumHosts:                 1,
+		NumChassis:               1,
+		DefaultOperationTimeout:  DefaultOperationTimeout,
+		EnableMetrics:            true,
+		EnableTracing:            true,
+		EnableThermalResponse:    false,
+		EmergencyResponseDelay:   5 * time.Second,
+		EnableEmergencyShutdown:  false,
+		ShutdownTemperatureLimit: 95.0,
+		ShutdownComponents:       []string{"host.0", "chassis.0"},
+		MaxEmergencyAttempts:     3,
+		EmergencyAttemptInterval: 1 * time.Second,
 	}
 
 	for _, opt := range opts {
@@ -398,6 +510,37 @@ func (c *Config) Validate() error {
 
 	if c.DefaultOperationTimeout <= 0 {
 		return fmt.Errorf("%w: default operation timeout must be positive", ErrInvalidConfiguration)
+	}
+
+	if c.EnableThermalResponse {
+		if c.EmergencyResponseDelay <= 0 {
+			return fmt.Errorf("%w: emergency response delay must be positive", ErrInvalidConfiguration)
+		}
+
+		if c.EnableEmergencyShutdown {
+			if c.ShutdownTemperatureLimit <= 0 {
+				return fmt.Errorf("%w: shutdown temperature limit must be positive", ErrInvalidConfiguration)
+			}
+
+			if len(c.ShutdownComponents) == 0 {
+				return fmt.Errorf("%w: at least one shutdown component must be specified when emergency shutdown is enabled", ErrInvalidConfiguration)
+			}
+
+			// Validate that shutdown components exist in configuration
+			for _, componentName := range c.ShutdownComponents {
+				if _, exists := c.Components[componentName]; !exists {
+					return fmt.Errorf("%w: shutdown component '%s' not found in configuration", ErrInvalidConfiguration, componentName)
+				}
+			}
+		}
+
+		if c.MaxEmergencyAttempts <= 0 {
+			return fmt.Errorf("%w: max emergency attempts must be positive", ErrInvalidConfiguration)
+		}
+
+		if c.EmergencyAttemptInterval <= 0 {
+			return fmt.Errorf("%w: emergency attempt interval must be positive", ErrInvalidConfiguration)
+		}
 	}
 
 	for name, component := range c.Components {
