@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"time"
 
+	"github.com/u-bmc/u-bmc/pkg/process"
 	"github.com/u-bmc/u-bmc/service"
 	"github.com/u-bmc/u-bmc/service/consolesrv"
 	"github.com/u-bmc/u-bmc/service/inventorymgr"
@@ -477,6 +478,104 @@ func (o *servicesOption) apply(c *config) {
 func WithExtraServices(services ...service.Service) Option {
 	return &servicesOption{
 		services: services,
+	}
+}
+
+// WithoutConsolesrv disables the console service by replacing it with a stub.
+func WithoutConsolesrv() Option {
+	return &consolesrvOption{
+		consolesrv: process.NewStub("consolesrv-stub"),
+	}
+}
+
+// WithoutInventorymgr disables the inventory manager service by replacing it with a stub.
+func WithoutInventorymgr() Option {
+	return &inventorymgrOption{
+		inventorymgr: process.NewStub("inventorymgr-stub"),
+	}
+}
+
+// WithoutIpmisrv disables the IPMI service by replacing it with a stub.
+func WithoutIpmisrv() Option {
+	return &ipmisrvOption{
+		ipmisrv: process.NewStub("ipmisrv-stub"),
+	}
+}
+
+// WithoutKvmsrv disables the KVM service by replacing it with a stub.
+func WithoutKvmsrv() Option {
+	return &kvmsrvOption{
+		kvmsrv: process.NewStub("kvmsrv-stub"),
+	}
+}
+
+// WithoutLedmgr disables the LED manager service by replacing it with a stub.
+func WithoutLedmgr() Option {
+	return &ledmgrOption{
+		ledmgr: process.NewStub("ledmgr-stub"),
+	}
+}
+
+// WithoutPowermgr disables the power manager service by replacing it with a stub.
+func WithoutPowermgr() Option {
+	return &powermgrOption{
+		powermgr: process.NewStub("powermgr-stub"),
+	}
+}
+
+// WithoutSecuritymgr disables the security manager service by replacing it with a stub.
+func WithoutSecuritymgr() Option {
+	return &securitymgrOption{
+		securitymgr: process.NewStub("securitymgr-stub"),
+	}
+}
+
+// WithoutSensormon disables the sensor monitoring service by replacing it with a stub.
+func WithoutSensormon() Option {
+	return &sensormonOption{
+		sensormon: process.NewStub("sensormon-stub"),
+	}
+}
+
+// WithoutStatemgr disables the state manager service by replacing it with a stub.
+func WithoutStatemgr() Option {
+	return &statemgrOption{
+		statemgr: process.NewStub("statemgr-stub"),
+	}
+}
+
+// WithoutTelemetry disables the telemetry service by replacing it with a stub.
+func WithoutTelemetry() Option {
+	return &telemetryOption{
+		telemetry: process.NewStub("telemetry-stub"),
+	}
+}
+
+// WithoutThermalmgr disables the thermal manager service by replacing it with a stub.
+func WithoutThermalmgr() Option {
+	return &thermalmgrOption{
+		thermalmgr: process.NewStub("thermalmgr-stub"),
+	}
+}
+
+// WithoutUpdatemgr disables the update manager service by replacing it with a stub.
+func WithoutUpdatemgr() Option {
+	return &updatemgrOption{
+		updatemgr: process.NewStub("updatemgr-stub"),
+	}
+}
+
+// WithoutUsermgr disables the user manager service by replacing it with a stub.
+func WithoutUsermgr() Option {
+	return &usermgrOption{
+		usermgr: process.NewStub("usermgr-stub"),
+	}
+}
+
+// WithoutWebsrv disables the web server service by replacing it with a stub.
+func WithoutWebsrv() Option {
+	return &websrvOption{
+		websrv: process.NewStub("websrv-stub"),
 	}
 }
 

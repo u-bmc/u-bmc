@@ -42,15 +42,6 @@
 // This function automatically logs the error and sends a properly formatted
 // error response to the requesting client.
 //
-// # Testing Support
-//
-// For testing and development, the package includes stub implementations
-// that provide no-op functionality. These can be used when IPC infrastructure
-// is not available or when testing individual components in isolation:
-//
-//	stub := ipc.NewStub()
-//	// Use stub in place of real IPC service
-//
 // # Integration with Services
 //
 // The IPC package is designed to work seamlessly with the u-bmc service

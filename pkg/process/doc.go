@@ -12,9 +12,12 @@
 //
 // # Core Functionality
 //
-// The package provides a single primary function `New()` that creates an
-// oversight.ChildProcess wrapper around a service.Service. This wrapper
-// handles:
+// The package provides:
+//
+//   - `New()` function that creates an oversight.ChildProcess wrapper around a service.Service
+//   - `NewStub()` function that creates a no-op stub service for testing or disabling services
+//
+// The `New()` wrapper handles:
 //
 //   - Service lifecycle management (start, stop, restart)
 //   - Panic recovery with detailed error reporting
@@ -24,7 +27,7 @@
 //
 // # Basic Usage
 //
-// Creating a supervised service process:
+// Creating a supervised service process or stub:
 //
 //	type MyService struct {
 //		name string
@@ -43,6 +46,12 @@
 //	func setupService() oversight.ChildProcess {
 //		svc := &MyService{name: "my-service"}
 //		return process.New(svc, ipcConnProvider)
+//	}
+//
+//	// Creating a stub service (for testing or disabling functionality)
+//	func setupStubService() oversight.ChildProcess {
+//		stub := process.NewStub("my-service-stub")
+//		return process.New(stub, ipcConnProvider)
 //	}
 //
 // # Oversight Tree Integration
@@ -316,6 +325,28 @@
 //   - Use appropriate timeouts for external dependencies
 //   - Monitor service health and implement health check endpoints
 //   - Document service dependencies and startup order requirements
+//
+// # Stub Services
+//
+// The package provides a generic stub service implementation that can be used
+// to replace any service with a no-op version:
+//
+//	// Create a stub that does nothing
+//	stub := process.NewStub("disabled-service")
+//
+//	// Use in operator configuration to disable a service
+//	op := operator.New(
+//		operator.WithoutWebsrv(), // Disables web server
+//		operator.WithoutKvmsrv(), // Disables KVM service
+//	)
+//
+// Stub services:
+//
+//   - Implement the service.Service interface
+//   - Return immediately from Run() without error
+//   - Can be used for testing, development, or production deployments
+//   - Maintain service name for proper identification in logs
+//   - Allow gradual service enablement during development
 //
 // # Performance Considerations
 //

@@ -94,10 +94,4 @@ var (
 	ErrEncodingError = errors.New("IPC encoding error")
 	// ErrDecodingError indicates a decoding error occurred.
 	ErrDecodingError = errors.New("IPC decoding error")
-
-	// Stub and testing errors
-	// ErrStubNotImplemented indicates that a stub method is not implemented.
-	ErrStubNotImplemented = errors.New("IPC stub method not implemented")
-	// ErrTestModeOnly indicates that the operation is only available in test mode.
-	ErrTestModeOnly = errors.New("IPC operation available in test mode only")
 )

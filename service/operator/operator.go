@@ -18,7 +18,6 @@ import (
 	"go.opentelemetry.io/otel/trace"
 
 	"github.com/u-bmc/u-bmc/pkg/id"
-	ipcPkg "github.com/u-bmc/u-bmc/pkg/ipc"
 	"github.com/u-bmc/u-bmc/pkg/log"
 	"github.com/u-bmc/u-bmc/pkg/mount"
 	"github.com/u-bmc/u-bmc/pkg/process"
@@ -201,13 +200,14 @@ func (s *Operator) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 			return err
 		}
 	} else {
+		ipcStub := process.NewStub("ipc-stub")
 		if err := supervisionTree.Add(
-			process.New(ipcPkg.NewStub(), nil),
+			process.New(ipcStub, nil),
 			oversight.Transient(),
 			oversight.Timeout(s.config.timeout),
-			"ipc-stub",
+			ipcStub.Name(),
 		); err != nil {
-			err = fmt.Errorf("%w %s to supervision tree: %w", ErrAddProcess, "ipc-stub", err)
+			err = fmt.Errorf("%w %s to supervision tree: %w", ErrAddProcess, ipcStub.Name(), err)
 			span.RecordError(err)
 			return err
 		}
