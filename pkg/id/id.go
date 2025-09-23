@@ -3,6 +3,9 @@
 package id
 
 import (
+	"bytes"
+	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -24,24 +27,40 @@ func GetOrCreatePersistentID(name, path string) (string, error) {
 
 	var idstr string
 	if _, err := os.Stat(fullPath); err != nil && !os.IsNotExist(err) {
-		return "", err
+		return "", fmt.Errorf("%w: %w", ErrFileStat, err)
 	} else if os.IsNotExist(err) {
-		id := uuid.New()
-
-		if err := file.AtomicCreateFile(fullPath, []byte(id.String()), os.ModePerm); err != nil && !os.IsExist(err) {
-			return "", err
+		if err := os.MkdirAll(path, os.ModePerm); err != nil {
+			return "", fmt.Errorf("%w: %w", ErrDirectoryCreation, err)
 		}
 
-		idstr = id.String()
+		id := uuid.New()
+
+		if err := file.AtomicCreateFile(fullPath, []byte(id.String()), 0o600); err == nil {
+			idstr = id.String()
+		} else if errors.Is(err, file.ErrFileAlreadyExists) || os.IsExist(err) {
+			b, err := os.ReadFile(fullPath)
+			if err != nil {
+				return "", fmt.Errorf("%w: %w", ErrFileRead, err)
+			}
+
+			id, err := uuid.ParseBytes(bytes.TrimSpace(b))
+			if err != nil {
+				return "", fmt.Errorf("%w: %w", ErrInvalidUUID, err)
+			}
+
+			idstr = id.String()
+		} else {
+			return "", fmt.Errorf("%w: %w", ErrFileCreation, err)
+		}
 	} else {
 		b, err := os.ReadFile(fullPath)
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("%w: %w", ErrFileRead, err)
 		}
 
-		id, err := uuid.ParseBytes(b)
+		id, err := uuid.ParseBytes(bytes.TrimSpace(b))
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("%w: %w", ErrInvalidUUID, err)
 		}
 
 		idstr = id.String()
@@ -57,7 +76,7 @@ func UpdatePersistentID(name, path string) (string, error) {
 	id := uuid.New()
 
 	if err := file.AtomicUpdateFile(filepath.Join(path, name), []byte(id.String()), os.ModePerm); err != nil {
-		return "", err
+		return "", fmt.Errorf("%w: %w", ErrFileUpdate, err)
 	}
 
 	return id.String(), nil
