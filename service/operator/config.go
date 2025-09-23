@@ -3,6 +3,7 @@
 package operator
 
 import (
+	"fmt"
 	"log/slog"
 	"time"
 
@@ -22,6 +23,44 @@ import (
 	"github.com/u-bmc/u-bmc/service/updatemgr"
 	"github.com/u-bmc/u-bmc/service/usermgr"
 	"github.com/u-bmc/u-bmc/service/websrv"
+)
+
+// Default configuration constants.
+const (
+	DefaultOperatorName        = "operator"
+	DefaultOperatorDescription = "BMC service orchestrator and supervisor"
+	DefaultOperatorVersion     = "1.0.0"
+	DefaultOperatorTimeout     = 10 * time.Second
+	DefaultMountCheck          = true
+	DefaultDisableLogo         = false
+	DefaultLogo                = `
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⣤⣤⣤⣀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⠟⠉⠁⠀⠈⠉⠛⢿⣦⡀
+⠀⠀⠀⠀⠀⠀⠀⣠⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣿⣆
+⠀⠀⠀⠀⠀⠀⢠⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡆
+⠀⠀⠀⠀⠀⠀⣿⡇⠀⠀⣶⣶⣦⠀⠀⠀⣠⣾⣶⡀⠀⠸⣿
+⠀⠀⠀⠀⠀⠀⣿⠀⠀⠘⠛⠀⠟⠀⠀⠀⠻⠁⠙⠃⠀⠀⣿
+⠀⠀⠀⠀⠀⠀⣿⡇⠀⠀⠀⠀⣴⡆⠀⢠⣦⠀⠀⠀⠀⢠⣿
+⠀⠀⠀⠀⠀⠀⠘⣿⠀⠀⠀⠀⠘⣿⣶⣿⠃⠀⠀⠀⠀⣿⠇
+⠀⠀⠀⠀⠀⠀⠀⠙⣿⣾⠿⠀⠀⠀⠀⠀⠀⠀⠿⣿⣾⠟
+⠀⠀⠀⠀⠀⠀⢀⣿⠛⠀⠀⠀⢀⣤⣤⣤⡀⠀⠀⠀⠙⣿⡄
+⠀⠀⠀⠀⠀⢀⣿⠃⠀⠀⠀⣴⡿⠋⠉⠉⢿⣷⠀⠀⠀⠈⣿⡄
+⠀⠀⠀⠀⠀⣼⡏⠀⠀⠀⢠⣿⠀⠀⠀⠀⠀⣿⡇⠀⠀⠀⢸⣿
+⠀⠀⠀⠀⠀⣿⡇⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⣿⡇⠀⠀⠀⢀⣿
+⠀⠀⠀⢰⣿⠛⠻⣿⠀⠀⢸⣿⠀⠀⠀⠀⠀⣿⡇⠀⠀⣾⠟⠛⢿⣦
+⠀⠀⠀⢿⣇⠀⠀⣿⠇⠀⢸⣿⠀⠀⠀⠀⠀⣿⡇⠀⠀⣿⠀⠀⢠⣿
+⠀⠀⠀⠈⠻⣿⡿⠋⠀⠀⢸⣿⠀⠀⠀⠀⠀⣿⡇⠀⠀⠙⠿⣿⠿⠁
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣼⣿⣤⠀⠀⠀⣠⣿⣧⣄
+⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⠁⠀⢻⣷⠀⣸⡟⠀⠈⣿⡆
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣄⣀⣾⠏⠀⠸⣷⣄⣠⣿⠃
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠁⠀⠀⠀⠈⠛⠛
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣶⡄
+⠀⣠⣄⠀⢠⣦⠀⠀⠀⠀⣿⣁⣶⣤⡀⠀⢀⣤⣦⣀⣴⣦⡀⠀⠀⣤⣶⣤⡀
+⠀⣿⡷⠀⢸⣿⢀⣤⣤⠀⣿⡟⠉⢻⣿⠀⣿⠏⠉⣿⠋⠙⣿⠀⣿⡟⠉⠛⠃
+⠀⢻⣷⣀⣾⡟⠀⠉⠉⠀⣿⣧⣀⣼⣿⠀⣿⠀⠀⣿⠀⠀⣿⠀⣿⣧⣀⣴⡆
+⠀⠀⠉⠛⠋⠀⠀⠀⠀⠀⠛⠉⠛⠋⠀⠀⠛⠀⠀⠛⠀⠀⠛⠀⠀⠙⠛⠋
+`
 )
 
 type config struct {
@@ -439,4 +478,17 @@ func WithExtraServices(services ...service.Service) Option {
 	return &servicesOption{
 		services: services,
 	}
+}
+
+// Validate checks if the configuration is valid.
+func (c *config) Validate() error {
+	if c.name == "" {
+		return fmt.Errorf("%w: operator name cannot be empty", ErrInvalidConfiguration)
+	}
+
+	if c.timeout <= 0 {
+		return fmt.Errorf("%w: timeout must be positive", ErrInvalidConfiguration)
+	}
+
+	return nil
 }
