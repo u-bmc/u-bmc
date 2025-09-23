@@ -3,8 +3,6 @@
 //go:build linux
 // +build linux
 
-// Package mount provides functionality for setting up essential filesystem mounts
-// in a Linux system, including proc, sysfs, and various virtual filesystems.
 package mount
 
 import (
@@ -15,17 +13,6 @@ import (
 	"strings"
 
 	"golang.org/x/sys/unix"
-)
-
-var (
-	// ErrMountPointCreation indicates failure to create a mount point directory.
-	ErrMountPointCreation = errors.New("failed to create mount point")
-	// ErrMountFailed indicates the mount operation failed.
-	ErrMountFailed = errors.New("mount operation failed")
-	// ErrMountVerification indicates the mounted filesystem doesn't match expected specification.
-	ErrMountVerification = errors.New("mount verification failed")
-	// ErrProcMountsRead indicates failure to read /proc/mounts.
-	ErrProcMountsRead = errors.New("failed to read /proc/mounts")
 )
 
 type mountSpec struct {
