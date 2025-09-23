@@ -52,3 +52,10 @@ func GetGlobalLogger() *slog.Logger {
 		otelHandler,
 	))
 }
+
+// RedirectSlogger configures the standard library slog package to use the global logger
+// from this package. This ensures that all slog calls throughout the application use
+// the same multi-target logger configuration (console + OpenTelemetry).
+func RedirectSlogger() {
+	slog.SetDefault(GetGlobalLogger())
+}
