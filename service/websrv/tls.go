@@ -22,7 +22,7 @@ func (s *WebSrv) setupTLS() (*tls.Config, http.Handler, error) {
 	switch certConfig.Type {
 	case cert.CertificateTypeSelfSigned:
 		return setupSelfSignedTLS(certConfig)
-	case cert.CertificateTypeLetsTencrypt:
+	case cert.CertificateTypeLetsEncrypt:
 		return setupLetsTEncryptTLS(certConfig)
 	default:
 		return nil, nil, fmt.Errorf("%w: unsupported certificate type", ErrSetupTLS)

@@ -17,8 +17,8 @@ type CertificateType int
 const (
 	// CertificateTypeSelfSigned generates a self-signed certificate.
 	CertificateTypeSelfSigned CertificateType = iota
-	// CertificateTypeLetsTencrypt uses Let's Encrypt to obtain a certificate.
-	CertificateTypeLetsTencrypt
+	// CertificateTypeLetsEncrypt uses Let's Encrypt to obtain a certificate.
+	CertificateTypeLetsEncrypt
 )
 
 // Config holds the configuration for certificate generation and management.
@@ -400,7 +400,7 @@ func (c *Config) Validate() error {
 	}
 
 	// Validate Let's Encrypt specific options
-	if c.Type == CertificateTypeLetsTencrypt {
+	if c.Type == CertificateTypeLetsEncrypt {
 		if c.Email == "" {
 			return fmt.Errorf("%w: email is required for Let's Encrypt", ErrInvalidEmail)
 		}

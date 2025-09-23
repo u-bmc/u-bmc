@@ -18,7 +18,7 @@ func GenerateAndSign(cfg *Config) (*tls.Config, http.Handler, error) {
 		return nil, nil, fmt.Errorf("%w: %w", ErrInvalidCertificateOptions, err)
 	}
 
-	if cfg.Type != CertificateTypeLetsTencrypt {
+	if cfg.Type != CertificateTypeLetsEncrypt {
 		return nil, nil, fmt.Errorf("%w: configuration type must be Let's Encrypt", ErrAutocertSetup)
 	}
 
