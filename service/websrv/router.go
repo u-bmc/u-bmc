@@ -14,12 +14,13 @@ import (
 	"connectrpc.com/otelconnect"
 	"connectrpc.com/validate"
 	"connectrpc.com/vanguard"
+	"github.com/nats-io/nats.go"
 	"github.com/rs/cors"
 	"github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1/schemav1alpha1connect"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
-func (s *WebSrv) setupRouter() (http.Handler, error) {
+func (s *WebSrv) setupRouter(nc *nats.Conn) (http.Handler, error) {
 	mux := http.NewServeMux()
 
 	// Create interceptors
@@ -34,7 +35,7 @@ func (s *WebSrv) setupRouter() (http.Handler, error) {
 	}
 
 	// Create the main proto server
-	protoServer := &ProtoServer{}
+	protoServer := NewProtoServer(nc, s.logger)
 
 	// Setup gRPC/Connect services
 	services := []*vanguard.Service{
@@ -53,8 +54,8 @@ func (s *WebSrv) setupRouter() (http.Handler, error) {
 	}
 
 	// Mount routes based on webui flag
-	if s.webui {
-		fileServer := http.FileServer(http.Dir(s.webuiPath))
+	if s.config.webui {
+		fileServer := http.FileServer(http.Dir(s.config.webuiPath))
 		mux.Handle("/", combinedRouter(fileServer, transcoder))
 	} else {
 		mux.Handle("/", transcoder)
@@ -80,14 +81,14 @@ func (s *WebSrv) setupRouter() (http.Handler, error) {
 	handler := corsMiddleware.Handler(mux)
 
 	// Apply OpenTelemetry HTTP instrumentation
-	handler = otelhttp.NewHandler(handler, "websrv")
+	handler = otelhttp.NewHandler(handler, s.Name())
 
 	return handler, nil
 }
 
 func combinedRouter(htmlHandler, apiHandler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.Contains(r.Header.Get("Content-Type"), "application") {
+		if strings.Contains(r.Header.Get("Content-Type"), "application") || strings.Contains(r.Header.Get("Accept"), "application") {
 			apiHandler.ServeHTTP(w, r)
 		} else {
 			htmlHandler.ServeHTTP(w, r)

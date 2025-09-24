@@ -21,8 +21,6 @@ import (
 
 // StartServers starts all HTTP servers concurrently.
 func (s *WebSrv) StartServers(ctx context.Context, router http.Handler, tlsConfig *tls.Config, httpHandler http.Handler) error {
-	l := log.GetGlobalLogger()
-
 	// Create listeners
 	tcpListener, err := s.createTCPListener(ctx)
 	if err != nil {
@@ -49,20 +47,20 @@ func (s *WebSrv) StartServers(ctx context.Context, router http.Handler, tlsConfi
 
 	// Setup graceful shutdown
 	defer func() {
-		if err := http3Server.Shutdown(ctx); err != nil {
-			l.ErrorContext(ctx, "Error shutting down HTTP3 server", "service", s.name, "error", err)
+		if err := http3Server.Shutdown(ctx); err != nil && ctx.Err() == nil {
+			s.logger.ErrorContext(ctx, "Error shutting down HTTP3 server", "error", err)
 		}
 	}()
 
 	defer func() {
-		if err := http2Server.Shutdown(ctx); err != nil {
-			l.ErrorContext(ctx, "Error shutting down HTTP2 server", "service", s.name, "error", err)
+		if err := http2Server.Shutdown(ctx); err != nil && ctx.Err() == nil {
+			s.logger.ErrorContext(ctx, "Error shutting down HTTP2 server", "error", err)
 		}
 	}()
 
 	defer func() {
-		if err := redirectServer.Shutdown(ctx); err != nil {
-			l.ErrorContext(ctx, "Error shutting down HTTP redirect server", "service", s.name, "error", err)
+		if err := redirectServer.Shutdown(ctx); err != nil && ctx.Err() == nil {
+			s.logger.ErrorContext(ctx, "Error shutting down HTTP redirect server", "error", err)
 		}
 	}()
 
@@ -70,19 +68,19 @@ func (s *WebSrv) StartServers(ctx context.Context, router http.Handler, tlsConfi
 	return nursery.RunConcurrentlyWithContext(
 		ctx,
 		func(ctx context.Context, c chan error) {
-			l.InfoContext(ctx, "Starting HTTP3 server", "service", s.name, "addr", s.addr)
+			s.logger.InfoContext(ctx, "Starting HTTP3 server", "addr", s.config.addr)
 			if err := http3Server.Serve(udpListener); err != nil {
 				c <- fmt.Errorf("%w: %w", ErrHTTP3Server, err)
 			}
 		},
 		func(ctx context.Context, c chan error) {
-			l.InfoContext(ctx, "Starting HTTP2 fallback server", "service", s.name, "addr", s.addr)
+			s.logger.InfoContext(ctx, "Starting HTTP2 fallback server", "addr", s.config.addr)
 			if err := http2Server.ServeTLS(tcpListener, "", ""); err != nil && err != http.ErrServerClosed {
 				c <- fmt.Errorf("%w: %w", ErrHTTP2Server, err)
 			}
 		},
 		func(ctx context.Context, c chan error) {
-			l.InfoContext(ctx, "Starting HTTP redirect server", "service", s.name, "addr", ":80")
+			s.logger.InfoContext(ctx, "Starting HTTP redirect server", "addr", ":80")
 			if err := redirectServer.Serve(httpListener); err != nil && err != http.ErrServerClosed {
 				c <- fmt.Errorf("%w: %w", ErrHTTPRedirectServer, err)
 			}
@@ -91,7 +89,7 @@ func (s *WebSrv) StartServers(ctx context.Context, router http.Handler, tlsConfi
 
 func (s *WebSrv) createTCPListener(ctx context.Context) (net.Listener, error) {
 	lc := &net.ListenConfig{}
-	listener, err := lc.Listen(ctx, "tcp", s.addr)
+	listener, err := lc.Listen(ctx, "tcp", s.config.addr)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %w", ErrCreateTCPListener, err)
 	}
@@ -108,7 +106,7 @@ func (s *WebSrv) createHTTPListener(ctx context.Context) (net.Listener, error) {
 }
 
 func (s *WebSrv) createUDPListener() (net.PacketConn, error) {
-	udpAddr, err := net.ResolveUDPAddr("udp", s.addr)
+	udpAddr, err := net.ResolveUDPAddr("udp", s.config.addr)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %w", ErrResolveUDPAddress, err)
 	}
@@ -122,8 +120,6 @@ func (s *WebSrv) createUDPListener() (net.PacketConn, error) {
 }
 
 func (s *WebSrv) createHTTP3Server(router http.Handler, tlsConfig *tls.Config) *http3.Server {
-	l := log.GetGlobalLogger()
-
 	return &http3.Server{
 		Handler: router,
 		QUICConfig: &quic.Config{
@@ -137,7 +133,7 @@ func (s *WebSrv) createHTTP3Server(router http.Handler, tlsConfig *tls.Config) *
 				}
 
 				return qlog.NewConnectionTracer(
-					log.NewQLogger(l.With("role", role)),
+					log.NewQLogger(s.logger.With("role", role)),
 					perspective,
 					id,
 				)
@@ -148,22 +144,18 @@ func (s *WebSrv) createHTTP3Server(router http.Handler, tlsConfig *tls.Config) *
 }
 
 func (s *WebSrv) createHTTP2Server(ctx context.Context, router http.Handler, tlsConfig *tls.Config) *http.Server {
-	l := log.GetGlobalLogger()
-
 	return &http.Server{
 		Handler:      router,
 		BaseContext:  func(_ net.Listener) context.Context { return ctx },
-		ReadTimeout:  s.readTimeout,
-		WriteTimeout: s.writeTimeout,
-		IdleTimeout:  s.idleTimeout,
+		ReadTimeout:  s.config.readTimeout,
+		WriteTimeout: s.config.writeTimeout,
+		IdleTimeout:  s.config.idleTimeout,
 		TLSConfig:    configureTLSForHTTP2(tlsConfig),
-		ErrorLog:     log.NewStdLoggerAt(l, slog.LevelWarn),
+		ErrorLog:     log.NewStdLoggerAt(s.logger, slog.LevelWarn),
 	}
 }
 
 func (s *WebSrv) createRedirectServer(ctx context.Context, httpHandler http.Handler) *http.Server {
-	l := log.GetGlobalLogger()
-
 	var handler http.Handler
 
 	// If we have an HTTP handler (e.g., for Let's Encrypt), use a mux to handle both
@@ -185,52 +177,59 @@ func (s *WebSrv) createRedirectServer(ctx context.Context, httpHandler http.Hand
 	return &http.Server{
 		Handler:      handler,
 		BaseContext:  func(_ net.Listener) context.Context { return ctx },
-		ReadTimeout:  s.readTimeout,
-		WriteTimeout: s.writeTimeout,
-		IdleTimeout:  s.idleTimeout,
-		ErrorLog:     log.NewStdLoggerAt(l, slog.LevelWarn),
+		ReadTimeout:  s.config.readTimeout,
+		WriteTimeout: s.config.writeTimeout,
+		IdleTimeout:  s.config.idleTimeout,
+		ErrorLog:     log.NewStdLoggerAt(s.logger, slog.LevelWarn),
 	}
 }
 
 func (s *WebSrv) redirectToHTTPS(w http.ResponseWriter, r *http.Request) {
+	// Extract host without port (supporting bracketed IPv6)
 	host := r.Host
-	if strings.Contains(host, ":") {
-		host, _, _ = net.SplitHostPort(host)
+	hostNoPort := host
+	if h, _, err := net.SplitHostPort(host); err == nil {
+		hostNoPort = h
+	} else if strings.HasPrefix(host, "[") && strings.HasSuffix(host, "]") {
+		// Bracketed IPv6 without port
+		hostNoPort = strings.Trim(host, "[]")
 	}
 
-	// Construct HTTPS URL
-	httpsURL := "https://" + host
-
-	// Add port if not using standard HTTPS port
-	if s.addr != ":443" && !strings.HasPrefix(s.addr, ":443") {
-		if strings.HasPrefix(s.addr, ":") {
-			httpsURL += s.addr
-		} else {
-			// Extract port from addr
-			if _, port, err := net.SplitHostPort(s.addr); err == nil {
-				httpsURL += ":" + port
-			}
+	// Parse s.config.addr for an explicit port only when present and not equal to "443"
+	var port string
+	if strings.HasPrefix(s.config.addr, ":") {
+		configPort := strings.TrimPrefix(s.config.addr, ":")
+		if configPort != "443" {
+			port = configPort
+		}
+	} else if _, p, err := net.SplitHostPort(s.config.addr); err == nil {
+		if p != "443" {
+			port = p
 		}
 	}
 
-	httpsURL += r.RequestURI
+	// Build target host, only appending port when non-empty
+	targetHost := hostNoPort
+	if port != "" {
+		targetHost = net.JoinHostPort(hostNoPort, port)
+	}
 
-	// Use 301 (Moved Permanently) for better SEO and caching
-	http.Redirect(w, r, httpsURL, http.StatusMovedPermanently)
+	httpsURL := "https://" + targetHost + r.RequestURI
+	http.Redirect(w, r, httpsURL, http.StatusPermanentRedirect)
 }
 
 // GetServerInfo returns information about the configured servers.
 func (s *WebSrv) GetServerInfo() map[string]interface{} {
 	return map[string]interface{}{
-		"name":          s.name,
-		"addr":          s.addr,
-		"webui":         s.webui,
-		"webui_path":    s.webuiPath,
-		"read_timeout":  s.readTimeout,
-		"write_timeout": s.writeTimeout,
-		"idle_timeout":  s.idleTimeout,
-		"rmem_max":      s.rmemMax,
-		"wmem_max":      s.wmemMax,
+		"name":          s.config.name,
+		"addr":          s.config.addr,
+		"webui":         s.config.webui,
+		"webui_path":    s.config.webuiPath,
+		"read_timeout":  s.config.readTimeout,
+		"write_timeout": s.config.writeTimeout,
+		"idle_timeout":  s.config.idleTimeout,
+		"rmem_max":      s.config.rmemMax,
+		"wmem_max":      s.config.wmemMax,
 		"protocols":     []string{"HTTP/3", "HTTP/2", "HTTP/1.1"},
 		"features": map[string]bool{
 			"tls":                true,
@@ -244,8 +243,8 @@ func (s *WebSrv) GetServerInfo() map[string]interface{} {
 
 // HealthCheck performs a basic health check on the server configuration.
 func (s *WebSrv) HealthCheck(router http.Handler, tlsConfig *tls.Config) error {
-	if s.name == "" {
-		return fmt.Errorf("server configuration is nil")
+	if s.config.name == "" {
+		return fmt.Errorf("server name cannot be empty")
 	}
 
 	if router == nil {
@@ -261,15 +260,15 @@ func (s *WebSrv) HealthCheck(router http.Handler, tlsConfig *tls.Config) error {
 	}
 
 	// Validate timeouts
-	if s.readTimeout < 0 {
+	if s.config.readTimeout < 0 {
 		return fmt.Errorf("read timeout cannot be negative")
 	}
 
-	if s.writeTimeout < 0 {
+	if s.config.writeTimeout < 0 {
 		return fmt.Errorf("write timeout cannot be negative")
 	}
 
-	if s.idleTimeout < 0 {
+	if s.config.idleTimeout < 0 {
 		return fmt.Errorf("idle timeout cannot be negative")
 	}
 
@@ -279,8 +278,8 @@ func (s *WebSrv) HealthCheck(router http.Handler, tlsConfig *tls.Config) error {
 // GetListenAddresses returns the addresses the servers will listen on.
 func (s *WebSrv) GetListenAddresses() map[string]string {
 	return map[string]string{
-		"http3":    s.addr + " (UDP)",
-		"http2":    s.addr + " (TCP)",
+		"http3":    s.config.addr + " (UDP)",
+		"http2":    s.config.addr + " (TCP)",
 		"redirect": ":80 (TCP)",
 	}
 }
