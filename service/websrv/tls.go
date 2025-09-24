@@ -12,8 +12,8 @@ import (
 
 // setupTLS configures TLS settings and loads or generates certificates based on the configuration.
 func (s *WebSrv) setupTLS() (*tls.Config, http.Handler, error) {
-	s.SetCertDefaults()
-	certConfig := s.GetCertConfig()
+	s.config.SetCertDefaults()
+	certConfig := s.config.GetCertConfig()
 
 	if err := certConfig.Validate(); err != nil {
 		return nil, nil, fmt.Errorf("%w: %w", ErrSetupTLS, err)
@@ -23,7 +23,7 @@ func (s *WebSrv) setupTLS() (*tls.Config, http.Handler, error) {
 	case cert.CertificateTypeSelfSigned:
 		return setupSelfSignedTLS(certConfig)
 	case cert.CertificateTypeLetsEncrypt:
-		return setupLetsTEncryptTLS(certConfig)
+		return setupLetsEncryptTLS(certConfig)
 	default:
 		return nil, nil, fmt.Errorf("%w: unsupported certificate type", ErrSetupTLS)
 	}
@@ -54,8 +54,8 @@ func setupSelfSignedTLS(certConfig *cert.Config) (*tls.Config, http.Handler, err
 	return tlsConfig, nil, nil
 }
 
-// setupLetsTEncryptTLS configures TLS using Let's Encrypt certificates.
-func setupLetsTEncryptTLS(certConfig *cert.Config) (*tls.Config, http.Handler, error) {
+// setupLetsEncryptTLS configures TLS using Let's Encrypt certificates.
+func setupLetsEncryptTLS(certConfig *cert.Config) (*tls.Config, http.Handler, error) {
 	tlsConfig, httpHandler, err := cert.GenerateAndSign(certConfig)
 	if err != nil {
 		return nil, nil, fmt.Errorf("%w: %w", ErrSetupTLS, err)
@@ -95,8 +95,8 @@ func validateTLSConfig(config *tls.Config) error {
 		return fmt.Errorf("no certificates configured")
 	}
 
-	if config.MinVersion < tls.VersionTLS12 {
-		return fmt.Errorf("minimum TLS version must be at least TLS 1.2")
+	if config.MinVersion < tls.VersionTLS13 {
+		return fmt.Errorf("minimum TLS version must be at least TLS 1.3")
 	}
 
 	return nil
