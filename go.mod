@@ -15,7 +15,7 @@ require (
 	github.com/arunsworld/nursery v0.6.0
 	github.com/google/uuid v1.6.0
 	github.com/lorenzosaino/go-sysctl v0.3.1
-	github.com/nats-io/nats-server/v2 v2.11.9
+	github.com/nats-io/nats-server/v2 v2.12.0
 	github.com/nats-io/nats.go v1.45.0
 	github.com/planetscale/vtprotobuf v0.6.1-0.20250313105119-ba97887b0a25
 	github.com/qmuntal/stateless v1.7.2
@@ -55,7 +55,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/minio/highwayhash v1.0.3 // indirect
-	github.com/nats-io/jwt/v2 v2.7.4 // indirect
+	github.com/nats-io/jwt/v2 v2.8.0 // indirect
 	github.com/nats-io/nkeys v0.4.11 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/quic-go/qpack v0.5.1 // indirect
