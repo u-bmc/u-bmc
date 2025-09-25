@@ -1,83 +1,43 @@
 # ASUS IPMI Expansion Card (IEC)
 
-This directory contains the u-bmc configuration for the ASUS IPMI Expansion Card, a PCIe x1 form factor baseboard management controller based on the Aspeed AST2600 SoC.
+This target integrates the ASUS IPMI Expansion Card (IEC)—a PCIe x1 form factor BMC based on the ASPEED AST2600—into u-bmc. It provides a clean entry point for platform-specific configuration (GPIO, I2C/PMBus, sensors, thermal zones) and wires the board into the common service graph orchestrated by the operator.
 
-## Hardware Overview
+## What this target is
 
-- **Form Factor**: PCIe x1 card
-- **SoC**: Aspeed AST2600
-- **Memory Limit**: 256MB (configured in main.go, card has 512MB total)
+- A focused, platform-specific bootstrap that configures and launches the operator with services relevant to this board.
+- A place to define stable names and mappings for GPIO lines (power/reset/identify, power-good), LEDs, sensors, fans, and PMBus devices.
+- A thin layer that uses shared packages and services; business logic lives in `service/` and `pkg/`, and the public API is defined in `schema/v1alpha1`.
 
-## Features
+## Scope and expectations
 
-### Implemented
-- **Telemetry**: OpenTelemetry-based monitoring with metrics, traces, and logs
-- **State Management**: Host, chassis, and BMC state management with NATS streaming
+- Power and state management, sensors, thermal control, and inventory are driven by shared services and exposed via the same API as all other targets.
+- The Web UI, Redfish/IPMI compatibility layers, KVM, and SOL are supported by the central service roadmap and are not implemented ad hoc per target.
+- Platform bring-up focuses on reliable mappings, safe defaults, and repeatable behavior. The authoritative API is served by `websrv` and documented in `docs/api.md`.
 
-### Hardware Capabilities (Pending Implementation)
-- **KVM**: Full keyboard, video, and mouse redirection
-- **SOL**: Serial Over LAN functionality
-- **Fan Control**: 8 fan control outputs
-- **Sensors**: 3 analog sensor inputs
-- **Power Management**: PMBus control interface
+## Hardware assumptions
 
-## Configuration Status
+- SoC: ASPEED AST2600
+- Kernel support: gpio-cdev, I2C/PMBus, HWMON, watchdog
+- Stable line naming for GPIO and discoverable I2C topology are expected (via device tree or equivalent)
 
-### ✅ Active Services
-- `telemetry`: OpenTelemetry monitoring service
-- `statemgr`: State management service
+## Using this target
 
-### 🚧 Pending Services (Currently Commented Out)
-- `sensormon`: Sensor monitoring service
-- `thermalmgr`: Thermal management service
-- `powermgr`: Power management service
-- `websrv`: Web server with KVM/SOL support
+1. Review the porting guidance in `docs/porting.md` for how to provide platform mappings and service options.
+2. Bring up the target with the operator configuration for this board, validating power, LEDs, sensors, and thermal behavior.
+3. Access and test the API using the examples in `docs/api.md`. The API is available via ConnectRPC and REST (transcoded), under `/api/v1alpha1/...`.
 
-## TODO Items
+## Status and roadmap
 
-### Hardware-Specific Configuration
-- [ ] Verify AST2600 hwmon device paths for sensor access
-- [ ] Determine correct GPIO chip device path (`/dev/gpiochipX`)
-- [ ] Map GPIO pin assignments for power control signals
-- [ ] Configure PMBus interface addresses and capabilities
-- [ ] Set hardware-appropriate temperature thresholds
-- [ ] Tune PID controller parameters for thermal management
+Development status and planned features for this target follow the central project roadmap. For KVM, SOL, update flows, and compatibility layers (Redfish, IPMI), see:
 
-### Service Implementation
-- [ ] Uncomment and verify import paths for disabled services
-- [ ] Configure 3 analog sensors with appropriate thresholds
-- [ ] Set up 8 fan control outputs with proper PWM mapping
-- [ ] Implement PMBus power management integration
-- [ ] Configure KVM video capture and input injection
-- [ ] Set up SOL (Serial Over LAN) functionality
-- [ ] Verify WebUI path and KVM/SOL web interface integration
+- docs/roadmap.md
 
-### Network and Security
-- [ ] Determine appropriate hostname and network configuration
-- [ ] Configure TLS certificates for web interface
-- [ ] Set up appropriate network interface bindings
-- [ ] Configure authentication and authorization policies
+## Related documentation
 
-### Testing and Validation
-- [ ] Test sensor readings and threshold monitoring
-- [ ] Validate fan control operation and thermal response
-- [ ] Verify power management operations (power on/off/reset)
-- [ ] Test KVM functionality (video, keyboard, mouse)
-- [ ] Validate SOL console access
-- [ ] Performance testing under load conditions
+- docs/overview.md — high-level system overview
+- docs/architecture.md — service graph and operator model
+- docs/api.md — how to access and query the API
+- docs/porting.md — how to configure and port a new platform
+- docs/webui.md — Web UI scope and integration
 
-## Build Instructions
-
-TODO: Add specific build instructions for this target
-
-## Deployment
-
-TODO: Add deployment instructions specific to this ASUS IPMI expansion card
-
-## Hardware Documentation
-
-TODO: Add links to hardware documentation, schematics, and pin mappings when available
-
-## Support
-
-TODO: Add support contact information and troubleshooting guidelines
+This README intentionally avoids per-file TODO lists. Please track open items and planned work in the central roadmap.
