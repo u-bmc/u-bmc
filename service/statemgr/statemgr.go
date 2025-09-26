@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"strings"
 	"sync"
 	"time"
 
@@ -13,13 +14,17 @@ import (
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
 	"github.com/nats-io/nats.go/micro"
+	v1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
 	"github.com/u-bmc/u-bmc/pkg/log"
 	"github.com/u-bmc/u-bmc/pkg/state"
 	"github.com/u-bmc/u-bmc/pkg/telemetry"
 	"github.com/u-bmc/u-bmc/service"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/trace"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 const (
@@ -34,32 +39,64 @@ var _ service.Service = (*StateMgr)(nil)
 // StateMgr manages state machines for BMC, chassis, and host components.
 // It provides NATS-based IPC endpoints for state management operations.
 type StateMgr struct {
-	config        *Config
+	config        *config
 	nc            *nats.Conn
 	js            jetstream.JetStream
 	microService  micro.Service
-	stateMachines map[string]*state.FSM
+	stateMachines map[string]*state.Machine
 	mu            sync.RWMutex
 	logger        *slog.Logger
 	tracer        trace.Tracer
+	meter         metric.Meter
 	cancel        context.CancelFunc
 	started       bool
+
+	// Subscriptions
+	powerResultSub *nats.Subscription
+
+	// Metrics
+	stateTransitionsTotal   metric.Int64Counter
+	stateTransitionDuration metric.Float64Histogram
+	stateTransitionFailures metric.Int64Counter
+	currentStateGauge       metric.Int64UpDownCounter
 }
 
 // New creates a new StateMgr instance with the provided options.
 func New(opts ...Option) *StateMgr {
-	config := NewConfig(opts...)
+	cfg := &config{
+		serviceName:               DefaultServiceName,
+		serviceDescription:        DefaultServiceDescription,
+		serviceVersion:            DefaultServiceVersion,
+		streamName:                DefaultStreamName,
+		streamSubjects:            []string{"statemgr.state.>", "statemgr.event.>"},
+		streamRetention:           0,
+		enableHostManagement:      true,
+		enableChassisManagement:   true,
+		enableBMCManagement:       true,
+		numHosts:                  1,
+		numChassis:                1,
+		stateTimeout:              DefaultStateTimeout,
+		enableMetrics:             true,
+		enableTracing:             true,
+		broadcastStateChanges:     true,
+		persistStateChanges:       true,
+		powerControlSubjectPrefix: "powermgr",
+		ledControlSubjectPrefix:   "ledmgr",
+	}
+
+	for _, opt := range opts {
+		opt.apply(cfg)
+	}
 
 	return &StateMgr{
-		config:        config,
-		stateMachines: make(map[string]*state.FSM),
-		tracer:        otel.Tracer("statemgr"),
+		config:        cfg,
+		stateMachines: make(map[string]*state.Machine),
 	}
 }
 
 // Name returns the service name.
 func (s *StateMgr) Name() string {
-	return s.config.ServiceName
+	return s.config.serviceName
 }
 
 // Run starts the state manager service and registers NATS IPC endpoints.
@@ -74,18 +111,27 @@ func (s *StateMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 	ctx, s.cancel = context.WithCancel(ctx)
 	s.mu.Unlock()
 
+	s.tracer = otel.Tracer(s.config.serviceName)
+	s.meter = otel.Meter(s.config.serviceName)
+
 	ctx, span := s.tracer.Start(ctx, "statemgr.Run")
 	defer span.End()
 
-	s.logger = log.GetGlobalLogger().With("service", s.config.ServiceName)
+	s.logger = log.GetGlobalLogger().With("service", s.config.serviceName)
 	s.logger.InfoContext(ctx, "Starting state manager service",
-		"version", s.config.ServiceVersion,
-		"hosts", s.config.NumHosts,
-		"chassis", s.config.NumChassis)
+		"version", s.config.serviceVersion,
+		"hosts", s.config.numHosts,
+		"chassis", s.config.numChassis,
+		"persistence_enabled", s.config.persistStateChanges)
 
 	if err := s.config.Validate(); err != nil {
 		span.RecordError(err)
 		return fmt.Errorf("%w: %w", ErrInvalidConfiguration, err)
+	}
+
+	if err := s.initializeMetrics(); err != nil {
+		span.RecordError(err)
+		return fmt.Errorf("failed to initialize metrics: %w", err)
 	}
 
 	nc, err := nats.Connect("", nats.InProcessServer(ipcConn))
@@ -102,7 +148,7 @@ func (s *StateMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 		return fmt.Errorf("%w: %w", ErrJetStreamInitFailed, err)
 	}
 
-	if s.config.PersistStateChanges {
+	if s.config.persistStateChanges {
 		if err := s.setupJetStream(ctx); err != nil {
 			span.RecordError(err)
 			return err
@@ -115,9 +161,9 @@ func (s *StateMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 	}
 
 	s.microService, err = micro.AddService(nc, micro.Config{
-		Name:        s.config.ServiceName,
-		Description: s.config.ServiceDescription,
-		Version:     s.config.ServiceVersion,
+		Name:        s.config.serviceName,
+		Description: s.config.serviceDescription,
+		Version:     s.config.serviceVersion,
 	})
 	if err != nil {
 		span.RecordError(err)
@@ -129,23 +175,25 @@ func (s *StateMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 		return err
 	}
 
+	if err := s.setupSubscriptions(ctx); err != nil {
+		span.RecordError(err)
+		return err
+	}
+
 	s.logger.InfoContext(ctx, "State manager service started successfully",
 		"endpoints_registered", true,
 		"state_machines_initialized", len(s.stateMachines))
 
 	span.SetAttributes(
-		attribute.String("service.name", s.config.ServiceName),
-		attribute.String("service.version", s.config.ServiceVersion),
+		attribute.String("service.name", s.config.serviceName),
+		attribute.String("service.version", s.config.serviceVersion),
 		attribute.Int("state_machines.count", len(s.stateMachines)),
+		attribute.Bool("persistence.enabled", s.config.persistStateChanges),
 	)
 
 	<-ctx.Done()
 
-	// Capture the context error before shutdown
-	// to return it after shutdown completes
 	err = ctx.Err()
-
-	// We need to create a new context here because the passed-in ctx is already canceled
 	ctx = context.WithoutCancel(ctx)
 	s.logger.InfoContext(ctx, "Shutting down state manager service")
 	s.shutdown(ctx)
@@ -153,13 +201,59 @@ func (s *StateMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 	return err
 }
 
+func (s *StateMgr) initializeMetrics() error {
+	if !s.config.enableMetrics {
+		return nil
+	}
+
+	var err error
+
+	s.stateTransitionsTotal, err = s.meter.Int64Counter(
+		"statemgr_transitions_total",
+		metric.WithDescription("Total number of state transitions"),
+		metric.WithUnit("1"),
+	)
+	if err != nil {
+		return fmt.Errorf("failed to create state transitions counter: %w", err)
+	}
+
+	s.stateTransitionDuration, err = s.meter.Float64Histogram(
+		"statemgr_transition_duration_seconds",
+		metric.WithDescription("Duration of state transitions"),
+		metric.WithUnit("s"),
+	)
+	if err != nil {
+		return fmt.Errorf("failed to create state transition duration histogram: %w", err)
+	}
+
+	s.stateTransitionFailures, err = s.meter.Int64Counter(
+		"statemgr_transition_failures_total",
+		metric.WithDescription("Total number of failed state transitions"),
+		metric.WithUnit("1"),
+	)
+	if err != nil {
+		return fmt.Errorf("failed to create state transition failures counter: %w", err)
+	}
+
+	s.currentStateGauge, err = s.meter.Int64UpDownCounter(
+		"statemgr_current_state",
+		metric.WithDescription("Current state of components (encoded as integer)"),
+		metric.WithUnit("1"),
+	)
+	if err != nil {
+		return fmt.Errorf("failed to create current state gauge: %w", err)
+	}
+
+	return nil
+}
+
 func (s *StateMgr) setupJetStream(ctx context.Context) error {
 	streamConfig := jetstream.StreamConfig{
-		Name:        s.config.StreamName,
+		Name:        s.config.streamName,
 		Description: "State manager persistence stream",
-		Subjects:    s.config.StreamSubjects,
+		Subjects:    s.config.streamSubjects,
 		Retention:   jetstream.LimitsPolicy,
-		MaxAge:      s.config.StreamRetention,
+		MaxAge:      s.config.streamRetention,
 		Storage:     jetstream.FileStorage,
 		Replicas:    1,
 		MaxMsgs:     -1,
@@ -185,9 +279,9 @@ func (s *StateMgr) setupJetStream(ctx context.Context) error {
 func (s *StateMgr) initializeStateMachines(ctx context.Context) error {
 	var tasks []nursery.ConcurrentJob
 
-	if s.config.EnableHostManagement {
-		for i := range s.config.NumHosts {
-			hostID := i // capture loop variable
+	if s.config.enableHostManagement {
+		for i := range s.config.numHosts {
+			hostID := i
 			tasks = append(tasks, func(ctx context.Context, errChan chan error) {
 				hostName := fmt.Sprintf("host.%d", hostID)
 				sm, err := s.createHostStateMachine(ctx, hostName)
@@ -206,9 +300,9 @@ func (s *StateMgr) initializeStateMachines(ctx context.Context) error {
 		}
 	}
 
-	if s.config.EnableChassisManagement {
-		for i := range s.config.NumChassis {
-			chassisID := i // capture loop variable
+	if s.config.enableChassisManagement {
+		for i := range s.config.numChassis {
+			chassisID := i
 			tasks = append(tasks, func(ctx context.Context, errChan chan error) {
 				chassisName := fmt.Sprintf("chassis.%d", chassisID)
 				sm, err := s.createChassisStateMachine(ctx, chassisName)
@@ -227,9 +321,9 @@ func (s *StateMgr) initializeStateMachines(ctx context.Context) error {
 		}
 	}
 
-	if s.config.EnableBMCManagement {
+	if s.config.enableBMCManagement {
 		tasks = append(tasks, func(ctx context.Context, errChan chan error) {
-			bmcName := "bmc.0" // Assuming a single BMC for simplicity, can be extended if needed
+			bmcName := "bmc.0"
 			sm, err := s.createManagementControllerStateMachine(ctx, bmcName)
 			if err != nil {
 				errChan <- err
@@ -249,78 +343,222 @@ func (s *StateMgr) initializeStateMachines(ctx context.Context) error {
 }
 
 func (s *StateMgr) registerEndpoints(ctx context.Context) error {
-	if s.config.EnableHostManagement {
-		for i := range s.config.NumHosts {
-			hostEndpoints := []string{
-				fmt.Sprintf("statemgr.host.%d.state", i),
-				fmt.Sprintf("statemgr.host.%d.control", i),
-				fmt.Sprintf("statemgr.host.%d.info", i),
-			}
+	if s.config.enableHostManagement {
+		hostGroup := s.microService.AddGroup("host")
+		for i := range s.config.numHosts {
+			stateEndpoint := fmt.Sprintf("%d.state", i)
+			controlEndpoint := fmt.Sprintf("%d.control", i)
+			infoEndpoint := fmt.Sprintf("%d.info", i)
 
-			for _, endpoint := range hostEndpoints {
-				if err := s.microService.AddEndpoint(endpoint,
-					micro.HandlerFunc(s.createRequestHandler(s.handleHostStateRequest))); err != nil { //nolint:contextcheck
-					return fmt.Errorf("failed to register host endpoint %s: %w", endpoint, err)
-				}
+			if err := hostGroup.AddEndpoint(stateEndpoint,
+				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleHostStateRequest))); err != nil {
+				return fmt.Errorf("failed to register host state endpoint %s: %w", stateEndpoint, err)
 			}
-		}
-	}
-
-	if s.config.EnableChassisManagement {
-		for i := range s.config.NumChassis {
-			chassisEndpoints := []string{
-				fmt.Sprintf("statemgr.chassis.%d.state", i),
-				fmt.Sprintf("statemgr.chassis.%d.control", i),
-				fmt.Sprintf("statemgr.chassis.%d.info", i),
+			if err := hostGroup.AddEndpoint(controlEndpoint,
+				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleHostStateRequest))); err != nil {
+				return fmt.Errorf("failed to register host control endpoint %s: %w", controlEndpoint, err)
 			}
-
-			for _, endpoint := range chassisEndpoints {
-				if err := s.microService.AddEndpoint(endpoint,
-					micro.HandlerFunc(s.createRequestHandler(s.handleChassisStateRequest))); err != nil { //nolint:contextcheck
-					return fmt.Errorf("failed to register chassis endpoint %s: %w", endpoint, err)
-				}
+			if err := hostGroup.AddEndpoint(infoEndpoint,
+				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleHostStateRequest))); err != nil {
+				return fmt.Errorf("failed to register host info endpoint %s: %w", infoEndpoint, err)
 			}
 		}
 	}
 
-	if s.config.EnableBMCManagement {
-		bmcEndpoints := []string{
-			"statemgr.bmc.0.state",
-			"statemgr.bmc.0.control",
-			"statemgr.bmc.0.info",
-		}
+	if s.config.enableChassisManagement {
+		chassisGroup := s.microService.AddGroup("chassis")
+		for i := range s.config.numChassis {
+			stateEndpoint := fmt.Sprintf("%d.state", i)
+			controlEndpoint := fmt.Sprintf("%d.control", i)
+			infoEndpoint := fmt.Sprintf("%d.info", i)
 
-		for _, endpoint := range bmcEndpoints {
-			if err := s.microService.AddEndpoint(endpoint,
-				micro.HandlerFunc(s.createRequestHandler(s.handleManagementControllerStateRequest))); err != nil { //nolint:contextcheck
-				return fmt.Errorf("failed to register BMC endpoint %s: %w", endpoint, err)
+			if err := chassisGroup.AddEndpoint(stateEndpoint,
+				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleChassisStateRequest))); err != nil {
+				return fmt.Errorf("failed to register chassis state endpoint %s: %w", stateEndpoint, err)
 			}
+			if err := chassisGroup.AddEndpoint(controlEndpoint,
+				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleChassisStateRequest))); err != nil {
+				return fmt.Errorf("failed to register chassis control endpoint %s: %w", controlEndpoint, err)
+			}
+			if err := chassisGroup.AddEndpoint(infoEndpoint,
+				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleChassisStateRequest))); err != nil {
+				return fmt.Errorf("failed to register chassis info endpoint %s: %w", infoEndpoint, err)
+			}
+		}
+	}
+
+	if s.config.enableBMCManagement {
+		bmcGroup := s.microService.AddGroup("bmc")
+
+		if err := bmcGroup.AddEndpoint("0.state",
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleManagementControllerStateRequest))); err != nil {
+			return fmt.Errorf("failed to register BMC state endpoint: %w", err)
+		}
+		if err := bmcGroup.AddEndpoint("0.control",
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleManagementControllerStateRequest))); err != nil {
+			return fmt.Errorf("failed to register BMC control endpoint: %w", err)
+		}
+		if err := bmcGroup.AddEndpoint("0.info",
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleManagementControllerStateRequest))); err != nil {
+			return fmt.Errorf("failed to register BMC info endpoint: %w", err)
 		}
 	}
 
 	return nil
 }
 
-func (s *StateMgr) createRequestHandler(handler func(context.Context, micro.Request)) micro.HandlerFunc {
+func (s *StateMgr) createRequestHandler(parentCtx context.Context, handler func(context.Context, micro.Request)) micro.HandlerFunc {
 	return func(req micro.Request) {
-		// Extract telemetry context from the NATS request
 		ctx := telemetry.GetCtxFromReq(req)
 
-		// Add the context to the request for downstream handlers
+		// Merge parent context values/cancellation with telemetry context
+		ctx = context.WithoutCancel(ctx)
+		if parentCtx != nil {
+			// Create a new context that inherits from parent but uses telemetry values
+			select {
+			case <-parentCtx.Done():
+				// If parent is already canceled, use a canceled context
+				var cancel context.CancelFunc
+				ctx, cancel = context.WithCancel(ctx)
+				cancel()
+			default:
+				// Parent is still active
+			}
+		}
+
 		if s.tracer != nil {
 			_, span := s.tracer.Start(ctx, "statemgr.handleRequest")
 			span.SetAttributes(
 				attribute.String("subject", req.Subject()),
-				attribute.String("service", s.config.ServiceName),
+				attribute.String("service", s.config.serviceName),
 			)
 			defer span.End()
 		}
 
-		handler(ctx, req)
+		handler(ctx, req) //nolint:contextcheck
 	}
 }
 
-// shutdown gracefully stops all state machines and cleans up resources.
+func (s *StateMgr) recordTransition(ctx context.Context, componentName, fromState, toState, trigger string, duration time.Duration, err error) {
+	if !s.config.enableMetrics {
+		return
+	}
+
+	attrs := []attribute.KeyValue{
+		attribute.String("component", componentName),
+		attribute.String("from_state", fromState),
+		attribute.String("to_state", toState),
+		attribute.String("trigger", trigger),
+	}
+
+	if err != nil {
+		attrs = append(attrs, attribute.String("status", "error"))
+		s.stateTransitionFailures.Add(ctx, 1, metric.WithAttributes(attrs...))
+	} else {
+		attrs = append(attrs, attribute.String("status", "success"))
+		if s.stateTransitionDuration != nil {
+			s.stateTransitionDuration.Record(ctx, duration.Seconds(), metric.WithAttributes(attrs...))
+		}
+	}
+
+	s.stateTransitionsTotal.Add(ctx, 1, metric.WithAttributes(attrs...))
+}
+
+func (s *StateMgr) updateCurrentState(ctx context.Context, componentName, stateName string) {
+	if !s.config.enableMetrics || s.currentStateGauge == nil {
+		return
+	}
+
+	// TODO: Implement state to integer encoding for metrics
+	s.currentStateGauge.Add(ctx, 1, metric.WithAttributes(
+		attribute.String("component", componentName),
+		attribute.String("state", stateName),
+	))
+}
+
+func (s *StateMgr) requestPowerAction(ctx context.Context, componentName, action string) error {
+	if s.config.powerControlSubjectPrefix == "" {
+		return nil
+	}
+
+	subject := fmt.Sprintf("%s.%s.action", s.config.powerControlSubjectPrefix, componentName)
+
+	timeoutMs := uint32(30000) // 30 second default timeout
+	powerReq := &v1alpha1.PowerControlRequest{
+		ComponentName: componentName,
+		Action:        action,
+		TimeoutMs:     &timeoutMs,
+	}
+
+	data, err := proto.Marshal(powerReq)
+	if err != nil {
+		s.logger.ErrorContext(ctx, "Failed to marshal power control request",
+			"component", componentName,
+			"action", action,
+			"error", err)
+		return fmt.Errorf("failed to marshal power control request: %w", err)
+	}
+
+	if err := s.nc.Publish(subject, data); err != nil {
+		s.logger.ErrorContext(ctx, "Failed to publish power control request",
+			"component", componentName,
+			"action", action,
+			"subject", subject,
+			"error", err)
+		return fmt.Errorf("failed to publish power control request: %w", err)
+	}
+
+	s.logger.InfoContext(ctx, "Power action request sent",
+		"component", componentName,
+		"action", action,
+		"subject", subject)
+
+	return nil
+}
+
+func (s *StateMgr) requestLEDAction(ctx context.Context, componentName, action string) error {
+	if s.config.ledControlSubjectPrefix == "" {
+		return nil
+	}
+
+	// Parse action to determine LED type and state
+	ledType, ledState := s.parseLEDAction(action)
+	subject := fmt.Sprintf("%s.%s.%s.control", s.config.ledControlSubjectPrefix, componentName, s.ledTypeToString(ledType))
+
+	ledReq := &v1alpha1.LEDControlRequest{
+		ComponentName: componentName,
+		LedType:       ledType,
+		LedState:      ledState,
+	}
+
+	data, err := proto.Marshal(ledReq)
+	if err != nil {
+		s.logger.ErrorContext(ctx, "Failed to marshal LED control request",
+			"component", componentName,
+			"action", action,
+			"error", err)
+		return fmt.Errorf("failed to marshal LED control request: %w", err)
+	}
+
+	if err := s.nc.Publish(subject, data); err != nil {
+		s.logger.ErrorContext(ctx, "Failed to publish LED control request",
+			"component", componentName,
+			"action", action,
+			"subject", subject,
+			"error", err)
+		return fmt.Errorf("failed to publish LED control request: %w", err)
+	}
+
+	s.logger.InfoContext(ctx, "LED action request sent",
+		"component", componentName,
+		"action", action,
+		"led_type", ledType,
+		"led_state", ledState,
+		"subject", subject)
+
+	return nil
+}
+
 func (s *StateMgr) shutdown(ctx context.Context) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -329,7 +567,11 @@ func (s *StateMgr) shutdown(ctx context.Context) {
 		s.cancel()
 	}
 
-	// In case the context is already canceled, create a new one for shutdown operations
+	// Clean up subscription
+	if s.powerResultSub != nil {
+		_ = s.powerResultSub.Unsubscribe()
+	}
+
 	if ctx.Err() != nil {
 		ctx = context.WithoutCancel(ctx)
 	}
@@ -347,10 +589,176 @@ func (s *StateMgr) shutdown(ctx context.Context) {
 	s.started = false
 }
 
-// getStateMachine safely retrieves a state machine by name.
-func (s *StateMgr) getStateMachine(name string) (*state.FSM, bool) {
+func (s *StateMgr) getStateMachine(name string) (*state.Machine, bool) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	sm, exists := s.stateMachines[name]
 	return sm, exists
+}
+
+func (s *StateMgr) parseLEDAction(action string) (v1alpha1.LEDType, v1alpha1.LEDState) {
+	switch action {
+	case "power_on": //nolint:goconst
+		return v1alpha1.LEDType_LED_TYPE_POWER, v1alpha1.LEDState_LED_STATE_ON
+	case "power_off": //nolint:goconst
+		return v1alpha1.LEDType_LED_TYPE_POWER, v1alpha1.LEDState_LED_STATE_OFF
+	case "power_blink":
+		return v1alpha1.LEDType_LED_TYPE_POWER, v1alpha1.LEDState_LED_STATE_BLINK
+	case "status_on":
+		return v1alpha1.LEDType_LED_TYPE_STATUS, v1alpha1.LEDState_LED_STATE_ON
+	case "status_off":
+		return v1alpha1.LEDType_LED_TYPE_STATUS, v1alpha1.LEDState_LED_STATE_OFF
+	case "status_blink":
+		return v1alpha1.LEDType_LED_TYPE_STATUS, v1alpha1.LEDState_LED_STATE_BLINK
+	case "error", "error_on":
+		return v1alpha1.LEDType_LED_TYPE_ERROR, v1alpha1.LEDState_LED_STATE_ON
+	case "error_off":
+		return v1alpha1.LEDType_LED_TYPE_ERROR, v1alpha1.LEDState_LED_STATE_OFF
+	case "error_blink":
+		return v1alpha1.LEDType_LED_TYPE_ERROR, v1alpha1.LEDState_LED_STATE_BLINK
+	case "critical_error":
+		return v1alpha1.LEDType_LED_TYPE_ERROR, v1alpha1.LEDState_LED_STATE_FAST_BLINK
+	case "warning":
+		return v1alpha1.LEDType_LED_TYPE_STATUS, v1alpha1.LEDState_LED_STATE_BLINK
+	case "failed":
+		return v1alpha1.LEDType_LED_TYPE_ERROR, v1alpha1.LEDState_LED_STATE_FAST_BLINK
+	case "identify_on":
+		return v1alpha1.LEDType_LED_TYPE_IDENTIFY, v1alpha1.LEDState_LED_STATE_ON
+	case "identify_off":
+		return v1alpha1.LEDType_LED_TYPE_IDENTIFY, v1alpha1.LEDState_LED_STATE_OFF
+	case "identify_blink":
+		return v1alpha1.LEDType_LED_TYPE_IDENTIFY, v1alpha1.LEDState_LED_STATE_BLINK
+	default:
+		// Default to power LED off
+		return v1alpha1.LEDType_LED_TYPE_POWER, v1alpha1.LEDState_LED_STATE_OFF
+	}
+}
+
+func (s *StateMgr) ledTypeToString(ledType v1alpha1.LEDType) string {
+	switch ledType {
+	case v1alpha1.LEDType_LED_TYPE_POWER:
+		return "power"
+	case v1alpha1.LEDType_LED_TYPE_STATUS:
+		return "status"
+	case v1alpha1.LEDType_LED_TYPE_ERROR:
+		return "error"
+	case v1alpha1.LEDType_LED_TYPE_IDENTIFY:
+		return "identify"
+	default:
+		return "power"
+	}
+}
+
+func (s *StateMgr) setupSubscriptions(ctx context.Context) error {
+	if s.config.powerControlSubjectPrefix == "" {
+		s.logger.InfoContext(ctx, "State reporting disabled, skipping subscriptions")
+		return nil
+	}
+
+	subject := fmt.Sprintf("%s.*.power.result", s.config.powerControlSubjectPrefix)
+
+	sub, err := s.nc.Subscribe(subject, func(msg *nats.Msg) {
+		s.handlePowerOperationResult(ctx, msg)
+	})
+	if err != nil {
+		return fmt.Errorf("failed to subscribe to power operation results: %w", err)
+	}
+
+	s.logger.InfoContext(ctx, "Subscribed to power operation results",
+		"subject", subject)
+
+	// Store subscription for cleanup
+	s.powerResultSub = sub
+
+	return nil
+}
+
+func (s *StateMgr) handlePowerOperationResult(ctx context.Context, msg *nats.Msg) {
+	var result v1alpha1.PowerOperationResult
+	if err := proto.Unmarshal(msg.Data, &result); err != nil {
+		s.logger.ErrorContext(ctx, "Failed to unmarshal power operation result",
+			"subject", msg.Subject,
+			"error", err)
+		return
+	}
+
+	s.logger.InfoContext(ctx, "Received power operation result",
+		"component", result.ComponentName,
+		"operation", result.Operation,
+		"success", result.Success,
+		"duration_ms", result.DurationMs)
+
+	sm, exists := s.getStateMachine(result.ComponentName)
+	if !exists {
+		s.logger.WarnContext(ctx, "No state machine found for component",
+			"component", result.ComponentName)
+		return
+	}
+
+	var trigger string
+	if result.Success {
+		trigger = fmt.Sprintf("%s_completed", result.Operation)
+	} else {
+		trigger = fmt.Sprintf("%s_failed", result.Operation)
+	}
+
+	if err := sm.Fire(ctx, trigger); err != nil {
+		s.logger.ErrorContext(ctx, "Failed to send trigger to state machine",
+			"component", result.ComponentName,
+			"trigger", trigger,
+			"error", err)
+		return
+	}
+
+	s.sendStateTransitionNotification(ctx, result.ComponentName, result.Operation, result.Success)
+}
+
+func (s *StateMgr) sendStateTransitionNotification(ctx context.Context, componentName, operation string, success bool) {
+	sm, exists := s.getStateMachine(componentName)
+	if !exists {
+		return
+	}
+
+	currentState := sm.State(ctx)
+
+	notification := &v1alpha1.StateTransitionNotification{
+		ComponentName:        componentName,
+		ComponentType:        s.getComponentType(componentName),
+		CurrentState:         currentState,
+		Trigger:              fmt.Sprintf("power_%s", operation),
+		Success:              success,
+		ChangedAt:            timestamppb.Now(),
+		TransitionDurationMs: 0, // Will be filled by caller if available
+	}
+
+	data, err := proto.Marshal(notification)
+	if err != nil {
+		s.logger.ErrorContext(ctx, "Failed to marshal state transition notification",
+			"component", componentName,
+			"error", err)
+		return
+	}
+
+	subject := fmt.Sprintf("%s.%s.state.changed", s.config.powerControlSubjectPrefix, componentName)
+	if err := s.nc.Publish(subject, data); err != nil {
+		s.logger.ErrorContext(ctx, "Failed to publish state transition notification",
+			"component", componentName,
+			"subject", subject,
+			"error", err)
+		return
+	}
+
+	s.logger.InfoContext(ctx, "State transition notification sent",
+		"component", componentName,
+		"state", currentState,
+		"trigger", notification.Trigger,
+		"success", success)
+}
+
+func (s *StateMgr) getComponentType(componentName string) string {
+	parts := strings.Split(componentName, ".")
+	if len(parts) > 0 {
+		return parts[0]
+	}
+	return "unknown"
 }

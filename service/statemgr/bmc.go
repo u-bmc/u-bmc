@@ -29,201 +29,161 @@ const (
 	managementControllerTriggerTransitionResume             = "MANAGEMENT_CONTROLLER_TRANSITION_RESUME"
 )
 
-func (s *StateMgr) createManagementControllerStateMachine(ctx context.Context, controllerName string) (*state.FSM, error) {
-	config := state.NewConfig(
+func (s *StateMgr) createManagementControllerStateMachine(ctx context.Context, controllerName string) (*state.Machine, error) {
+	sm, err := state.NewStateMachine(
 		state.WithName(controllerName),
 		state.WithDescription(fmt.Sprintf("Management Controller %s state machine", controllerName)),
 		state.WithInitialState(schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String()),
 		state.WithStates(
-			state.StateDefinition{
-				Name:        schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
-				Description: "Management Controller is not ready",
-				OnEntry:     s.createManagementControllerStatusEntryAction(controllerName, schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY),
-				OnExit:      s.createManagementControllerStatusExitAction(controllerName, schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
-				Description: "Management Controller is ready and operational",
-				OnEntry:     s.createManagementControllerStatusEntryAction(controllerName, schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY),
-				OnExit:      s.createManagementControllerStatusExitAction(controllerName, schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DISABLED.String(),
-				Description: "Management Controller is disabled",
-				OnEntry:     s.createManagementControllerStatusEntryAction(controllerName, schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DISABLED),
-				OnExit:      s.createManagementControllerStatusExitAction(controllerName, schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DISABLED),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR.String(),
-				Description: "Management Controller is in error state",
-				OnEntry:     s.createManagementControllerStatusEntryAction(controllerName, schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR),
-				OnExit:      s.createManagementControllerStatusExitAction(controllerName, schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_QUIESCED.String(),
-				Description: "Management Controller is quiesced",
-				OnEntry:     s.createManagementControllerStatusEntryAction(controllerName, schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_QUIESCED),
-				OnExit:      s.createManagementControllerStatusExitAction(controllerName, schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_QUIESCED),
-			},
-			state.StateDefinition{
-				Name:        schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC.String(),
-				Description: "Management Controller is in diagnostic mode",
-				OnEntry:     s.createManagementControllerStatusEntryAction(controllerName, schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC),
-				OnExit:      s.createManagementControllerStatusExitAction(controllerName, schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC),
-			},
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DISABLED.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_QUIESCED.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC.String(),
 		),
-		state.WithTransitions(
-			// API-triggered transitions
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
-				Trigger: schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE.String(),
-				Action:  s.createManagementControllerTransitionAction(controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
-				Trigger: schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_REBOOT.String(),
-				Action:  s.createManagementControllerTransitionAction(controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_REBOOT),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
-				Trigger: schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_WARM_RESET.String(),
-				Action:  s.createManagementControllerTransitionAction(controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_WARM_RESET),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
-				Trigger: schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_COLD_RESET.String(),
-				Action:  s.createManagementControllerTransitionAction(controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_COLD_RESET),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
-				Trigger: schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_HARD_RESET.String(),
-				Action:  s.createManagementControllerTransitionAction(controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_HARD_RESET),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
-				Trigger: schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET.String(),
-				Action:  s.createManagementControllerTransitionAction(controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DISABLED.String(),
-				Trigger: schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_DISABLE.String(),
-				Action:  s.createManagementControllerTransitionAction(controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_DISABLE),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DISABLED.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
-				Trigger: schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE.String(),
-				Action:  s.createManagementControllerTransitionAction(controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
-				Trigger: schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_REBOOT.String(),
-				Action:  s.createManagementControllerTransitionAction(controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_REBOOT),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
-				Trigger: schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_COLD_RESET.String(),
-				Action:  s.createManagementControllerTransitionAction(controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_COLD_RESET),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
-				Trigger: schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE.String(),
-				Action:  s.createManagementControllerTransitionAction(controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR.String(),
-				Trigger: schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_DISABLE.String(),
-				Action:  s.createManagementControllerTransitionAction(controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_DISABLE),
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_QUIESCED.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
-				Trigger: schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE.String(),
-				Action:  s.createManagementControllerTransitionAction(controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE),
-			},
-			// Internal transitions (not exposed via API)
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
-				Trigger: managementControllerTriggerTransitionCompleteReady,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR.String(),
-				Trigger: managementControllerTriggerTransitionCompleteError,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC.String(),
-				Trigger: managementControllerTriggerTransitionCompleteDiagnostic,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_QUIESCED.String(),
-				Trigger: managementControllerTriggerTransitionTimeout,
-			},
-			state.TransitionDefinition{
-				From:    schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_QUIESCED.String(),
-				To:      schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
-				Trigger: managementControllerTriggerTransitionResume,
-			},
+		// API-triggered transitions
+		state.WithActionTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
+			schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE.String(),
+			s.createManagementControllerTransitionAction(ctx, controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE),
 		),
-		state.WithPersistState(s.config.PersistStateChanges),
-		state.WithStateTimeout(s.config.StateTimeout),
-		state.WithMetrics(s.config.EnableMetrics),
-		state.WithTracing(s.config.EnableTracing),
+		state.WithActionTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
+			schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_REBOOT.String(),
+			s.createManagementControllerTransitionAction(ctx, controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_REBOOT),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
+			schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_WARM_RESET.String(),
+			s.createManagementControllerTransitionAction(ctx, controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_WARM_RESET),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
+			schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_COLD_RESET.String(),
+			s.createManagementControllerTransitionAction(ctx, controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_COLD_RESET),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
+			schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_HARD_RESET.String(),
+			s.createManagementControllerTransitionAction(ctx, controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_HARD_RESET),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
+			schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET.String(),
+			s.createManagementControllerTransitionAction(ctx, controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_FACTORY_RESET),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DISABLED.String(),
+			schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_DISABLE.String(),
+			s.createManagementControllerTransitionAction(ctx, controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_DISABLE),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DISABLED.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
+			schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE.String(),
+			s.createManagementControllerTransitionAction(ctx, controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
+			schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_REBOOT.String(),
+			s.createManagementControllerTransitionAction(ctx, controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_REBOOT),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
+			schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_COLD_RESET.String(),
+			s.createManagementControllerTransitionAction(ctx, controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_COLD_RESET),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
+			schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE.String(),
+			s.createManagementControllerTransitionAction(ctx, controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR.String(),
+			schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_DISABLE.String(),
+			s.createManagementControllerTransitionAction(ctx, controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_DISABLE),
+		),
+		state.WithActionTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_QUIESCED.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
+			schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE.String(),
+			s.createManagementControllerTransitionAction(ctx, controllerName, schemav1alpha1.ManagementControllerAction_MANAGEMENT_CONTROLLER_ACTION_ENABLE),
+		),
+		// Internal transitions (not exposed via API)
+		state.WithTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
+			managementControllerTriggerTransitionCompleteReady,
+		),
+		state.WithTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_ERROR.String(),
+			managementControllerTriggerTransitionCompleteError,
+		),
+		state.WithTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_DIAGNOSTIC.String(),
+			managementControllerTriggerTransitionCompleteDiagnostic,
+		),
+		state.WithTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_NOT_READY.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_QUIESCED.String(),
+			managementControllerTriggerTransitionTimeout,
+		),
+		state.WithTransition(
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_QUIESCED.String(),
+			schemav1alpha1.ManagementControllerStatus_MANAGEMENT_CONTROLLER_STATUS_READY.String(),
+			managementControllerTriggerTransitionResume,
+		),
+		state.WithStateTimeout(s.config.stateTimeout),
+		state.WithStateEntry(s.createManagementControllerStatusEntryCallback(ctx, controllerName)),
+		state.WithStateExit(s.createManagementControllerStatusExitCallback(ctx, controllerName)),
+		state.WithPersistence(s.createManagementControllerPersistenceCallback(ctx, controllerName)),
+		state.WithBroadcast(s.createManagementControllerBroadcastCallback(ctx, controllerName)),
 	)
-
-	sm, err := state.New(config)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create management controller %s state machine: %w", controllerName, err)
-	}
-
-	if err := sm.SetPersistenceCallback(s.createManagementControllerPersistenceCallback(ctx, controllerName)); err != nil {
-		return nil, fmt.Errorf("failed to set persistence callback for management controller %s: %w", controllerName, err)
-	}
-	if err := sm.SetBroadcastCallback(s.createManagementControllerBroadcastCallback(ctx, controllerName)); err != nil {
-		return nil, fmt.Errorf("failed to set broadcast callback for management controller %s: %w", controllerName, err)
 	}
 
 	return sm, nil
 }
 
-func (s *StateMgr) createManagementControllerStatusEntryAction(controllerName string, status schemav1alpha1.ManagementControllerStatus) state.StateAction {
-	return func(ctx context.Context) error {
+func (s *StateMgr) createManagementControllerStatusEntryCallback(ctx context.Context, controllerName string) state.EntryCallback {
+	return func(ctx context.Context, machineName, stateName string) error {
 		if s.logger != nil {
 			s.logger.InfoContext(ctx, "Management Controller entering status",
 				"controller_name", controllerName,
-				"status", status.String())
+				"status", stateName)
 		}
 		return nil
 	}
 }
 
-func (s *StateMgr) createManagementControllerStatusExitAction(controllerName string, status schemav1alpha1.ManagementControllerStatus) state.StateAction {
-	return func(ctx context.Context) error {
+func (s *StateMgr) createManagementControllerStatusExitCallback(ctx context.Context, controllerName string) state.ExitCallback {
+	return func(ctx context.Context, machineName, stateName string) error {
 		if s.logger != nil {
 			s.logger.InfoContext(ctx, "Management Controller exiting status",
 				"controller_name", controllerName,
-				"status", status.String())
+				"status", stateName)
 		}
 		return nil
 	}
 }
 
-func (s *StateMgr) createManagementControllerTransitionAction(controllerName string, action schemav1alpha1.ManagementControllerAction) state.TransitionAction {
-	return func(ctx context.Context, from, to string) error {
+func (s *StateMgr) createManagementControllerTransitionAction(ctx context.Context, controllerName string, action schemav1alpha1.ManagementControllerAction) state.ActionFunc {
+	return func(from, to, trigger string) error {
 		if s.logger != nil {
 			s.logger.InfoContext(ctx, "Management Controller state transition",
 				"controller_name", controllerName,
@@ -236,8 +196,8 @@ func (s *StateMgr) createManagementControllerTransitionAction(controllerName str
 }
 
 func (s *StateMgr) createManagementControllerPersistenceCallback(ctx context.Context, controllerName string) state.PersistenceCallback {
-	return func(machineName, state string) error {
-		if !s.config.PersistStateChanges || s.js == nil {
+	return func(ctx context.Context, machineName, state string) error {
+		if !s.config.persistStateChanges || s.js == nil {
 			return nil
 		}
 
@@ -254,10 +214,10 @@ func (s *StateMgr) createManagementControllerPersistenceCallback(ctx context.Con
 			return fmt.Errorf("failed to marshal state event: %w", err)
 		}
 
-		ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+		publishCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 		defer cancel()
 
-		if _, err = s.js.Publish(ctx, subject, dataBytes); err != nil {
+		if _, err = s.js.Publish(publishCtx, subject, dataBytes); err != nil {
 			return fmt.Errorf("%w: %w", ErrStatePersistenceFailed, err)
 		}
 
@@ -265,9 +225,9 @@ func (s *StateMgr) createManagementControllerPersistenceCallback(ctx context.Con
 	}
 }
 
-func (s *StateMgr) createManagementControllerBroadcastCallback(ctx context.Context, componentName string) state.BroadcastCallback {
-	return func(machineName, previousState, currentState string, trigger string) error {
-		if !s.config.BroadcastStateChanges || s.nc == nil {
+func (s *StateMgr) createManagementControllerBroadcastCallback(_ context.Context, componentName string) state.BroadcastCallback {
+	return func(ctx context.Context, machineName, previousState, currentState string, trigger string) error {
+		if !s.config.broadcastStateChanges || s.nc == nil {
 			return nil
 		}
 
@@ -297,7 +257,7 @@ func (s *StateMgr) createManagementControllerBroadcastCallback(ctx context.Conte
 func (s *StateMgr) handleManagementControllerStateRequest(ctx context.Context, req micro.Request) {
 	if s.tracer != nil {
 		var span trace.Span
-		_, span = s.tracer.Start(ctx, "statemgr.handleManagementControllerStateRequest")
+		ctx, span = s.tracer.Start(ctx, "statemgr.handleManagementControllerStateRequest")
 		defer span.End()
 		span.SetAttributes(attribute.String("subject", req.Subject()))
 	}
@@ -332,7 +292,7 @@ func (s *StateMgr) handleGetManagementControllerState(ctx context.Context, req m
 		return
 	}
 
-	currentState := sm.CurrentState()
+	currentState := sm.State(ctx)
 	statusEnum := managementControllerStatusStringToEnum(currentState)
 
 	response := &schemav1alpha1.GetManagementControllerResponse{
@@ -379,7 +339,7 @@ func (s *StateMgr) handleManagementControllerControl(ctx context.Context, req mi
 		return
 	}
 
-	currentState := sm.CurrentState()
+	currentState := sm.State(ctx)
 	statusEnum := managementControllerStatusStringToEnum(currentState)
 
 	response := &schemav1alpha1.ChangeManagementControllerStateResponse{
@@ -404,7 +364,7 @@ func (s *StateMgr) handleGetManagementControllerInfo(ctx context.Context, req mi
 		return
 	}
 
-	currentState := sm.CurrentState()
+	currentState := sm.State(ctx)
 	statusEnum := managementControllerStatusStringToEnum(currentState)
 
 	response := &schemav1alpha1.ManagementController{
