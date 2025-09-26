@@ -15,10 +15,11 @@ plugins:
     out: api/gen
     opt:
       - paths=source_relative
-  - remote: buf.build/connectrpc/go:v1.18.1
+  - remote: buf.build/connectrpc/go:v1.19.0
     out: api/gen
     opt:
       - paths=source_relative
+      - simple=true
   - remote: buf.build/community/planetscale-vtprotobuf:v0.6.0
     out: api/gen
     opt:
