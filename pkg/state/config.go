@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// Config holds the configuration for a state machine.
+// Config holds the configuration for a state machine wrapper.
 type Config struct {
 	// Name is the unique identifier for the state machine
 	Name string
@@ -16,54 +16,48 @@ type Config struct {
 	Description string
 	// InitialState is the starting state of the machine
 	InitialState string
-	// States defines all possible states
-	States []StateDefinition
-	// Transitions defines all allowed state transitions
-	Transitions []TransitionDefinition
-	// PersistState enables state persistence
-	PersistState bool
+	// States defines all possible states (simplified as string slice)
+	States []string
+	// Transitions defines allowed transitions including from/to states, triggers, and optional guard and action handlers
+	Transitions []Transition
 	// StateTimeout is the maximum time a state transition can take
 	StateTimeout time.Duration
-	// EnableMetrics enables state transition metrics collection
-	EnableMetrics bool
-	// EnableTracing enables distributed tracing for state transitions
-	EnableTracing bool
+	// PersistenceCallback is called when state changes need to be persisted
+	PersistenceCallback PersistenceCallback
+	// BroadcastCallback is called when state changes need to be broadcast
+	BroadcastCallback BroadcastCallback
+	// OnStateEntry is called when entering any state
+	OnStateEntry EntryCallback
+	// OnStateExit is called when exiting any state
+	OnStateExit ExitCallback
 }
 
-// StateDefinition defines a single state in the state machine.
-type StateDefinition struct { //nolint:revive // keeping struct name for clarity considering we have TransitionDefinition as well
-	// Name is the unique identifier for the state
-	Name string
-	// Description provides human-readable information about the state
-	Description string
-	// OnEntry is called when entering this state
-	OnEntry StateAction
-	// OnExit is called when leaving this state
-	OnExit StateAction
-}
-
-// TransitionDefinition defines a valid state transition.
-type TransitionDefinition struct {
-	// From is the source state
-	From string
-	// To is the destination state
-	To string
-	// Trigger is the event that causes the transition
+// Transition represents a simple state transition.
+type Transition struct {
+	From    string
+	To      string
 	Trigger string
-	// Guard is an optional condition that must be true for the transition
-	Guard TransitionGuard
-	// Action is executed during the transition
-	Action TransitionAction
+	Guard   GuardFunc
+	Action  ActionFunc
 }
 
-// StateAction is a function executed when entering or exiting a state.
-type StateAction func(ctx context.Context) error //nolint:revive // keeping signature for clarity considering we have TransitionAction as well
+// PersistenceCallback is called when state needs to be persisted.
+type PersistenceCallback func(ctx context.Context, machineName, state string) error
 
-// TransitionAction is a function executed during a state transition.
-type TransitionAction func(ctx context.Context, from, to string) error
+// BroadcastCallback is called when state changes need to be broadcast.
+type BroadcastCallback func(ctx context.Context, machineName, previousState, currentState, trigger string) error
 
-// TransitionGuard is a function that determines if a transition is allowed.
-type TransitionGuard func(ctx context.Context) bool
+// EntryCallback is called when entering a state.
+type EntryCallback func(ctx context.Context, machineName, state string) error
+
+// ExitCallback is called when exiting a state.
+type ExitCallback func(ctx context.Context, machineName, state string) error
+
+// GuardFunc determines if a transition is allowed.
+type GuardFunc func() bool
+
+// ActionFunc is executed during a transition.
+type ActionFunc func(from, to, trigger string) error
 
 // Option represents a configuration option for the state machine.
 type Option interface {
@@ -110,42 +104,72 @@ func WithInitialState(state string) Option {
 }
 
 type statesOption struct {
-	states []StateDefinition
+	states []string
 }
 
 func (o *statesOption) apply(c *Config) {
-	c.States = append([]StateDefinition(nil), o.states...)
+	c.States = append([]string(nil), o.states...)
 }
 
 // WithStates sets the available states for the state machine.
-func WithStates(states ...StateDefinition) Option {
+func WithStates(states ...string) Option {
 	return &statesOption{states: states}
 }
 
-type transitionsOption struct {
-	transitions []TransitionDefinition
+type transitionOption struct {
+	transition Transition
 }
 
-func (o *transitionsOption) apply(c *Config) {
-	c.Transitions = append([]TransitionDefinition(nil), o.transitions...)
+func (o *transitionOption) apply(c *Config) {
+	c.Transitions = append(c.Transitions, o.transition)
 }
 
-// WithTransitions sets the allowed transitions for the state machine.
-func WithTransitions(transitions ...TransitionDefinition) Option {
-	return &transitionsOption{transitions: transitions}
+// WithTransition adds a transition to the state machine.
+func WithTransition(from, to, trigger string) Option {
+	return &transitionOption{
+		transition: Transition{
+			From:    from,
+			To:      to,
+			Trigger: trigger,
+		},
+	}
 }
 
-type persistStateOption struct {
-	persist bool
+// WithGuardedTransition adds a transition with a guard condition.
+func WithGuardedTransition(from, to, trigger string, guard GuardFunc) Option {
+	return &transitionOption{
+		transition: Transition{
+			From:    from,
+			To:      to,
+			Trigger: trigger,
+			Guard:   guard,
+		},
+	}
 }
 
-func (o *persistStateOption) apply(c *Config) {
-	c.PersistState = o.persist
+// WithActionTransition adds a transition with an action.
+func WithActionTransition(from, to, trigger string, action ActionFunc) Option {
+	return &transitionOption{
+		transition: Transition{
+			From:    from,
+			To:      to,
+			Trigger: trigger,
+			Action:  action,
+		},
+	}
 }
 
-// WithPersistState enables or disables state persistence.
-func WithPersistState(persist bool) Option {
-	return &persistStateOption{persist: persist}
+// WithCompleteTransition adds a transition with both guard and action.
+func WithCompleteTransition(from, to, trigger string, guard GuardFunc, action ActionFunc) Option {
+	return &transitionOption{
+		transition: Transition{
+			From:    from,
+			To:      to,
+			Trigger: trigger,
+			Guard:   guard,
+			Action:  action,
+		},
+	}
 }
 
 type stateTimeoutOption struct {
@@ -161,44 +185,67 @@ func WithStateTimeout(timeout time.Duration) Option {
 	return &stateTimeoutOption{timeout: timeout}
 }
 
-type enableMetricsOption struct {
-	enable bool
+type persistenceOption struct {
+	callback PersistenceCallback
 }
 
-func (o *enableMetricsOption) apply(c *Config) {
-	c.EnableMetrics = o.enable
+func (o *persistenceOption) apply(c *Config) {
+	c.PersistenceCallback = o.callback
 }
 
-// WithMetrics enables or disables metrics collection.
-func WithMetrics(enable bool) Option {
-	return &enableMetricsOption{enable: enable}
+// WithPersistence sets the persistence callback.
+func WithPersistence(callback PersistenceCallback) Option {
+	return &persistenceOption{callback: callback}
 }
 
-type enableTracingOption struct {
-	enable bool
+type broadcastOption struct {
+	callback BroadcastCallback
 }
 
-func (o *enableTracingOption) apply(c *Config) {
-	c.EnableTracing = o.enable
+func (o *broadcastOption) apply(c *Config) {
+	c.BroadcastCallback = o.callback
 }
 
-// WithTracing enables or disables distributed tracing.
-func WithTracing(enable bool) Option {
-	return &enableTracingOption{enable: enable}
+// WithBroadcast sets the broadcast callback.
+func WithBroadcast(callback BroadcastCallback) Option {
+	return &broadcastOption{callback: callback}
+}
+
+type stateEntryOption struct {
+	callback EntryCallback
+}
+
+func (o *stateEntryOption) apply(c *Config) {
+	c.OnStateEntry = o.callback
+}
+
+// WithStateEntry sets the state entry callback.
+func WithStateEntry(callback EntryCallback) Option {
+	return &stateEntryOption{callback: callback}
+}
+
+type stateExitOption struct {
+	callback ExitCallback
+}
+
+func (o *stateExitOption) apply(c *Config) {
+	c.OnStateExit = o.callback
+}
+
+// WithStateExit sets the state exit callback.
+func WithStateExit(callback ExitCallback) Option {
+	return &stateExitOption{callback: callback}
 }
 
 // NewConfig creates a new state machine configuration with the provided options.
 func NewConfig(opts ...Option) *Config {
 	cfg := &Config{
-		Name:          "",
-		Description:   "",
-		InitialState:  "unspecified",
-		States:        []StateDefinition{},
-		Transitions:   []TransitionDefinition{},
-		PersistState:  false,
-		StateTimeout:  30 * time.Second,
-		EnableMetrics: true,
-		EnableTracing: true,
+		Name:         "",
+		Description:  "",
+		InitialState: "",
+		States:       []string{},
+		Transitions:  []Transition{},
+		StateTimeout: 30 * time.Second,
 	}
 
 	for _, opt := range opts {
@@ -226,14 +273,14 @@ func (c *Config) Validate() error {
 	initialStateFound := false
 	stateNames := make(map[string]bool)
 	for _, state := range c.States {
-		if state.Name == "" {
+		if state == "" {
 			return fmt.Errorf("%w: state name cannot be empty", ErrInvalidConfig)
 		}
-		if stateNames[state.Name] {
-			return fmt.Errorf("%w: duplicate state name: %s", ErrInvalidConfig, state.Name)
+		if stateNames[state] {
+			return fmt.Errorf("%w: duplicate state name: %s", ErrInvalidConfig, state)
 		}
-		stateNames[state.Name] = true
-		if state.Name == c.InitialState {
+		stateNames[state] = true
+		if state == c.InitialState {
 			initialStateFound = true
 		}
 	}
