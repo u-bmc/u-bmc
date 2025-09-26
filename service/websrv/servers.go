@@ -144,8 +144,13 @@ func (s *WebSrv) createHTTP3Server(router http.Handler, tlsConfig *tls.Config) *
 }
 
 func (s *WebSrv) createHTTP2Server(ctx context.Context, router http.Handler, tlsConfig *tls.Config) *http.Server {
+	p := new(http.Protocols)
+	p.SetHTTP1(true)
+	p.SetHTTP2(true)
+
 	return &http.Server{
 		Handler:      router,
+		Protocols:    p,
 		BaseContext:  func(_ net.Listener) context.Context { return ctx },
 		ReadTimeout:  s.config.readTimeout,
 		WriteTimeout: s.config.writeTimeout,
