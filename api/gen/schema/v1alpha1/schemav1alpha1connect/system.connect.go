@@ -111,35 +111,35 @@ const (
 
 // BMCServiceClient is a client for the schema.v1alpha1.BMCService service.
 type BMCServiceClient interface {
-	GetSystemInfo(context.Context, *connect.Request[v1alpha1.GetSystemInfoRequest]) (*connect.Response[v1alpha1.GetSystemInfoResponse], error)
-	GetHealth(context.Context, *connect.Request[v1alpha1.GetHealthRequest]) (*connect.Response[v1alpha1.GetHealthResponse], error)
-	GetAssetInfo(context.Context, *connect.Request[v1alpha1.GetAssetInfoRequest]) (*connect.Response[v1alpha1.GetAssetInfoResponse], error)
-	SetAssetInfo(context.Context, *connect.Request[v1alpha1.SetAssetInfoRequest]) (*connect.Response[v1alpha1.SetAssetInfoResponse], error)
-	GetChassis(context.Context, *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error)
-	ListChassis(context.Context, *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error)
-	UpdateChassis(context.Context, *connect.Request[v1alpha1.UpdateChassisRequest]) (*connect.Response[v1alpha1.UpdateChassisResponse], error)
-	ChangeChassisState(context.Context, *connect.Request[v1alpha1.ChangeChassisStateRequest]) (*connect.Response[v1alpha1.ChangeChassisStateResponse], error)
-	GetHost(context.Context, *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error)
-	ListHosts(context.Context, *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error)
-	UpdateHost(context.Context, *connect.Request[v1alpha1.UpdateHostRequest]) (*connect.Response[v1alpha1.UpdateHostResponse], error)
-	ChangeHostState(context.Context, *connect.Request[v1alpha1.ChangeHostStateRequest]) (*connect.Response[v1alpha1.ChangeHostStateResponse], error)
-	GetManagementController(context.Context, *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error)
-	ListManagementControllers(context.Context, *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error)
-	UpdateManagementController(context.Context, *connect.Request[v1alpha1.UpdateManagementControllerRequest]) (*connect.Response[v1alpha1.UpdateManagementControllerResponse], error)
-	ChangeManagementControllerState(context.Context, *connect.Request[v1alpha1.ChangeManagementControllerStateRequest]) (*connect.Response[v1alpha1.ChangeManagementControllerStateResponse], error)
-	ListSensors(context.Context, *connect.Request[v1alpha1.ListSensorsRequest]) (*connect.Response[v1alpha1.ListSensorsResponse], error)
-	GetSensor(context.Context, *connect.Request[v1alpha1.GetSensorRequest]) (*connect.Response[v1alpha1.GetSensorResponse], error)
-	GetThermalZone(context.Context, *connect.Request[v1alpha1.GetThermalZoneRequest]) (*connect.Response[v1alpha1.GetThermalZoneResponse], error)
-	SetThermalZone(context.Context, *connect.Request[v1alpha1.SetThermalZoneRequest]) (*connect.Response[v1alpha1.SetThermalZoneResponse], error)
-	ListThermalZones(context.Context, *connect.Request[v1alpha1.ListThermalZonesRequest]) (*connect.Response[v1alpha1.ListThermalZonesResponse], error)
-	CreateUser(context.Context, *connect.Request[v1alpha1.CreateUserRequest]) (*connect.Response[v1alpha1.CreateUserResponse], error)
-	GetUser(context.Context, *connect.Request[v1alpha1.GetUserRequest]) (*connect.Response[v1alpha1.GetUserResponse], error)
-	UpdateUser(context.Context, *connect.Request[v1alpha1.UpdateUserRequest]) (*connect.Response[v1alpha1.UpdateUserResponse], error)
-	DeleteUser(context.Context, *connect.Request[v1alpha1.DeleteUserRequest]) (*connect.Response[v1alpha1.DeleteUserResponse], error)
-	ListUsers(context.Context, *connect.Request[v1alpha1.ListUsersRequest]) (*connect.Response[v1alpha1.ListUsersResponse], error)
-	ChangePassword(context.Context, *connect.Request[v1alpha1.ChangePasswordRequest]) (*connect.Response[v1alpha1.ChangePasswordResponse], error)
-	ResetPassword(context.Context, *connect.Request[v1alpha1.ResetPasswordRequest]) (*connect.Response[v1alpha1.ResetPasswordResponse], error)
-	AuthenticateUser(context.Context, *connect.Request[v1alpha1.AuthenticateUserRequest]) (*connect.Response[v1alpha1.AuthenticateUserResponse], error)
+	GetSystemInfo(context.Context, *v1alpha1.GetSystemInfoRequest) (*v1alpha1.GetSystemInfoResponse, error)
+	GetHealth(context.Context, *v1alpha1.GetHealthRequest) (*v1alpha1.GetHealthResponse, error)
+	GetAssetInfo(context.Context, *v1alpha1.GetAssetInfoRequest) (*v1alpha1.GetAssetInfoResponse, error)
+	SetAssetInfo(context.Context, *v1alpha1.SetAssetInfoRequest) (*v1alpha1.SetAssetInfoResponse, error)
+	GetChassis(context.Context, *v1alpha1.GetChassisRequest) (*v1alpha1.GetChassisResponse, error)
+	ListChassis(context.Context, *v1alpha1.ListChassisRequest) (*v1alpha1.ListChassisResponse, error)
+	UpdateChassis(context.Context, *v1alpha1.UpdateChassisRequest) (*v1alpha1.UpdateChassisResponse, error)
+	ChangeChassisState(context.Context, *v1alpha1.ChangeChassisStateRequest) (*v1alpha1.ChangeChassisStateResponse, error)
+	GetHost(context.Context, *v1alpha1.GetHostRequest) (*v1alpha1.GetHostResponse, error)
+	ListHosts(context.Context, *v1alpha1.ListHostsRequest) (*v1alpha1.ListHostsResponse, error)
+	UpdateHost(context.Context, *v1alpha1.UpdateHostRequest) (*v1alpha1.UpdateHostResponse, error)
+	ChangeHostState(context.Context, *v1alpha1.ChangeHostStateRequest) (*v1alpha1.ChangeHostStateResponse, error)
+	GetManagementController(context.Context, *v1alpha1.GetManagementControllerRequest) (*v1alpha1.GetManagementControllerResponse, error)
+	ListManagementControllers(context.Context, *v1alpha1.ListManagementControllersRequest) (*v1alpha1.ListManagementControllersResponse, error)
+	UpdateManagementController(context.Context, *v1alpha1.UpdateManagementControllerRequest) (*v1alpha1.UpdateManagementControllerResponse, error)
+	ChangeManagementControllerState(context.Context, *v1alpha1.ChangeManagementControllerStateRequest) (*v1alpha1.ChangeManagementControllerStateResponse, error)
+	ListSensors(context.Context, *v1alpha1.ListSensorsRequest) (*v1alpha1.ListSensorsResponse, error)
+	GetSensor(context.Context, *v1alpha1.GetSensorRequest) (*v1alpha1.GetSensorResponse, error)
+	GetThermalZone(context.Context, *v1alpha1.GetThermalZoneRequest) (*v1alpha1.GetThermalZoneResponse, error)
+	SetThermalZone(context.Context, *v1alpha1.SetThermalZoneRequest) (*v1alpha1.SetThermalZoneResponse, error)
+	ListThermalZones(context.Context, *v1alpha1.ListThermalZonesRequest) (*v1alpha1.ListThermalZonesResponse, error)
+	CreateUser(context.Context, *v1alpha1.CreateUserRequest) (*v1alpha1.CreateUserResponse, error)
+	GetUser(context.Context, *v1alpha1.GetUserRequest) (*v1alpha1.GetUserResponse, error)
+	UpdateUser(context.Context, *v1alpha1.UpdateUserRequest) (*v1alpha1.UpdateUserResponse, error)
+	DeleteUser(context.Context, *v1alpha1.DeleteUserRequest) (*v1alpha1.DeleteUserResponse, error)
+	ListUsers(context.Context, *v1alpha1.ListUsersRequest) (*v1alpha1.ListUsersResponse, error)
+	ChangePassword(context.Context, *v1alpha1.ChangePasswordRequest) (*v1alpha1.ChangePasswordResponse, error)
+	ResetPassword(context.Context, *v1alpha1.ResetPasswordRequest) (*v1alpha1.ResetPasswordResponse, error)
+	AuthenticateUser(context.Context, *v1alpha1.AuthenticateUserRequest) (*v1alpha1.AuthenticateUserResponse, error)
 }
 
 // NewBMCServiceClient constructs a client for the schema.v1alpha1.BMCService service. By default,
@@ -364,181 +364,297 @@ type bMCServiceClient struct {
 }
 
 // GetSystemInfo calls schema.v1alpha1.BMCService.GetSystemInfo.
-func (c *bMCServiceClient) GetSystemInfo(ctx context.Context, req *connect.Request[v1alpha1.GetSystemInfoRequest]) (*connect.Response[v1alpha1.GetSystemInfoResponse], error) {
-	return c.getSystemInfo.CallUnary(ctx, req)
+func (c *bMCServiceClient) GetSystemInfo(ctx context.Context, req *v1alpha1.GetSystemInfoRequest) (*v1alpha1.GetSystemInfoResponse, error) {
+	response, err := c.getSystemInfo.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // GetHealth calls schema.v1alpha1.BMCService.GetHealth.
-func (c *bMCServiceClient) GetHealth(ctx context.Context, req *connect.Request[v1alpha1.GetHealthRequest]) (*connect.Response[v1alpha1.GetHealthResponse], error) {
-	return c.getHealth.CallUnary(ctx, req)
+func (c *bMCServiceClient) GetHealth(ctx context.Context, req *v1alpha1.GetHealthRequest) (*v1alpha1.GetHealthResponse, error) {
+	response, err := c.getHealth.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // GetAssetInfo calls schema.v1alpha1.BMCService.GetAssetInfo.
-func (c *bMCServiceClient) GetAssetInfo(ctx context.Context, req *connect.Request[v1alpha1.GetAssetInfoRequest]) (*connect.Response[v1alpha1.GetAssetInfoResponse], error) {
-	return c.getAssetInfo.CallUnary(ctx, req)
+func (c *bMCServiceClient) GetAssetInfo(ctx context.Context, req *v1alpha1.GetAssetInfoRequest) (*v1alpha1.GetAssetInfoResponse, error) {
+	response, err := c.getAssetInfo.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // SetAssetInfo calls schema.v1alpha1.BMCService.SetAssetInfo.
-func (c *bMCServiceClient) SetAssetInfo(ctx context.Context, req *connect.Request[v1alpha1.SetAssetInfoRequest]) (*connect.Response[v1alpha1.SetAssetInfoResponse], error) {
-	return c.setAssetInfo.CallUnary(ctx, req)
+func (c *bMCServiceClient) SetAssetInfo(ctx context.Context, req *v1alpha1.SetAssetInfoRequest) (*v1alpha1.SetAssetInfoResponse, error) {
+	response, err := c.setAssetInfo.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // GetChassis calls schema.v1alpha1.BMCService.GetChassis.
-func (c *bMCServiceClient) GetChassis(ctx context.Context, req *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error) {
-	return c.getChassis.CallUnary(ctx, req)
+func (c *bMCServiceClient) GetChassis(ctx context.Context, req *v1alpha1.GetChassisRequest) (*v1alpha1.GetChassisResponse, error) {
+	response, err := c.getChassis.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // ListChassis calls schema.v1alpha1.BMCService.ListChassis.
-func (c *bMCServiceClient) ListChassis(ctx context.Context, req *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error) {
-	return c.listChassis.CallUnary(ctx, req)
+func (c *bMCServiceClient) ListChassis(ctx context.Context, req *v1alpha1.ListChassisRequest) (*v1alpha1.ListChassisResponse, error) {
+	response, err := c.listChassis.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // UpdateChassis calls schema.v1alpha1.BMCService.UpdateChassis.
-func (c *bMCServiceClient) UpdateChassis(ctx context.Context, req *connect.Request[v1alpha1.UpdateChassisRequest]) (*connect.Response[v1alpha1.UpdateChassisResponse], error) {
-	return c.updateChassis.CallUnary(ctx, req)
+func (c *bMCServiceClient) UpdateChassis(ctx context.Context, req *v1alpha1.UpdateChassisRequest) (*v1alpha1.UpdateChassisResponse, error) {
+	response, err := c.updateChassis.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // ChangeChassisState calls schema.v1alpha1.BMCService.ChangeChassisState.
-func (c *bMCServiceClient) ChangeChassisState(ctx context.Context, req *connect.Request[v1alpha1.ChangeChassisStateRequest]) (*connect.Response[v1alpha1.ChangeChassisStateResponse], error) {
-	return c.changeChassisState.CallUnary(ctx, req)
+func (c *bMCServiceClient) ChangeChassisState(ctx context.Context, req *v1alpha1.ChangeChassisStateRequest) (*v1alpha1.ChangeChassisStateResponse, error) {
+	response, err := c.changeChassisState.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // GetHost calls schema.v1alpha1.BMCService.GetHost.
-func (c *bMCServiceClient) GetHost(ctx context.Context, req *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error) {
-	return c.getHost.CallUnary(ctx, req)
+func (c *bMCServiceClient) GetHost(ctx context.Context, req *v1alpha1.GetHostRequest) (*v1alpha1.GetHostResponse, error) {
+	response, err := c.getHost.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // ListHosts calls schema.v1alpha1.BMCService.ListHosts.
-func (c *bMCServiceClient) ListHosts(ctx context.Context, req *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error) {
-	return c.listHosts.CallUnary(ctx, req)
+func (c *bMCServiceClient) ListHosts(ctx context.Context, req *v1alpha1.ListHostsRequest) (*v1alpha1.ListHostsResponse, error) {
+	response, err := c.listHosts.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // UpdateHost calls schema.v1alpha1.BMCService.UpdateHost.
-func (c *bMCServiceClient) UpdateHost(ctx context.Context, req *connect.Request[v1alpha1.UpdateHostRequest]) (*connect.Response[v1alpha1.UpdateHostResponse], error) {
-	return c.updateHost.CallUnary(ctx, req)
+func (c *bMCServiceClient) UpdateHost(ctx context.Context, req *v1alpha1.UpdateHostRequest) (*v1alpha1.UpdateHostResponse, error) {
+	response, err := c.updateHost.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // ChangeHostState calls schema.v1alpha1.BMCService.ChangeHostState.
-func (c *bMCServiceClient) ChangeHostState(ctx context.Context, req *connect.Request[v1alpha1.ChangeHostStateRequest]) (*connect.Response[v1alpha1.ChangeHostStateResponse], error) {
-	return c.changeHostState.CallUnary(ctx, req)
+func (c *bMCServiceClient) ChangeHostState(ctx context.Context, req *v1alpha1.ChangeHostStateRequest) (*v1alpha1.ChangeHostStateResponse, error) {
+	response, err := c.changeHostState.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // GetManagementController calls schema.v1alpha1.BMCService.GetManagementController.
-func (c *bMCServiceClient) GetManagementController(ctx context.Context, req *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error) {
-	return c.getManagementController.CallUnary(ctx, req)
+func (c *bMCServiceClient) GetManagementController(ctx context.Context, req *v1alpha1.GetManagementControllerRequest) (*v1alpha1.GetManagementControllerResponse, error) {
+	response, err := c.getManagementController.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // ListManagementControllers calls schema.v1alpha1.BMCService.ListManagementControllers.
-func (c *bMCServiceClient) ListManagementControllers(ctx context.Context, req *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error) {
-	return c.listManagementControllers.CallUnary(ctx, req)
+func (c *bMCServiceClient) ListManagementControllers(ctx context.Context, req *v1alpha1.ListManagementControllersRequest) (*v1alpha1.ListManagementControllersResponse, error) {
+	response, err := c.listManagementControllers.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // UpdateManagementController calls schema.v1alpha1.BMCService.UpdateManagementController.
-func (c *bMCServiceClient) UpdateManagementController(ctx context.Context, req *connect.Request[v1alpha1.UpdateManagementControllerRequest]) (*connect.Response[v1alpha1.UpdateManagementControllerResponse], error) {
-	return c.updateManagementController.CallUnary(ctx, req)
+func (c *bMCServiceClient) UpdateManagementController(ctx context.Context, req *v1alpha1.UpdateManagementControllerRequest) (*v1alpha1.UpdateManagementControllerResponse, error) {
+	response, err := c.updateManagementController.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // ChangeManagementControllerState calls schema.v1alpha1.BMCService.ChangeManagementControllerState.
-func (c *bMCServiceClient) ChangeManagementControllerState(ctx context.Context, req *connect.Request[v1alpha1.ChangeManagementControllerStateRequest]) (*connect.Response[v1alpha1.ChangeManagementControllerStateResponse], error) {
-	return c.changeManagementControllerState.CallUnary(ctx, req)
+func (c *bMCServiceClient) ChangeManagementControllerState(ctx context.Context, req *v1alpha1.ChangeManagementControllerStateRequest) (*v1alpha1.ChangeManagementControllerStateResponse, error) {
+	response, err := c.changeManagementControllerState.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // ListSensors calls schema.v1alpha1.BMCService.ListSensors.
-func (c *bMCServiceClient) ListSensors(ctx context.Context, req *connect.Request[v1alpha1.ListSensorsRequest]) (*connect.Response[v1alpha1.ListSensorsResponse], error) {
-	return c.listSensors.CallUnary(ctx, req)
+func (c *bMCServiceClient) ListSensors(ctx context.Context, req *v1alpha1.ListSensorsRequest) (*v1alpha1.ListSensorsResponse, error) {
+	response, err := c.listSensors.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // GetSensor calls schema.v1alpha1.BMCService.GetSensor.
-func (c *bMCServiceClient) GetSensor(ctx context.Context, req *connect.Request[v1alpha1.GetSensorRequest]) (*connect.Response[v1alpha1.GetSensorResponse], error) {
-	return c.getSensor.CallUnary(ctx, req)
+func (c *bMCServiceClient) GetSensor(ctx context.Context, req *v1alpha1.GetSensorRequest) (*v1alpha1.GetSensorResponse, error) {
+	response, err := c.getSensor.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // GetThermalZone calls schema.v1alpha1.BMCService.GetThermalZone.
-func (c *bMCServiceClient) GetThermalZone(ctx context.Context, req *connect.Request[v1alpha1.GetThermalZoneRequest]) (*connect.Response[v1alpha1.GetThermalZoneResponse], error) {
-	return c.getThermalZone.CallUnary(ctx, req)
+func (c *bMCServiceClient) GetThermalZone(ctx context.Context, req *v1alpha1.GetThermalZoneRequest) (*v1alpha1.GetThermalZoneResponse, error) {
+	response, err := c.getThermalZone.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // SetThermalZone calls schema.v1alpha1.BMCService.SetThermalZone.
-func (c *bMCServiceClient) SetThermalZone(ctx context.Context, req *connect.Request[v1alpha1.SetThermalZoneRequest]) (*connect.Response[v1alpha1.SetThermalZoneResponse], error) {
-	return c.setThermalZone.CallUnary(ctx, req)
+func (c *bMCServiceClient) SetThermalZone(ctx context.Context, req *v1alpha1.SetThermalZoneRequest) (*v1alpha1.SetThermalZoneResponse, error) {
+	response, err := c.setThermalZone.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // ListThermalZones calls schema.v1alpha1.BMCService.ListThermalZones.
-func (c *bMCServiceClient) ListThermalZones(ctx context.Context, req *connect.Request[v1alpha1.ListThermalZonesRequest]) (*connect.Response[v1alpha1.ListThermalZonesResponse], error) {
-	return c.listThermalZones.CallUnary(ctx, req)
+func (c *bMCServiceClient) ListThermalZones(ctx context.Context, req *v1alpha1.ListThermalZonesRequest) (*v1alpha1.ListThermalZonesResponse, error) {
+	response, err := c.listThermalZones.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // CreateUser calls schema.v1alpha1.BMCService.CreateUser.
-func (c *bMCServiceClient) CreateUser(ctx context.Context, req *connect.Request[v1alpha1.CreateUserRequest]) (*connect.Response[v1alpha1.CreateUserResponse], error) {
-	return c.createUser.CallUnary(ctx, req)
+func (c *bMCServiceClient) CreateUser(ctx context.Context, req *v1alpha1.CreateUserRequest) (*v1alpha1.CreateUserResponse, error) {
+	response, err := c.createUser.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // GetUser calls schema.v1alpha1.BMCService.GetUser.
-func (c *bMCServiceClient) GetUser(ctx context.Context, req *connect.Request[v1alpha1.GetUserRequest]) (*connect.Response[v1alpha1.GetUserResponse], error) {
-	return c.getUser.CallUnary(ctx, req)
+func (c *bMCServiceClient) GetUser(ctx context.Context, req *v1alpha1.GetUserRequest) (*v1alpha1.GetUserResponse, error) {
+	response, err := c.getUser.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // UpdateUser calls schema.v1alpha1.BMCService.UpdateUser.
-func (c *bMCServiceClient) UpdateUser(ctx context.Context, req *connect.Request[v1alpha1.UpdateUserRequest]) (*connect.Response[v1alpha1.UpdateUserResponse], error) {
-	return c.updateUser.CallUnary(ctx, req)
+func (c *bMCServiceClient) UpdateUser(ctx context.Context, req *v1alpha1.UpdateUserRequest) (*v1alpha1.UpdateUserResponse, error) {
+	response, err := c.updateUser.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // DeleteUser calls schema.v1alpha1.BMCService.DeleteUser.
-func (c *bMCServiceClient) DeleteUser(ctx context.Context, req *connect.Request[v1alpha1.DeleteUserRequest]) (*connect.Response[v1alpha1.DeleteUserResponse], error) {
-	return c.deleteUser.CallUnary(ctx, req)
+func (c *bMCServiceClient) DeleteUser(ctx context.Context, req *v1alpha1.DeleteUserRequest) (*v1alpha1.DeleteUserResponse, error) {
+	response, err := c.deleteUser.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // ListUsers calls schema.v1alpha1.BMCService.ListUsers.
-func (c *bMCServiceClient) ListUsers(ctx context.Context, req *connect.Request[v1alpha1.ListUsersRequest]) (*connect.Response[v1alpha1.ListUsersResponse], error) {
-	return c.listUsers.CallUnary(ctx, req)
+func (c *bMCServiceClient) ListUsers(ctx context.Context, req *v1alpha1.ListUsersRequest) (*v1alpha1.ListUsersResponse, error) {
+	response, err := c.listUsers.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // ChangePassword calls schema.v1alpha1.BMCService.ChangePassword.
-func (c *bMCServiceClient) ChangePassword(ctx context.Context, req *connect.Request[v1alpha1.ChangePasswordRequest]) (*connect.Response[v1alpha1.ChangePasswordResponse], error) {
-	return c.changePassword.CallUnary(ctx, req)
+func (c *bMCServiceClient) ChangePassword(ctx context.Context, req *v1alpha1.ChangePasswordRequest) (*v1alpha1.ChangePasswordResponse, error) {
+	response, err := c.changePassword.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // ResetPassword calls schema.v1alpha1.BMCService.ResetPassword.
-func (c *bMCServiceClient) ResetPassword(ctx context.Context, req *connect.Request[v1alpha1.ResetPasswordRequest]) (*connect.Response[v1alpha1.ResetPasswordResponse], error) {
-	return c.resetPassword.CallUnary(ctx, req)
+func (c *bMCServiceClient) ResetPassword(ctx context.Context, req *v1alpha1.ResetPasswordRequest) (*v1alpha1.ResetPasswordResponse, error) {
+	response, err := c.resetPassword.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // AuthenticateUser calls schema.v1alpha1.BMCService.AuthenticateUser.
-func (c *bMCServiceClient) AuthenticateUser(ctx context.Context, req *connect.Request[v1alpha1.AuthenticateUserRequest]) (*connect.Response[v1alpha1.AuthenticateUserResponse], error) {
-	return c.authenticateUser.CallUnary(ctx, req)
+func (c *bMCServiceClient) AuthenticateUser(ctx context.Context, req *v1alpha1.AuthenticateUserRequest) (*v1alpha1.AuthenticateUserResponse, error) {
+	response, err := c.authenticateUser.CallUnary(ctx, connect.NewRequest(req))
+	if response != nil {
+		return response.Msg, err
+	}
+	return nil, err
 }
 
 // BMCServiceHandler is an implementation of the schema.v1alpha1.BMCService service.
 type BMCServiceHandler interface {
-	GetSystemInfo(context.Context, *connect.Request[v1alpha1.GetSystemInfoRequest]) (*connect.Response[v1alpha1.GetSystemInfoResponse], error)
-	GetHealth(context.Context, *connect.Request[v1alpha1.GetHealthRequest]) (*connect.Response[v1alpha1.GetHealthResponse], error)
-	GetAssetInfo(context.Context, *connect.Request[v1alpha1.GetAssetInfoRequest]) (*connect.Response[v1alpha1.GetAssetInfoResponse], error)
-	SetAssetInfo(context.Context, *connect.Request[v1alpha1.SetAssetInfoRequest]) (*connect.Response[v1alpha1.SetAssetInfoResponse], error)
-	GetChassis(context.Context, *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error)
-	ListChassis(context.Context, *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error)
-	UpdateChassis(context.Context, *connect.Request[v1alpha1.UpdateChassisRequest]) (*connect.Response[v1alpha1.UpdateChassisResponse], error)
-	ChangeChassisState(context.Context, *connect.Request[v1alpha1.ChangeChassisStateRequest]) (*connect.Response[v1alpha1.ChangeChassisStateResponse], error)
-	GetHost(context.Context, *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error)
-	ListHosts(context.Context, *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error)
-	UpdateHost(context.Context, *connect.Request[v1alpha1.UpdateHostRequest]) (*connect.Response[v1alpha1.UpdateHostResponse], error)
-	ChangeHostState(context.Context, *connect.Request[v1alpha1.ChangeHostStateRequest]) (*connect.Response[v1alpha1.ChangeHostStateResponse], error)
-	GetManagementController(context.Context, *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error)
-	ListManagementControllers(context.Context, *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error)
-	UpdateManagementController(context.Context, *connect.Request[v1alpha1.UpdateManagementControllerRequest]) (*connect.Response[v1alpha1.UpdateManagementControllerResponse], error)
-	ChangeManagementControllerState(context.Context, *connect.Request[v1alpha1.ChangeManagementControllerStateRequest]) (*connect.Response[v1alpha1.ChangeManagementControllerStateResponse], error)
-	ListSensors(context.Context, *connect.Request[v1alpha1.ListSensorsRequest]) (*connect.Response[v1alpha1.ListSensorsResponse], error)
-	GetSensor(context.Context, *connect.Request[v1alpha1.GetSensorRequest]) (*connect.Response[v1alpha1.GetSensorResponse], error)
-	GetThermalZone(context.Context, *connect.Request[v1alpha1.GetThermalZoneRequest]) (*connect.Response[v1alpha1.GetThermalZoneResponse], error)
-	SetThermalZone(context.Context, *connect.Request[v1alpha1.SetThermalZoneRequest]) (*connect.Response[v1alpha1.SetThermalZoneResponse], error)
-	ListThermalZones(context.Context, *connect.Request[v1alpha1.ListThermalZonesRequest]) (*connect.Response[v1alpha1.ListThermalZonesResponse], error)
-	CreateUser(context.Context, *connect.Request[v1alpha1.CreateUserRequest]) (*connect.Response[v1alpha1.CreateUserResponse], error)
-	GetUser(context.Context, *connect.Request[v1alpha1.GetUserRequest]) (*connect.Response[v1alpha1.GetUserResponse], error)
-	UpdateUser(context.Context, *connect.Request[v1alpha1.UpdateUserRequest]) (*connect.Response[v1alpha1.UpdateUserResponse], error)
-	DeleteUser(context.Context, *connect.Request[v1alpha1.DeleteUserRequest]) (*connect.Response[v1alpha1.DeleteUserResponse], error)
-	ListUsers(context.Context, *connect.Request[v1alpha1.ListUsersRequest]) (*connect.Response[v1alpha1.ListUsersResponse], error)
-	ChangePassword(context.Context, *connect.Request[v1alpha1.ChangePasswordRequest]) (*connect.Response[v1alpha1.ChangePasswordResponse], error)
-	ResetPassword(context.Context, *connect.Request[v1alpha1.ResetPasswordRequest]) (*connect.Response[v1alpha1.ResetPasswordResponse], error)
-	AuthenticateUser(context.Context, *connect.Request[v1alpha1.AuthenticateUserRequest]) (*connect.Response[v1alpha1.AuthenticateUserResponse], error)
+	GetSystemInfo(context.Context, *v1alpha1.GetSystemInfoRequest) (*v1alpha1.GetSystemInfoResponse, error)
+	GetHealth(context.Context, *v1alpha1.GetHealthRequest) (*v1alpha1.GetHealthResponse, error)
+	GetAssetInfo(context.Context, *v1alpha1.GetAssetInfoRequest) (*v1alpha1.GetAssetInfoResponse, error)
+	SetAssetInfo(context.Context, *v1alpha1.SetAssetInfoRequest) (*v1alpha1.SetAssetInfoResponse, error)
+	GetChassis(context.Context, *v1alpha1.GetChassisRequest) (*v1alpha1.GetChassisResponse, error)
+	ListChassis(context.Context, *v1alpha1.ListChassisRequest) (*v1alpha1.ListChassisResponse, error)
+	UpdateChassis(context.Context, *v1alpha1.UpdateChassisRequest) (*v1alpha1.UpdateChassisResponse, error)
+	ChangeChassisState(context.Context, *v1alpha1.ChangeChassisStateRequest) (*v1alpha1.ChangeChassisStateResponse, error)
+	GetHost(context.Context, *v1alpha1.GetHostRequest) (*v1alpha1.GetHostResponse, error)
+	ListHosts(context.Context, *v1alpha1.ListHostsRequest) (*v1alpha1.ListHostsResponse, error)
+	UpdateHost(context.Context, *v1alpha1.UpdateHostRequest) (*v1alpha1.UpdateHostResponse, error)
+	ChangeHostState(context.Context, *v1alpha1.ChangeHostStateRequest) (*v1alpha1.ChangeHostStateResponse, error)
+	GetManagementController(context.Context, *v1alpha1.GetManagementControllerRequest) (*v1alpha1.GetManagementControllerResponse, error)
+	ListManagementControllers(context.Context, *v1alpha1.ListManagementControllersRequest) (*v1alpha1.ListManagementControllersResponse, error)
+	UpdateManagementController(context.Context, *v1alpha1.UpdateManagementControllerRequest) (*v1alpha1.UpdateManagementControllerResponse, error)
+	ChangeManagementControllerState(context.Context, *v1alpha1.ChangeManagementControllerStateRequest) (*v1alpha1.ChangeManagementControllerStateResponse, error)
+	ListSensors(context.Context, *v1alpha1.ListSensorsRequest) (*v1alpha1.ListSensorsResponse, error)
+	GetSensor(context.Context, *v1alpha1.GetSensorRequest) (*v1alpha1.GetSensorResponse, error)
+	GetThermalZone(context.Context, *v1alpha1.GetThermalZoneRequest) (*v1alpha1.GetThermalZoneResponse, error)
+	SetThermalZone(context.Context, *v1alpha1.SetThermalZoneRequest) (*v1alpha1.SetThermalZoneResponse, error)
+	ListThermalZones(context.Context, *v1alpha1.ListThermalZonesRequest) (*v1alpha1.ListThermalZonesResponse, error)
+	CreateUser(context.Context, *v1alpha1.CreateUserRequest) (*v1alpha1.CreateUserResponse, error)
+	GetUser(context.Context, *v1alpha1.GetUserRequest) (*v1alpha1.GetUserResponse, error)
+	UpdateUser(context.Context, *v1alpha1.UpdateUserRequest) (*v1alpha1.UpdateUserResponse, error)
+	DeleteUser(context.Context, *v1alpha1.DeleteUserRequest) (*v1alpha1.DeleteUserResponse, error)
+	ListUsers(context.Context, *v1alpha1.ListUsersRequest) (*v1alpha1.ListUsersResponse, error)
+	ChangePassword(context.Context, *v1alpha1.ChangePasswordRequest) (*v1alpha1.ChangePasswordResponse, error)
+	ResetPassword(context.Context, *v1alpha1.ResetPasswordRequest) (*v1alpha1.ResetPasswordResponse, error)
+	AuthenticateUser(context.Context, *v1alpha1.AuthenticateUserRequest) (*v1alpha1.AuthenticateUserResponse, error)
 }
 
 // NewBMCServiceHandler builds an HTTP handler from the service implementation. It returns the path
@@ -548,175 +664,175 @@ type BMCServiceHandler interface {
 // and JSON codecs. They also support gzip compression.
 func NewBMCServiceHandler(svc BMCServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
 	bMCServiceMethods := v1alpha1.File_schema_v1alpha1_system_proto.Services().ByName("BMCService").Methods()
-	bMCServiceGetSystemInfoHandler := connect.NewUnaryHandler(
+	bMCServiceGetSystemInfoHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceGetSystemInfoProcedure,
 		svc.GetSystemInfo,
 		connect.WithSchema(bMCServiceMethods.ByName("GetSystemInfo")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceGetHealthHandler := connect.NewUnaryHandler(
+	bMCServiceGetHealthHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceGetHealthProcedure,
 		svc.GetHealth,
 		connect.WithSchema(bMCServiceMethods.ByName("GetHealth")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceGetAssetInfoHandler := connect.NewUnaryHandler(
+	bMCServiceGetAssetInfoHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceGetAssetInfoProcedure,
 		svc.GetAssetInfo,
 		connect.WithSchema(bMCServiceMethods.ByName("GetAssetInfo")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceSetAssetInfoHandler := connect.NewUnaryHandler(
+	bMCServiceSetAssetInfoHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceSetAssetInfoProcedure,
 		svc.SetAssetInfo,
 		connect.WithSchema(bMCServiceMethods.ByName("SetAssetInfo")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceGetChassisHandler := connect.NewUnaryHandler(
+	bMCServiceGetChassisHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceGetChassisProcedure,
 		svc.GetChassis,
 		connect.WithSchema(bMCServiceMethods.ByName("GetChassis")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceListChassisHandler := connect.NewUnaryHandler(
+	bMCServiceListChassisHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceListChassisProcedure,
 		svc.ListChassis,
 		connect.WithSchema(bMCServiceMethods.ByName("ListChassis")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceUpdateChassisHandler := connect.NewUnaryHandler(
+	bMCServiceUpdateChassisHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceUpdateChassisProcedure,
 		svc.UpdateChassis,
 		connect.WithSchema(bMCServiceMethods.ByName("UpdateChassis")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceChangeChassisStateHandler := connect.NewUnaryHandler(
+	bMCServiceChangeChassisStateHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceChangeChassisStateProcedure,
 		svc.ChangeChassisState,
 		connect.WithSchema(bMCServiceMethods.ByName("ChangeChassisState")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceGetHostHandler := connect.NewUnaryHandler(
+	bMCServiceGetHostHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceGetHostProcedure,
 		svc.GetHost,
 		connect.WithSchema(bMCServiceMethods.ByName("GetHost")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceListHostsHandler := connect.NewUnaryHandler(
+	bMCServiceListHostsHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceListHostsProcedure,
 		svc.ListHosts,
 		connect.WithSchema(bMCServiceMethods.ByName("ListHosts")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceUpdateHostHandler := connect.NewUnaryHandler(
+	bMCServiceUpdateHostHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceUpdateHostProcedure,
 		svc.UpdateHost,
 		connect.WithSchema(bMCServiceMethods.ByName("UpdateHost")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceChangeHostStateHandler := connect.NewUnaryHandler(
+	bMCServiceChangeHostStateHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceChangeHostStateProcedure,
 		svc.ChangeHostState,
 		connect.WithSchema(bMCServiceMethods.ByName("ChangeHostState")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceGetManagementControllerHandler := connect.NewUnaryHandler(
+	bMCServiceGetManagementControllerHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceGetManagementControllerProcedure,
 		svc.GetManagementController,
 		connect.WithSchema(bMCServiceMethods.ByName("GetManagementController")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceListManagementControllersHandler := connect.NewUnaryHandler(
+	bMCServiceListManagementControllersHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceListManagementControllersProcedure,
 		svc.ListManagementControllers,
 		connect.WithSchema(bMCServiceMethods.ByName("ListManagementControllers")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceUpdateManagementControllerHandler := connect.NewUnaryHandler(
+	bMCServiceUpdateManagementControllerHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceUpdateManagementControllerProcedure,
 		svc.UpdateManagementController,
 		connect.WithSchema(bMCServiceMethods.ByName("UpdateManagementController")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceChangeManagementControllerStateHandler := connect.NewUnaryHandler(
+	bMCServiceChangeManagementControllerStateHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceChangeManagementControllerStateProcedure,
 		svc.ChangeManagementControllerState,
 		connect.WithSchema(bMCServiceMethods.ByName("ChangeManagementControllerState")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceListSensorsHandler := connect.NewUnaryHandler(
+	bMCServiceListSensorsHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceListSensorsProcedure,
 		svc.ListSensors,
 		connect.WithSchema(bMCServiceMethods.ByName("ListSensors")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceGetSensorHandler := connect.NewUnaryHandler(
+	bMCServiceGetSensorHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceGetSensorProcedure,
 		svc.GetSensor,
 		connect.WithSchema(bMCServiceMethods.ByName("GetSensor")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceGetThermalZoneHandler := connect.NewUnaryHandler(
+	bMCServiceGetThermalZoneHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceGetThermalZoneProcedure,
 		svc.GetThermalZone,
 		connect.WithSchema(bMCServiceMethods.ByName("GetThermalZone")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceSetThermalZoneHandler := connect.NewUnaryHandler(
+	bMCServiceSetThermalZoneHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceSetThermalZoneProcedure,
 		svc.SetThermalZone,
 		connect.WithSchema(bMCServiceMethods.ByName("SetThermalZone")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceListThermalZonesHandler := connect.NewUnaryHandler(
+	bMCServiceListThermalZonesHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceListThermalZonesProcedure,
 		svc.ListThermalZones,
 		connect.WithSchema(bMCServiceMethods.ByName("ListThermalZones")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceCreateUserHandler := connect.NewUnaryHandler(
+	bMCServiceCreateUserHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceCreateUserProcedure,
 		svc.CreateUser,
 		connect.WithSchema(bMCServiceMethods.ByName("CreateUser")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceGetUserHandler := connect.NewUnaryHandler(
+	bMCServiceGetUserHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceGetUserProcedure,
 		svc.GetUser,
 		connect.WithSchema(bMCServiceMethods.ByName("GetUser")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceUpdateUserHandler := connect.NewUnaryHandler(
+	bMCServiceUpdateUserHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceUpdateUserProcedure,
 		svc.UpdateUser,
 		connect.WithSchema(bMCServiceMethods.ByName("UpdateUser")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceDeleteUserHandler := connect.NewUnaryHandler(
+	bMCServiceDeleteUserHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceDeleteUserProcedure,
 		svc.DeleteUser,
 		connect.WithSchema(bMCServiceMethods.ByName("DeleteUser")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceListUsersHandler := connect.NewUnaryHandler(
+	bMCServiceListUsersHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceListUsersProcedure,
 		svc.ListUsers,
 		connect.WithSchema(bMCServiceMethods.ByName("ListUsers")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceChangePasswordHandler := connect.NewUnaryHandler(
+	bMCServiceChangePasswordHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceChangePasswordProcedure,
 		svc.ChangePassword,
 		connect.WithSchema(bMCServiceMethods.ByName("ChangePassword")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceResetPasswordHandler := connect.NewUnaryHandler(
+	bMCServiceResetPasswordHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceResetPasswordProcedure,
 		svc.ResetPassword,
 		connect.WithSchema(bMCServiceMethods.ByName("ResetPassword")),
 		connect.WithHandlerOptions(opts...),
 	)
-	bMCServiceAuthenticateUserHandler := connect.NewUnaryHandler(
+	bMCServiceAuthenticateUserHandler := connect.NewUnaryHandlerSimple(
 		BMCServiceAuthenticateUserProcedure,
 		svc.AuthenticateUser,
 		connect.WithSchema(bMCServiceMethods.ByName("AuthenticateUser")),
@@ -791,118 +907,118 @@ func NewBMCServiceHandler(svc BMCServiceHandler, opts ...connect.HandlerOption) 
 // UnimplementedBMCServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedBMCServiceHandler struct{}
 
-func (UnimplementedBMCServiceHandler) GetSystemInfo(context.Context, *connect.Request[v1alpha1.GetSystemInfoRequest]) (*connect.Response[v1alpha1.GetSystemInfoResponse], error) {
+func (UnimplementedBMCServiceHandler) GetSystemInfo(context.Context, *v1alpha1.GetSystemInfoRequest) (*v1alpha1.GetSystemInfoResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetSystemInfo is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) GetHealth(context.Context, *connect.Request[v1alpha1.GetHealthRequest]) (*connect.Response[v1alpha1.GetHealthResponse], error) {
+func (UnimplementedBMCServiceHandler) GetHealth(context.Context, *v1alpha1.GetHealthRequest) (*v1alpha1.GetHealthResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetHealth is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) GetAssetInfo(context.Context, *connect.Request[v1alpha1.GetAssetInfoRequest]) (*connect.Response[v1alpha1.GetAssetInfoResponse], error) {
+func (UnimplementedBMCServiceHandler) GetAssetInfo(context.Context, *v1alpha1.GetAssetInfoRequest) (*v1alpha1.GetAssetInfoResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetAssetInfo is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) SetAssetInfo(context.Context, *connect.Request[v1alpha1.SetAssetInfoRequest]) (*connect.Response[v1alpha1.SetAssetInfoResponse], error) {
+func (UnimplementedBMCServiceHandler) SetAssetInfo(context.Context, *v1alpha1.SetAssetInfoRequest) (*v1alpha1.SetAssetInfoResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.SetAssetInfo is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) GetChassis(context.Context, *connect.Request[v1alpha1.GetChassisRequest]) (*connect.Response[v1alpha1.GetChassisResponse], error) {
+func (UnimplementedBMCServiceHandler) GetChassis(context.Context, *v1alpha1.GetChassisRequest) (*v1alpha1.GetChassisResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetChassis is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) ListChassis(context.Context, *connect.Request[v1alpha1.ListChassisRequest]) (*connect.Response[v1alpha1.ListChassisResponse], error) {
+func (UnimplementedBMCServiceHandler) ListChassis(context.Context, *v1alpha1.ListChassisRequest) (*v1alpha1.ListChassisResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ListChassis is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) UpdateChassis(context.Context, *connect.Request[v1alpha1.UpdateChassisRequest]) (*connect.Response[v1alpha1.UpdateChassisResponse], error) {
+func (UnimplementedBMCServiceHandler) UpdateChassis(context.Context, *v1alpha1.UpdateChassisRequest) (*v1alpha1.UpdateChassisResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.UpdateChassis is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) ChangeChassisState(context.Context, *connect.Request[v1alpha1.ChangeChassisStateRequest]) (*connect.Response[v1alpha1.ChangeChassisStateResponse], error) {
+func (UnimplementedBMCServiceHandler) ChangeChassisState(context.Context, *v1alpha1.ChangeChassisStateRequest) (*v1alpha1.ChangeChassisStateResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ChangeChassisState is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) GetHost(context.Context, *connect.Request[v1alpha1.GetHostRequest]) (*connect.Response[v1alpha1.GetHostResponse], error) {
+func (UnimplementedBMCServiceHandler) GetHost(context.Context, *v1alpha1.GetHostRequest) (*v1alpha1.GetHostResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetHost is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) ListHosts(context.Context, *connect.Request[v1alpha1.ListHostsRequest]) (*connect.Response[v1alpha1.ListHostsResponse], error) {
+func (UnimplementedBMCServiceHandler) ListHosts(context.Context, *v1alpha1.ListHostsRequest) (*v1alpha1.ListHostsResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ListHosts is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) UpdateHost(context.Context, *connect.Request[v1alpha1.UpdateHostRequest]) (*connect.Response[v1alpha1.UpdateHostResponse], error) {
+func (UnimplementedBMCServiceHandler) UpdateHost(context.Context, *v1alpha1.UpdateHostRequest) (*v1alpha1.UpdateHostResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.UpdateHost is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) ChangeHostState(context.Context, *connect.Request[v1alpha1.ChangeHostStateRequest]) (*connect.Response[v1alpha1.ChangeHostStateResponse], error) {
+func (UnimplementedBMCServiceHandler) ChangeHostState(context.Context, *v1alpha1.ChangeHostStateRequest) (*v1alpha1.ChangeHostStateResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ChangeHostState is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) GetManagementController(context.Context, *connect.Request[v1alpha1.GetManagementControllerRequest]) (*connect.Response[v1alpha1.GetManagementControllerResponse], error) {
+func (UnimplementedBMCServiceHandler) GetManagementController(context.Context, *v1alpha1.GetManagementControllerRequest) (*v1alpha1.GetManagementControllerResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetManagementController is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) ListManagementControllers(context.Context, *connect.Request[v1alpha1.ListManagementControllersRequest]) (*connect.Response[v1alpha1.ListManagementControllersResponse], error) {
+func (UnimplementedBMCServiceHandler) ListManagementControllers(context.Context, *v1alpha1.ListManagementControllersRequest) (*v1alpha1.ListManagementControllersResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ListManagementControllers is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) UpdateManagementController(context.Context, *connect.Request[v1alpha1.UpdateManagementControllerRequest]) (*connect.Response[v1alpha1.UpdateManagementControllerResponse], error) {
+func (UnimplementedBMCServiceHandler) UpdateManagementController(context.Context, *v1alpha1.UpdateManagementControllerRequest) (*v1alpha1.UpdateManagementControllerResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.UpdateManagementController is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) ChangeManagementControllerState(context.Context, *connect.Request[v1alpha1.ChangeManagementControllerStateRequest]) (*connect.Response[v1alpha1.ChangeManagementControllerStateResponse], error) {
+func (UnimplementedBMCServiceHandler) ChangeManagementControllerState(context.Context, *v1alpha1.ChangeManagementControllerStateRequest) (*v1alpha1.ChangeManagementControllerStateResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ChangeManagementControllerState is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) ListSensors(context.Context, *connect.Request[v1alpha1.ListSensorsRequest]) (*connect.Response[v1alpha1.ListSensorsResponse], error) {
+func (UnimplementedBMCServiceHandler) ListSensors(context.Context, *v1alpha1.ListSensorsRequest) (*v1alpha1.ListSensorsResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ListSensors is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) GetSensor(context.Context, *connect.Request[v1alpha1.GetSensorRequest]) (*connect.Response[v1alpha1.GetSensorResponse], error) {
+func (UnimplementedBMCServiceHandler) GetSensor(context.Context, *v1alpha1.GetSensorRequest) (*v1alpha1.GetSensorResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetSensor is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) GetThermalZone(context.Context, *connect.Request[v1alpha1.GetThermalZoneRequest]) (*connect.Response[v1alpha1.GetThermalZoneResponse], error) {
+func (UnimplementedBMCServiceHandler) GetThermalZone(context.Context, *v1alpha1.GetThermalZoneRequest) (*v1alpha1.GetThermalZoneResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetThermalZone is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) SetThermalZone(context.Context, *connect.Request[v1alpha1.SetThermalZoneRequest]) (*connect.Response[v1alpha1.SetThermalZoneResponse], error) {
+func (UnimplementedBMCServiceHandler) SetThermalZone(context.Context, *v1alpha1.SetThermalZoneRequest) (*v1alpha1.SetThermalZoneResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.SetThermalZone is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) ListThermalZones(context.Context, *connect.Request[v1alpha1.ListThermalZonesRequest]) (*connect.Response[v1alpha1.ListThermalZonesResponse], error) {
+func (UnimplementedBMCServiceHandler) ListThermalZones(context.Context, *v1alpha1.ListThermalZonesRequest) (*v1alpha1.ListThermalZonesResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ListThermalZones is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) CreateUser(context.Context, *connect.Request[v1alpha1.CreateUserRequest]) (*connect.Response[v1alpha1.CreateUserResponse], error) {
+func (UnimplementedBMCServiceHandler) CreateUser(context.Context, *v1alpha1.CreateUserRequest) (*v1alpha1.CreateUserResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.CreateUser is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) GetUser(context.Context, *connect.Request[v1alpha1.GetUserRequest]) (*connect.Response[v1alpha1.GetUserResponse], error) {
+func (UnimplementedBMCServiceHandler) GetUser(context.Context, *v1alpha1.GetUserRequest) (*v1alpha1.GetUserResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.GetUser is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) UpdateUser(context.Context, *connect.Request[v1alpha1.UpdateUserRequest]) (*connect.Response[v1alpha1.UpdateUserResponse], error) {
+func (UnimplementedBMCServiceHandler) UpdateUser(context.Context, *v1alpha1.UpdateUserRequest) (*v1alpha1.UpdateUserResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.UpdateUser is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) DeleteUser(context.Context, *connect.Request[v1alpha1.DeleteUserRequest]) (*connect.Response[v1alpha1.DeleteUserResponse], error) {
+func (UnimplementedBMCServiceHandler) DeleteUser(context.Context, *v1alpha1.DeleteUserRequest) (*v1alpha1.DeleteUserResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.DeleteUser is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) ListUsers(context.Context, *connect.Request[v1alpha1.ListUsersRequest]) (*connect.Response[v1alpha1.ListUsersResponse], error) {
+func (UnimplementedBMCServiceHandler) ListUsers(context.Context, *v1alpha1.ListUsersRequest) (*v1alpha1.ListUsersResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ListUsers is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) ChangePassword(context.Context, *connect.Request[v1alpha1.ChangePasswordRequest]) (*connect.Response[v1alpha1.ChangePasswordResponse], error) {
+func (UnimplementedBMCServiceHandler) ChangePassword(context.Context, *v1alpha1.ChangePasswordRequest) (*v1alpha1.ChangePasswordResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ChangePassword is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) ResetPassword(context.Context, *connect.Request[v1alpha1.ResetPasswordRequest]) (*connect.Response[v1alpha1.ResetPasswordResponse], error) {
+func (UnimplementedBMCServiceHandler) ResetPassword(context.Context, *v1alpha1.ResetPasswordRequest) (*v1alpha1.ResetPasswordResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.ResetPassword is not implemented"))
 }
 
-func (UnimplementedBMCServiceHandler) AuthenticateUser(context.Context, *connect.Request[v1alpha1.AuthenticateUserRequest]) (*connect.Response[v1alpha1.AuthenticateUserResponse], error) {
+func (UnimplementedBMCServiceHandler) AuthenticateUser(context.Context, *v1alpha1.AuthenticateUserRequest) (*v1alpha1.AuthenticateUserResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1alpha1.BMCService.AuthenticateUser is not implemented"))
 }
