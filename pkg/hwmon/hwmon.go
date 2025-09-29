@@ -4,515 +4,89 @@ package hwmon
 
 import (
 	"context"
+	"errors"
 	"fmt"
-	"maps"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
-	"sync"
+	"syscall"
 	"time"
 )
 
-// Sensor represents a hardware monitoring sensor with configuration and state management.
-type Sensor struct {
-	config      *Config
-	discoverer  *Discoverer
-	sensorPath  string
-	devicePath  string
-	sensorInfo  *SensorInfo
-	cache       *sensorCache
-	mu          sync.RWMutex
-	initialized bool
-	lastError   error
-	lastErrorAt time.Time
+const (
+	// DefaultHwmonPath is the default path to hwmon devices in sysfs.
+	DefaultHwmonPath = "/sys/class/hwmon"
+)
+
+// ReadInt reads an integer value from the specified hwmon file path.
+func ReadInt(path string) (int, error) {
+	return ReadIntCtx(context.Background(), path)
 }
 
-// sensorCache holds cached sensor values with TTL support.
-type sensorCache struct {
-	value     Value
-	timestamp time.Time
-	ttl       time.Duration
-	mu        sync.RWMutex
-}
-
-// NewSensor creates a new sensor instance with the provided configuration.
-func NewSensor(config *Config) (*Sensor, error) {
-	if config == nil {
-		return nil, fmt.Errorf("%w: config cannot be nil", ErrInvalidConfig)
-	}
-
-	if err := config.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: %w", ErrInvalidConfig, err)
-	}
-
-	sensor := &Sensor{
-		config:     config.Clone(),
-		discoverer: NewDiscoverer(WithDiscoveryPath(config.BasePath)),
-	}
-
-	if config.CachingEnabled {
-		sensor.cache = &sensorCache{
-			ttl: config.CacheTTL,
-		}
-	}
-
-	return sensor, nil
-}
-
-// Initialize discovers and validates the sensor path.
-func (s *Sensor) Initialize(ctx context.Context) error {
-	if ctx == nil {
-		return ErrNilContext
-	}
-
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
-	if s.initialized {
-		return nil
-	}
-
-	if s.config.CustomPath != "" {
-		s.sensorPath = s.config.CustomPath
-		s.devicePath = filepath.Dir(s.config.CustomPath)
-	} else {
-		if err := s.discoverSensorPath(ctx); err != nil {
-			s.lastError = err
-			s.lastErrorAt = time.Now()
-			return err
-		}
-	}
-
-	if err := s.validateSensorPath(); err != nil {
-		s.lastError = err
-		s.lastErrorAt = time.Now()
-		return err
-	}
-
-	s.initialized = true
-	s.lastError = nil
-	return nil
-}
-
-// ReadValue reads the current sensor value.
-func (s *Sensor) ReadValue(ctx context.Context) (Value, error) {
-	if ctx == nil {
-		return nil, ErrNilContext
-	}
-
-	if !s.initialized {
-		if err := s.Initialize(ctx); err != nil {
-			return nil, err
-		}
-	}
-
-	if s.config.CachingEnabled && s.cache != nil {
-		if value := s.getCachedValue(); value != nil {
-			return value, nil
-		}
-	}
-
-	value, err := s.readValueWithRetry(ctx)
-	if err != nil {
-		s.mu.Lock()
-		s.lastError = err
-		s.lastErrorAt = time.Now()
-		s.mu.Unlock()
-		return nil, err
-	}
-
-	if s.config.ValidationEnabled {
-		if err := s.validateValue(value); err != nil {
-			return nil, fmt.Errorf("%w: %w", ErrValidationFailed, err)
-		}
-	}
-
-	if s.config.CachingEnabled && s.cache != nil {
-		s.setCachedValue(value)
-	}
-
-	s.mu.Lock()
-	s.lastError = nil
-	s.mu.Unlock()
-
-	return value, nil
-}
-
-// WriteValue writes a value to the sensor (if writable).
-func (s *Sensor) WriteValue(ctx context.Context, value Value) error {
-	if ctx == nil {
-		return ErrNilContext
-	}
-
-	if !s.initialized {
-		if err := s.Initialize(ctx); err != nil {
-			return err
-		}
-	}
-
-	if !s.config.Writable {
-		return fmt.Errorf("%w: sensor is configured as read-only", ErrReadOnlySensor)
-	}
-
-	if s.config.ValidationEnabled {
-		if err := s.validateValue(value); err != nil {
-			return fmt.Errorf("%w: %w", ErrValidationFailed, err)
-		}
-	}
-
-	err := s.writeValueWithRetry(ctx, value)
-	if err != nil {
-		s.mu.Lock()
-		s.lastError = err
-		s.lastErrorAt = time.Now()
-		s.mu.Unlock()
-		return err
-	}
-
-	if s.config.CachingEnabled && s.cache != nil {
-		s.cache.mu.Lock()
-		s.cache.value = nil
-		s.cache.mu.Unlock()
-	}
-
-	s.mu.Lock()
-	s.lastError = nil
-	s.mu.Unlock()
-
-	return nil
-}
-
-// ReadRawValue reads the raw string value from sysfs.
-func (s *Sensor) ReadRawValue(ctx context.Context) (string, error) {
-	if ctx == nil {
-		return "", ErrNilContext
-	}
-
-	if !s.initialized {
-		if err := s.Initialize(ctx); err != nil {
-			return "", err
-		}
-	}
-
-	return s.readRawValueWithRetry(ctx)
-}
-
-// WriteRawValue writes a raw string value to sysfs.
-func (s *Sensor) WriteRawValue(ctx context.Context, value string) error {
-	if ctx == nil {
-		return ErrNilContext
-	}
-
-	if !s.initialized {
-		if err := s.Initialize(ctx); err != nil {
-			return err
-		}
-	}
-
-	if !s.config.Writable {
-		return fmt.Errorf("%w: sensor is configured as read-only", ErrReadOnlySensor)
-	}
-
-	return s.writeRawValueWithRetry(ctx, value)
-}
-
-// IsAvailable checks if the sensor is currently available.
-func (s *Sensor) IsAvailable(ctx context.Context) bool {
-	if !s.initialized {
-		return s.Initialize(ctx) == nil
-	}
-
-	s.mu.RLock()
-	path := s.sensorPath
-	s.mu.RUnlock()
-
+// ReadIntCtx reads an integer value from the specified hwmon file path with context support.
+func ReadIntCtx(ctx context.Context, path string) (int, error) {
 	if path == "" {
-		return false
+		return 0, fmt.Errorf("%w: path cannot be empty", ErrInvalidPath)
 	}
 
-	_, err := os.Stat(path)
-	return err == nil
-}
-
-// GetInfo returns sensor information.
-func (s *Sensor) GetInfo() *SensorInfo {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-	return s.sensorInfo
-}
-
-// GetPath returns the sensor sysfs path.
-func (s *Sensor) GetPath() string {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-	return s.sensorPath
-}
-
-// GetDevicePath returns the device sysfs path.
-func (s *Sensor) GetDevicePath() string {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-	return s.devicePath
-}
-
-// GetConfig returns a copy of the sensor configuration.
-func (s *Sensor) GetConfig() *Config {
-	return s.config.Clone()
-}
-
-// IsWritable returns true if the sensor supports writing.
-func (s *Sensor) IsWritable() bool {
-	return s.config.Writable
-}
-
-// Type returns the sensor type.
-func (s *Sensor) Type() SensorType {
-	return s.config.SensorType
-}
-
-// Label returns the sensor label.
-func (s *Sensor) Label() string {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-
-	if s.sensorInfo != nil && s.sensorInfo.Label != "" {
-		return s.sensorInfo.Label
-	}
-	return s.config.SensorLabel
-}
-
-// Name returns the sensor name.
-func (s *Sensor) Name() string {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-
-	if s.sensorInfo != nil {
-		return s.sensorInfo.Name
-	}
-	return fmt.Sprintf("%s%d", s.config.SensorType.Prefix(), s.config.SensorIndex)
-}
-
-// LastError returns the last error that occurred.
-func (s *Sensor) LastError() (time.Time, error) {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-	return s.lastErrorAt, s.lastError
-}
-
-// discoverSensorPath discovers the sensor path using the configured parameters.
-func (s *Sensor) discoverSensorPath(ctx context.Context) error {
-	device, err := s.discoverer.FindDevice(ctx, s.config.Device)
-	if err != nil {
-		return fmt.Errorf("%w: %w", ErrDeviceNotFound, err)
-	}
-
-	s.devicePath = device.Path
-
-	var sensorInfo *SensorInfo
-	if s.config.UseIndex || s.config.SensorLabel == "" {
-		sensorInfo, err = device.GetSensorByTypeAndIndex(ctx, s.config.SensorType, s.config.SensorIndex)
-	} else {
-		sensorInfo, err = device.GetSensorByLabel(ctx, s.config.SensorLabel)
-	}
-
-	if err != nil {
-		return fmt.Errorf("%w: %w", ErrSensorNotFound, err)
-	}
-
-	attributePath, err := sensorInfo.GetAttributePath(s.config.Attribute)
-	if err != nil {
-		return fmt.Errorf("%w: %w", ErrAttributeNotSupported, err)
-	}
-
-	s.sensorPath = attributePath
-	s.sensorInfo = sensorInfo
-	return nil
-}
-
-// validateSensorPath validates that the sensor path exists and is accessible.
-func (s *Sensor) validateSensorPath() error {
-	if s.sensorPath == "" {
-		return fmt.Errorf("%w: sensor path is empty", ErrInvalidPath)
-	}
-
-	info, err := os.Stat(s.sensorPath)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return fmt.Errorf("%w: %s", ErrPathNotFound, s.sensorPath)
-		}
-		if os.IsPermission(err) {
-			return fmt.Errorf("%w: %s", ErrPermissionDenied, s.sensorPath)
-		}
-		return fmt.Errorf("%w: %w", ErrFileSystemError, err)
-	}
-
-	if info.IsDir() {
-		return fmt.Errorf("%w: path is a directory: %s", ErrInvalidPath, s.sensorPath)
-	}
-
-	if s.config.Writable {
-		file, err := os.OpenFile(s.sensorPath, os.O_WRONLY, 0)
-		if err != nil {
-			if os.IsPermission(err) {
-				return fmt.Errorf("%w: cannot write to %s", ErrPermissionDenied, s.sensorPath)
-			}
-			return fmt.Errorf("%w: cannot open for writing: %s", ErrFileSystemError, s.sensorPath)
-		}
-		_ = file.Close()
-	}
-
-	return nil
-}
-
-// readValueWithRetry reads a sensor value with retry logic.
-func (s *Sensor) readValueWithRetry(ctx context.Context) (Value, error) {
-	var lastErr error
-
-	for attempt := 0; attempt <= s.config.RetryCount; attempt++ {
-		if attempt > 0 {
-			select {
-			case <-ctx.Done():
-				return nil, fmt.Errorf("%w: %w", ErrOperationCanceled, ctx.Err())
-			case <-time.After(s.config.RetryDelay):
-			}
-		}
-
-		timeoutCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
-
-		rawValue, err := s.readRawValue(timeoutCtx)
-		cancel()
-
-		if err != nil {
-			lastErr = err
-			continue
-		}
-
-		value, err := ParseValue(rawValue, s.config.SensorType)
-		if err != nil {
-			lastErr = fmt.Errorf("%w: %w", ErrValueParseFailure, err)
-			continue
-		}
-
-		return value, nil
-	}
-
-	if lastErr != nil {
-		return nil, fmt.Errorf("%w: %w", ErrRetryExhausted, lastErr)
-	}
-
-	return nil, fmt.Errorf("%w: unknown error after %d attempts", ErrRetryExhausted, s.config.RetryCount+1)
-}
-
-// writeValueWithRetry writes a sensor value with retry logic.
-func (s *Sensor) writeValueWithRetry(ctx context.Context, value Value) error {
-	rawValue := FormatValue(value)
-	return s.writeRawValueWithRetry(ctx, rawValue)
-}
-
-// readRawValueWithRetry reads a raw sensor value with retry logic.
-func (s *Sensor) readRawValueWithRetry(ctx context.Context) (string, error) {
-	var lastErr error
-
-	for attempt := 0; attempt <= s.config.RetryCount; attempt++ {
-		if attempt > 0 {
-			select {
-			case <-ctx.Done():
-				return "", fmt.Errorf("%w: %w", ErrOperationCanceled, ctx.Err())
-			case <-time.After(s.config.RetryDelay):
-			}
-		}
-
-		timeoutCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
-		value, err := s.readRawValue(timeoutCtx)
-		cancel()
-
-		if err == nil {
-			return value, nil
-		}
-
-		lastErr = err
-	}
-
-	return "", fmt.Errorf("%w: %w", ErrRetryExhausted, lastErr)
-}
-
-// writeRawValueWithRetry writes a raw sensor value with retry logic.
-func (s *Sensor) writeRawValueWithRetry(ctx context.Context, value string) error {
-	var lastErr error
-
-	for attempt := 0; attempt <= s.config.RetryCount; attempt++ {
-		if attempt > 0 {
-			select {
-			case <-ctx.Done():
-				return fmt.Errorf("%w: %w", ErrOperationCanceled, ctx.Err())
-			case <-time.After(s.config.RetryDelay):
-			}
-		}
-
-		timeoutCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
-		err := s.writeRawValue(timeoutCtx, value)
-		cancel()
-
-		if err == nil {
-			return nil
-		}
-
-		lastErr = err
-	}
-
-	return fmt.Errorf("%w: %w", ErrRetryExhausted, lastErr)
-}
-
-// readRawValue reads the raw value from the sensor file.
-func (s *Sensor) readRawValue(ctx context.Context) (string, error) {
-	done := make(chan struct{})
-	var result string
-	var err error
+	done := make(chan struct {
+		value int
+		err   error
+	}, 1)
 
 	go func() {
-		defer close(done)
-
-		data, readErr := os.ReadFile(s.sensorPath)
-		if readErr != nil {
-			if os.IsNotExist(readErr) {
-				err = fmt.Errorf("%w: sensor file not found", ErrDeviceUnavailable)
-			} else if os.IsPermission(readErr) {
-				err = fmt.Errorf("%w: %w", ErrPermissionDenied, readErr)
-			} else {
-				err = fmt.Errorf("%w: %w", ErrReadFailure, readErr)
-			}
+		data, err := os.ReadFile(path)
+		if err != nil {
+			done <- struct {
+				value int
+				err   error
+			}{0, mapFileError(err, path)}
 			return
 		}
 
-		result = strings.TrimSpace(string(data))
-		if result == "" {
-			err = fmt.Errorf("%w: empty value read from sensor", ErrInvalidValue)
+		value, err := strconv.Atoi(strings.TrimSpace(string(data)))
+		if err != nil {
+			done <- struct {
+				value int
+				err   error
+			}{0, fmt.Errorf("%w: failed to parse integer from %s: %w", ErrInvalidValue, path, err)}
 			return
 		}
+
+		done <- struct {
+			value int
+			err   error
+		}{value, nil}
 	}()
 
 	select {
-	case <-done:
-		return result, err
+	case result := <-done:
+		return result.value, result.err
 	case <-ctx.Done():
-		return "", fmt.Errorf("%w: %w", ErrReadTimeout, ctx.Err())
+		return 0, fmt.Errorf("%w: %w", ErrOperationTimeout, ctx.Err())
 	}
 }
 
-// writeRawValue writes a raw value to the sensor file.
-func (s *Sensor) writeRawValue(ctx context.Context, value string) error {
+// WriteInt writes an integer value to the specified hwmon file path.
+func WriteInt(path string, value int) error {
+	return WriteIntCtx(context.Background(), path, value)
+}
+
+// WriteIntCtx writes an integer value to the specified hwmon file path with context support.
+func WriteIntCtx(ctx context.Context, path string, value int) error {
+	if path == "" {
+		return fmt.Errorf("%w: path cannot be empty", ErrInvalidPath)
+	}
+
 	done := make(chan error, 1)
 
 	go func() {
-		err := os.WriteFile(s.sensorPath, []byte(value), 0o600)
+		data := strconv.Itoa(value)
+		err := os.WriteFile(path, []byte(data), 0o600)
 		if err != nil {
-			if os.IsNotExist(err) {
-				done <- fmt.Errorf("%w: sensor file not found", ErrDeviceUnavailable)
-			} else if os.IsPermission(err) {
-				done <- fmt.Errorf("%w: %w", ErrPermissionDenied, err)
-			} else {
-				done <- fmt.Errorf("%w: %w", ErrWriteFailure, err)
-			}
+			done <- mapFileError(err, path)
 			return
 		}
 		done <- nil
@@ -522,240 +96,359 @@ func (s *Sensor) writeRawValue(ctx context.Context, value string) error {
 	case err := <-done:
 		return err
 	case <-ctx.Done():
-		return fmt.Errorf("%w: %w", ErrWriteTimeout, ctx.Err())
+		return fmt.Errorf("%w: %w", ErrOperationTimeout, ctx.Err())
 	}
 }
 
-// validateValue validates a sensor value against configured constraints.
-func (s *Sensor) validateValue(value Value) error {
-	if !value.IsValid() {
-		return fmt.Errorf("%w: value failed basic validation", ErrInvalidValue)
-	}
-
-	if s.config.HasValueRange() {
-		floatValue := value.Float()
-
-		if s.config.MinValue != nil && floatValue < *s.config.MinValue {
-			return fmt.Errorf("%w: value %.3f below minimum %.3f", ErrValueOutOfRange, floatValue, *s.config.MinValue)
-		}
-
-		if s.config.MaxValue != nil && floatValue > *s.config.MaxValue {
-			return fmt.Errorf("%w: value %.3f above maximum %.3f", ErrValueOutOfRange, floatValue, *s.config.MaxValue)
-		}
-	}
-
-	return nil
+// ReadString reads a string value from the specified hwmon file path.
+func ReadString(path string) (string, error) {
+	return ReadStringCtx(context.Background(), path)
 }
 
-// getCachedValue retrieves a cached value if it's still valid.
-func (s *Sensor) getCachedValue() Value {
-	if s.cache == nil {
-		return nil
+// ReadStringCtx reads a string value from the specified hwmon file path with context support.
+func ReadStringCtx(ctx context.Context, path string) (string, error) {
+	if path == "" {
+		return "", fmt.Errorf("%w: path cannot be empty", ErrInvalidPath)
 	}
 
-	s.cache.mu.RLock()
-	defer s.cache.mu.RUnlock()
-
-	if s.cache.value == nil {
-		return nil
-	}
-
-	if time.Since(s.cache.timestamp) > s.cache.ttl {
-		return nil
-	}
-
-	return s.cache.value
-}
-
-// setCachedValue stores a value in the cache.
-func (s *Sensor) setCachedValue(value Value) {
-	if s.cache == nil {
-		return
-	}
-
-	s.cache.mu.Lock()
-	defer s.cache.mu.Unlock()
-
-	s.cache.value = value
-	s.cache.timestamp = time.Now()
-}
-
-// String returns a string representation of the sensor.
-func (s *Sensor) String() string {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-
-	label := s.Label()
-	if label == "" {
-		label = s.Name()
-	}
-
-	return fmt.Sprintf("Sensor{device=%s, label=%s, type=%s, path=%s}",
-		s.config.Device, label, s.config.SensorType.String(), s.sensorPath)
-}
-
-// SensorManager manages multiple sensors and provides batch operations.
-type SensorManager struct {
-	sensors map[string]*Sensor
-	mu      sync.RWMutex
-}
-
-// NewSensorManager creates a new sensor manager.
-func NewSensorManager() *SensorManager {
-	return &SensorManager{
-		sensors: make(map[string]*Sensor),
-	}
-}
-
-// AddSensor adds a sensor to the manager.
-func (sm *SensorManager) AddSensor(name string, sensor *Sensor) error {
-	if name == "" {
-		return fmt.Errorf("%w: sensor name cannot be empty", ErrInvalidConfig)
-	}
-
-	if sensor == nil {
-		return fmt.Errorf("%w: sensor cannot be nil", ErrInvalidConfig)
-	}
-
-	sm.mu.Lock()
-	defer sm.mu.Unlock()
-
-	if _, exists := sm.sensors[name]; exists {
-		return fmt.Errorf("sensor %s already exists", name)
-	}
-
-	sm.sensors[name] = sensor
-	return nil
-}
-
-// RemoveSensor removes a sensor from the manager.
-func (sm *SensorManager) RemoveSensor(name string) error {
-	sm.mu.Lock()
-	defer sm.mu.Unlock()
-
-	if _, exists := sm.sensors[name]; !exists {
-		return fmt.Errorf("%w: sensor %s", ErrSensorNotFound, name)
-	}
-
-	delete(sm.sensors, name)
-	return nil
-}
-
-// GetSensor retrieves a sensor by name.
-func (sm *SensorManager) GetSensor(name string) (*Sensor, error) {
-	sm.mu.RLock()
-	defer sm.mu.RUnlock()
-
-	sensor, exists := sm.sensors[name]
-	if !exists {
-		return nil, fmt.Errorf("%w: sensor %s", ErrSensorNotFound, name)
-	}
-
-	return sensor, nil
-}
-
-// ListSensors returns all sensor names.
-func (sm *SensorManager) ListSensors() []string {
-	sm.mu.RLock()
-	defer sm.mu.RUnlock()
-
-	names := make([]string, 0, len(sm.sensors))
-	for name := range sm.sensors {
-		names = append(names, name)
-	}
-
-	return names
-}
-
-// ReadAllSensors reads values from all sensors.
-func (sm *SensorManager) ReadAllSensors(ctx context.Context) (map[string]Value, map[string]error) {
-	sm.mu.RLock()
-	sensors := make(map[string]*Sensor, len(sm.sensors))
-	maps.Copy(sensors, sm.sensors)
-	sm.mu.RUnlock()
-
-	values := make(map[string]Value)
-	errors := make(map[string]error)
-
-	for name, sensor := range sensors {
-		value, err := sensor.ReadValue(ctx)
-		if err != nil {
-			errors[name] = err
-		} else {
-			values[name] = value
-		}
-	}
-
-	return values, errors
-}
-
-// InitializeAllSensors initializes all sensors in the manager.
-func (sm *SensorManager) InitializeAllSensors(ctx context.Context) map[string]error {
-	sm.mu.RLock()
-	sensors := make(map[string]*Sensor, len(sm.sensors))
-	maps.Copy(sensors, sm.sensors)
-	sm.mu.RUnlock()
-
-	errors := make(map[string]error)
-
-	for name, sensor := range sensors {
-		if err := sensor.Initialize(ctx); err != nil {
-			errors[name] = err
-		}
-	}
-
-	return errors
-}
-
-// OfNameAndLabel is a convenience function that creates a sensor
-// for the specified device name and sensor label (for backward compatibility).
-func OfNameAndLabel(name string, label string) (*Sensor, error) {
-	config := NewConfig(
-		WithDevice(name),
-		WithSensorLabel(label),
-		WithSensorType(SensorTypeTemperature),
-		WithAttribute(AttributeInput),
-	)
-
-	sensor, err := NewSensor(config)
-	if err != nil {
-		return nil, err
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	if err := sensor.Initialize(ctx); err != nil {
-		return nil, err
-	}
-
-	return sensor, nil
-}
-
-// ReadWithCtx reads a value from a file path with context support (for backward compatibility).
-func ReadWithCtx(ctx context.Context, path string) (string, error) {
-	if ctx == nil {
-		return "", ErrNilContext
-	}
-
-	done := make(chan struct{})
-	var result string
-	var err error
+	done := make(chan struct {
+		value string
+		err   error
+	}, 1)
 
 	go func() {
-		defer close(done)
-		data, readErr := os.ReadFile(path)
-		if readErr != nil {
-			err = readErr
+		data, err := os.ReadFile(path)
+		if err != nil {
+			done <- struct {
+				value string
+				err   error
+			}{"", mapFileError(err, path)}
 			return
 		}
-		result = strings.TrimSpace(string(data))
+
+		value := strings.TrimSpace(string(data))
+		done <- struct {
+			value string
+			err   error
+		}{value, nil}
 	}()
 
 	select {
-	case <-done:
-		return result, err
+	case result := <-done:
+		return result.value, result.err
 	case <-ctx.Done():
-		return "", ctx.Err()
+		return "", fmt.Errorf("%w: %w", ErrOperationTimeout, ctx.Err())
 	}
+}
+
+// WriteString writes a string value to the specified hwmon file path.
+func WriteString(path, value string) error {
+	return WriteStringCtx(context.Background(), path, value)
+}
+
+// WriteStringCtx writes a string value to the specified hwmon file path with context support.
+func WriteStringCtx(ctx context.Context, path, value string) error {
+	if path == "" {
+		return fmt.Errorf("%w: path cannot be empty", ErrInvalidPath)
+	}
+
+	done := make(chan error, 1)
+
+	go func() {
+		err := os.WriteFile(path, []byte(value), 0o600)
+		if err != nil {
+			done <- mapFileError(err, path)
+			return
+		}
+		done <- nil
+	}()
+
+	select {
+	case err := <-done:
+		return err
+	case <-ctx.Done():
+		return fmt.Errorf("%w: %w", ErrOperationTimeout, ctx.Err())
+	}
+}
+
+// ListDevices returns a list of all hwmon device paths.
+func ListDevices() ([]string, error) {
+	return ListDevicesCtx(context.Background())
+}
+
+// ListDevicesCtx returns a list of all hwmon device paths with context support.
+func ListDevicesCtx(ctx context.Context) ([]string, error) {
+	return ListDevicesInPathCtx(ctx, DefaultHwmonPath)
+}
+
+// ListDevicesInPath returns a list of hwmon device paths in the specified directory.
+func ListDevicesInPath(hwmonPath string) ([]string, error) {
+	return ListDevicesInPathCtx(context.Background(), hwmonPath)
+}
+
+// ListDevicesInPathCtx returns a list of hwmon device paths in the specified directory with context support.
+func ListDevicesInPathCtx(ctx context.Context, hwmonPath string) ([]string, error) {
+	if hwmonPath == "" {
+		return nil, fmt.Errorf("%w: hwmon path cannot be empty", ErrInvalidPath)
+	}
+
+	done := make(chan struct {
+		devices []string
+		err     error
+	}, 1)
+
+	go func() {
+		entries, err := os.ReadDir(hwmonPath)
+		if err != nil {
+			done <- struct {
+				devices []string
+				err     error
+			}{nil, mapFileError(err, hwmonPath)}
+			return
+		}
+
+		var devices []string
+		hwmonPattern := regexp.MustCompile(`^hwmon\d+$`)
+
+		for _, entry := range entries {
+			if hwmonPattern.MatchString(entry.Name()) {
+				devicePath := filepath.Join(hwmonPath, entry.Name())
+				// Use os.Stat to follow symlinks and verify it's a directory
+				if stat, err := os.Stat(devicePath); err == nil && stat.IsDir() {
+					devices = append(devices, devicePath)
+				}
+			}
+		}
+
+		done <- struct {
+			devices []string
+			err     error
+		}{devices, nil}
+	}()
+
+	select {
+	case result := <-done:
+		return result.devices, result.err
+	case <-ctx.Done():
+		return nil, fmt.Errorf("%w: %w", ErrOperationTimeout, ctx.Err())
+	}
+}
+
+// FindDeviceByName finds a hwmon device by its name attribute.
+func FindDeviceByName(deviceName string) (string, error) {
+	return FindDeviceByNameCtx(context.Background(), deviceName)
+}
+
+// FindDeviceByNameCtx finds a hwmon device by its name attribute with context support.
+func FindDeviceByNameCtx(ctx context.Context, deviceName string) (string, error) {
+	return FindDeviceByNameInPathCtx(ctx, DefaultHwmonPath, deviceName)
+}
+
+// FindDeviceByNameInPath finds a hwmon device by its name attribute in the specified directory.
+func FindDeviceByNameInPath(hwmonPath, deviceName string) (string, error) {
+	return FindDeviceByNameInPathCtx(context.Background(), hwmonPath, deviceName)
+}
+
+// FindDeviceByNameInPathCtx finds a hwmon device by its name attribute in the specified directory with context support.
+func FindDeviceByNameInPathCtx(ctx context.Context, hwmonPath, deviceName string) (string, error) {
+	if deviceName == "" {
+		return "", fmt.Errorf("%w: device name cannot be empty", ErrInvalidPath)
+	}
+
+	devices, err := ListDevicesInPathCtx(ctx, hwmonPath)
+	if err != nil {
+		return "", err
+	}
+
+	for _, device := range devices {
+		nameFile := filepath.Join(device, "name")
+		name, err := ReadStringCtx(ctx, nameFile)
+		if err != nil {
+			continue // Skip devices where we can't read the name
+		}
+
+		if name == deviceName {
+			return device, nil
+		}
+	}
+
+	return "", fmt.Errorf("%w: device with name '%s'", ErrDeviceNotFound, deviceName)
+}
+
+// ListAttributes returns a list of attribute files in the specified device directory that match the pattern.
+func ListAttributes(devicePath, pattern string) ([]string, error) {
+	return ListAttributesCtx(context.Background(), devicePath, pattern)
+}
+
+// ListAttributesCtx returns a list of attribute files in the specified device directory that match the pattern with context support.
+func ListAttributesCtx(ctx context.Context, devicePath, pattern string) ([]string, error) {
+	if devicePath == "" {
+		return nil, fmt.Errorf("%w: device path cannot be empty", ErrInvalidPath)
+	}
+
+	done := make(chan struct {
+		attributes []string
+		err        error
+	}, 1)
+
+	go func() {
+		entries, err := os.ReadDir(devicePath)
+		if err != nil {
+			done <- struct {
+				attributes []string
+				err        error
+			}{nil, mapFileError(err, devicePath)}
+			return
+		}
+
+		var attributes []string
+		var regex *regexp.Regexp
+
+		if pattern != "" {
+			regex, err = regexp.Compile(pattern)
+			if err != nil {
+				done <- struct {
+					attributes []string
+					err        error
+				}{nil, fmt.Errorf("%w: invalid pattern '%s': %w", ErrInvalidValue, pattern, err)}
+				return
+			}
+		}
+
+		for _, entry := range entries {
+			if !entry.IsDir() {
+				if regex == nil || regex.MatchString(entry.Name()) {
+					attributes = append(attributes, entry.Name())
+				}
+			}
+		}
+
+		done <- struct {
+			attributes []string
+			err        error
+		}{attributes, nil}
+	}()
+
+	select {
+	case result := <-done:
+		return result.attributes, result.err
+	case <-ctx.Done():
+		return nil, fmt.Errorf("%w: %w", ErrOperationTimeout, ctx.Err())
+	}
+}
+
+// FileExists checks if a hwmon file exists.
+func FileExists(path string) bool {
+	return FileExistsCtx(context.Background(), path)
+}
+
+// FileExistsCtx checks if a hwmon file exists with context support.
+func FileExistsCtx(ctx context.Context, path string) bool {
+	if path == "" {
+		return false
+	}
+
+	done := make(chan bool, 1)
+
+	go func() {
+		_, err := os.Stat(path)
+		done <- err == nil
+	}()
+
+	select {
+	case exists := <-done:
+		return exists
+	case <-ctx.Done():
+		return false
+	}
+}
+
+// IsWritable checks if a hwmon file is writable.
+func IsWritable(path string) bool {
+	return IsWritableCtx(context.Background(), path)
+}
+
+// IsWritableCtx checks if a hwmon file is writable with context support.
+func IsWritableCtx(ctx context.Context, path string) bool {
+	if path == "" {
+		return false
+	}
+
+	done := make(chan bool, 1)
+
+	go func() {
+		// Try to open the file for writing to check if it's writable
+		file, err := os.OpenFile(path, os.O_WRONLY, 0)
+		if err == nil {
+			_ = file.Close()
+			done <- true
+		} else {
+			done <- false
+		}
+	}()
+
+	select {
+	case writable := <-done:
+		return writable
+	case <-ctx.Done():
+		return false
+	}
+}
+
+// WaitForDevice waits for a hwmon device to appear with the specified name.
+func WaitForDevice(deviceName string, timeout time.Duration) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	return WaitForDeviceCtx(ctx, deviceName)
+}
+
+// WaitForDeviceCtx waits for a hwmon device to appear with the specified name with context support.
+func WaitForDeviceCtx(ctx context.Context, deviceName string) (string, error) {
+	ticker := time.NewTicker(100 * time.Millisecond)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return "", fmt.Errorf("%w: %w", ErrOperationTimeout, ctx.Err())
+		case <-ticker.C:
+			device, err := FindDeviceByNameCtx(ctx, deviceName)
+			if err == nil {
+				return device, nil
+			}
+			// Continue waiting if device not found
+		}
+	}
+}
+
+// mapFileError maps OS file errors to hwmon package errors.
+func mapFileError(err error, path string) error {
+	if err == nil {
+		return nil
+	}
+
+	if os.IsNotExist(err) {
+		return fmt.Errorf("%w: %s", ErrFileNotFound, path)
+	}
+	if os.IsPermission(err) {
+		return fmt.Errorf("%w: %s", ErrPermissionDenied, path)
+	}
+	var pe *os.PathError
+	if errors.As(err, &pe) {
+		// Map common errno
+		var errno syscall.Errno
+		if errors.As(pe.Err, &errno) {
+			switch errno {
+			case syscall.EINVAL:
+				return fmt.Errorf("%w: %s: %w", ErrInvalidValue, path, err)
+			}
+		}
+		switch pe.Op {
+		case "read":
+			return fmt.Errorf("%w: %s: %w", ErrReadFailure, path, err)
+		case "write", "open":
+			return fmt.Errorf("%w: %s: %w", ErrWriteFailure, path, err)
+		}
+	}
+	return fmt.Errorf("%w: %s: %w", ErrReadFailure, path, err)
 }
