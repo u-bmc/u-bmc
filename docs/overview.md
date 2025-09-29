@@ -102,11 +102,14 @@ graph TB
 - The protobuf schema (authoritative API) is under `schema/v1alpha1/` and drives both ConnectRPC and REST.
 
 ## What to read next
+## References
 
 - docs/architecture.md — deeper service graph and ordering
 - docs/api.md — how to access and query the API (ConnectRPC, REST, future Redfish/IPMI)
 - docs/state.md — state machine wrapper and patterns
 - docs/gpio.md — GPIO usage and conventions
+- docs/sensormon.md — sensor monitoring service configuration and usage
+- docs/thermalmgr.md — thermal management and PID control setup
 - docs/integration_example.md — power/state orchestration flow
 - docs/integration_complete.md — power/LED integration details
 - docs/porting.md — how to configure and port a new platform
