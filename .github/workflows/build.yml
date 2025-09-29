@@ -24,6 +24,6 @@ jobs:
         with:
           go-version: "1.25"
           check-latest: true
-      - name: Build ASRock Platform
-        working-directory: targets/mainboards/asrock/turin2d24tm3-2l
+      - name: Build ASUS Platform
+        working-directory: targets/mainboards/asus/iec
         run: GOOS=linux GOARCH=arm GOARM=7,softfloat go build -ldflags="-s -w"
