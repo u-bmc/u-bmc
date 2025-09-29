@@ -108,6 +108,13 @@ type config struct {
 	enableTracing               bool
 	enableStateReporting        bool
 	stateReportingSubjectPrefix string
+	enableThermalResponse       bool
+	emergencyResponseDelay      time.Duration
+	enableEmergencyShutdown     bool
+	shutdownTemperatureLimit    float64
+	shutdownComponents          []string
+	maxEmergencyAttempts        int
+	emergencyAttemptInterval    time.Duration
 }
 
 type Option interface {
@@ -203,6 +210,22 @@ func WithComponents(components map[string]ComponentConfig) Option {
 	return &componentsOption{components: components}
 }
 
+type componentOption struct {
+	name   string
+	config ComponentConfig
+}
+
+func (o *componentOption) apply(c *config) {
+	if c.components == nil {
+		c.components = make(map[string]ComponentConfig)
+	}
+	c.components[o.name] = o.config
+}
+
+func WithComponent(name string, config ComponentConfig) Option {
+	return &componentOption{name: name, config: config}
+}
+
 type enableHostManagementOption struct {
 	enable bool
 }
@@ -213,6 +236,10 @@ func (o *enableHostManagementOption) apply(c *config) {
 
 func WithHostManagement(enable bool) Option {
 	return &enableHostManagementOption{enable: enable}
+}
+
+func WithoutHostManagement() Option {
+	return &enableHostManagementOption{enable: false}
 }
 
 type enableChassisManagementOption struct {
@@ -227,6 +254,10 @@ func WithChassisManagement(enable bool) Option {
 	return &enableChassisManagementOption{enable: enable}
 }
 
+func WithoutChassisManagement() Option {
+	return &enableChassisManagementOption{enable: false}
+}
+
 type enableBMCManagementOption struct {
 	enable bool
 }
@@ -237,6 +268,10 @@ func (o *enableBMCManagementOption) apply(c *config) {
 
 func WithBMCManagement(enable bool) Option {
 	return &enableBMCManagementOption{enable: enable}
+}
+
+func WithoutBMCManagement() Option {
+	return &enableBMCManagementOption{enable: false}
 }
 
 type numHostsOption struct {
@@ -287,6 +322,10 @@ func WithMetrics(enable bool) Option {
 	return &enableMetricsOption{enable: enable}
 }
 
+func WithoutMetrics() Option {
+	return &enableMetricsOption{enable: false}
+}
+
 type enableTracingOption struct {
 	enable bool
 }
@@ -297,6 +336,10 @@ func (o *enableTracingOption) apply(c *config) {
 
 func WithTracing(enable bool) Option {
 	return &enableTracingOption{enable: enable}
+}
+
+func WithoutTracing() Option {
+	return &enableTracingOption{enable: false}
 }
 
 type enableStateReportingOption struct {
@@ -311,6 +354,10 @@ func WithStateReporting(enable bool) Option {
 	return &enableStateReportingOption{enable: enable}
 }
 
+func WithoutStateReporting() Option {
+	return &enableStateReportingOption{enable: false}
+}
+
 type stateReportingSubjectPrefixOption struct {
 	prefix string
 }
@@ -321,6 +368,98 @@ func (o *stateReportingSubjectPrefixOption) apply(c *config) {
 
 func WithStateReportingSubjectPrefix(prefix string) Option {
 	return &stateReportingSubjectPrefixOption{prefix: prefix}
+}
+
+type enableThermalResponseOption struct {
+	enable bool
+}
+
+func (o *enableThermalResponseOption) apply(c *config) {
+	c.enableThermalResponse = o.enable
+}
+
+func WithThermalResponse(enable bool) Option {
+	return &enableThermalResponseOption{enable: enable}
+}
+
+func WithoutThermalResponse() Option {
+	return &enableThermalResponseOption{enable: false}
+}
+
+type emergencyResponseDelayOption struct {
+	delay time.Duration
+}
+
+func (o *emergencyResponseDelayOption) apply(c *config) {
+	c.emergencyResponseDelay = o.delay
+}
+
+func WithEmergencyResponseDelay(delay time.Duration) Option {
+	return &emergencyResponseDelayOption{delay: delay}
+}
+
+type enableEmergencyShutdownOption struct {
+	enable bool
+}
+
+func (o *enableEmergencyShutdownOption) apply(c *config) {
+	c.enableEmergencyShutdown = o.enable
+}
+
+func WithEmergencyShutdown(enable bool) Option {
+	return &enableEmergencyShutdownOption{enable: enable}
+}
+
+func WithoutEmergencyShutdown() Option {
+	return &enableEmergencyShutdownOption{enable: false}
+}
+
+type shutdownTemperatureLimitOption struct {
+	limit float64
+}
+
+func (o *shutdownTemperatureLimitOption) apply(c *config) {
+	c.shutdownTemperatureLimit = o.limit
+}
+
+func WithShutdownTemperatureLimit(limit float64) Option {
+	return &shutdownTemperatureLimitOption{limit: limit}
+}
+
+type shutdownComponentsOption struct {
+	components []string
+}
+
+func (o *shutdownComponentsOption) apply(c *config) {
+	c.shutdownComponents = o.components
+}
+
+func WithShutdownComponents(components []string) Option {
+	return &shutdownComponentsOption{components: components}
+}
+
+type maxEmergencyAttemptsOption struct {
+	attempts int
+}
+
+func (o *maxEmergencyAttemptsOption) apply(c *config) {
+	c.maxEmergencyAttempts = o.attempts
+}
+
+func WithMaxEmergencyAttempts(attempts int) Option {
+	return &maxEmergencyAttemptsOption{attempts: attempts}
+}
+
+type emergencyAttemptIntervalOption struct {
+	interval time.Duration
+}
+
+func (o *emergencyAttemptIntervalOption) apply(c *config) {
+	c.emergencyAttemptInterval = o.interval
+}
+
+func WithEmergencyAttemptInterval(interval time.Duration) Option {
+	return &emergencyAttemptIntervalOption{interval: interval}
 }
 
 func (c *config) Validate() error {
@@ -362,6 +501,30 @@ func (c *config) Validate() error {
 
 	if c.defaultOperationTimeout <= 0 {
 		return fmt.Errorf("%w: default operation timeout must be positive", ErrInvalidConfiguration)
+	}
+
+	if c.enableThermalResponse {
+		if c.emergencyResponseDelay <= 0 {
+			return fmt.Errorf("%w: emergency response delay must be positive when thermal response is enabled", ErrInvalidConfiguration)
+		}
+
+		if c.enableEmergencyShutdown {
+			if c.shutdownTemperatureLimit <= 0 {
+				return fmt.Errorf("%w: shutdown temperature limit must be positive when emergency shutdown is enabled", ErrInvalidConfiguration)
+			}
+
+			if len(c.shutdownComponents) == 0 {
+				return fmt.Errorf("%w: at least one shutdown component must be specified when emergency shutdown is enabled", ErrInvalidConfiguration)
+			}
+
+			if c.maxEmergencyAttempts <= 0 {
+				return fmt.Errorf("%w: max emergency attempts must be positive when emergency shutdown is enabled", ErrInvalidConfiguration)
+			}
+
+			if c.emergencyAttemptInterval <= 0 {
+				return fmt.Errorf("%w: emergency attempt interval must be positive when emergency shutdown is enabled", ErrInvalidConfiguration)
+			}
+		}
 	}
 
 	for name, component := range c.components {
@@ -473,26 +636,7 @@ func (c *config) validateI2CConfig(componentName string, i2cConfig I2CConfig) er
 	return nil
 }
 
-func (c *config) GetComponentConfig(name string) (ComponentConfig, bool) {
-	config, exists := c.components[name]
-	return config, exists
-}
-
-func (c *config) GetHostConfig(index int) (ComponentConfig, bool) {
-	name := fmt.Sprintf("host.%d", index)
-	return c.GetComponentConfig(name)
-}
-
-func (c *config) GetChassisConfig(index int) (ComponentConfig, bool) {
-	name := fmt.Sprintf("chassis.%d", index)
-	return c.GetComponentConfig(name)
-}
-
-func (c *config) GetBMCConfig() (ComponentConfig, bool) {
-	return c.GetComponentConfig("bmc.0")
-}
-
-func (c *config) AddDefaultComponents() {
+func addDefaultComponents(c *config) {
 	if c.components == nil {
 		c.components = make(map[string]ComponentConfig)
 	}

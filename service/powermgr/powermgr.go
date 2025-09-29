@@ -343,11 +343,20 @@ func New(opts ...Option) *PowerMgr {
 		enableTracing:               true,
 		enableStateReporting:        true,
 		stateReportingSubjectPrefix: "statemgr",
+		enableThermalResponse:       false,
+		emergencyResponseDelay:      5 * time.Second,
+		enableEmergencyShutdown:     false,
+		shutdownTemperatureLimit:    85.0,
+		shutdownComponents:          []string{},
+		maxEmergencyAttempts:        3,
+		emergencyAttemptInterval:    30 * time.Second,
 	}
 
 	for _, opt := range opts {
 		opt.apply(cfg)
 	}
+
+	addDefaultComponents(cfg)
 
 	return &PowerMgr{
 		config:   cfg,
@@ -362,6 +371,14 @@ func (p *PowerMgr) Name() string {
 
 // Run starts the power manager service and registers NATS IPC endpoints.
 func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) error {
+	p.tracer = otel.Tracer(p.config.serviceName)
+	p.meter = otel.Meter(p.config.serviceName)
+
+	ctx, span := p.tracer.Start(ctx, "powermgr.Run")
+	defer span.End()
+
+	p.logger = log.GetGlobalLogger().With("service", p.config.serviceName)
+
 	p.mu.Lock()
 	if p.started {
 		p.mu.Unlock()
@@ -370,14 +387,6 @@ func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 	p.started = true
 	ctx, p.cancel = context.WithCancel(ctx)
 	p.mu.Unlock()
-
-	p.tracer = otel.Tracer(p.config.serviceName)
-	p.meter = otel.Meter(p.config.serviceName)
-
-	ctx, span := p.tracer.Start(ctx, "powermgr.Run")
-	defer span.End()
-
-	p.logger = log.GetGlobalLogger().With("service", p.config.serviceName)
 	p.logger.InfoContext(ctx, "Starting power manager service",
 		"version", p.config.serviceVersion,
 		"hosts", p.config.numHosts,
@@ -394,7 +403,7 @@ func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 		return fmt.Errorf("failed to initialize metrics: %w", err)
 	}
 
-	p.config.AddDefaultComponents()
+	addDefaultComponents(p.config)
 
 	nc, err := nats.Connect("", nats.InProcessServer(ipcConn))
 	if err != nil {
@@ -409,6 +418,11 @@ func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 		return fmt.Errorf("%w: %w", ErrBackendInitializationFailed, err)
 	}
 	defer p.closeBackends()
+
+	if err := p.initializeThermalIntegration(ctx); err != nil {
+		span.RecordError(err)
+		p.logger.WarnContext(ctx, "Thermal integration initialization failed", "error", err)
+	}
 
 	p.microService, err = micro.AddService(nc, micro.Config{
 		Name:        p.config.serviceName,
@@ -596,7 +610,7 @@ func (p *PowerMgr) createRequestHandler(parentCtx context.Context, handler func(
 }
 
 func (p *PowerMgr) getBackendForComponent(componentName string) (PowerBackend, error) {
-	component, exists := p.config.GetComponentConfig(componentName)
+	component, exists := p.config.components[componentName]
 	if !exists {
 		return nil, fmt.Errorf("%w: component '%s'", ErrComponentNotFound, componentName)
 	}
