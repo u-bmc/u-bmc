@@ -1,0 +1,199 @@
+// SPDX-License-Identifier: BSD-3-Clause
+
+syntax = "proto3";
+
+package schema.v1alpha1;
+
+import "google/protobuf/duration.proto";
+
+message TelemetryControlMessage {
+  TelemetryControlType type = 1;
+  string service_name = 2;
+  oneof payload {
+    ProviderConfig provider_config = 3;
+    ExporterConfig exporter_config = 4;
+    SamplingConfig sampling_config = 5;
+    DebugConfig debug_config = 6;
+    CollectorConfig collector_config = 7;
+  }
+}
+
+enum TelemetryControlType {
+  TELEMETRY_CONTROL_TYPE_UNSPECIFIED = 0;
+  TELEMETRY_CONTROL_TYPE_PROVIDER = 1;
+  TELEMETRY_CONTROL_TYPE_EXPORTER = 2;
+  TELEMETRY_CONTROL_TYPE_SAMPLING = 3;
+  TELEMETRY_CONTROL_TYPE_DEBUG = 4;
+  TELEMETRY_CONTROL_TYPE_COLLECTOR = 5;
+}
+
+message ProviderConfig {
+  bool enable_tracing = 1;
+  bool enable_metrics = 2;
+  bool enable_logging = 3;
+  map<string, string> resource_attributes = 4;
+  TracingProviderConfig tracing = 5;
+  MetricsProviderConfig metrics = 6;
+  LoggingProviderConfig logging = 7;
+}
+
+message TracingProviderConfig {
+  SamplingConfig sampling = 1;
+  int32 max_export_batch_size = 2;
+  google.protobuf.Duration batch_timeout = 3;
+  int32 max_queue_size = 4;
+}
+
+message MetricsProviderConfig {
+  google.protobuf.Duration reader_interval = 1;
+
+  bool enable_exemplars = 2;
+  int32 max_cardinality = 3;
+}
+
+message LoggingProviderConfig {
+  int32 max_export_batch_size = 1;
+  google.protobuf.Duration batch_timeout = 2;
+  int32 max_queue_size = 3;
+}
+
+message ExporterConfig {
+  ExporterType type = 1;
+  string http_endpoint = 2;
+  string grpc_endpoint = 3;
+  bool insecure = 4;
+  google.protobuf.Duration timeout = 5;
+  map<string, string> headers = 6;
+  TLSConfig tls = 7;
+}
+
+enum ExporterType {
+  EXPORTER_TYPE_UNSPECIFIED = 0;
+  EXPORTER_TYPE_NOOP = 1;
+  EXPORTER_TYPE_OTLP_HTTP = 2;
+  EXPORTER_TYPE_OTLP_GRPC = 3;
+  EXPORTER_TYPE_DUAL = 4;
+}
+
+message TLSConfig {
+  string ca_file = 1;
+  string cert_file = 2;
+  string key_file = 3;
+  bool insecure_skip_verify = 4;
+  string server_name = 5;
+}
+
+message SamplingConfig {
+  double default_ratio = 1;
+  map<string, double> service_overrides = 2;
+  SamplingStrategy strategy = 3;
+}
+
+enum SamplingStrategy {
+  SAMPLING_STRATEGY_UNSPECIFIED = 0;
+  SAMPLING_STRATEGY_ALWAYS_ON = 1;
+  SAMPLING_STRATEGY_ALWAYS_OFF = 2;
+  SAMPLING_STRATEGY_TRACE_ID_RATIO = 3;
+  SAMPLING_STRATEGY_PARENT_BASED = 4;
+}
+
+message DebugConfig {
+  bool enabled = 1;
+  DebugLevel level = 2;
+  google.protobuf.Duration duration = 3;
+}
+
+enum DebugLevel {
+  DEBUG_LEVEL_UNSPECIFIED = 0;
+  DEBUG_LEVEL_ERROR = 1;
+  DEBUG_LEVEL_WARN = 2;
+  DEBUG_LEVEL_INFO = 3;
+  DEBUG_LEVEL_DEBUG = 4;
+  DEBUG_LEVEL_TRACE = 5;
+}
+
+message CollectorConfig {
+  bool enable_collection = 1;
+  bool enable_preprocessing = 2;
+  google.protobuf.Duration collection_interval = 3;
+  int32 max_batch_size = 4;
+  repeated FilterRule filter_rules = 5;
+  repeated AggregationRule aggregation_rules = 6;
+}
+
+message FilterRule {
+  string name = 1;
+  SignalType signal_type = 2;
+  FilterCriteria criteria = 3;
+  FilterAction action = 4;
+}
+
+enum SignalType {
+  SIGNAL_TYPE_UNSPECIFIED = 0;
+  SIGNAL_TYPE_TRACES = 1;
+  SIGNAL_TYPE_METRICS = 2;
+  SIGNAL_TYPE_LOGS = 3;
+}
+
+message FilterCriteria {
+  string service_name_pattern = 1;
+  map<string, string> attribute_filters = 2;
+  map<string, string> resource_filters = 3;
+  string name_pattern = 4;
+}
+
+enum FilterAction {
+  FILTER_ACTION_UNSPECIFIED = 0;
+  FILTER_ACTION_ALLOW = 1;
+  FILTER_ACTION_DROP = 2;
+  FILTER_ACTION_SAMPLE = 3;
+}
+
+message AggregationRule {
+  string name = 1;
+  SignalType signal_type = 2;
+  AggregationCriteria criteria = 3;
+  AggregationSettings settings = 4;
+}
+
+message AggregationCriteria {
+  string service_name_pattern = 1;
+  string metric_name_pattern = 2;
+  repeated string group_by_attributes = 3;
+}
+
+message AggregationSettings {
+  google.protobuf.Duration window_size = 1;
+  AggregationType type = 2;
+  int32 max_cardinality = 3;
+}
+
+enum AggregationType {
+  AGGREGATION_TYPE_UNSPECIFIED = 0;
+  AGGREGATION_TYPE_SUM = 1;
+  AGGREGATION_TYPE_AVERAGE = 2;
+  AGGREGATION_TYPE_COUNT = 3;
+  AGGREGATION_TYPE_MIN = 4;
+  AGGREGATION_TYPE_MAX = 5;
+  AGGREGATION_TYPE_HISTOGRAM = 6;
+}
+
+message TelemetryStatus {
+  bool healthy = 1;
+  string config_summary = 2;
+  repeated string active_exporters = 3;
+  TelemetryStats stats = 4;
+}
+
+message TelemetryStats {
+  int64 traces_processed = 1;
+  int64 metrics_processed = 2;
+  int64 logs_processed = 3;
+  int64 traces_exported = 4;
+  int64 metrics_exported = 5;
+  int64 logs_exported = 6;
+  int64 export_errors = 7;
+  int64 processing_errors = 8;
+  google.protobuf.Duration avg_processing_latency = 9;
+  google.protobuf.Duration avg_export_latency = 10;
+}
