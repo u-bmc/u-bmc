@@ -111,8 +111,8 @@ High‑level porting steps
 
 Service‑specific guidance (brief)
 - powermgr: uses `pkg/gpio` for line control; prefer the convenience toggles for momentary presses. Confirm active‑low vs active‑high and debounce.
-- sensormon: combine HWMON polling with I2C/PMBus reads; map sensor readings to the correct schema units; record `last_reading_timestamp`.
-- thermalmgr: keep PID bounds realistic for your fan hardware; avoid oscillation by tuning sample time and constraints.
+- sensormon: combine HWMON polling with I2C/PMBus reads; map sensor readings to the correct schema units; record `last_reading_timestamp`. See docs/sensormon.md for detailed configuration.
+- thermalmgr: keep PID bounds realistic for your fan hardware; avoid oscillation by tuning sample time and constraints. See docs/thermalmgr.md for PID tuning examples and thermal zone setup.
 - websrv: stick to TLS 1.3; use QUIC if supported; set reasonable read/write/idle timeouts; prefer serving the Web UI from the same process for simplicity.
 - statemgr: ensure action mappings for power and LEDs are complete; verify that chassis, host, and BMC actions drive the expected transitions.
 
@@ -180,4 +180,6 @@ See also
 - docs/overview.md for the system overview.
 - docs/architecture.md for the service graph and sequencing model.
 - docs/api.md for API access patterns and examples.
+- docs/sensormon.md for sensor monitoring configuration and usage.
+- docs/thermalmgr.md for thermal management and PID control setup.
 - docs/roadmap.md for central TODOs and planned compatibility layers.
