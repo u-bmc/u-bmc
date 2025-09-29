@@ -43,12 +43,13 @@ The first version of the Web UI should cover daily operator tasks through the ex
 - Delivery: the web UI talks only to websrv; no direct access to other services.
 - Packaging: development build for local testing; production build served by websrv.
 
-Sensor monitoring (sensormon)
-We need reliable, low-overhead monitoring that surfaces actionable signals and integrates with telemetry.
+Sensor and thermal management integration
+Complete integration testing and platform validation for sensor monitoring and thermal management systems.
 
-- Sources: hwmon, I2C/PMBus devices, and platform-specific sensors.
-- Features: threshold evaluation, debouncing, and state change events.
-- Outputs: periodic samples to telemetry and actionable transitions to statemgr.
+- Sensor monitoring (sensormon): hwmon and I2C sensor discovery, threshold monitoring, and NATS event publishing - implementation complete.
+- Thermal management (thermalmgr): PID-based fan control, emergency response integration, and hardware discovery - implementation complete.
+- Integration testing: end-to-end validation of sensor data flow to thermal control loops.
+- Platform validation: verify sensor and thermal configurations on target hardware.
 
 Web API hardening
 Strengthen the default posture of websrv.
@@ -141,8 +142,9 @@ Ship artifacts that are trustworthy and easy to consume.
 - GPIO: power/reset/identify lines mapped with clear active states and debounce characteristics.
 - LEDs: power, status, and identify mapping with supported patterns (on/off/blink).
 - I2C: bus topology, device addresses, and muxes; PMBus devices and scaling coefficients.
-- Thermal: zones, sensors, and PID defaults per platform.
+- Thermal: zones, sensors, and PID defaults per platform (see docs/thermalmgr.md for configuration).
 - Inventory: asset information available via schema/v1alpha1.
+- Sensors: hwmon device mapping and threshold configuration (see docs/sensormon.md for setup).
 - Non-userspace: kernel, device tree, udev, hwmon, pinmux, watchdog (tracked until the rootfs builder is in place).
 
 ## API direction
@@ -166,5 +168,7 @@ The ConnectRPC API is the primary entry point and is available now. It supports 
 - docs/porting.md — how to configure and port a new platform
 - docs/integration_example.md — power and state integration flow
 - docs/integration_complete.md — power/LED integration details
+- docs/sensormon.md — sensor monitoring service documentation
+- docs/thermalmgr.md — thermal management service documentation
 
 Status and priorities evolve as we integrate more platforms and validate the runtime. This roadmap keeps us aligned on the next most valuable increments while protecting the system’s reliability.
