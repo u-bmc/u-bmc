@@ -16,6 +16,7 @@ import (
 	v1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
 	"github.com/u-bmc/u-bmc/pkg/gpio"
 	"github.com/u-bmc/u-bmc/pkg/i2c"
+	"github.com/u-bmc/u-bmc/pkg/ipc"
 	"github.com/u-bmc/u-bmc/pkg/log"
 	"github.com/u-bmc/u-bmc/pkg/telemetry"
 	"github.com/u-bmc/u-bmc/service"
@@ -605,54 +606,35 @@ func (s *LEDMgr) closeBackends() {
 }
 
 func (s *LEDMgr) registerEndpoints(ctx context.Context) error {
-	if s.config.enableHostManagement {
-		hostGroup := s.microService.AddGroup("host")
-		for i := 0; i < s.config.numHosts; i++ {
-			controlEndpoint := fmt.Sprintf("%d.control", i)
-			statusEndpoint := fmt.Sprintf("%d.status", i)
+	groups := make(map[string]micro.Group)
 
-			if err := hostGroup.AddEndpoint(controlEndpoint,
-				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleLEDRequest))); err != nil {
-				return fmt.Errorf("failed to register host control endpoint %s: %w", controlEndpoint, err)
-			}
-			if err := hostGroup.AddEndpoint(statusEndpoint,
-				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleLEDRequest))); err != nil {
-				return fmt.Errorf("failed to register host status endpoint %s: %w", statusEndpoint, err)
-			}
-		}
+	// Register general LED endpoints that handle all instances
+	if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectLEDControl,
+		micro.HandlerFunc(s.createRequestHandler(ctx, s.handleGeneralLEDControl)), groups); err != nil {
+		return fmt.Errorf("failed to register LED control endpoint: %w", err)
 	}
-
-	if s.config.enableChassisManagement {
-		chassisGroup := s.microService.AddGroup("chassis")
-		for i := 0; i < s.config.numChassis; i++ {
-			controlEndpoint := fmt.Sprintf("%d.control", i)
-			statusEndpoint := fmt.Sprintf("%d.status", i)
-
-			if err := chassisGroup.AddEndpoint(controlEndpoint,
-				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleLEDRequest))); err != nil {
-				return fmt.Errorf("failed to register chassis control endpoint %s: %w", controlEndpoint, err)
-			}
-			if err := chassisGroup.AddEndpoint(statusEndpoint,
-				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleLEDRequest))); err != nil {
-				return fmt.Errorf("failed to register chassis status endpoint %s: %w", statusEndpoint, err)
-			}
-		}
-	}
-
-	if s.config.enableBMCManagement {
-		bmcGroup := s.microService.AddGroup("bmc")
-
-		if err := bmcGroup.AddEndpoint("0.control",
-			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleLEDRequest))); err != nil {
-			return fmt.Errorf("failed to register BMC control endpoint: %w", err)
-		}
-		if err := bmcGroup.AddEndpoint("0.status",
-			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleLEDRequest))); err != nil {
-			return fmt.Errorf("failed to register BMC status endpoint: %w", err)
-		}
+	if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectLEDStatus,
+		micro.HandlerFunc(s.createRequestHandler(ctx, s.handleGeneralLEDStatus)), groups); err != nil {
+		return fmt.Errorf("failed to register LED status endpoint: %w", err)
 	}
 
 	return nil
+}
+
+// handleGeneralLEDControl is a general handler that processes LED control requests
+// for any component type based on the message content instead of the subject
+func (s *LEDMgr) handleGeneralLEDControl(ctx context.Context, req micro.Request) {
+	// Try to parse the LED control request and determine component type from content
+	// For now, dispatch to the existing LED request handler
+	s.handleLEDRequest(ctx, req)
+}
+
+// handleGeneralLEDStatus is a general handler that processes LED status requests
+// for any component type based on the message content instead of the subject
+func (s *LEDMgr) handleGeneralLEDStatus(ctx context.Context, req micro.Request) {
+	// Try to parse the LED status request and determine component type from content
+	// For now, dispatch to the existing LED request handler
+	s.handleLEDRequest(ctx, req)
 }
 
 func (s *LEDMgr) createRequestHandler(parentCtx context.Context, handler func(context.Context, micro.Request)) micro.HandlerFunc {

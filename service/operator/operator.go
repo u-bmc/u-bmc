@@ -226,7 +226,7 @@ func (s *Operator) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 		}
 
 		// Dynamically add all service.Service fields to supervision tree
-		configValue := reflect.ValueOf(s.config)
+		configValue := reflect.ValueOf(*s.config)
 		for i := range configValue.NumField() {
 			field := configValue.Field(i)
 
