@@ -23,8 +23,7 @@ service/sensormon/
 ├── config.go       # Configuration options
 ├── sensormon.go    # Main service implementation
 ├── sensors.go      # Sensor list/get operations
-├── monitoring.go   # Monitoring start/stop/status operations
-└── README.md       # This file
+└── monitoring.go   # Monitoring start/stop/status
 ```
 
 ### Updated hwmon Package
@@ -33,7 +32,7 @@ The `pkg/hwmon` package has been simplified to provide stateless, functional acc
 
 ```
 pkg/hwmon/
-├── doc.go     # Package documentation  
+├── doc.go     # Package documentation
 ├── errors.go  # Error definitions
 └── hwmon.go   # Core hwmon functions
 ```
@@ -61,7 +60,7 @@ pkg/hwmon/
 sensormon.sensors.list        # List all available sensors
 sensormon.sensor.get          # Get specific sensor information
 sensormon.monitoring.start    # Start continuous monitoring
-sensormon.monitoring.stop     # Stop monitoring  
+sensormon.monitoring.stop     # Stop monitoring
 sensormon.monitoring.status   # Get monitoring status
 ```
 
@@ -139,7 +138,7 @@ Based on protobuf schema definitions:
 
 - **Temperature**: Celsius, Fahrenheit, Kelvin
 - **Voltage**: Volts (from millivolts)
-- **Current**: Amps (from milliamps)  
+- **Current**: Amps (from milliamps)
 - **Tach/Fan**: RPM
 - **Power**: Watts (from microwatts)
 - **Energy**: Joules

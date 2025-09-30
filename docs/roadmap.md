@@ -43,13 +43,13 @@ The first version of the Web UI should cover daily operator tasks through the ex
 - Delivery: the web UI talks only to websrv; no direct access to other services.
 - Packaging: development build for local testing; production build served by websrv.
 
-Sensor and thermal management integration
-Complete integration testing and platform validation for sensor monitoring and thermal management systems.
+Service documentation completion
+Comprehensive service documentation has been completed for all major implemented services.
 
-- Sensor monitoring (sensormon): hwmon and I2C sensor discovery, threshold monitoring, and NATS event publishing - implementation complete.
-- Thermal management (thermalmgr): PID-based fan control, emergency response integration, and hardware discovery - implementation complete.
-- Integration testing: end-to-end validation of sensor data flow to thermal control loops.
-- Platform validation: verify sensor and thermal configurations on target hardware.
+- Core services documented: operator, ipc, websrv, statemgr, powermgr, thermalmgr, sensormon, ledmgr
+- API documentation: complete ConnectRPC and REST API reference with integration examples
+- Documentation standards: centralized in docs/ directory with consistent formatting and cross-references
+- Package documentation: available on pkg.go.dev for detailed implementation guidance
 
 Web API hardening
 Strengthen the default posture of websrv.
@@ -62,7 +62,7 @@ Platform enablement
 Bring up initial targets in targets/, following the porting guidance in docs/porting.md.
 
 - Deliverables: GPIO line mapping for power and LEDs, I2C bus and device discovery, thermal zones, and inventory basics.
-- Non-userspace items are tracked in this roadmap’s platform section (see Later → Rootfs builder, kernel and device tree notes).
+- Non-userspace items are tracked in this roadmap's platform section (see Later → Rootfs builder, kernel and device tree notes).
 
 ## Next
 
@@ -166,8 +166,13 @@ The ConnectRPC API is the primary entry point and is available now. It supports 
 - docs/gpio.md — GPIO abstractions and usage
 - docs/api.md — API usage and request examples
 - docs/porting.md — how to configure and port a new platform
-- docs/integration_example.md — power and state integration flow
-- docs/integration_complete.md — power/LED integration details
+- docs/operator.md — service supervision and lifecycle management
+- docs/ipc.md — embedded NATS messaging and service communication
+- docs/websrv.md — web server and API gateway service
+- docs/statemgr.md — system state machines and coordination
+- docs/powermgr.md — power management and sequencing service
+- docs/ledmgr.md — LED control and visual indication service
+- docs/api.md — comprehensive API reference and integration guide
 - docs/sensormon.md — sensor monitoring service documentation
 - docs/thermalmgr.md — thermal management service documentation
 
