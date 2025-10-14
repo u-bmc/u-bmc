@@ -28,8 +28,9 @@ func (p *PowerMgr) handleChassisPowerAction(ctx context.Context, req micro.Reque
 		span.SetAttributes(attribute.String("subject", req.Subject()))
 	}
 
+	// Validate subject format: powermgr.chassis.{id}.action
 	parts := strings.Split(req.Subject(), ".")
-	if len(parts) != 4 || parts[0] != "powermgr" || parts[1] != "chassis" {
+	if len(parts) != 4 || parts[0] != "powermgr" || parts[1] != "chassis" || parts[3] != "action" {
 		ipc.RespondWithError(ctx, req, ErrInvalidRequest, "invalid subject format")
 		return
 	}
@@ -79,7 +80,7 @@ func (p *PowerMgr) handleChassisPowerAction(ctx context.Context, req micro.Reque
 
 	// Record metrics
 	p.recordOperation(ctx, operation, componentName, err)
-	if p.config.enableMetrics && p.powerOperationDuration != nil {
+	if p.powerOperationDuration != nil {
 		duration := time.Since(start).Seconds()
 		p.powerOperationDuration.Record(ctx, duration, metric.WithAttributes(
 			attribute.String("operation", operation),
