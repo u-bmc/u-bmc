@@ -5,11 +5,11 @@ package statemgr
 import (
 	"context"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/nats-io/nats.go/micro"
 	schemav1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
+	v1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
 	"github.com/u-bmc/u-bmc/pkg/ipc"
 	"github.com/u-bmc/u-bmc/pkg/state"
 	"go.opentelemetry.io/otel/attribute"
@@ -254,35 +254,80 @@ func (s *StateMgr) createManagementControllerBroadcastCallback(_ context.Context
 	}
 }
 
-func (s *StateMgr) handleManagementControllerStateRequest(ctx context.Context, req micro.Request) {
+func (s *StateMgr) handleManagementControllerState(ctx context.Context, req micro.Request) {
 	if s.tracer != nil {
 		var span trace.Span
-		ctx, span = s.tracer.Start(ctx, "statemgr.handleManagementControllerStateRequest")
+		ctx, span = s.tracer.Start(ctx, "statemgr.handleManagementControllerState")
 		defer span.End()
 		span.SetAttributes(attribute.String("subject", req.Subject()))
 	}
 
-	// Validate subject format: statemgr.controller.{name}.{operation}
-	parts := strings.Split(req.Subject(), ".")
-	if len(parts) < 4 || parts[0] != "statemgr" || (parts[1] != "controller" && parts[1] != "bmc") {
-		ipc.RespondWithError(ctx, req, ErrInvalidRequest, "invalid subject format")
+	var request v1alpha1.GetManagementControllerRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
+		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
 		return
 	}
 
-	controllerID := parts[2]
-	controllerName := fmt.Sprintf("bmc.%s", controllerID)
-	operation := parts[3]
-
-	switch operation {
-	case operationState:
-		s.handleGetManagementControllerState(ctx, req, controllerName)
-	case operationControl:
-		s.handleManagementControllerControl(ctx, req, controllerName)
-	case operationInfo:
-		s.handleGetManagementControllerInfo(ctx, req, controllerName)
+	// Extract controller name from the oneof identifier
+	var controllerName string
+	switch id := request.Identifier.(type) {
+	case *v1alpha1.GetManagementControllerRequest_Name:
+		controllerName = id.Name
 	default:
-		ipc.RespondWithError(ctx, req, ErrInvalidRequest, fmt.Sprintf("unknown operation: %s", operation))
+		ipc.RespondWithError(ctx, req, ErrMissingRequiredField, "management controller name is required")
+		return
 	}
+
+	s.handleGetManagementControllerState(ctx, req, controllerName)
+}
+
+func (s *StateMgr) handleManagementControllerControl(ctx context.Context, req micro.Request) {
+	if s.tracer != nil {
+		var span trace.Span
+		ctx, span = s.tracer.Start(ctx, "statemgr.handleManagementControllerControl")
+		defer span.End()
+		span.SetAttributes(attribute.String("subject", req.Subject()))
+	}
+
+	var request schemav1alpha1.ChangeManagementControllerStateRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
+		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
+		return
+	}
+
+	if request.ControllerName == "" {
+		ipc.RespondWithError(ctx, req, ErrMissingRequiredField, "management controller name is required")
+		return
+	}
+
+	s.handleManagementControllerControlRequest(ctx, req, request.ControllerName, &request)
+}
+
+func (s *StateMgr) handleManagementControllerInfo(ctx context.Context, req micro.Request) {
+	if s.tracer != nil {
+		var span trace.Span
+		ctx, span = s.tracer.Start(ctx, "statemgr.handleManagementControllerInfo")
+		defer span.End()
+		span.SetAttributes(attribute.String("subject", req.Subject()))
+	}
+
+	var request v1alpha1.GetManagementControllerRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
+		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
+		return
+	}
+
+	// Extract controller name from the oneof identifier
+	var controllerName string
+	switch id := request.Identifier.(type) {
+	case *v1alpha1.GetManagementControllerRequest_Name:
+		controllerName = id.Name
+	default:
+		ipc.RespondWithError(ctx, req, ErrMissingRequiredField, "management controller name is required")
+		return
+	}
+
+	s.handleGetManagementControllerInfo(ctx, req, controllerName)
 }
 
 func (s *StateMgr) handleGetManagementControllerState(ctx context.Context, req micro.Request, controllerName string) {
@@ -315,12 +360,7 @@ func (s *StateMgr) handleGetManagementControllerState(ctx context.Context, req m
 	}
 }
 
-func (s *StateMgr) handleManagementControllerControl(ctx context.Context, req micro.Request, controllerName string) {
-	var request schemav1alpha1.ChangeManagementControllerStateRequest
-	if err := request.UnmarshalVT(req.Data()); err != nil {
-		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
-		return
-	}
+func (s *StateMgr) handleManagementControllerControlRequest(ctx context.Context, req micro.Request, controllerName string, request *schemav1alpha1.ChangeManagementControllerStateRequest) {
 
 	sm, exists := s.getStateMachine(controllerName)
 	if !exists {
