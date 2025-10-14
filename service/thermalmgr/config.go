@@ -8,6 +8,88 @@ import (
 	"time"
 )
 
+// ThermalEvent represents different thermal management events.
+type ThermalEvent string
+
+const (
+	EventTemperatureWarning     ThermalEvent = "temperature_warning"
+	EventTemperatureCritical    ThermalEvent = "temperature_critical"
+	EventTemperatureNormal      ThermalEvent = "temperature_normal"
+	EventEmergencyShutdown      ThermalEvent = "emergency_shutdown"
+	EventCoolingEngaged         ThermalEvent = "cooling_engaged"
+	EventCoolingDisengaged      ThermalEvent = "cooling_disengaged"
+	EventThermalZoneCreated     ThermalEvent = "thermal_zone_created"
+	EventCoolingDeviceConnected ThermalEvent = "cooling_device_connected"
+	EventPIDControllerUpdated   ThermalEvent = "pid_controller_updated"
+)
+
+// ThermalEventCallback is called when thermal management events occur.
+type ThermalEventCallback func(zoneName string, event ThermalEvent, data interface{}) error
+
+// ThermalCallbacks holds callback functions for thermal management events.
+type ThermalCallbacks struct {
+	OnTemperatureWarning     ThermalEventCallback `json:"-"` // called when temperature exceeds warning threshold
+	OnTemperatureCritical    ThermalEventCallback `json:"-"` // called when temperature exceeds critical threshold
+	OnTemperatureNormal      ThermalEventCallback `json:"-"` // called when temperature returns to normal
+	OnEmergencyShutdown      ThermalEventCallback `json:"-"` // called during emergency shutdown
+	OnCoolingEngaged         ThermalEventCallback `json:"-"` // called when cooling is engaged
+	OnCoolingDisengaged      ThermalEventCallback `json:"-"` // called when cooling is disengaged
+	OnThermalZoneCreated     ThermalEventCallback `json:"-"` // called when thermal zone is created
+	OnCoolingDeviceConnected ThermalEventCallback `json:"-"` // called when cooling device is connected
+	OnPIDControllerUpdated   ThermalEventCallback `json:"-"` // called when PID controller is updated
+}
+
+// CoolingDeviceType represents the type of cooling device.
+type CoolingDeviceType string
+
+const (
+	CoolingDeviceTypeFan    CoolingDeviceType = "fan"
+	CoolingDeviceTypePump   CoolingDeviceType = "pump"
+	CoolingDeviceTypeValve  CoolingDeviceType = "valve"
+	CoolingDeviceTypeMock   CoolingDeviceType = "mock"
+	CoolingDeviceTypeCustom CoolingDeviceType = "custom"
+)
+
+// CoolingDeviceConfig represents configuration for a cooling device.
+type CoolingDeviceConfig struct {
+	ID               string            `json:"id"`                          // unique device identifier
+	Name             string            `json:"name"`                        // human-readable name
+	Type             CoolingDeviceType `json:"type"`                        // device type
+	Enabled          bool              `json:"enabled"`                     // whether device is enabled
+	MinSpeed         float64           `json:"min_speed"`                   // minimum speed/output (0-100%)
+	MaxSpeed         float64           `json:"max_speed"`                   // maximum speed/output (0-100%)
+	InitialSpeed     float64           `json:"initial_speed"`               // initial speed on startup
+	HwmonPath        string            `json:"hwmon_path,omitempty"`        // hwmon path for fan control
+	PWMChannel       int               `json:"pwm_channel,omitempty"`       // PWM channel number
+	CustomAttributes map[string]string `json:"custom_attributes,omitempty"` // additional attributes
+}
+
+// PIDConfig represents PID controller configuration.
+type PIDConfig struct {
+	Kp         float64       `json:"kp"`          // proportional gain
+	Ki         float64       `json:"ki"`          // integral gain
+	Kd         float64       `json:"kd"`          // derivative gain
+	SampleTime time.Duration `json:"sample_time"` // PID sample time
+	OutputMin  float64       `json:"output_min"`  // minimum output value
+	OutputMax  float64       `json:"output_max"`  // maximum output value
+}
+
+// ThermalZoneConfig represents configuration for a thermal zone.
+type ThermalZoneConfig struct {
+	ID               string            `json:"id"`                          // unique zone identifier
+	Name             string            `json:"name"`                        // human-readable name
+	Description      string            `json:"description,omitempty"`       // zone description
+	Enabled          bool              `json:"enabled"`                     // whether zone is enabled
+	SensorIDs        []string          `json:"sensor_ids"`                  // sensor IDs to monitor
+	CoolingDeviceIDs []string          `json:"cooling_device_ids"`          // cooling device IDs to control
+	WarningTemp      float64           `json:"warning_temp"`                // warning temperature threshold
+	CriticalTemp     float64           `json:"critical_temp"`               // critical temperature threshold
+	EmergencyTemp    float64           `json:"emergency_temp,omitempty"`    // emergency temperature threshold
+	TargetTemp       float64           `json:"target_temp"`                 // target temperature for PID control
+	PIDConfig        *PIDConfig        `json:"pid_config,omitempty"`        // PID controller configuration
+	CustomAttributes map[string]string `json:"custom_attributes,omitempty"` // additional attributes
+}
+
 const (
 	DefaultServiceName            = "thermalmgr"
 	DefaultServiceDescription     = "Thermal management service for BMC components"
@@ -61,8 +143,12 @@ type config struct {
 	enableEmergencyResponse bool
 	emergencyResponseDelay  time.Duration
 	failsafeCoolingLevel    float64
-	enableMetrics           bool
-	enableTracing           bool
+
+	// Enhanced configuration
+	thermalZones   []ThermalZoneConfig
+	coolingDevices []CoolingDeviceConfig
+	callbacks      ThermalCallbacks
+	enableMockMode bool
 }
 
 type Option interface {
@@ -462,36 +548,56 @@ func WithEmergencyResponseConfig(enabled bool, delay time.Duration, failsafeLeve
 	return &emergencyResponseConfigOption{enabled: enabled, delay: delay, failsafeLevel: failsafeLevel}
 }
 
-type enableMetricsOption struct {
+type thermalZonesOption struct {
+	zones []ThermalZoneConfig
+}
+
+func (o *thermalZonesOption) apply(c *config) {
+	c.thermalZones = o.zones
+}
+
+func WithThermalZones(zones ...ThermalZoneConfig) Option {
+	return &thermalZonesOption{zones: zones}
+}
+
+type coolingDevicesOption struct {
+	devices []CoolingDeviceConfig
+}
+
+func (o *coolingDevicesOption) apply(c *config) {
+	c.coolingDevices = o.devices
+}
+
+func WithCoolingDevices(devices ...CoolingDeviceConfig) Option {
+	return &coolingDevicesOption{devices: devices}
+}
+
+type callbacksOption struct {
+	callbacks ThermalCallbacks
+}
+
+func (o *callbacksOption) apply(c *config) {
+	c.callbacks = o.callbacks
+}
+
+func WithCallbacks(callbacks ThermalCallbacks) Option {
+	return &callbacksOption{callbacks: callbacks}
+}
+
+type enableMockModeOption struct {
 	enable bool
 }
 
-func (o *enableMetricsOption) apply(c *config) {
-	c.enableMetrics = o.enable
+func (o *enableMockModeOption) apply(c *config) {
+	c.enableMockMode = o.enable
 }
 
-func WithMetrics(enable bool) Option {
-	return &enableMetricsOption{enable: enable}
+func WithMockMode(enable bool) Option {
+	return &enableMockModeOption{enable: enable}
 }
 
-func WithoutMetrics() Option {
-	return &enableMetricsOption{enable: false}
-}
-
-type enableTracingOption struct {
-	enable bool
-}
-
-func (o *enableTracingOption) apply(c *config) {
-	c.enableTracing = o.enable
-}
-
-func WithTracing(enable bool) Option {
-	return &enableTracingOption{enable: enable}
-}
-
-func WithoutTracing() Option {
-	return &enableTracingOption{enable: false}
+func WithoutMockMode() Option {
+	return &enableMockModeOption{enable: false}
 }
 
 func (c *config) Validate() error {
@@ -571,5 +677,157 @@ func (c *config) Validate() error {
 		return fmt.Errorf("%w: emergency response delay must be positive when emergency response is enabled", ErrInvalidConfiguration)
 	}
 
+	// Validate thermal zones
+	zoneIDs := make(map[string]bool)
+	for i, zone := range c.thermalZones {
+		if zone.ID == "" {
+			return fmt.Errorf("%w: thermal zone %d has empty ID", ErrInvalidConfiguration, i)
+		}
+
+		if zoneIDs[zone.ID] {
+			return fmt.Errorf("%w: duplicate thermal zone ID '%s'", ErrInvalidConfiguration, zone.ID)
+		}
+		zoneIDs[zone.ID] = true
+
+		if zone.Name == "" {
+			return fmt.Errorf("%w: thermal zone '%s' has empty name", ErrInvalidConfiguration, zone.ID)
+		}
+
+		if len(zone.SensorIDs) == 0 {
+			return fmt.Errorf("%w: thermal zone '%s' has no sensors", ErrInvalidConfiguration, zone.ID)
+		}
+
+		if zone.WarningTemp >= zone.CriticalTemp {
+			return fmt.Errorf("%w: thermal zone '%s' warning temperature must be less than critical temperature", ErrInvalidConfiguration, zone.ID)
+		}
+
+		if zone.EmergencyTemp > 0 && zone.CriticalTemp >= zone.EmergencyTemp {
+			return fmt.Errorf("%w: thermal zone '%s' critical temperature must be less than emergency temperature", ErrInvalidConfiguration, zone.ID)
+		}
+
+		if zone.PIDConfig != nil {
+			if zone.PIDConfig.SampleTime <= 0 {
+				return fmt.Errorf("%w: thermal zone '%s' PID sample time must be positive", ErrInvalidConfiguration, zone.ID)
+			}
+			if zone.PIDConfig.OutputMin >= zone.PIDConfig.OutputMax {
+				return fmt.Errorf("%w: thermal zone '%s' PID output minimum must be less than maximum", ErrInvalidConfiguration, zone.ID)
+			}
+		}
+	}
+
+	// Validate cooling devices
+	deviceIDs := make(map[string]bool)
+	for i, device := range c.coolingDevices {
+		if device.ID == "" {
+			return fmt.Errorf("%w: cooling device %d has empty ID", ErrInvalidConfiguration, i)
+		}
+
+		if deviceIDs[device.ID] {
+			return fmt.Errorf("%w: duplicate cooling device ID '%s'", ErrInvalidConfiguration, device.ID)
+		}
+		deviceIDs[device.ID] = true
+
+		if device.Name == "" {
+			return fmt.Errorf("%w: cooling device '%s' has empty name", ErrInvalidConfiguration, device.ID)
+		}
+
+		if device.MinSpeed < 0 || device.MinSpeed > 100 {
+			return fmt.Errorf("%w: cooling device '%s' minimum speed must be between 0 and 100", ErrInvalidConfiguration, device.ID)
+		}
+
+		if device.MaxSpeed < 0 || device.MaxSpeed > 100 {
+			return fmt.Errorf("%w: cooling device '%s' maximum speed must be between 0 and 100", ErrInvalidConfiguration, device.ID)
+		}
+
+		if device.MinSpeed >= device.MaxSpeed {
+			return fmt.Errorf("%w: cooling device '%s' minimum speed must be less than maximum speed", ErrInvalidConfiguration, device.ID)
+		}
+
+		if device.InitialSpeed < device.MinSpeed || device.InitialSpeed > device.MaxSpeed {
+			return fmt.Errorf("%w: cooling device '%s' initial speed must be between minimum and maximum speed", ErrInvalidConfiguration, device.ID)
+		}
+
+		if device.Type == CoolingDeviceTypeFan && device.HwmonPath == "" && !c.enableMockMode {
+			return fmt.Errorf("%w: cooling device '%s' of type fan must have hwmon_path in non-mock mode", ErrInvalidConfiguration, device.ID)
+		}
+	}
+
 	return nil
+}
+
+// Helper functions for creating thermal configurations
+
+// NewThermalZone creates a new thermal zone configuration.
+func NewThermalZone(id, name string, sensorIDs []string, coolingDeviceIDs []string, targetTemp, warningTemp, criticalTemp float64) ThermalZoneConfig {
+	return ThermalZoneConfig{
+		ID:               id,
+		Name:             name,
+		Enabled:          true,
+		SensorIDs:        sensorIDs,
+		CoolingDeviceIDs: coolingDeviceIDs,
+		TargetTemp:       targetTemp,
+		WarningTemp:      warningTemp,
+		CriticalTemp:     criticalTemp,
+		PIDConfig: &PIDConfig{
+			Kp:         DefaultDefaultPIDKp,
+			Ki:         DefaultDefaultPIDKi,
+			Kd:         DefaultDefaultPIDKd,
+			SampleTime: DefaultDefaultPIDSampleTime,
+			OutputMin:  DefaultDefaultOutputMin,
+			OutputMax:  DefaultDefaultOutputMax,
+		},
+	}
+}
+
+// NewCoolingDevice creates a new cooling device configuration.
+func NewCoolingDevice(id, name string, deviceType CoolingDeviceType, minSpeed, maxSpeed, initialSpeed float64) CoolingDeviceConfig {
+	return CoolingDeviceConfig{
+		ID:           id,
+		Name:         name,
+		Type:         deviceType,
+		Enabled:      true,
+		MinSpeed:     minSpeed,
+		MaxSpeed:     maxSpeed,
+		InitialSpeed: initialSpeed,
+	}
+}
+
+// NewFanDevice creates a new fan cooling device configuration.
+func NewFanDevice(id, name, hwmonPath string, pwmChannel int, minSpeed, maxSpeed, initialSpeed float64) CoolingDeviceConfig {
+	return CoolingDeviceConfig{
+		ID:           id,
+		Name:         name,
+		Type:         CoolingDeviceTypeFan,
+		Enabled:      true,
+		MinSpeed:     minSpeed,
+		MaxSpeed:     maxSpeed,
+		InitialSpeed: initialSpeed,
+		HwmonPath:    hwmonPath,
+		PWMChannel:   pwmChannel,
+	}
+}
+
+// NewMockCoolingDevice creates a new mock cooling device configuration for testing.
+func NewMockCoolingDevice(id, name string, minSpeed, maxSpeed, initialSpeed float64) CoolingDeviceConfig {
+	return CoolingDeviceConfig{
+		ID:           id,
+		Name:         name,
+		Type:         CoolingDeviceTypeMock,
+		Enabled:      true,
+		MinSpeed:     minSpeed,
+		MaxSpeed:     maxSpeed,
+		InitialSpeed: initialSpeed,
+	}
+}
+
+// NewPIDConfig creates a new PID controller configuration.
+func NewPIDConfig(kp, ki, kd float64, sampleTime time.Duration, outputMin, outputMax float64) *PIDConfig {
+	return &PIDConfig{
+		Kp:         kp,
+		Ki:         ki,
+		Kd:         kd,
+		SampleTime: sampleTime,
+		OutputMin:  outputMin,
+		OutputMax:  outputMax,
+	}
 }
