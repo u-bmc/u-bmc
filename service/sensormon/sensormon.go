@@ -15,6 +15,7 @@ import (
 	"github.com/nats-io/nats.go/micro"
 	v1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
 	"github.com/u-bmc/u-bmc/pkg/hwmon"
+	"github.com/u-bmc/u-bmc/pkg/ipc"
 	"github.com/u-bmc/u-bmc/pkg/log"
 	"github.com/u-bmc/u-bmc/pkg/telemetry"
 	"github.com/u-bmc/u-bmc/service"
@@ -74,8 +75,6 @@ func New(opts ...Option) *SensorMon {
 		sensorTimeout:             DefaultSensorTimeout,
 		enableHwmonSensors:        true,
 		enableGPIOSensors:         false,
-		enableMetrics:             true,
-		enableTracing:             true,
 		enableThresholdMonitoring: true,
 		broadcastSensorReadings:   false,
 		persistSensorData:         false,
@@ -438,21 +437,15 @@ func (s *SensorMon) getUnitForContext(sensorContext v1alpha1.SensorContext) v1al
 }
 
 func (s *SensorMon) registerEndpoints(ctx context.Context) error {
-	endpoints := []struct {
-		subject string
-		handler micro.HandlerFunc
-	}{
-		{"sensormon.sensors.list", s.createRequestHandler(ctx, s.handleListSensors)},
-		{"sensormon.sensor.get", s.createRequestHandler(ctx, s.handleGetSensor)},
-		{"sensormon.monitoring.start", s.createRequestHandler(ctx, s.handleStartMonitoring)},
-		{"sensormon.monitoring.stop", s.createRequestHandler(ctx, s.handleStopMonitoring)},
-		{"sensormon.monitoring.status", s.createRequestHandler(ctx, s.handleMonitoringStatus)},
-	}
+	groups := make(map[string]micro.Group)
 
-	for _, ep := range endpoints {
-		if err := s.microService.AddEndpoint(ep.subject, ep.handler); err != nil {
-			return fmt.Errorf("%w: %s: %w", ErrEndpointRegistrationFailed, ep.subject, err)
-		}
+	if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectSensorList,
+		micro.HandlerFunc(s.createRequestHandler(ctx, s.handleListSensors)), groups); err != nil {
+		return fmt.Errorf("failed to register sensor list endpoint: %w", err)
+	}
+	if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectSensorInfo,
+		micro.HandlerFunc(s.createRequestHandler(ctx, s.handleGetSensor)), groups); err != nil {
+		return fmt.Errorf("failed to register sensor info endpoint: %w", err)
 	}
 
 	return nil
