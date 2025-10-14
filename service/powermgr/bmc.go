@@ -28,8 +28,9 @@ func (p *PowerMgr) handleBMCPowerAction(ctx context.Context, req micro.Request) 
 		span.SetAttributes(attribute.String("subject", req.Subject()))
 	}
 
+	// Validate subject format: powermgr.bmc.{id}.action
 	parts := strings.Split(req.Subject(), ".")
-	if len(parts) != 4 || parts[0] != DefaultServiceName || parts[1] != "bmc" {
+	if len(parts) != 4 || parts[0] != DefaultServiceName || parts[1] != "bmc" || parts[3] != "action" {
 		ipc.RespondWithError(ctx, req, ErrInvalidRequest, "invalid subject format")
 		return
 	}
@@ -77,7 +78,7 @@ func (p *PowerMgr) handleBMCPowerAction(ctx context.Context, req micro.Request) 
 
 	// Record metrics
 	p.recordOperation(ctx, operation, componentName, err)
-	if p.config.enableMetrics && p.powerOperationDuration != nil {
+	if p.powerOperationDuration != nil {
 		duration := time.Since(start).Seconds()
 		p.powerOperationDuration.Record(ctx, duration, metric.WithAttributes(
 			attribute.String("operation", operation),

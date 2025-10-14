@@ -8,6 +8,35 @@ import (
 	"time"
 )
 
+// PowerEvent represents different power management events.
+type PowerEvent string
+
+const (
+	EventPowerOn           PowerEvent = "power_on"
+	EventPowerOff          PowerEvent = "power_off"
+	EventReset             PowerEvent = "reset"
+	EventForceOff          PowerEvent = "force_off"
+	EventPowerStateChanged PowerEvent = "power_state_changed"
+	EventOperationFailed   PowerEvent = "operation_failed"
+	EventEmergencyShutdown PowerEvent = "emergency_shutdown"
+	EventThermalThrottling PowerEvent = "thermal_throttling"
+)
+
+// PowerEventCallback is called when power management events occur.
+type PowerEventCallback func(componentName string, event PowerEvent, data interface{}) error
+
+// PowerCallbacks holds callback functions for power management events.
+type PowerCallbacks struct {
+	OnPowerOn           PowerEventCallback `json:"-"` // called when component powers on
+	OnPowerOff          PowerEventCallback `json:"-"` // called when component powers off
+	OnReset             PowerEventCallback `json:"-"` // called when component resets
+	OnForceOff          PowerEventCallback `json:"-"` // called when component force powers off
+	OnPowerStateChanged PowerEventCallback `json:"-"` // called when power state changes
+	OnOperationFailed   PowerEventCallback `json:"-"` // called when power operation fails
+	OnEmergencyShutdown PowerEventCallback `json:"-"` // called during emergency shutdown
+	OnThermalThrottling PowerEventCallback `json:"-"` // called during thermal throttling
+}
+
 const (
 	DefaultServiceName        = "powermgr"
 	DefaultServiceDescription = "Power management service for BMC components"
@@ -26,6 +55,7 @@ type BackendType string
 const (
 	BackendTypeGPIO BackendType = "gpio"
 	BackendTypeI2C  BackendType = "i2c"
+	BackendTypeMock BackendType = "mock"
 )
 
 type GPIOActiveState int
@@ -76,13 +106,23 @@ type I2CConfig struct {
 	ResetValue    uint8
 }
 
+// MockConfig represents mock backend configuration for testing.
+type MockConfig struct {
+	AlwaysSucceed     bool          `json:"always_succeed"`              // whether operations always succeed
+	OperationDelay    time.Duration `json:"operation_delay,omitempty"`   // delay before completing operations
+	FailureRate       float64       `json:"failure_rate,omitempty"`      // probability of operation failure (0.0-1.0)
+	PowerStateDelay   time.Duration `json:"power_state_delay,omitempty"` // delay before power state changes
+	InitialPowerState bool          `json:"initial_power_state"`         // initial power state (on/off)
+}
+
 type ComponentConfig struct {
 	Name             string
 	Type             string
 	Enabled          bool
 	Backend          BackendType
-	GPIO             GPIOConfig
-	I2C              I2CConfig
+	GPIO             *GPIOConfig
+	I2C              *I2CConfig
+	Mock             *MockConfig
 	OperationTimeout time.Duration
 	PowerOnDelay     time.Duration
 	PowerOffDelay    time.Duration
@@ -104,8 +144,6 @@ type config struct {
 	numHosts                    int
 	numChassis                  int
 	defaultOperationTimeout     time.Duration
-	enableMetrics               bool
-	enableTracing               bool
 	enableStateReporting        bool
 	stateReportingSubjectPrefix string
 	enableThermalResponse       bool
@@ -115,6 +153,10 @@ type config struct {
 	shutdownComponents          []string
 	maxEmergencyAttempts        int
 	emergencyAttemptInterval    time.Duration
+
+	// Callback support
+	callbacks          PowerCallbacks
+	enableMockBackends bool
 }
 
 type Option interface {
@@ -310,38 +352,6 @@ func WithDefaultOperationTimeout(timeout time.Duration) Option {
 	return &defaultOperationTimeoutOption{timeout: timeout}
 }
 
-type enableMetricsOption struct {
-	enable bool
-}
-
-func (o *enableMetricsOption) apply(c *config) {
-	c.enableMetrics = o.enable
-}
-
-func WithMetrics(enable bool) Option {
-	return &enableMetricsOption{enable: enable}
-}
-
-func WithoutMetrics() Option {
-	return &enableMetricsOption{enable: false}
-}
-
-type enableTracingOption struct {
-	enable bool
-}
-
-func (o *enableTracingOption) apply(c *config) {
-	c.enableTracing = o.enable
-}
-
-func WithTracing(enable bool) Option {
-	return &enableTracingOption{enable: enable}
-}
-
-func WithoutTracing() Option {
-	return &enableTracingOption{enable: false}
-}
-
 type enableStateReportingOption struct {
 	enable bool
 }
@@ -462,6 +472,34 @@ func WithEmergencyAttemptInterval(interval time.Duration) Option {
 	return &emergencyAttemptIntervalOption{interval: interval}
 }
 
+type callbacksOption struct {
+	callbacks PowerCallbacks
+}
+
+func (o *callbacksOption) apply(c *config) {
+	c.callbacks = o.callbacks
+}
+
+func WithCallbacks(callbacks PowerCallbacks) Option {
+	return &callbacksOption{callbacks: callbacks}
+}
+
+type enableMockBackendsOption struct {
+	enable bool
+}
+
+func (o *enableMockBackendsOption) apply(c *config) {
+	c.enableMockBackends = o.enable
+}
+
+func WithMockBackends(enable bool) Option {
+	return &enableMockBackendsOption{enable: enable}
+}
+
+func WithoutMockBackends() Option {
+	return &enableMockBackendsOption{enable: false}
+}
+
 func (c *config) Validate() error {
 	if c.serviceName == "" {
 		return fmt.Errorf("%w: service name cannot be empty", ErrInvalidConfiguration)
@@ -553,8 +591,12 @@ func (c *config) validateComponentConfig(name string, component ComponentConfig)
 		return fmt.Errorf("%w: invalid component type '%s' for component '%s'", ErrInvalidConfiguration, component.Type, name)
 	}
 
-	if component.Backend != BackendTypeGPIO && component.Backend != BackendTypeI2C {
+	if component.Backend != BackendTypeGPIO && component.Backend != BackendTypeI2C && component.Backend != BackendTypeMock {
 		return fmt.Errorf("%w: invalid backend type '%s' for component '%s'", ErrInvalidConfiguration, component.Backend, name)
+	}
+
+	if component.Backend == BackendTypeMock && !c.enableMockBackends {
+		return fmt.Errorf("%w: mock backend not enabled for component '%s'", ErrInvalidConfiguration, name)
 	}
 
 	if component.OperationTimeout <= 0 {
@@ -578,14 +620,29 @@ func (c *config) validateComponentConfig(name string, component ComponentConfig)
 	}
 
 	if component.Backend == BackendTypeGPIO {
-		if err := c.validateGPIOConfig(name, component.GPIO); err != nil {
+		if component.GPIO == nil {
+			return fmt.Errorf("%w: component '%s' has GPIO backend but no GPIO config", ErrInvalidConfiguration, name)
+		}
+		if err := c.validateGPIOConfig(name, *component.GPIO); err != nil {
 			return err
 		}
 	}
 
 	if component.Backend == BackendTypeI2C {
-		if err := c.validateI2CConfig(name, component.I2C); err != nil {
+		if component.I2C == nil {
+			return fmt.Errorf("%w: component '%s' has I2C backend but no I2C config", ErrInvalidConfiguration, name)
+		}
+		if err := c.validateI2CConfig(name, *component.I2C); err != nil {
 			return err
+		}
+	}
+
+	if component.Backend == BackendTypeMock {
+		if component.Mock == nil {
+			return fmt.Errorf("%w: component '%s' has mock backend but no mock config", ErrInvalidConfiguration, name)
+		}
+		if err := c.validateMockConfig(component.Mock); err != nil {
+			return fmt.Errorf("%w: component '%s' mock config: %w", ErrInvalidConfiguration, name, err)
 		}
 	}
 
@@ -682,9 +739,13 @@ func newDefaultComponentConfig(name, componentType string, backend BackendType, 
 
 	switch backend {
 	case BackendTypeGPIO:
-		config.GPIO = newDefaultGPIOConfig()
+		gpioConfig := newDefaultGPIOConfig()
+		config.GPIO = &gpioConfig
 	case BackendTypeI2C:
-		config.I2C = newDefaultI2CConfig(i2cDevice)
+		i2cConfig := newDefaultI2CConfig(i2cDevice)
+		config.I2C = &i2cConfig
+	case BackendTypeMock:
+		config.Mock = newDefaultMockConfig()
 	}
 
 	return config
@@ -716,6 +777,121 @@ func newDefaultI2CConfig(devicePath string) I2CConfig {
 	return I2CConfig{
 		DevicePath:    devicePath,
 		SlaveAddress:  0x20,
+		PowerOnReg:    0x01,
+		PowerOffReg:   0x02,
+		ResetReg:      0x03,
+		StatusReg:     0x04,
+		PowerOnValue:  0x01,
+		PowerOffValue: 0x00,
+		ResetValue:    0x01,
+	}
+}
+
+func (c *config) validateMockConfig(cfg *MockConfig) error {
+	if cfg == nil {
+		return fmt.Errorf("mock configuration is required for mock backend")
+	}
+
+	if cfg.FailureRate < 0.0 || cfg.FailureRate > 1.0 {
+		return fmt.Errorf("mock failure rate must be between 0.0 and 1.0")
+	}
+
+	if cfg.OperationDelay < 0 {
+		return fmt.Errorf("mock operation delay cannot be negative")
+	}
+
+	if cfg.PowerStateDelay < 0 {
+		return fmt.Errorf("mock power state delay cannot be negative")
+	}
+
+	return nil
+}
+
+func newDefaultMockConfig() *MockConfig {
+	return &MockConfig{
+		AlwaysSucceed:     true,
+		OperationDelay:    100 * time.Millisecond,
+		FailureRate:       0.0,
+		PowerStateDelay:   50 * time.Millisecond,
+		InitialPowerState: false,
+	}
+}
+
+// NewMockConfig creates a new mock power configuration.
+func NewMockConfig(alwaysSucceed bool, initialPowerState bool) *MockConfig {
+	return &MockConfig{
+		AlwaysSucceed:     alwaysSucceed,
+		OperationDelay:    100 * time.Millisecond,
+		FailureRate:       0.0,
+		PowerStateDelay:   50 * time.Millisecond,
+		InitialPowerState: initialPowerState,
+	}
+}
+
+// NewMockConfigWithFailures creates a mock power configuration that can simulate failures.
+func NewMockConfigWithFailures(failureRate float64, initialPowerState bool) *MockConfig {
+	return &MockConfig{
+		AlwaysSucceed:     false,
+		OperationDelay:    100 * time.Millisecond,
+		FailureRate:       failureRate,
+		PowerStateDelay:   50 * time.Millisecond,
+		InitialPowerState: initialPowerState,
+	}
+}
+
+// NewReliableMockConfig creates a highly reliable mock power configuration.
+func NewReliableMockConfig(initialPowerState bool) *MockConfig {
+	return &MockConfig{
+		AlwaysSucceed:     true,
+		OperationDelay:    10 * time.Millisecond, // Fast operations
+		FailureRate:       0.0,                   // No failures
+		PowerStateDelay:   5 * time.Millisecond,  // Quick state changes
+		InitialPowerState: initialPowerState,
+	}
+}
+
+// NewSlowMockConfig creates a mock power configuration with slow operations for testing timeouts.
+func NewSlowMockConfig(initialPowerState bool) *MockConfig {
+	return &MockConfig{
+		AlwaysSucceed:     true,
+		OperationDelay:    2 * time.Second, // Slow operations
+		FailureRate:       0.0,
+		PowerStateDelay:   1 * time.Second, // Slow state changes
+		InitialPowerState: initialPowerState,
+	}
+}
+
+// NewGPIOConfig creates a new GPIO power configuration.
+func NewGPIOConfig(powerLine, resetLine, statusLine int) *GPIOConfig {
+	return &GPIOConfig{
+		PowerButton: GPIOLineConfig{
+			Line:         fmt.Sprintf("%d", powerLine),
+			Direction:    DirectionOutput,
+			ActiveState:  ActiveLow,
+			InitialValue: 0,
+			Bias:         BiasDisabled,
+		},
+		ResetButton: GPIOLineConfig{
+			Line:         fmt.Sprintf("%d", resetLine),
+			Direction:    DirectionOutput,
+			ActiveState:  ActiveLow,
+			InitialValue: 0,
+			Bias:         BiasDisabled,
+		},
+		PowerStatus: GPIOLineConfig{
+			Line:        fmt.Sprintf("%d", statusLine),
+			Direction:   DirectionInput,
+			ActiveState: ActiveHigh,
+			Bias:        BiasPullDown,
+		},
+	}
+}
+
+// NewI2CConfig creates a new I2C power configuration.
+func NewI2CConfig(devicePath string, slaveAddr uint8) *I2CConfig {
+	return &I2CConfig{
+		DevicePath:    devicePath,
+		SlaveAddress:  slaveAddr,
 		PowerOnReg:    0x01,
 		PowerOffReg:   0x02,
 		ResetReg:      0x03,
