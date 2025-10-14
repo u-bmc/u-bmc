@@ -81,6 +81,10 @@ var (
 	// ErrI2CTransmissionFailed indicates I2C data transmission failed.
 	ErrI2CTransmissionFailed = errors.New("I2C transmission failed")
 
+	// LED configuration errors
+	// ErrLEDNotConfigured indicates LED is not configured for the component.
+	ErrLEDNotConfigured = errors.New("LED not configured for component")
+
 	// Hardware errors
 	// ErrHardwareNotResponding indicates the hardware is not responding.
 	ErrHardwareNotResponding = errors.New("hardware not responding")
