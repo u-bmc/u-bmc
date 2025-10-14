@@ -13,10 +13,12 @@ import (
 // Compile-time assertion that SecurityMgr implements service.Service.
 var _ service.Service = (*SecurityMgr)(nil)
 
+// SecurityMgr provides security management functionality for BMC access control.
 type SecurityMgr struct {
-	config
+	config config
 }
 
+// New creates a new SecurityMgr instance with the provided options.
 func New(opts ...Option) *SecurityMgr {
 	cfg := &config{
 		name: "securitymgr",
@@ -30,16 +32,16 @@ func New(opts ...Option) *SecurityMgr {
 }
 
 func (s *SecurityMgr) Name() string {
-	return s.name
+	return s.config.name
 }
 
 func (s *SecurityMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) error {
 	l := log.GetGlobalLogger()
 
-	l.InfoContext(ctx, "Starting security manager", "service", s.name)
+	l.InfoContext(ctx, "Starting security manager", "service", s.config.name)
 
 	<-ctx.Done()
-	l.InfoContext(ctx, "Stopping security manager", "service", s.name, "reason", ctx.Err())
+	l.InfoContext(ctx, "Stopping security manager", "service", s.config.name, "reason", ctx.Err())
 
 	return ctx.Err()
 }
