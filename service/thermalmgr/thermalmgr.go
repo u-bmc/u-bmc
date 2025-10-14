@@ -14,6 +14,7 @@ import (
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
 	"github.com/nats-io/nats.go/micro"
+	"github.com/u-bmc/u-bmc/pkg/ipc"
 	"github.com/u-bmc/u-bmc/pkg/log"
 	"github.com/u-bmc/u-bmc/pkg/telemetry"
 	"github.com/u-bmc/u-bmc/pkg/thermal"
@@ -77,8 +78,6 @@ func New(opts ...Option) *ThermalMgr {
 		enableEmergencyResponse: true,
 		emergencyResponseDelay:  DefaultEmergencyResponseDelay,
 		failsafeCoolingLevel:    DefaultFailsafeCoolingLevel,
-		enableMetrics:           true,
-		enableTracing:           true,
 	}
 
 	for _, opt := range opts {
@@ -318,31 +317,19 @@ func (t *ThermalMgr) createDefaultThermalZones(ctx context.Context) error {
 }
 
 func (t *ThermalMgr) registerEndpoints(ctx context.Context) error {
-	endpoints := []struct {
-		subject string
-		handler micro.HandlerFunc
-	}{
-		// Thermal zone management
-		{"thermalmgr.zones.list", t.createRequestHandler(ctx, t.handleListThermalZones)},
-		{"thermalmgr.zone.get", t.createRequestHandler(ctx, t.handleGetThermalZone)},
-		{"thermalmgr.zone.set", t.createRequestHandler(ctx, t.handleSetThermalZone)},
+	groups := make(map[string]micro.Group)
 
-		// Cooling device management
-		{"thermalmgr.devices.list", t.createRequestHandler(ctx, t.handleListCoolingDevices)},
-		{"thermalmgr.device.get", t.createRequestHandler(ctx, t.handleGetCoolingDevice)},
-		{"thermalmgr.device.set", t.createRequestHandler(ctx, t.handleSetCoolingDevice)},
-
-		// Thermal control
-		{"thermalmgr.control.start", t.createRequestHandler(ctx, t.handleStartThermalControl)},
-		{"thermalmgr.control.stop", t.createRequestHandler(ctx, t.handleStopThermalControl)},
-		{"thermalmgr.control.status", t.createRequestHandler(ctx, t.handleThermalControlStatus)},
-		{"thermalmgr.control.emergency", t.createRequestHandler(ctx, t.handleEmergencyThermal)},
+	if err := ipc.RegisterEndpointWithGroupCache(t.microService, ipc.SubjectThermalZoneList,
+		micro.HandlerFunc(t.createRequestHandler(ctx, t.handleListThermalZones)), groups); err != nil {
+		return fmt.Errorf("failed to register thermal zone list endpoint: %w", err)
 	}
-
-	for _, ep := range endpoints {
-		if err := t.microService.AddEndpoint(ep.subject, ep.handler); err != nil {
-			return fmt.Errorf("%w: %s: %w", ErrEndpointRegistrationFailed, ep.subject, err)
-		}
+	if err := ipc.RegisterEndpointWithGroupCache(t.microService, ipc.SubjectThermalZoneInfo,
+		micro.HandlerFunc(t.createRequestHandler(ctx, t.handleGetThermalZone)), groups); err != nil {
+		return fmt.Errorf("failed to register thermal zone info endpoint: %w", err)
+	}
+	if err := ipc.RegisterEndpointWithGroupCache(t.microService, ipc.SubjectThermalZoneSet,
+		micro.HandlerFunc(t.createRequestHandler(ctx, t.handleSetThermalZone)), groups); err != nil {
+		return fmt.Errorf("failed to register thermal zone set endpoint: %w", err)
 	}
 
 	return nil

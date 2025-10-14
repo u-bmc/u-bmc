@@ -27,7 +27,7 @@
 //   - Microservice endpoints for thermal management operations
 //   - Context-aware operations with timeout support
 //   - Structured logging with slog
-//   - OpenTelemetry integration for observability
+//   - Observability handled by global telemetry service
 //
 // # Thermal Management Model
 //
@@ -89,6 +89,10 @@
 //   - Cooling device mappings and power ranges
 //   - Control loop timing and sample rates
 //   - Emergency response procedures
+//   - Integration with other BMC services
+//
+// Note: Metrics and tracing are managed globally by the telemetry service
+// and do not require individual service configuration.
 //
 // # Error Handling and Resilience
 //
