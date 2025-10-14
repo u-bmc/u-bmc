@@ -15,6 +15,7 @@ import (
 	"github.com/nats-io/nats.go/jetstream"
 	"github.com/nats-io/nats.go/micro"
 	v1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
+	"github.com/u-bmc/u-bmc/pkg/ipc"
 	"github.com/u-bmc/u-bmc/pkg/log"
 	"github.com/u-bmc/u-bmc/pkg/state"
 	"github.com/u-bmc/u-bmc/pkg/telemetry"
@@ -25,13 +26,6 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/timestamppb"
-)
-
-const (
-	operationState      = "state"
-	operationControl    = "control"
-	operationInfo       = "info"
-	operationTransition = "transition"
 )
 
 var _ service.Service = (*StateMgr)(nil)
@@ -76,8 +70,6 @@ func New(opts ...Option) *StateMgr {
 		numHosts:                  1,
 		numChassis:                1,
 		stateTimeout:              DefaultStateTimeout,
-		enableMetrics:             true,
-		enableTracing:             true,
 		broadcastStateChanges:     true,
 		persistStateChanges:       true,
 		powerControlSubjectPrefix: "powermgr",
@@ -102,14 +94,14 @@ func (s *StateMgr) Name() string {
 // Run starts the state manager service and registers NATS IPC endpoints.
 // It initializes state machines for enabled components and handles graceful shutdown.
 func (s *StateMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) error {
-	s.mu.Lock()
-	if s.started {
-		s.mu.Unlock()
-		return ErrServiceAlreadyStarted
-	}
-	s.started = true
-	ctx, s.cancel = context.WithCancel(ctx)
-	s.mu.Unlock()
+	// s.mu.Lock()
+	// if s.started {
+	// 	s.mu.Unlock()
+	// 	return ErrServiceAlreadyStarted
+	// }
+	// s.started = true
+	// ctx, s.cancel = context.WithCancel(ctx)
+	// s.mu.Unlock()
 
 	s.tracer = otel.Tracer(s.config.serviceName)
 	s.meter = otel.Meter(s.config.serviceName)
@@ -202,10 +194,6 @@ func (s *StateMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 }
 
 func (s *StateMgr) initializeMetrics() error {
-	if !s.config.enableMetrics {
-		return nil
-	}
-
 	var err error
 
 	s.stateTransitionsTotal, err = s.meter.Int64Counter(
@@ -343,63 +331,61 @@ func (s *StateMgr) initializeStateMachines(ctx context.Context) error {
 }
 
 func (s *StateMgr) registerEndpoints(ctx context.Context) error {
-	if s.config.enableHostManagement {
-		hostGroup := s.microService.AddGroup("host")
-		for i := range s.config.numHosts {
-			stateEndpoint := fmt.Sprintf("%d.state", i)
-			controlEndpoint := fmt.Sprintf("%d.control", i)
-			infoEndpoint := fmt.Sprintf("%d.info", i)
+	groups := make(map[string]micro.Group)
 
-			if err := hostGroup.AddEndpoint(stateEndpoint,
-				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleHostStateRequest))); err != nil {
-				return fmt.Errorf("failed to register host state endpoint %s: %w", stateEndpoint, err)
-			}
-			if err := hostGroup.AddEndpoint(controlEndpoint,
-				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleHostStateRequest))); err != nil {
-				return fmt.Errorf("failed to register host control endpoint %s: %w", controlEndpoint, err)
-			}
-			if err := hostGroup.AddEndpoint(infoEndpoint,
-				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleHostStateRequest))); err != nil {
-				return fmt.Errorf("failed to register host info endpoint %s: %w", infoEndpoint, err)
-			}
+	if s.config.enableHostManagement {
+		if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectHostList,
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleListHosts)), groups); err != nil {
+			return fmt.Errorf("failed to register host list endpoint: %w", err)
+		}
+		if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectHostState,
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleHostState)), groups); err != nil {
+			return fmt.Errorf("failed to register host state endpoint: %w", err)
+		}
+		if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectHostControl,
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleHostControl)), groups); err != nil {
+			return fmt.Errorf("failed to register host control endpoint: %w", err)
+		}
+		if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectHostInfo,
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleHostInfo)), groups); err != nil {
+			return fmt.Errorf("failed to register host info endpoint: %w", err)
 		}
 	}
 
 	if s.config.enableChassisManagement {
-		chassisGroup := s.microService.AddGroup("chassis")
-		for i := range s.config.numChassis {
-			stateEndpoint := fmt.Sprintf("%d.state", i)
-			controlEndpoint := fmt.Sprintf("%d.control", i)
-			infoEndpoint := fmt.Sprintf("%d.info", i)
-
-			if err := chassisGroup.AddEndpoint(stateEndpoint,
-				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleChassisStateRequest))); err != nil {
-				return fmt.Errorf("failed to register chassis state endpoint %s: %w", stateEndpoint, err)
-			}
-			if err := chassisGroup.AddEndpoint(controlEndpoint,
-				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleChassisStateRequest))); err != nil {
-				return fmt.Errorf("failed to register chassis control endpoint %s: %w", controlEndpoint, err)
-			}
-			if err := chassisGroup.AddEndpoint(infoEndpoint,
-				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleChassisStateRequest))); err != nil {
-				return fmt.Errorf("failed to register chassis info endpoint %s: %w", infoEndpoint, err)
-			}
+		if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectChassisList,
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleListChassis)), groups); err != nil {
+			return fmt.Errorf("failed to register chassis list endpoint: %w", err)
+		}
+		if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectChassisState,
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleChassisState)), groups); err != nil {
+			return fmt.Errorf("failed to register chassis state endpoint: %w", err)
+		}
+		if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectChassisControl,
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleChassisControl)), groups); err != nil {
+			return fmt.Errorf("failed to register chassis control endpoint: %w", err)
+		}
+		if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectChassisInfo,
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleChassisInfo)), groups); err != nil {
+			return fmt.Errorf("failed to register chassis info endpoint: %w", err)
 		}
 	}
 
 	if s.config.enableBMCManagement {
-		bmcGroup := s.microService.AddGroup("bmc")
-
-		if err := bmcGroup.AddEndpoint("0.state",
-			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleManagementControllerStateRequest))); err != nil {
+		if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectBMCList,
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleListManagementControllers)), groups); err != nil {
+			return fmt.Errorf("failed to register BMC list endpoint: %w", err)
+		}
+		if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectBMCState,
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleManagementControllerState)), groups); err != nil {
 			return fmt.Errorf("failed to register BMC state endpoint: %w", err)
 		}
-		if err := bmcGroup.AddEndpoint("0.control",
-			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleManagementControllerStateRequest))); err != nil {
+		if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectBMCControl,
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleManagementControllerControl)), groups); err != nil {
 			return fmt.Errorf("failed to register BMC control endpoint: %w", err)
 		}
-		if err := bmcGroup.AddEndpoint("0.info",
-			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleManagementControllerStateRequest))); err != nil {
+		if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectBMCInfo,
+			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleManagementControllerInfo)), groups); err != nil {
 			return fmt.Errorf("failed to register BMC info endpoint: %w", err)
 		}
 	}
@@ -440,10 +426,6 @@ func (s *StateMgr) createRequestHandler(parentCtx context.Context, handler func(
 }
 
 func (s *StateMgr) recordTransition(ctx context.Context, componentName, fromState, toState, trigger string, duration time.Duration, err error) {
-	if !s.config.enableMetrics {
-		return
-	}
-
 	attrs := []attribute.KeyValue{
 		attribute.String("component", componentName),
 		attribute.String("from_state", fromState),
@@ -465,7 +447,7 @@ func (s *StateMgr) recordTransition(ctx context.Context, componentName, fromStat
 }
 
 func (s *StateMgr) updateCurrentState(ctx context.Context, componentName, stateName string) {
-	if !s.config.enableMetrics || s.currentStateGauge == nil {
+	if s.currentStateGauge == nil {
 		return
 	}
 
@@ -481,9 +463,9 @@ func (s *StateMgr) requestPowerAction(ctx context.Context, componentName, action
 		return nil
 	}
 
-	subject := fmt.Sprintf("%s.%s.action", s.config.powerControlSubjectPrefix, componentName)
+	subject := ipc.InternalPowerAction
 
-	timeoutMs := uint32(30000) // 30 second default timeout
+	timeoutMs := uint32(ipc.DefaultCommandTimeout)
 	powerReq := &v1alpha1.PowerControlRequest{
 		ComponentName: componentName,
 		Action:        action,
@@ -523,7 +505,7 @@ func (s *StateMgr) requestLEDAction(ctx context.Context, componentName, action s
 
 	// Parse action to determine LED type and state
 	ledType, ledState := s.parseLEDAction(action)
-	subject := fmt.Sprintf("%s.%s.%s.control", s.config.ledControlSubjectPrefix, componentName, s.ledTypeToString(ledType))
+	subject := ipc.InternalLEDControl
 
 	ledReq := &v1alpha1.LEDControlRequest{
 		ComponentName: componentName,
@@ -655,7 +637,7 @@ func (s *StateMgr) setupSubscriptions(ctx context.Context) error {
 		return nil
 	}
 
-	subject := fmt.Sprintf("%s.*.power.result", s.config.powerControlSubjectPrefix)
+	subject := ipc.InternalPowerResult
 
 	sub, err := s.nc.Subscribe(subject, func(msg *nats.Msg) {
 		s.handlePowerOperationResult(ctx, msg)
@@ -739,7 +721,7 @@ func (s *StateMgr) sendStateTransitionNotification(ctx context.Context, componen
 		return
 	}
 
-	subject := fmt.Sprintf("%s.%s.state.changed", s.config.powerControlSubjectPrefix, componentName)
+	subject := ipc.SubjectStateEvent
 	if err := s.nc.Publish(subject, data); err != nil {
 		s.logger.ErrorContext(ctx, "Failed to publish state transition notification",
 			"component", componentName,
@@ -761,4 +743,144 @@ func (s *StateMgr) getComponentType(componentName string) string {
 		return parts[0]
 	}
 	return "unknown"
+}
+
+func (s *StateMgr) handleListHosts(ctx context.Context, req micro.Request) {
+	if s.tracer != nil {
+		var span trace.Span
+		ctx, span = s.tracer.Start(ctx, "statemgr.handleListHosts")
+		defer span.End()
+		span.SetAttributes(attribute.String("subject", req.Subject()))
+	}
+
+	var request v1alpha1.ListHostsRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
+		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
+		return
+	}
+
+	hosts := make([]*v1alpha1.Host, 0, s.config.numHosts)
+
+	for i := 0; i < s.config.numHosts; i++ {
+		hostName := fmt.Sprintf("host.%d", i)
+		sm, exists := s.getStateMachine(hostName)
+		if !exists {
+			continue
+		}
+
+		currentState := sm.State(ctx)
+		statusEnum := hostStatusStringToEnum(currentState)
+
+		host := &v1alpha1.Host{
+			Name:   hostName,
+			Status: &statusEnum,
+		}
+		hosts = append(hosts, host)
+	}
+
+	response := &v1alpha1.ListHostsResponse{
+		Hosts: hosts,
+	}
+
+	resp, err := response.MarshalVT()
+	if err != nil {
+		ipc.RespondWithError(ctx, req, ErrMarshalingFailed, err.Error())
+		return
+	}
+
+	if err := req.Respond(resp); err != nil && s.logger != nil {
+		s.logger.ErrorContext(ctx, "Failed to send response", "error", err)
+	}
+}
+
+func (s *StateMgr) handleListChassis(ctx context.Context, req micro.Request) {
+	if s.tracer != nil {
+		var span trace.Span
+		ctx, span = s.tracer.Start(ctx, "statemgr.handleListChassis")
+		defer span.End()
+		span.SetAttributes(attribute.String("subject", req.Subject()))
+	}
+
+	var request v1alpha1.ListChassisRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
+		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
+		return
+	}
+
+	chassis := make([]*v1alpha1.Chassis, 0, s.config.numChassis)
+
+	for i := 0; i < s.config.numChassis; i++ {
+		chassisName := fmt.Sprintf("chassis.%d", i)
+		sm, exists := s.getStateMachine(chassisName)
+		if !exists {
+			continue
+		}
+
+		currentState := sm.State(ctx)
+		statusEnum := chassisStatusStringToEnum(currentState)
+
+		chassisItem := &v1alpha1.Chassis{
+			Name:   chassisName,
+			Status: &statusEnum,
+		}
+		chassis = append(chassis, chassisItem)
+	}
+
+	response := &v1alpha1.ListChassisResponse{
+		Chassis: chassis,
+	}
+
+	resp, err := response.MarshalVT()
+	if err != nil {
+		ipc.RespondWithError(ctx, req, ErrMarshalingFailed, err.Error())
+		return
+	}
+
+	if err := req.Respond(resp); err != nil && s.logger != nil {
+		s.logger.ErrorContext(ctx, "Failed to send response", "error", err)
+	}
+}
+
+func (s *StateMgr) handleListManagementControllers(ctx context.Context, req micro.Request) {
+	if s.tracer != nil {
+		var span trace.Span
+		ctx, span = s.tracer.Start(ctx, "statemgr.handleListManagementControllers")
+		defer span.End()
+		span.SetAttributes(attribute.String("subject", req.Subject()))
+	}
+
+	var request v1alpha1.ListManagementControllersRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
+		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
+		return
+	}
+
+	controllers := make([]*v1alpha1.ManagementController, 0, 1)
+
+	bmcName := "bmc.0"
+	sm, exists := s.getStateMachine(bmcName)
+	if exists {
+		currentState := sm.State(ctx)
+		statusEnum := managementControllerStatusStringToEnum(currentState)
+
+		controller := &v1alpha1.ManagementController{
+			Name:   bmcName,
+			Status: &statusEnum,
+		}
+		controllers = append(controllers, controller)
+	}
+
+	response := &v1alpha1.ListManagementControllersResponse{
+		Controllers: controllers,
+	}
+
+	resp, err := response.MarshalVT()
+	if err != nil {
+		ipc.RespondWithError(ctx, req, ErrMarshalingFailed, err.Error())
+		return
+	}
+
+	if err := req.Respond(resp); err != nil && s.logger != nil {
+		s.logger.ErrorContext(ctx, "Failed to send response", "error", err)
+	}
 }

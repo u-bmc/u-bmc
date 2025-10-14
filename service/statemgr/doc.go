@@ -268,4 +268,11 @@
 //   - Consistent state coordination
 //   - Comprehensive event broadcasting
 //   - Graceful error handling and recovery
+//
+// # Observability
+//
+// Metrics and tracing are managed globally by the telemetry service and do not
+// require individual service configuration. The statemgr service automatically
+// exports state transition metrics and trace spans when the global telemetry
+// service is properly configured.
 package statemgr
