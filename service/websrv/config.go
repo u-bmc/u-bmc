@@ -33,9 +33,9 @@ func (o *nameOption) apply(c *config) {
 	c.name = o.name
 }
 
-// WithName sets the service name for the web server.
+// WithServiceName sets the service name for the web server.
 // This name is used for logging and identification purposes.
-func WithName(name string) Option {
+func WithServiceName(name string) Option {
 	return &nameOption{
 		name: name,
 	}
