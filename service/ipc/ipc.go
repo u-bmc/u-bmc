@@ -140,7 +140,7 @@ func (s *IPC) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) error
 		return fmt.Errorf("%w: %w", ErrServerCreationFailed, err)
 	}
 	s.server = ns
-	s.server.SetLoggerV2(log.NewNATSLogger(s.logger), true, true, true)
+	s.server.SetLoggerV2(log.NewNATSLogger(s.logger), true, false, false)
 
 	// Start the server
 	s.logger.InfoContext(ctx, "Starting NATS server", "server_name", s.config.serverName)
