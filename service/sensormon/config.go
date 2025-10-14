@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	v1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
 )
 
 const (
@@ -25,6 +27,120 @@ const (
 	DefaultWarningTempThreshold      = 75.0
 )
 
+// SensorBackendType represents the backend type for sensor reading.
+type SensorBackendType string
+
+const (
+	BackendTypeHwmon SensorBackendType = "hwmon"
+	BackendTypeGPIO  SensorBackendType = "gpio"
+	BackendTypeMock  SensorBackendType = "mock"
+)
+
+// MockSensorBehavior defines how mock sensors behave.
+type MockSensorBehavior string
+
+const (
+	MockBehaviorFixed     MockSensorBehavior = "fixed"     // Return fixed value
+	MockBehaviorRandomize MockSensorBehavior = "randomize" // Return randomized values around base
+	MockBehaviorSine      MockSensorBehavior = "sine"      // Sine wave pattern
+	MockBehaviorStep      MockSensorBehavior = "step"      // Step increases/decreases
+)
+
+// Threshold represents sensor threshold configuration.
+type Threshold struct {
+	Warning  *float64 `json:"warning,omitempty"`
+	Critical *float64 `json:"critical,omitempty"`
+}
+
+// Location represents sensor physical location.
+type Location struct {
+	Zone        string            `json:"zone,omitempty"`        // Thermal zone (e.g., "cpu", "memory", "psu")
+	Position    string            `json:"position,omitempty"`    // Physical position (e.g., "inlet", "outlet", "center")
+	Component   string            `json:"component,omitempty"`   // Component name (e.g., "CPU0", "DIMM_A1")
+	Coordinates map[string]string `json:"coordinates,omitempty"` // Additional location data
+}
+
+// HwmonSensorConfig represents hwmon-specific sensor configuration.
+type HwmonSensorConfig struct {
+	DevicePath     string   `json:"device_path"`               // hwmon device path (e.g., "/sys/class/hwmon/hwmon0")
+	AttributeName  string   `json:"attribute_name"`            // attribute name (e.g., "temp1_input")
+	LabelAttribute string   `json:"label_attribute,omitempty"` // label attribute (e.g., "temp1_label")
+	ScaleFactor    int      `json:"scale_factor,omitempty"`    // scaling factor for raw values
+	MatchPattern   string   `json:"match_pattern,omitempty"`   // regex pattern to match device
+	RequiredFiles  []string `json:"required_files,omitempty"`  // files that must exist for detection
+}
+
+// GPIOSensorConfig represents GPIO-specific sensor configuration.
+type GPIOSensorConfig struct {
+	ChipPath     string            `json:"chip_path"`               // GPIO chip path (e.g., "/dev/gpiochip0")
+	Line         int               `json:"line"`                    // GPIO line number
+	ActiveState  string            `json:"active_state"`            // "high" or "low"
+	PullResistor string            `json:"pull_resistor,omitempty"` // "up", "down", or "none"
+	DebounceTime time.Duration     `json:"debounce_time,omitempty"` // debounce time for discrete sensors
+	ValueMapping map[string]string `json:"value_mapping,omitempty"` // map GPIO values to sensor states
+}
+
+// MockSensorConfig represents mock sensor configuration for testing.
+type MockSensorConfig struct {
+	Behavior      MockSensorBehavior `json:"behavior"`                 // how the sensor behaves
+	BaseValue     float64            `json:"base_value"`               // base value for calculations
+	Variance      float64            `json:"variance,omitempty"`       // variance for randomization
+	Period        time.Duration      `json:"period,omitempty"`         // period for periodic behaviors
+	StepSize      float64            `json:"step_size,omitempty"`      // step size for step behavior
+	MinValue      float64            `json:"min_value,omitempty"`      // minimum value
+	MaxValue      float64            `json:"max_value,omitempty"`      // maximum value
+	FailureRate   float64            `json:"failure_rate,omitempty"`   // probability of read failure (0.0-1.0)
+	FailurePeriod time.Duration      `json:"failure_period,omitempty"` // duration of failure periods
+}
+
+// SensorDefinition represents a complete sensor configuration.
+type SensorDefinition struct {
+	ID               string                 `json:"id"`                          // unique sensor identifier
+	Name             string                 `json:"name"`                        // human-readable name
+	Description      string                 `json:"description,omitempty"`       // sensor description
+	Context          v1alpha1.SensorContext `json:"context"`                     // sensor type/context
+	Unit             v1alpha1.SensorUnit    `json:"unit"`                        // measurement unit
+	Backend          SensorBackendType      `json:"backend"`                     // backend type
+	Location         Location               `json:"location,omitempty"`          // physical location
+	UpperThresholds  *Threshold             `json:"upper_thresholds,omitempty"`  // upper thresholds
+	LowerThresholds  *Threshold             `json:"lower_thresholds,omitempty"`  // lower thresholds
+	Enabled          bool                   `json:"enabled"`                     // whether sensor is enabled
+	ReadOnly         bool                   `json:"read_only,omitempty"`         // whether sensor is read-only
+	CustomAttributes map[string]string      `json:"custom_attributes,omitempty"` // additional attributes
+
+	// Backend-specific configurations
+	HwmonConfig *HwmonSensorConfig `json:"hwmon_config,omitempty"` // hwmon configuration
+	GPIOConfig  *GPIOSensorConfig  `json:"gpio_config,omitempty"`  // GPIO configuration
+	MockConfig  *MockSensorConfig  `json:"mock_config,omitempty"`  // mock configuration
+}
+
+// SensorEventCallback is called when sensor events occur.
+type SensorEventCallback func(sensorID string, event SensorEvent, data interface{}) error
+
+// SensorEvent represents different sensor events.
+type SensorEvent string
+
+const (
+	EventSensorRead         SensorEvent = "sensor_read"
+	EventThresholdWarning   SensorEvent = "threshold_warning"
+	EventThresholdCritical  SensorEvent = "threshold_critical"
+	EventThresholdNormal    SensorEvent = "threshold_normal"
+	EventSensorError        SensorEvent = "sensor_error"
+	EventSensorDiscovered   SensorEvent = "sensor_discovered"
+	EventSensorStatusChange SensorEvent = "sensor_status_change"
+)
+
+// SensorCallbacks holds callback functions for sensor events.
+type SensorCallbacks struct {
+	OnSensorRead        SensorEventCallback `json:"-"` // called after each sensor read
+	OnThresholdWarning  SensorEventCallback `json:"-"` // called when warning threshold exceeded
+	OnThresholdCritical SensorEventCallback `json:"-"` // called when critical threshold exceeded
+	OnThresholdNormal   SensorEventCallback `json:"-"` // called when sensor returns to normal
+	OnSensorError       SensorEventCallback `json:"-"` // called when sensor read fails
+	OnSensorDiscovered  SensorEventCallback `json:"-"` // called when new sensor is discovered
+	OnStatusChange      SensorEventCallback `json:"-"` // called when sensor status changes
+}
+
 type config struct {
 	serviceName               string
 	serviceDescription        string
@@ -36,9 +152,9 @@ type config struct {
 	sensorTimeout             time.Duration
 	enableHwmonSensors        bool
 	enableGPIOSensors         bool
-	enableMetrics             bool
-	enableTracing             bool
+	enableMockSensors         bool
 	enableThresholdMonitoring bool
+	enableAutoDiscovery       bool
 	broadcastSensorReadings   bool
 	persistSensorData         bool
 	streamName                string
@@ -53,6 +169,24 @@ type config struct {
 	criticalTempThreshold     float64
 	warningTempThreshold      float64
 	emergencyResponseDelay    time.Duration
+
+	// Enhanced configuration
+	sensorDefinitions      []SensorDefinition
+	callbacks              SensorCallbacks
+	mockFailureSimulation  bool
+	mockFailureRate        float64
+	customBackendFactories map[string]SensorBackendFactory
+}
+
+// SensorBackendFactory creates sensor backend instances.
+type SensorBackendFactory func(config interface{}) (SensorBackend, error)
+
+// SensorBackend interface for different sensor implementations.
+type SensorBackend interface {
+	ReadValue() (interface{}, error)
+	GetStatus() (v1alpha1.SensorStatus, error)
+	Configure(config interface{}) error
+	Close() error
 }
 
 type Option interface {
@@ -187,36 +321,20 @@ func WithoutGPIOSensors() Option {
 	return &enableGPIOSensorsOption{enable: false}
 }
 
-type enableMetricsOption struct {
+type enableMockSensorsOption struct {
 	enable bool
 }
 
-func (o *enableMetricsOption) apply(c *config) {
-	c.enableMetrics = o.enable
+func (o *enableMockSensorsOption) apply(c *config) {
+	c.enableMockSensors = o.enable
 }
 
-func WithMetrics(enable bool) Option {
-	return &enableMetricsOption{enable: enable}
+func WithMockSensors(enable bool) Option {
+	return &enableMockSensorsOption{enable: enable}
 }
 
-func WithoutMetrics() Option {
-	return &enableMetricsOption{enable: false}
-}
-
-type enableTracingOption struct {
-	enable bool
-}
-
-func (o *enableTracingOption) apply(c *config) {
-	c.enableTracing = o.enable
-}
-
-func WithTracing(enable bool) Option {
-	return &enableTracingOption{enable: enable}
-}
-
-func WithoutTracing() Option {
-	return &enableTracingOption{enable: false}
+func WithoutMockSensors() Option {
+	return &enableMockSensorsOption{enable: false}
 }
 
 type enableThresholdMonitoringOption struct {
@@ -233,6 +351,22 @@ func WithThresholdMonitoring(enable bool) Option {
 
 func WithoutThresholdMonitoring() Option {
 	return &enableThresholdMonitoringOption{enable: false}
+}
+
+type enableAutoDiscoveryOption struct {
+	enable bool
+}
+
+func (o *enableAutoDiscoveryOption) apply(c *config) {
+	c.enableAutoDiscovery = o.enable
+}
+
+func WithAutoDiscovery(enable bool) Option {
+	return &enableAutoDiscoveryOption{enable: enable}
+}
+
+func WithoutAutoDiscovery() Option {
+	return &enableAutoDiscoveryOption{enable: false}
 }
 
 type broadcastSensorReadingsOption struct {
@@ -317,15 +451,15 @@ func WithStreamRetention(retention time.Duration) Option {
 }
 
 type maxConcurrentReadsOption struct {
-	maxVal int
+	max int
 }
 
 func (o *maxConcurrentReadsOption) apply(c *config) {
-	c.maxConcurrentReads = o.maxVal
+	c.maxConcurrentReads = o.max
 }
 
-func WithMaxConcurrentReads(maxVal int) Option {
-	return &maxConcurrentReadsOption{maxVal: maxVal}
+func WithMaxConcurrentReads(max int) Option {
+	return &maxConcurrentReadsOption{max: max}
 }
 
 type sensorDiscoveryTimeoutOption struct {
@@ -396,18 +530,28 @@ func WithoutThermalAlerts() Option {
 	return &enableThermalAlertsOption{enable: false}
 }
 
-type thermalThresholdsOption struct {
-	warning  float64
-	critical float64
+type criticalTempThresholdOption struct {
+	threshold float64
 }
 
-func (o *thermalThresholdsOption) apply(c *config) {
-	c.warningTempThreshold = o.warning
-	c.criticalTempThreshold = o.critical
+func (o *criticalTempThresholdOption) apply(c *config) {
+	c.criticalTempThreshold = o.threshold
 }
 
-func WithThermalThresholds(warning, critical float64) Option {
-	return &thermalThresholdsOption{warning: warning, critical: critical}
+func WithCriticalTempThreshold(threshold float64) Option {
+	return &criticalTempThresholdOption{threshold: threshold}
+}
+
+type warningTempThresholdOption struct {
+	threshold float64
+}
+
+func (o *warningTempThresholdOption) apply(c *config) {
+	c.warningTempThreshold = o.threshold
+}
+
+func WithWarningTempThreshold(threshold float64) Option {
+	return &warningTempThresholdOption{threshold: threshold}
 }
 
 type emergencyResponseDelayOption struct {
@@ -422,6 +566,70 @@ func WithEmergencyResponseDelay(delay time.Duration) Option {
 	return &emergencyResponseDelayOption{delay: delay}
 }
 
+// Enhanced configuration options
+type sensorDefinitionsOption struct {
+	definitions []SensorDefinition
+}
+
+func (o *sensorDefinitionsOption) apply(c *config) {
+	c.sensorDefinitions = o.definitions
+}
+
+func WithSensorDefinitions(definitions ...SensorDefinition) Option {
+	return &sensorDefinitionsOption{definitions: definitions}
+}
+
+type callbacksOption struct {
+	callbacks SensorCallbacks
+}
+
+func (o *callbacksOption) apply(c *config) {
+	c.callbacks = o.callbacks
+}
+
+func WithCallbacks(callbacks SensorCallbacks) Option {
+	return &callbacksOption{callbacks: callbacks}
+}
+
+type mockFailureSimulationOption struct {
+	enable bool
+	rate   float64
+}
+
+func (o *mockFailureSimulationOption) apply(c *config) {
+	c.mockFailureSimulation = o.enable
+	c.mockFailureRate = o.rate
+}
+
+func WithMockFailureSimulation(enable bool, rate float64) Option {
+	return &mockFailureSimulationOption{enable: enable, rate: rate}
+}
+
+func WithoutMockFailureSimulation() Option {
+	return &mockFailureSimulationOption{enable: false, rate: 0.0}
+}
+
+type customBackendFactoriesOption struct {
+	factories map[string]SensorBackendFactory
+}
+
+func (o *customBackendFactoriesOption) apply(c *config) {
+	if c.customBackendFactories == nil {
+		c.customBackendFactories = make(map[string]SensorBackendFactory)
+	}
+	for name, factory := range o.factories {
+		c.customBackendFactories[name] = factory
+	}
+}
+
+func WithCustomBackendFactories(factories map[string]SensorBackendFactory) Option {
+	return &customBackendFactoriesOption{factories: factories}
+}
+
+func WithCustomBackendFactory(name string, factory SensorBackendFactory) Option {
+	return &customBackendFactoriesOption{factories: map[string]SensorBackendFactory{name: factory}}
+}
+
 func (c *config) Validate() error {
 	if c.serviceName == "" {
 		return fmt.Errorf("%w: service name cannot be empty", ErrInvalidConfiguration)
@@ -429,14 +637,6 @@ func (c *config) Validate() error {
 
 	if c.serviceVersion == "" {
 		return fmt.Errorf("%w: service version cannot be empty", ErrInvalidConfiguration)
-	}
-
-	if c.hwmonPath == "" {
-		return fmt.Errorf("%w: hwmon path cannot be empty", ErrInvalidConfiguration)
-	}
-
-	if c.gpioChipPath == "" && c.enableGPIOSensors {
-		return fmt.Errorf("%w: GPIO chip path cannot be empty when GPIO sensors are enabled", ErrInvalidConfiguration)
 	}
 
 	if c.monitoringInterval <= 0 {
@@ -451,8 +651,30 @@ func (c *config) Validate() error {
 		return fmt.Errorf("%w: sensor timeout must be positive", ErrInvalidConfiguration)
 	}
 
-	if !c.enableHwmonSensors && !c.enableGPIOSensors {
-		return fmt.Errorf("%w: at least one sensor type must be enabled", ErrInvalidConfiguration)
+	if c.maxConcurrentReads <= 0 {
+		return fmt.Errorf("%w: max concurrent reads must be positive", ErrInvalidConfiguration)
+	}
+
+	if c.sensorDiscoveryTimeout <= 0 {
+		return fmt.Errorf("%w: sensor discovery timeout must be positive", ErrInvalidConfiguration)
+	}
+
+	if c.enableThermalAlerts {
+		if c.warningTempThreshold >= c.criticalTempThreshold {
+			return fmt.Errorf("%w: warning temperature threshold must be less than critical threshold", ErrInvalidConfiguration)
+		}
+	}
+
+	if c.enableThermalIntegration && c.thermalMgrEndpoint == "" {
+		return fmt.Errorf("%w: thermal manager endpoint cannot be empty when thermal integration is enabled", ErrInvalidConfiguration)
+	}
+
+	if c.temperatureUpdateInterval <= 0 {
+		return fmt.Errorf("%w: temperature update interval must be positive", ErrInvalidConfiguration)
+	}
+
+	if c.emergencyResponseDelay <= 0 {
+		return fmt.Errorf("%w: emergency response delay must be positive", ErrInvalidConfiguration)
 	}
 
 	if c.persistSensorData {
@@ -470,36 +692,149 @@ func (c *config) Validate() error {
 			}
 		}
 
-		if c.streamRetention < 0 {
-			return fmt.Errorf("%w: stream retention cannot be negative", ErrInvalidConfiguration)
+		if c.streamRetention <= 0 {
+			return fmt.Errorf("%w: stream retention must be positive when sensor data persistence is enabled", ErrInvalidConfiguration)
 		}
 	}
 
-	if c.maxConcurrentReads <= 0 {
-		return fmt.Errorf("%w: maximum concurrent reads must be positive", ErrInvalidConfiguration)
+	// Validate sensor definitions
+	sensorIDs := make(map[string]bool)
+	for i, def := range c.sensorDefinitions {
+		if def.ID == "" {
+			return fmt.Errorf("%w: sensor definition %d has empty ID", ErrInvalidConfiguration, i)
+		}
+
+		if sensorIDs[def.ID] {
+			return fmt.Errorf("%w: duplicate sensor ID '%s'", ErrInvalidConfiguration, def.ID)
+		}
+		sensorIDs[def.ID] = true
+
+		if def.Name == "" {
+			return fmt.Errorf("%w: sensor definition '%s' has empty name", ErrInvalidConfiguration, def.ID)
+		}
+
+		// Validate backend-specific configurations
+		switch def.Backend {
+		case BackendTypeHwmon:
+			if def.HwmonConfig == nil {
+				return fmt.Errorf("%w: sensor '%s' has hwmon backend but no hwmon config", ErrInvalidConfiguration, def.ID)
+			}
+			if def.HwmonConfig.DevicePath == "" && def.HwmonConfig.MatchPattern == "" {
+				return fmt.Errorf("%w: sensor '%s' hwmon config must have either device_path or match_pattern", ErrInvalidConfiguration, def.ID)
+			}
+			if def.HwmonConfig.AttributeName == "" {
+				return fmt.Errorf("%w: sensor '%s' hwmon config must have attribute_name", ErrInvalidConfiguration, def.ID)
+			}
+		case BackendTypeGPIO:
+			if def.GPIOConfig == nil {
+				return fmt.Errorf("%w: sensor '%s' has gpio backend but no gpio config", ErrInvalidConfiguration, def.ID)
+			}
+			if def.GPIOConfig.ChipPath == "" {
+				return fmt.Errorf("%w: sensor '%s' gpio config must have chip_path", ErrInvalidConfiguration, def.ID)
+			}
+			if def.GPIOConfig.Line < 0 {
+				return fmt.Errorf("%w: sensor '%s' gpio config must have valid line number", ErrInvalidConfiguration, def.ID)
+			}
+		case BackendTypeMock:
+			if def.MockConfig == nil {
+				return fmt.Errorf("%w: sensor '%s' has mock backend but no mock config", ErrInvalidConfiguration, def.ID)
+			}
+		default:
+			// Check if it's a custom backend
+			if c.customBackendFactories == nil || c.customBackendFactories[string(def.Backend)] == nil {
+				return fmt.Errorf("%w: sensor '%s' has unknown backend type '%s'", ErrInvalidConfiguration, def.ID, def.Backend)
+			}
+		}
+
+		// Validate thresholds
+		if def.UpperThresholds != nil {
+			if def.UpperThresholds.Warning != nil && def.UpperThresholds.Critical != nil {
+				if *def.UpperThresholds.Warning >= *def.UpperThresholds.Critical {
+					return fmt.Errorf("%w: sensor '%s' upper warning threshold must be less than critical threshold", ErrInvalidConfiguration, def.ID)
+				}
+			}
+		}
+
+		if def.LowerThresholds != nil {
+			if def.LowerThresholds.Warning != nil && def.LowerThresholds.Critical != nil {
+				if *def.LowerThresholds.Warning <= *def.LowerThresholds.Critical {
+					return fmt.Errorf("%w: sensor '%s' lower warning threshold must be greater than critical threshold", ErrInvalidConfiguration, def.ID)
+				}
+			}
+		}
 	}
 
-	if c.sensorDiscoveryTimeout <= 0 {
-		return fmt.Errorf("%w: sensor discovery timeout must be positive", ErrInvalidConfiguration)
-	}
-
-	if c.enableThermalIntegration {
-		if c.thermalMgrEndpoint == "" {
-			return fmt.Errorf("%w: thermal manager endpoint cannot be empty when thermal integration is enabled", ErrInvalidConfiguration)
-		}
-
-		if c.temperatureUpdateInterval <= 0 {
-			return fmt.Errorf("%w: temperature update interval must be positive", ErrInvalidConfiguration)
-		}
-
-		if c.criticalTempThreshold <= c.warningTempThreshold {
-			return fmt.Errorf("%w: critical temperature threshold must be greater than warning threshold", ErrInvalidConfiguration)
-		}
-
-		if c.emergencyResponseDelay <= 0 {
-			return fmt.Errorf("%w: emergency response delay must be positive", ErrInvalidConfiguration)
+	if c.mockFailureSimulation {
+		if c.mockFailureRate < 0.0 || c.mockFailureRate > 1.0 {
+			return fmt.Errorf("%w: mock failure rate must be between 0.0 and 1.0", ErrInvalidConfiguration)
 		}
 	}
 
 	return nil
+}
+
+// Helper functions for creating sensor definitions
+func NewTemperatureSensor(id, name string, backend SensorBackendType) SensorDefinition {
+	context := v1alpha1.SensorContext_SENSOR_CONTEXT_TEMPERATURE
+	unit := v1alpha1.SensorUnit_SENSOR_UNIT_CELSIUS
+	return SensorDefinition{
+		ID:      id,
+		Name:    name,
+		Context: context,
+		Unit:    unit,
+		Backend: backend,
+		Enabled: true,
+	}
+}
+
+func NewVoltageSensor(id, name string, backend SensorBackendType) SensorDefinition {
+	context := v1alpha1.SensorContext_SENSOR_CONTEXT_VOLTAGE
+	unit := v1alpha1.SensorUnit_SENSOR_UNIT_VOLTS
+	return SensorDefinition{
+		ID:      id,
+		Name:    name,
+		Context: context,
+		Unit:    unit,
+		Backend: backend,
+		Enabled: true,
+	}
+}
+
+func NewFanSensor(id, name string, backend SensorBackendType) SensorDefinition {
+	context := v1alpha1.SensorContext_SENSOR_CONTEXT_TACH
+	unit := v1alpha1.SensorUnit_SENSOR_UNIT_RPM
+	return SensorDefinition{
+		ID:      id,
+		Name:    name,
+		Context: context,
+		Unit:    unit,
+		Backend: backend,
+		Enabled: true,
+	}
+}
+
+func NewPowerSensor(id, name string, backend SensorBackendType) SensorDefinition {
+	context := v1alpha1.SensorContext_SENSOR_CONTEXT_POWER
+	unit := v1alpha1.SensorUnit_SENSOR_UNIT_WATTS
+	return SensorDefinition{
+		ID:      id,
+		Name:    name,
+		Context: context,
+		Unit:    unit,
+		Backend: backend,
+		Enabled: true,
+	}
+}
+
+func NewCurrentSensor(id, name string, backend SensorBackendType) SensorDefinition {
+	context := v1alpha1.SensorContext_SENSOR_CONTEXT_CURRENT
+	unit := v1alpha1.SensorUnit_SENSOR_UNIT_AMPS
+	return SensorDefinition{
+		ID:      id,
+		Name:    name,
+		Context: context,
+		Unit:    unit,
+		Backend: backend,
+		Enabled: true,
+	}
 }
