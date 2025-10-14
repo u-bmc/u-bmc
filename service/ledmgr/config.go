@@ -96,8 +96,6 @@ type config struct {
 	numChassis              int
 	defaultOperationTimeout time.Duration
 	defaultBlinkInterval    time.Duration
-	enableMetrics           bool
-	enableTracing           bool
 }
 
 type Option interface {
@@ -275,30 +273,6 @@ func (o *defaultBlinkIntervalOption) apply(c *config) {
 
 func WithDefaultBlinkInterval(interval time.Duration) Option {
 	return &defaultBlinkIntervalOption{interval: interval}
-}
-
-type enableMetricsOption struct {
-	enable bool
-}
-
-func (o *enableMetricsOption) apply(c *config) {
-	c.enableMetrics = o.enable
-}
-
-func WithMetrics(enable bool) Option {
-	return &enableMetricsOption{enable: enable}
-}
-
-type enableTracingOption struct {
-	enable bool
-}
-
-func (o *enableTracingOption) apply(c *config) {
-	c.enableTracing = o.enable
-}
-
-func WithTracing(enable bool) Option {
-	return &enableTracingOption{enable: enable}
 }
 
 func (c *config) Validate() error {
