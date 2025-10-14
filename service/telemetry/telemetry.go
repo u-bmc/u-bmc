@@ -13,10 +13,12 @@ import (
 // Compile-time assertion that Telemetry implements service.Service.
 var _ service.Service = (*Telemetry)(nil)
 
+// Telemetry provides telemetry and observability services for BMC monitoring.
 type Telemetry struct {
-	config
+	config config
 }
 
+// New creates a new Telemetry instance with the provided options.
 func New(opts ...Option) *Telemetry {
 	cfg := &config{
 		name: "telemetry",
@@ -30,16 +32,16 @@ func New(opts ...Option) *Telemetry {
 }
 
 func (s *Telemetry) Name() string {
-	return s.name
+	return s.config.name
 }
 
 func (s *Telemetry) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) error {
 	l := log.GetGlobalLogger()
 
-	l.InfoContext(ctx, "Starting telemetry service", "service", s.name)
+	l.InfoContext(ctx, "Starting telemetry service", "service", s.config.name)
 
 	<-ctx.Done()
-	l.InfoContext(ctx, "Stopping telemetry service", "service", s.name, "reason", ctx.Err())
+	l.InfoContext(ctx, "Stopping telemetry service", "service", s.config.name, "reason", ctx.Err())
 
 	return ctx.Err()
 }
