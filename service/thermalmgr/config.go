@@ -28,15 +28,15 @@ type ThermalEventCallback func(zoneName string, event ThermalEvent, data interfa
 
 // ThermalCallbacks holds callback functions for thermal management events.
 type ThermalCallbacks struct {
-	OnTemperatureWarning     ThermalEventCallback `json:"-"` // called when temperature exceeds warning threshold
-	OnTemperatureCritical    ThermalEventCallback `json:"-"` // called when temperature exceeds critical threshold
-	OnTemperatureNormal      ThermalEventCallback `json:"-"` // called when temperature returns to normal
-	OnEmergencyShutdown      ThermalEventCallback `json:"-"` // called during emergency shutdown
-	OnCoolingEngaged         ThermalEventCallback `json:"-"` // called when cooling is engaged
-	OnCoolingDisengaged      ThermalEventCallback `json:"-"` // called when cooling is disengaged
-	OnThermalZoneCreated     ThermalEventCallback `json:"-"` // called when thermal zone is created
-	OnCoolingDeviceConnected ThermalEventCallback `json:"-"` // called when cooling device is connected
-	OnPIDControllerUpdated   ThermalEventCallback `json:"-"` // called when PID controller is updated
+	OnTemperatureWarning     ThermalEventCallback // called when temperature exceeds warning threshold
+	OnTemperatureCritical    ThermalEventCallback // called when temperature exceeds critical threshold
+	OnTemperatureNormal      ThermalEventCallback // called when temperature returns to normal
+	OnEmergencyShutdown      ThermalEventCallback // called during emergency shutdown
+	OnCoolingEngaged         ThermalEventCallback // called when cooling is engaged
+	OnCoolingDisengaged      ThermalEventCallback // called when cooling is disengaged
+	OnThermalZoneCreated     ThermalEventCallback // called when thermal zone is created
+	OnCoolingDeviceConnected ThermalEventCallback // called when cooling device is connected
+	OnPIDControllerUpdated   ThermalEventCallback // called when PID controller is updated
 }
 
 // CoolingDeviceType represents the type of cooling device.

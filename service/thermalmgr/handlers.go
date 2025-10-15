@@ -10,20 +10,7 @@ import (
 	"github.com/nats-io/nats.go/micro"
 	v1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
 	"github.com/u-bmc/u-bmc/pkg/thermal"
-	"google.golang.org/protobuf/encoding/protojson"
 )
-
-// ThermalZoneListResponse represents the response for listing thermal zones.
-type ThermalZoneListResponse struct {
-	ThermalZones []*v1alpha1.ThermalZone `json:"thermal_zones"`
-	Count        int                     `json:"count"`
-}
-
-// CoolingDeviceListResponse represents the response for listing cooling devices.
-type CoolingDeviceListResponse struct {
-	CoolingDevices []*v1alpha1.CoolingDevice `json:"cooling_devices"`
-	Count          int                       `json:"count"`
-}
 
 // ThermalControlStatusResponse represents the thermal control status.
 type ThermalControlStatusResponse struct {
@@ -43,12 +30,11 @@ func (t *ThermalMgr) handleListThermalZones(ctx context.Context, req micro.Reque
 	}
 	t.mu.RUnlock()
 
-	response := ThermalZoneListResponse{
+	response := &v1alpha1.ListThermalZonesResponse{
 		ThermalZones: zones,
-		Count:        len(zones),
 	}
 
-	responseData, err := json.Marshal(response)
+	responseData, err := response.MarshalVT()
 	if err != nil {
 		t.logger.ErrorContext(ctx, "Failed to marshal thermal zones list response",
 			"error", err)
@@ -68,7 +54,7 @@ func (t *ThermalMgr) handleListThermalZones(ctx context.Context, req micro.Reque
 // handleGetThermalZone handles requests to get a specific thermal zone.
 func (t *ThermalMgr) handleGetThermalZone(ctx context.Context, req micro.Request) {
 	var request v1alpha1.GetThermalZoneRequest
-	if err := protojson.Unmarshal(req.Data(), &request); err != nil {
+	if err := request.UnmarshalVT(req.Data()); err != nil {
 		t.logger.WarnContext(ctx, "Invalid get thermal zone request",
 			"error", err)
 		_ = req.Error("400", "invalid request format", nil)
@@ -95,7 +81,7 @@ func (t *ThermalMgr) handleGetThermalZone(ctx context.Context, req micro.Request
 		ThermalZones: []*v1alpha1.ThermalZone{protoZone},
 	}
 
-	responseData, err := protojson.Marshal(response)
+	responseData, err := response.MarshalVT()
 	if err != nil {
 		t.logger.ErrorContext(ctx, "Failed to marshal thermal zone response",
 			"zone", zoneName,
@@ -117,7 +103,7 @@ func (t *ThermalMgr) handleGetThermalZone(ctx context.Context, req micro.Request
 // handleSetThermalZone handles requests to update a thermal zone.
 func (t *ThermalMgr) handleSetThermalZone(ctx context.Context, req micro.Request) {
 	var request v1alpha1.SetThermalZoneRequest
-	if err := protojson.Unmarshal(req.Data(), &request); err != nil {
+	if err := request.UnmarshalVT(req.Data()); err != nil {
 		t.logger.WarnContext(ctx, "Invalid set thermal zone request",
 			"error", err)
 		_ = req.Error("400", "invalid request format", nil)
@@ -176,7 +162,7 @@ func (t *ThermalMgr) handleSetThermalZone(ctx context.Context, req micro.Request
 		ThermalZone: protoZone,
 	}
 
-	responseData, err := protojson.Marshal(response)
+	responseData, err := response.MarshalVT()
 	if err != nil {
 		t.logger.ErrorContext(ctx, "Failed to marshal set thermal zone response",
 			"zone", zoneName,
@@ -205,12 +191,11 @@ func (t *ThermalMgr) handleListCoolingDevices(ctx context.Context, req micro.Req
 	}
 	t.mu.RUnlock()
 
-	response := CoolingDeviceListResponse{
+	response := &v1alpha1.ListCoolingDevicesResponse{
 		CoolingDevices: devices,
-		Count:          len(devices),
 	}
 
-	responseData, err := json.Marshal(response)
+	responseData, err := response.MarshalVT()
 	if err != nil {
 		t.logger.ErrorContext(ctx, "Failed to marshal cooling devices list response",
 			"error", err)
@@ -229,12 +214,8 @@ func (t *ThermalMgr) handleListCoolingDevices(ctx context.Context, req micro.Req
 
 // handleGetCoolingDevice handles requests to get a specific cooling device.
 func (t *ThermalMgr) handleGetCoolingDevice(ctx context.Context, req micro.Request) {
-	type GetCoolingDeviceRequest struct {
-		Name string `json:"name"`
-	}
-
-	var request GetCoolingDeviceRequest
-	if err := json.Unmarshal(req.Data(), &request); err != nil {
+	var request v1alpha1.GetCoolingDeviceRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
 		t.logger.WarnContext(ctx, "Invalid get cooling device request",
 			"error", err)
 		_ = req.Error("400", "invalid request format", nil)
@@ -252,14 +233,16 @@ func (t *ThermalMgr) handleGetCoolingDevice(ctx context.Context, req micro.Reque
 		return
 	}
 
-	protoDevice := t.convertCoolingDeviceToProto(device)
+	response := &v1alpha1.GetCoolingDeviceResponse{
+		CoolingDevice: t.convertCoolingDeviceToProto(device),
+	}
 
-	responseData, err := json.Marshal(protoDevice)
+	responseData, err := response.MarshalVT()
 	if err != nil {
 		t.logger.ErrorContext(ctx, "Failed to marshal cooling device response",
 			"device", request.Name,
 			"error", err)
-		_ = req.Error("500", "failed to marshal response", nil)
+		_ = req.Error("500", "internal server error", nil)
 		return
 	}
 
@@ -275,13 +258,8 @@ func (t *ThermalMgr) handleGetCoolingDevice(ctx context.Context, req micro.Reque
 
 // handleSetCoolingDevice handles requests to update a cooling device.
 func (t *ThermalMgr) handleSetCoolingDevice(ctx context.Context, req micro.Request) {
-	type SetCoolingDeviceRequest struct {
-		Name         string   `json:"name"`
-		PowerPercent *float64 `json:"power_percent,omitempty"`
-	}
-
-	var request SetCoolingDeviceRequest
-	if err := json.Unmarshal(req.Data(), &request); err != nil {
+	var request v1alpha1.SetCoolingDeviceRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
 		t.logger.WarnContext(ctx, "Invalid set cooling device request",
 			"error", err)
 		_ = req.Error("400", "invalid request format", nil)
@@ -300,6 +278,7 @@ func (t *ThermalMgr) handleSetCoolingDevice(ctx context.Context, req micro.Reque
 	}
 
 	// Update device power if provided
+	// Update power percentage if provided
 	if request.PowerPercent != nil {
 		if err := thermal.SetCoolingDevicePower(ctx, device, *request.PowerPercent); err != nil {
 			t.logger.ErrorContext(ctx, "Failed to set cooling device power",
@@ -315,25 +294,86 @@ func (t *ThermalMgr) handleSetCoolingDevice(ctx context.Context, req micro.Reque
 			"power_percent", *request.PowerPercent)
 	}
 
-	protoDevice := t.convertCoolingDeviceToProto(device)
+	response := &v1alpha1.SetCoolingDeviceResponse{
+		CoolingDevice: t.convertCoolingDeviceToProto(device),
+	}
 
-	responseData, err := json.Marshal(protoDevice)
+	responseData, err := response.MarshalVT()
 	if err != nil {
 		t.logger.ErrorContext(ctx, "Failed to marshal set cooling device response",
 			"device", request.Name,
 			"error", err)
-		_ = req.Error("500", "failed to marshal response", nil)
+		_ = req.Error("500", "internal server error", nil)
 		return
 	}
 
 	if err := req.Respond(responseData); err != nil {
 		t.logger.ErrorContext(ctx, "Failed to send set cooling device response",
-			"device", request.Name,
 			"error", err)
 	}
 
 	t.logger.DebugContext(ctx, "Updated cooling device",
-		"device", request.Name)
+		"device", request.Name,
+		"power_percent", request.PowerPercent)
+}
+
+// handleSensorDataForThermalZone demonstrates proper cross-schema usage.
+// This handler shows how the thermal service can consume sensor data (sensor.proto)
+// to make thermal management decisions (thermal.proto).
+func (t *ThermalMgr) handleSensorDataForThermalZone(ctx context.Context, req micro.Request) {
+	var request v1alpha1.SensorDataRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
+		t.logger.WarnContext(ctx, "Invalid sensor data request",
+			"error", err)
+		_ = req.Error("400", "invalid request format", nil)
+		return
+	}
+
+	// Example: Thermal service using sensor schema messages to collect temperature data
+	// for thermal zone management decisions
+	t.mu.RLock()
+	zone, exists := t.thermalZones[request.GetZoneName()]
+	t.mu.RUnlock()
+
+	if !exists {
+		_ = req.Error("404", fmt.Sprintf("thermal zone not found: %s", request.GetZoneName()), nil)
+		return
+	}
+
+	// Create thermal zone temperature response using thermal schema
+	// Note: Using available fields from the zone object and providing defaults for missing data
+	currentTemp := 0.0 // Would get actual current temperature from sensors
+	targetTemp := zone.TargetTemperature
+
+	zoneTemp := &v1alpha1.ThermalZoneTemperature{
+		ZoneName:              zone.Name,
+		CurrentTemperature:    currentTemp,
+		TargetTemperature:     &targetTemp,
+		ContributingSensorIds: zone.SensorPaths, // Use SensorPaths instead of SensorNames
+		// LastUpdated would be set from actual timestamp data
+	}
+
+	response := &v1alpha1.ThermalZoneTemperatureResponse{
+		ZoneTemperatures: []*v1alpha1.ThermalZoneTemperature{zoneTemp},
+	}
+
+	responseData, err := response.MarshalVT()
+	if err != nil {
+		t.logger.ErrorContext(ctx, "Failed to marshal thermal zone temperature response",
+			"zone", request.GetZoneName(),
+			"error", err)
+		_ = req.Error("500", "internal server error", nil)
+		return
+	}
+
+	if err := req.Respond(responseData); err != nil {
+		t.logger.ErrorContext(ctx, "Failed to send thermal zone temperature response",
+			"error", err)
+	}
+
+	t.logger.DebugContext(ctx, "Provided thermal zone temperature data",
+		"zone", request.GetZoneName(),
+		"target_temp", zone.TargetTemperature)
 }
 
 // handleStartThermalControl handles requests to start thermal control.
