@@ -139,6 +139,8 @@ func (s *SensorMon) readSensorValue(ctx context.Context, sensorInfo *sensorInfo)
 		return s.readHwmonSensorValue(ctx, sensorInfo)
 	case sensorTypeGPIO:
 		return s.readGPIOSensorValue(ctx, sensorInfo)
+	case sensorTypeMock:
+		return s.readMockSensorValue(ctx, sensorInfo)
 	default:
 		return fmt.Errorf("%w: unknown sensor type", ErrSensorTypeUnsupported)
 	}
@@ -335,6 +337,72 @@ func (s *SensorMon) getSensorByLocation(location *v1alpha1.Location) (*sensorInf
 		}
 	}
 	return nil, false
+}
+
+// readMockSensorValue generates mock sensor values using the mock backend.
+func (s *SensorMon) readMockSensorValue(ctx context.Context, sensorInfo *sensorInfo) error {
+	// Find the sensor definition to get mock configuration
+	var mockConfig *MockSensorConfig
+	for _, definition := range s.config.sensorDefinitions {
+		if definition.ID == sensorInfo.Sensor.Id && definition.MockConfig != nil {
+			mockConfig = definition.MockConfig
+			break
+		}
+	}
+
+	if mockConfig == nil {
+		return fmt.Errorf("no mock configuration found for sensor %s", sensorInfo.Sensor.Id)
+	}
+
+	// Create mock backend and read value
+	backend, err := NewMockBackend(mockConfig)
+	if err != nil {
+		return fmt.Errorf("failed to create mock backend for sensor %s: %w", sensorInfo.Sensor.Id, err)
+	}
+
+	value, err := backend.ReadValue()
+	if err != nil {
+		status := v1alpha1.SensorStatus_SENSOR_STATUS_ERROR
+		sensorInfo.Sensor.Status = &status
+		return fmt.Errorf("%w: %w", ErrSensorReadFailed, err)
+	}
+
+	// Convert value to float64
+	var floatValue float64
+	switch v := value.(type) {
+	case float64:
+		floatValue = v
+	case int:
+		floatValue = float64(v)
+	case int64:
+		floatValue = float64(v)
+	default:
+		return fmt.Errorf("unsupported mock value type: %T", value)
+	}
+
+	// Update analog reading
+	analogReading := &v1alpha1.AnalogSensorReading{
+		Value: floatValue,
+	}
+
+	// Copy existing thresholds if they exist
+	if sensorInfo.Sensor.Reading != nil {
+		if existing, ok := sensorInfo.Sensor.Reading.(*v1alpha1.Sensor_AnalogReading); ok && existing.AnalogReading != nil {
+			analogReading.UpperThresholds = existing.AnalogReading.UpperThresholds
+			analogReading.LowerThresholds = existing.AnalogReading.LowerThresholds
+		}
+	}
+
+	sensorInfo.Sensor.Reading = &v1alpha1.Sensor_AnalogReading{
+		AnalogReading: analogReading,
+	}
+	sensorInfo.Sensor.LastReadingTimestamp = timestamppb.Now()
+	status := v1alpha1.SensorStatus_SENSOR_STATUS_ENABLED
+	sensorInfo.Sensor.Status = &status
+	sensorInfo.LastRead = time.Now()
+	sensorInfo.LastValue = floatValue
+
+	return nil
 }
 
 // applySensorFieldMask applies a field mask to a sensor to return only requested fields.

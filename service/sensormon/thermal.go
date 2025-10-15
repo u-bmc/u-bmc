@@ -4,12 +4,12 @@ package sensormon
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/nats-io/nats.go"
 	v1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // ThermalIntegrationConfig holds thermal integration settings.
@@ -24,29 +24,11 @@ type ThermalIntegrationConfig struct {
 	EmergencyResponseDelay    time.Duration
 }
 
-// ThermalSensorReading represents a temperature reading for thermal management.
-type ThermalSensorReading struct {
-	SensorID    string    `json:"sensor_id"`
-	SensorName  string    `json:"sensor_name"`
-	Temperature float64   `json:"temperature"`
-	Unit        string    `json:"unit"`
-	Timestamp   time.Time `json:"timestamp"`
-	Location    string    `json:"location,omitempty"`
-	ZoneName    string    `json:"zone_name,omitempty"`
-}
+// SensorReading is an alias for the protobuf message.
+type SensorReading = v1alpha1.SensorReading
 
-// ThermalAlert represents a thermal alert message.
-type ThermalAlert struct {
-	Type        string    `json:"type"`
-	SensorID    string    `json:"sensor_id"`
-	SensorName  string    `json:"sensor_name"`
-	Temperature float64   `json:"temperature"`
-	Threshold   float64   `json:"threshold"`
-	Severity    string    `json:"severity"`
-	ZoneName    string    `json:"zone_name,omitempty"`
-	Timestamp   time.Time `json:"timestamp"`
-	Message     string    `json:"message"`
-}
+// SensorAlert is an alias for the protobuf message.
+type SensorAlert = v1alpha1.SensorAlert
 
 // initializeThermalIntegration sets up thermal management integration.
 func (s *SensorMon) initializeThermalIntegration(ctx context.Context) error {
@@ -188,28 +170,30 @@ func (s *SensorMon) getTemperatureValue(sensorInfo *sensorInfo) (float64, error)
 
 // sendThermalAlert sends a thermal alert to the thermal manager.
 func (s *SensorMon) sendThermalAlert(ctx context.Context, sensorInfo *sensorInfo, temperature, threshold float64, severity string) {
-	alert := ThermalAlert{
-		Type:        "temperature_threshold",
-		SensorID:    sensorInfo.Sensor.Id,
-		SensorName:  sensorInfo.Sensor.Name,
-		Temperature: temperature,
-		Threshold:   threshold,
-		Severity:    severity,
-		Timestamp:   time.Now(),
-		Message:     fmt.Sprintf("Temperature %.1f°C exceeds %s threshold %.1f°C", temperature, severity, threshold),
+	alert := &v1alpha1.SensorAlert{
+		Type:       "temperature_threshold",
+		SensorId:   sensorInfo.Sensor.Id,
+		SensorName: sensorInfo.Sensor.Name,
+		Value:      temperature,
+		Threshold:  &threshold,
+		Severity:   severity,
+		Timestamp:  timestamppb.Now(),
+		Message:    fmt.Sprintf("Temperature %.1f°C exceeds %s threshold %.1f°C", temperature, severity, threshold),
 	}
 
 	// Add zone information if available
 	if sensorInfo.Sensor.CustomAttributes != nil {
-		if zoneName, exists := sensorInfo.Sensor.CustomAttributes["thermal_zone"]; exists {
-			alert.ZoneName = zoneName
+		// Add thermal zone if configured
+		if s.config.enableThermalIntegration {
+			if zoneName, exists := sensorInfo.Sensor.CustomAttributes["thermal_zone"]; exists {
+				alert.ZoneName = &zoneName
+			}
 		}
 	}
 
-	alertData, err := json.Marshal(alert)
+	alertData, err := alert.MarshalVT()
 	if err != nil {
 		s.logger.ErrorContext(ctx, "Failed to marshal thermal alert",
-			"sensor_id", sensorInfo.Sensor.Id,
 			"error", err)
 		return
 	}
@@ -237,32 +221,36 @@ func (s *SensorMon) sendThermalAlert(ctx context.Context, sensorInfo *sensorInfo
 	}
 }
 
-// sendTemperatureUpdate sends a temperature reading update to thermal manager.
+// sendTemperatureUpdate sends a temperature update to the thermal manager.
 func (s *SensorMon) sendTemperatureUpdate(ctx context.Context, sensorInfo *sensorInfo, temperature float64) {
-	reading := ThermalSensorReading{
-		SensorID:    sensorInfo.Sensor.Id,
-		SensorName:  sensorInfo.Sensor.Name,
-		Temperature: temperature,
-		Unit:        "celsius",
-		Timestamp:   time.Now(),
+	reading := &v1alpha1.SensorReading{
+		SensorId:   sensorInfo.Sensor.Id,
+		SensorName: sensorInfo.Sensor.Name,
+		Value:      temperature,
+		Unit:       "celsius",
+		Timestamp:  timestamppb.Now(),
 	}
 
-	// Add location information if available
-	if sensorInfo.Sensor.Location != nil && sensorInfo.Sensor.Location.ComponentLocation != nil {
-		reading.Location = sensorInfo.Sensor.Location.ComponentLocation.Name
+	// Add location if available
+	if sensorInfo.Sensor.Location != nil {
+		if sensorInfo.Sensor.Location.ComponentLocation.Position != nil {
+			reading.Location = sensorInfo.Sensor.Location.ComponentLocation.Position
+		}
 	}
 
 	// Add zone information if available
 	if sensorInfo.Sensor.CustomAttributes != nil {
-		if zoneName, exists := sensorInfo.Sensor.CustomAttributes["thermal_zone"]; exists {
-			reading.ZoneName = zoneName
+		// Add location and zone info if available
+		if s.config.enableThermalIntegration {
+			if zoneName, exists := sensorInfo.Sensor.CustomAttributes["thermal_zone"]; exists {
+				reading.ZoneName = &zoneName
+			}
 		}
 	}
 
-	readingData, err := json.Marshal(reading)
+	readingData, err := reading.MarshalVT()
 	if err != nil {
 		s.logger.WarnContext(ctx, "Failed to marshal temperature reading",
-			"sensor_id", sensorInfo.Sensor.Id,
 			"error", err)
 		return
 	}
@@ -297,18 +285,18 @@ func (s *SensorMon) sendDelayedEmergencyNotification(ctx context.Context, sensor
 
 	// If temperature is still critical, send emergency notification
 	if currentTemp >= s.config.criticalTempThreshold {
-		emergencyAlert := ThermalAlert{
-			Type:        "emergency_thermal",
-			SensorID:    sensorInfo.Sensor.Id,
-			SensorName:  sensorInfo.Sensor.Name,
-			Temperature: currentTemp,
-			Threshold:   s.config.criticalTempThreshold,
-			Severity:    "emergency",
-			Timestamp:   time.Now(),
-			Message:     fmt.Sprintf("Emergency: Critical temperature %.1f°C persists after %v delay", currentTemp, s.config.emergencyResponseDelay),
+		emergencyAlert := &v1alpha1.SensorAlert{
+			Type:       "emergency_thermal",
+			SensorId:   sensorInfo.Sensor.Id,
+			SensorName: sensorInfo.Sensor.Name,
+			Value:      currentTemp,
+			Threshold:  &s.config.criticalTempThreshold,
+			Severity:   "emergency",
+			Timestamp:  timestamppb.Now(),
+			Message:    fmt.Sprintf("Emergency: Critical temperature %.1f°C persists after %v delay", currentTemp, s.config.emergencyResponseDelay),
 		}
 
-		alertData, err := json.Marshal(emergencyAlert)
+		alertData, err := emergencyAlert.MarshalVT()
 		if err != nil {
 			s.logger.ErrorContext(ctx, "Failed to marshal emergency thermal alert",
 				"sensor_id", sensorInfo.Sensor.Id,
@@ -344,31 +332,26 @@ func (s *SensorMon) sendDelayedEmergencyNotification(ctx context.Context, sensor
 func (s *SensorMon) handleTemperatureDataRequest(msg *nats.Msg) {
 	ctx := context.Background()
 
-	type TemperatureDataRequest struct {
-		SensorIDs []string `json:"sensor_ids,omitempty"`
-		ZoneName  string   `json:"zone_name,omitempty"`
-	}
-
-	var request TemperatureDataRequest
-	if err := json.Unmarshal(msg.Data, &request); err != nil {
+	var request v1alpha1.SensorDataRequest
+	if err := request.UnmarshalVT(msg.Data); err != nil {
 		s.logger.WarnContext(ctx, "Invalid temperature data request", "error", err)
 		return
 	}
 
 	s.mu.RLock()
-	var readings []ThermalSensorReading
+	var readings []*v1alpha1.SensorReading
 
-	if len(request.SensorIDs) > 0 {
+	if len(request.SensorIds) > 0 {
 		// Return specific sensors
-		for _, sensorID := range request.SensorIDs {
+		for _, sensorID := range request.SensorIds {
 			if sensorInfo, exists := s.sensors[sensorID]; exists && s.isTemperatureSensor(sensorInfo) {
 				if temp, err := s.getTemperatureValue(sensorInfo); err == nil {
-					readings = append(readings, ThermalSensorReading{
-						SensorID:    sensorInfo.Sensor.Id,
-						SensorName:  sensorInfo.Sensor.Name,
-						Temperature: temp,
-						Unit:        "celsius",
-						Timestamp:   time.Now(),
+					readings = append(readings, &v1alpha1.SensorReading{
+						SensorId:   sensorInfo.Sensor.Id,
+						SensorName: sensorInfo.Sensor.Name,
+						Value:      temp,
+						Unit:       "celsius",
+						Timestamp:  timestamppb.Now(),
 					})
 				}
 			}
@@ -378,12 +361,12 @@ func (s *SensorMon) handleTemperatureDataRequest(msg *nats.Msg) {
 		for _, sensorInfo := range s.sensors {
 			if s.isTemperatureSensor(sensorInfo) {
 				if temp, err := s.getTemperatureValue(sensorInfo); err == nil {
-					readings = append(readings, ThermalSensorReading{
-						SensorID:    sensorInfo.Sensor.Id,
-						SensorName:  sensorInfo.Sensor.Name,
-						Temperature: temp,
-						Unit:        "celsius",
-						Timestamp:   time.Now(),
+					readings = append(readings, &v1alpha1.SensorReading{
+						SensorId:   sensorInfo.Sensor.Id,
+						SensorName: sensorInfo.Sensor.Name,
+						Value:      temp,
+						Unit:       "celsius",
+						Timestamp:  timestamppb.Now(),
 					})
 				}
 			}
@@ -391,12 +374,11 @@ func (s *SensorMon) handleTemperatureDataRequest(msg *nats.Msg) {
 	}
 	s.mu.RUnlock()
 
-	response := map[string]interface{}{
-		"readings": readings,
-		"count":    len(readings),
+	response := &v1alpha1.SensorDataResponse{
+		Readings: readings,
 	}
 
-	responseData, err := json.Marshal(response)
+	responseData, err := response.MarshalVT()
 	if err != nil {
 		s.logger.ErrorContext(ctx, "Failed to marshal temperature data response", "error", err)
 		return
@@ -412,22 +394,15 @@ func (s *SensorMon) handleTemperatureDataRequest(msg *nats.Msg) {
 
 	s.logger.DebugContext(ctx, "Sent temperature data response",
 		"readings_count", len(readings),
-		"requested_sensors", len(request.SensorIDs))
+		"requested_sensors", len(request.SensorIds))
 }
 
 // handleSensorConfigRequest handles sensor configuration requests from thermal manager.
 func (s *SensorMon) handleSensorConfigRequest(msg *nats.Msg) {
 	ctx := context.Background()
 
-	type SensorConfigRequest struct {
-		Action     string            `json:"action"`
-		SensorID   string            `json:"sensor_id"`
-		ZoneName   string            `json:"zone_name,omitempty"`
-		Attributes map[string]string `json:"attributes,omitempty"`
-	}
-
-	var request SensorConfigRequest
-	if err := json.Unmarshal(msg.Data, &request); err != nil {
+	var request v1alpha1.SensorConfigRequest
+	if err := request.UnmarshalVT(msg.Data); err != nil {
 		s.logger.WarnContext(ctx, "Invalid sensor config request", "error", err)
 		return
 	}
@@ -435,23 +410,24 @@ func (s *SensorMon) handleSensorConfigRequest(msg *nats.Msg) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	sensorInfo, exists := s.sensors[request.SensorID]
+	sensorInfo, exists := s.sensors[request.SensorId]
 	if !exists {
 		s.logger.WarnContext(ctx, "Sensor not found for config request",
-			"sensor_id", request.SensorID)
+			"sensor_id", request.SensorId)
 		return
 	}
 
 	switch request.Action {
 	case "assign_zone":
+		// Assign sensor to thermal zone
 		if sensorInfo.Sensor.CustomAttributes == nil {
 			sensorInfo.Sensor.CustomAttributes = make(map[string]string)
 		}
-		sensorInfo.Sensor.CustomAttributes["thermal_zone"] = request.ZoneName
+		sensorInfo.Sensor.CustomAttributes["thermal_zone"] = request.GetZoneName()
 
 		s.logger.InfoContext(ctx, "Assigned sensor to thermal zone",
-			"sensor_id", request.SensorID,
-			"zone_name", request.ZoneName)
+			"sensor_id", request.SensorId,
+			"zone_name", request.GetZoneName())
 
 	case "update_attributes":
 		if sensorInfo.Sensor.CustomAttributes == nil {
@@ -462,12 +438,12 @@ func (s *SensorMon) handleSensorConfigRequest(msg *nats.Msg) {
 		}
 
 		s.logger.InfoContext(ctx, "Updated sensor attributes",
-			"sensor_id", request.SensorID,
+			"sensor_id", request.SensorId,
 			"attributes", request.Attributes)
 
 	default:
-		s.logger.WarnContext(ctx, "Unknown sensor config action",
+		s.logger.WarnContext(ctx, "Unknown sensor configuration action",
 			"action", request.Action,
-			"sensor_id", request.SensorID)
+			"sensor_id", request.SensorId)
 	}
 }

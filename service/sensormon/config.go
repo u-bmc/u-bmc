@@ -48,70 +48,70 @@ const (
 
 // Threshold represents sensor threshold configuration.
 type Threshold struct {
-	Warning  *float64 `json:"warning,omitempty"`
-	Critical *float64 `json:"critical,omitempty"`
+	Warning  *float64 // warning threshold value
+	Critical *float64 // critical threshold value
 }
 
 // Location represents sensor physical location.
 type Location struct {
-	Zone        string            `json:"zone,omitempty"`        // Thermal zone (e.g., "cpu", "memory", "psu")
-	Position    string            `json:"position,omitempty"`    // Physical position (e.g., "inlet", "outlet", "center")
-	Component   string            `json:"component,omitempty"`   // Component name (e.g., "CPU0", "DIMM_A1")
-	Coordinates map[string]string `json:"coordinates,omitempty"` // Additional location data
+	Zone        string            // Thermal zone (e.g., "cpu", "memory", "psu")
+	Position    string            // Physical position (e.g., "inlet", "outlet", "center")
+	Component   string            // Component name (e.g., "CPU0", "DIMM_A1")
+	Coordinates map[string]string // Additional location data
 }
 
 // HwmonSensorConfig represents hwmon-specific sensor configuration.
 type HwmonSensorConfig struct {
-	DevicePath     string   `json:"device_path"`               // hwmon device path (e.g., "/sys/class/hwmon/hwmon0")
-	AttributeName  string   `json:"attribute_name"`            // attribute name (e.g., "temp1_input")
-	LabelAttribute string   `json:"label_attribute,omitempty"` // label attribute (e.g., "temp1_label")
-	ScaleFactor    int      `json:"scale_factor,omitempty"`    // scaling factor for raw values
-	MatchPattern   string   `json:"match_pattern,omitempty"`   // regex pattern to match device
-	RequiredFiles  []string `json:"required_files,omitempty"`  // files that must exist for detection
+	DevicePath     string   // hwmon device path (e.g., "/sys/class/hwmon/hwmon0")
+	AttributeName  string   // attribute name (e.g., "temp1_input")
+	LabelAttribute string   // label attribute (e.g., "temp1_label")
+	ScaleFactor    int      // scaling factor for raw values
+	MatchPattern   string   // regex pattern to match device
+	RequiredFiles  []string // files that must exist for detection
 }
 
 // GPIOSensorConfig represents GPIO-specific sensor configuration.
 type GPIOSensorConfig struct {
-	ChipPath     string            `json:"chip_path"`               // GPIO chip path (e.g., "/dev/gpiochip0")
-	Line         int               `json:"line"`                    // GPIO line number
-	ActiveState  string            `json:"active_state"`            // "high" or "low"
-	PullResistor string            `json:"pull_resistor,omitempty"` // "up", "down", or "none"
-	DebounceTime time.Duration     `json:"debounce_time,omitempty"` // debounce time for discrete sensors
-	ValueMapping map[string]string `json:"value_mapping,omitempty"` // map GPIO values to sensor states
+	ChipPath     string            // GPIO chip path (e.g., "/dev/gpiochip0")
+	Line         int               // GPIO line number
+	ActiveState  string            // "high" or "low"
+	PullResistor string            // "up", "down", or "none"
+	DebounceTime time.Duration     // debounce time for discrete sensors
+	ValueMapping map[string]string // map GPIO values to sensor states
 }
 
 // MockSensorConfig represents mock sensor configuration for testing.
 type MockSensorConfig struct {
-	Behavior      MockSensorBehavior `json:"behavior"`                 // how the sensor behaves
-	BaseValue     float64            `json:"base_value"`               // base value for calculations
-	Variance      float64            `json:"variance,omitempty"`       // variance for randomization
-	Period        time.Duration      `json:"period,omitempty"`         // period for periodic behaviors
-	StepSize      float64            `json:"step_size,omitempty"`      // step size for step behavior
-	MinValue      float64            `json:"min_value,omitempty"`      // minimum value
-	MaxValue      float64            `json:"max_value,omitempty"`      // maximum value
-	FailureRate   float64            `json:"failure_rate,omitempty"`   // probability of read failure (0.0-1.0)
-	FailurePeriod time.Duration      `json:"failure_period,omitempty"` // duration of failure periods
+	Behavior      MockSensorBehavior // how the sensor behaves
+	BaseValue     float64            // base value for calculations
+	Variance      float64            // variance for randomization
+	Period        time.Duration      // period for periodic behaviors
+	StepSize      float64            // step size for step behavior
+	MinValue      float64            // minimum value
+	MaxValue      float64            // maximum value
+	FailureRate   float64            // probability of read failure (0.0-1.0)
+	FailurePeriod time.Duration      // duration of failure periods
 }
 
 // SensorDefinition represents a complete sensor configuration.
 type SensorDefinition struct {
-	ID               string                 `json:"id"`                          // unique sensor identifier
-	Name             string                 `json:"name"`                        // human-readable name
-	Description      string                 `json:"description,omitempty"`       // sensor description
-	Context          v1alpha1.SensorContext `json:"context"`                     // sensor type/context
-	Unit             v1alpha1.SensorUnit    `json:"unit"`                        // measurement unit
-	Backend          SensorBackendType      `json:"backend"`                     // backend type
-	Location         Location               `json:"location,omitempty"`          // physical location
-	UpperThresholds  *Threshold             `json:"upper_thresholds,omitempty"`  // upper thresholds
-	LowerThresholds  *Threshold             `json:"lower_thresholds,omitempty"`  // lower thresholds
-	Enabled          bool                   `json:"enabled"`                     // whether sensor is enabled
-	ReadOnly         bool                   `json:"read_only,omitempty"`         // whether sensor is read-only
-	CustomAttributes map[string]string      `json:"custom_attributes,omitempty"` // additional attributes
+	ID               string                 // unique sensor identifier
+	Name             string                 // human-readable name
+	Description      string                 // sensor description
+	Context          v1alpha1.SensorContext // sensor type/context
+	Unit             v1alpha1.SensorUnit    // measurement unit
+	Backend          SensorBackendType      // backend type
+	Location         Location               // physical location
+	UpperThresholds  *Threshold             // upper thresholds
+	LowerThresholds  *Threshold             // lower thresholds
+	Enabled          bool                   // whether sensor is enabled
+	ReadOnly         bool                   // whether sensor is read-only
+	CustomAttributes map[string]string      // additional attributes
 
 	// Backend-specific configurations
-	HwmonConfig *HwmonSensorConfig `json:"hwmon_config,omitempty"` // hwmon configuration
-	GPIOConfig  *GPIOSensorConfig  `json:"gpio_config,omitempty"`  // GPIO configuration
-	MockConfig  *MockSensorConfig  `json:"mock_config,omitempty"`  // mock configuration
+	HwmonConfig *HwmonSensorConfig // hwmon configuration
+	GPIOConfig  *GPIOSensorConfig  // GPIO configuration
+	MockConfig  *MockSensorConfig  // mock configuration
 }
 
 // SensorEventCallback is called when sensor events occur.
@@ -132,13 +132,13 @@ const (
 
 // SensorCallbacks holds callback functions for sensor events.
 type SensorCallbacks struct {
-	OnSensorRead        SensorEventCallback `json:"-"` // called after each sensor read
-	OnThresholdWarning  SensorEventCallback `json:"-"` // called when warning threshold exceeded
-	OnThresholdCritical SensorEventCallback `json:"-"` // called when critical threshold exceeded
-	OnThresholdNormal   SensorEventCallback `json:"-"` // called when sensor returns to normal
-	OnSensorError       SensorEventCallback `json:"-"` // called when sensor read fails
-	OnSensorDiscovered  SensorEventCallback `json:"-"` // called when new sensor is discovered
-	OnStatusChange      SensorEventCallback `json:"-"` // called when sensor status changes
+	OnSensorRead        SensorEventCallback // called after each sensor read
+	OnThresholdWarning  SensorEventCallback // called when warning threshold exceeded
+	OnThresholdCritical SensorEventCallback // called when critical threshold exceeded
+	OnThresholdNormal   SensorEventCallback // called when sensor returns to normal
+	OnSensorError       SensorEventCallback // called when sensor read fails
+	OnSensorDiscovered  SensorEventCallback // called when new sensor is discovered
+	OnStatusChange      SensorEventCallback // called when sensor status changes
 }
 
 type config struct {

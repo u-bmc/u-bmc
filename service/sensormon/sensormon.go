@@ -60,6 +60,7 @@ type sensorType int
 const (
 	sensorTypeHwmon sensorType = iota
 	sensorTypeGPIO
+	sensorTypeMock
 )
 
 // New creates a new SensorMon instance with the provided options.
@@ -182,9 +183,23 @@ func (s *SensorMon) Run(ctx context.Context, ipcConn nats.InProcessConnProvider)
 		return err
 	}
 
+	// Auto-start monitoring for testing platforms with mock sensors
+	if s.config.enableMockSensors && len(s.sensors) > 0 {
+		s.mu.Lock()
+		if !s.monitoring {
+			s.monitoring = true
+			s.monitoringStop = make(chan struct{})
+			s.monitoringStats.StartTime = time.Now()
+			go s.runMonitoring(ctx)
+			s.logger.InfoContext(ctx, "Auto-started sensor monitoring for mock platform")
+		}
+		s.mu.Unlock()
+	}
+
 	s.logger.InfoContext(ctx, "Sensor monitoring service started successfully",
 		"endpoints_registered", true,
-		"sensors_discovered", len(s.sensors))
+		"sensors_discovered", len(s.sensors),
+		"monitoring_active", s.monitoring)
 
 	span.SetAttributes(
 		attribute.String("service.name", s.config.serviceName),
@@ -235,6 +250,11 @@ func (s *SensorMon) discoverSensors(ctx context.Context) error {
 	ctx, cancel := context.WithTimeout(ctx, s.config.sensorDiscoveryTimeout)
 	defer cancel()
 
+	// Process user-defined sensor definitions first
+	if err := s.processSensorDefinitions(ctx); err != nil {
+		s.logger.WarnContext(ctx, "Failed to process sensor definitions", "error", err)
+	}
+
 	if s.config.enableHwmonSensors {
 		if err := s.discoverHwmonSensors(ctx); err != nil {
 			s.logger.WarnContext(ctx, "Hwmon sensor discovery failed", "error", err)
@@ -246,6 +266,87 @@ func (s *SensorMon) discoverSensors(ctx context.Context) error {
 			s.logger.WarnContext(ctx, "GPIO sensor discovery failed", "error", err)
 		}
 	}
+
+	return nil
+}
+
+// processSensorDefinitions creates sensors from the user-defined sensor definitions.
+func (s *SensorMon) processSensorDefinitions(ctx context.Context) error {
+	if len(s.config.sensorDefinitions) == 0 {
+		return nil
+	}
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	for _, definition := range s.config.sensorDefinitions {
+		if !definition.Enabled {
+			continue
+		}
+
+		// Create sensor based on definition
+		sensor := &v1alpha1.Sensor{
+			Id:               definition.ID,
+			Name:             definition.Name,
+			Context:          &definition.Context,
+			Unit:             &definition.Unit,
+			Status:           func() *v1alpha1.SensorStatus { status := v1alpha1.SensorStatus_SENSOR_STATUS_ENABLED; return &status }(),
+			CustomAttributes: make(map[string]string),
+		}
+
+		// Set up location if provided
+		if definition.Location.Zone != "" || definition.Location.Position != "" || definition.Location.Component != "" {
+			sensor.Location = &v1alpha1.Location{
+				ComponentLocation: &v1alpha1.ComponentLocation{
+					Name: fmt.Sprintf("Zone: %s, Position: %s, Component: %s",
+						definition.Location.Zone, definition.Location.Position, definition.Location.Component),
+				},
+			}
+			if definition.Location.Position != "" {
+				sensor.Location.ComponentLocation.Position = &definition.Location.Position
+			}
+		}
+
+		// Initialize analog reading with thresholds
+		analogReading := &v1alpha1.AnalogSensorReading{}
+
+		if definition.UpperThresholds != nil {
+			analogReading.UpperThresholds = &v1alpha1.Threshold{
+				Warning:  definition.UpperThresholds.Warning,
+				Critical: definition.UpperThresholds.Critical,
+			}
+		}
+
+		if definition.LowerThresholds != nil {
+			analogReading.LowerThresholds = &v1alpha1.Threshold{
+				Warning:  definition.LowerThresholds.Warning,
+				Critical: definition.LowerThresholds.Critical,
+			}
+		}
+
+		sensor.Reading = &v1alpha1.Sensor_AnalogReading{
+			AnalogReading: analogReading,
+		}
+		sensor.LastReadingTimestamp = timestamppb.Now()
+
+		// Create sensor info
+		info := &sensorInfo{
+			Sensor: sensor,
+			Path:   fmt.Sprintf("mock:%s", definition.ID), // Mock path for identification
+			Type:   sensorTypeMock,                        // Add this type
+		}
+
+		s.sensors[definition.ID] = info
+
+		s.logger.DebugContext(ctx, "Added sensor from definition",
+			"id", definition.ID,
+			"name", definition.Name,
+			"backend", definition.Backend,
+			"context", definition.Context.String())
+	}
+
+	s.logger.InfoContext(ctx, "Processed sensor definitions",
+		"count", len(s.config.sensorDefinitions))
 
 	return nil
 }
