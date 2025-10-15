@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"log/slog"
 	"runtime/debug"
 	"time"
 
@@ -234,10 +235,23 @@ func createMockSensorConfig() []sensormon.Option {
 		},
 	}
 
+	// Create sensor unit lookup map
+	sensorUnits := make(map[string]v1alpha1.SensorUnit)
+	for _, sensor := range sensors {
+		sensorUnits[sensor.ID] = sensor.Unit
+	}
+
 	// Configure sensor callbacks
 	callbacks := sensormon.SensorCallbacks{
 		OnSensorRead: func(sensorID string, event sensormon.SensorEvent, data interface{}) error {
-			// Log sensor reads in test mode
+			// Log sensor reads in test mode with debug output
+			if value, ok := data.(float64); ok {
+				unit := "units"
+				if sensorUnit, exists := sensorUnits[sensorID]; exists {
+					unit = getSensorUnitString(sensorUnit)
+				}
+				slog.Debug("Sensor Reading", "sensor_id", sensorID, "value", value, "unit", unit)
+			}
 			return nil
 		},
 		OnThresholdWarning: func(sensorID string, event sensormon.SensorEvent, data interface{}) error {
@@ -253,7 +267,7 @@ func createMockSensorConfig() []sensormon.Option {
 	return []sensormon.Option{
 		sensormon.WithServiceName("sensormon"),
 		sensormon.WithServiceDescription("Mock sensor monitoring service for testing"),
-		sensormon.WithMonitoringInterval(2 * time.Second),
+		sensormon.WithMonitoringInterval(5 * time.Second), // Changed to 5 seconds for debug logging
 		sensormon.WithThresholdCheckInterval(5 * time.Second),
 		sensormon.WithSensorTimeout(1 * time.Second),
 		// Enable only mock sensors for testing
@@ -284,42 +298,65 @@ func createMockPowerConfig() []powermgr.Option {
 	// Define mock power components
 	hostComponents := map[string]powermgr.ComponentConfig{
 		"host.0": {
-			Name:             "host.0",
-			Type:             "host",
-			Enabled:          true,
-			Backend:          powermgr.BackendTypeMock,
-			Mock:             powermgr.NewReliableMockConfig(false), // Start powered off
-			OperationTimeout: 10 * time.Second,
-			PowerOnDelay:     2 * time.Second,
-			PowerOffDelay:    3 * time.Second,
-			ResetDelay:       1 * time.Second,
-			ForceOffDelay:    500 * time.Millisecond,
+			Name:    "host.0",
+			Type:    "host",
+			Enabled: true,
+			Backend: powermgr.BackendTypeMock,
+			Mock: func() *powermgr.MockConfig {
+				config := powermgr.NewReliableMockConfig(false) // Start powered off
+				config.OperationDelay = 0                       // Immediate API response (transitioning)
+				config.PowerStateDelay = 1 * time.Second        // 1 second delay to reach final state (on)
+				return config
+			}(),
+			OperationTimeout: 1 * time.Second, // Reduced for immediate response
+			PowerOnDelay:     0,               // Immediate
+			PowerOffDelay:    0,               // Immediate
+			ResetDelay:       0,               // Immediate
+			ForceOffDelay:    0,               // Immediate
 		},
 	}
 
 	chassisComponents := map[string]powermgr.ComponentConfig{
 		"chassis.0": {
-			Name:             "chassis.0",
-			Type:             "chassis",
-			Enabled:          true,
-			Backend:          powermgr.BackendTypeMock,
-			Mock:             powermgr.NewReliableMockConfig(true), // Start powered on
-			OperationTimeout: 5 * time.Second,
-			PowerOnDelay:     1 * time.Second,
-			PowerOffDelay:    2 * time.Second,
-			ResetDelay:       500 * time.Millisecond,
-			ForceOffDelay:    200 * time.Millisecond,
+			Name:    "chassis.0",
+			Type:    "chassis",
+			Enabled: true,
+			Backend: powermgr.BackendTypeMock,
+			Mock: func() *powermgr.MockConfig {
+				config := powermgr.NewReliableMockConfig(true) // Start powered on
+				config.OperationDelay = 0                      // Immediate API response (transitioning)
+				config.PowerStateDelay = 1 * time.Second       // 1 second delay to reach final state
+				return config
+			}(),
+			OperationTimeout: 1 * time.Second, // Reduced for immediate response
+			PowerOnDelay:     0,               // Immediate
+			PowerOffDelay:    0,               // Immediate
+			ResetDelay:       0,               // Immediate
+			ForceOffDelay:    0,               // Immediate
 		},
 	}
 
 	// Configure power callbacks
 	callbacks := powermgr.PowerCallbacks{
 		OnPowerOn: func(componentName string, event powermgr.PowerEvent, data interface{}) error {
-			// Handle power on events
+			// Handle power on events with debug logging
+			slog.Debug("Power ON", "component", componentName, "state", "ON")
 			return nil
 		},
 		OnPowerOff: func(componentName string, event powermgr.PowerEvent, data interface{}) error {
-			// Handle power off events
+			// Handle power off events with debug logging
+			slog.Debug("Power OFF", "component", componentName, "state", "OFF")
+			return nil
+		},
+		OnPowerStateChanged: func(componentName string, event powermgr.PowerEvent, data interface{}) error {
+			// Handle final power state changes with debug logging
+			if powerState, ok := data.(bool); ok {
+				if powerState {
+					slog.Debug("Power State Changed", "component", componentName, "final_state", "ON")
+				} else {
+					slog.Debug("Power State Changed", "component", componentName, "final_state", "OFF")
+				}
+			}
 			return nil
 		},
 		OnEmergencyShutdown: func(componentName string, event powermgr.PowerEvent, data interface{}) error {
@@ -345,7 +382,7 @@ func createMockPowerConfig() []powermgr.Option {
 		powermgr.WithComponents(chassisComponents),
 		// State reporting
 		powermgr.WithStateReporting(true),
-		powermgr.WithStateReportingSubjectPrefix("powermgr.state"),
+		powermgr.WithStateReportingSubjectPrefix("statemgr"),
 		// Thermal response
 		powermgr.WithThermalResponse(true),
 		powermgr.WithEmergencyResponseDelay(3 * time.Second),
@@ -392,15 +429,25 @@ func createMockThermalConfig() []thermalmgr.Option {
 	// Configure thermal callbacks
 	callbacks := thermalmgr.ThermalCallbacks{
 		OnTemperatureWarning: func(zoneName string, event thermalmgr.ThermalEvent, data interface{}) error {
-			// Handle temperature warnings
+			// Handle temperature warnings with debug logging
+			slog.Debug("Thermal Warning", "zone", zoneName, "event", "temperature_warning_threshold")
 			return nil
 		},
 		OnTemperatureCritical: func(zoneName string, event thermalmgr.ThermalEvent, data interface{}) error {
-			// Handle critical temperatures
+			// Handle critical temperatures with debug logging
+			slog.Debug("Thermal Critical", "zone", zoneName, "event", "critical_temperature_threshold")
 			return nil
 		},
 		OnEmergencyShutdown: func(zoneName string, event thermalmgr.ThermalEvent, data interface{}) error {
-			// Handle emergency shutdown
+			// Handle emergency shutdown with debug logging
+			slog.Debug("Thermal Emergency", "zone", zoneName, "event", "emergency_shutdown")
+			return nil
+		},
+		OnCoolingEngaged: func(deviceName string, event thermalmgr.ThermalEvent, data interface{}) error {
+			// Handle cooling engagement with debug logging
+			if speedPercent, ok := data.(float64); ok {
+				slog.Debug("Fan Speed Change", "device", deviceName, "speed_percent", speedPercent)
+			}
 			return nil
 		},
 	}
@@ -442,4 +489,24 @@ func createMockThermalConfig() []thermalmgr.Option {
 // Helper function to create float64 pointers
 func ptrFloat64(f float64) *float64 {
 	return &f
+}
+
+// Helper function to get sensor unit string for debug logging
+func getSensorUnitString(unit v1alpha1.SensorUnit) string {
+	switch unit {
+	case v1alpha1.SensorUnit_SENSOR_UNIT_CELSIUS:
+		return "°C"
+	case v1alpha1.SensorUnit_SENSOR_UNIT_RPM:
+		return "RPM"
+	case v1alpha1.SensorUnit_SENSOR_UNIT_VOLTS:
+		return "V"
+	case v1alpha1.SensorUnit_SENSOR_UNIT_WATTS:
+		return "W"
+	case v1alpha1.SensorUnit_SENSOR_UNIT_AMPS:
+		return "A"
+	case v1alpha1.SensorUnit_SENSOR_UNIT_PERCENT:
+		return "%"
+	default:
+		return "units"
+	}
 }
