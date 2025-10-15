@@ -19,7 +19,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file schema/v1alpha1/thermal.proto.
  */
 export const file_schema_v1alpha1_thermal: GenFile = /*@__PURE__*/
-  fileDesc("Ch1zY2hlbWEvdjFhbHBoYTEvdGhlcm1hbC5wcm90bxIPc2NoZW1hLnYxYWxwaGExIs4ECgtUaGVybWFsWm9uZRIVCgRuYW1lGAEgASgJQge6SARyAhABEh4KDHNlbnNvcl9uYW1lcxgCIAMoCUIIukgFkgECCAESHAoUY29vbGluZ19kZXZpY2VfbmFtZXMYAyADKAkSGwoTY3VycmVudF90ZW1wZXJhdHVyZRgEIAEoARIfChJ0YXJnZXRfdGVtcGVyYXR1cmUYBSABKAFIAIgBARI3CgxwaWRfc2V0dGluZ3MYBiABKAsyHC5zY2hlbWEudjFhbHBoYTEuUElEU2V0dGluZ3NIAYgBARI8CgZzdGF0dXMYByABKA4yIi5zY2hlbWEudjFhbHBoYTEuVGhlcm1hbFpvbmVTdGF0dXNCCLpIBYIBAhABEjAKCGxvY2F0aW9uGAggASgLMhkuc2NoZW1hLnYxYWxwaGExLkxvY2F0aW9uSAKIAQESNQoMbGFzdF91cGRhdGVkGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgDiAEBEk0KEWN1c3RvbV9hdHRyaWJ1dGVzGAogAygLMjIuc2NoZW1hLnYxYWxwaGExLlRoZXJtYWxab25lLkN1c3RvbUF0dHJpYnV0ZXNFbnRyeRo3ChVDdXN0b21BdHRyaWJ1dGVzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIVChNfdGFyZ2V0X3RlbXBlcmF0dXJlQg8KDV9waWRfc2V0dGluZ3NCCwoJX2xvY2F0aW9uQg8KDV9sYXN0X3VwZGF0ZWQi3gsKDUNvb2xpbmdEZXZpY2USFQoEbmFtZRgBIAEoCUIHukgEcgIQARI/CgR0eXBlGAIgASgOMiIuc2NoZW1hLnYxYWxwaGExLkNvb2xpbmdEZXZpY2VUeXBlQgi6SAWCAQIQAUgAiAEBEjsKFWNvb2xpbmdfcG93ZXJfcGVyY2VudBgDIAEoAUIXukgUEhIZAAAAAAAAWUApAAAAAAAAAABIAYgBARI/ChltaW5fY29vbGluZ19wb3dlcl9wZXJjZW50GAQgASgBQhe6SBQSEhkAAAAAAABZQCkAAAAAAAAAAEgCiAEBEj8KGW1heF9jb29saW5nX3Bvd2VyX3BlcmNlbnQYBSABKAFCF7pIFBISGQAAAAAAAFlAKQAAAAAAAAAASAOIAQESKAoHc2Vuc29ycxgGIAMoCzIXLnNjaGVtYS52MWFscGhhMS5TZW5zb3ISQwoGc3RhdHVzGAcgASgOMiQuc2NoZW1hLnYxYWxwaGExLkNvb2xpbmdEZXZpY2VTdGF0dXNCCLpIBYIBAhABSASIAQESTgoMY29udHJvbF9tb2RlGAggASgOMikuc2NoZW1hLnYxYWxwaGExLkNvb2xpbmdEZXZpY2VDb250cm9sTW9kZUIIukgFggECEAFIBYgBARIwCghsb2NhdGlvbhgJIAEoCzIZLnNjaGVtYS52MWFscGhhMS5Mb2NhdGlvbkgGiAEBEjUKDGxhc3RfdXBkYXRlZBgKIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIB4gBARJPChFjdXN0b21fYXR0cmlidXRlcxgLIAMoCzI0LnNjaGVtYS52MWFscGhhMS5Db29saW5nRGV2aWNlLkN1c3RvbUF0dHJpYnV0ZXNFbnRyeRo3ChVDdXN0b21BdHRyaWJ1dGVzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ATrqBLpI5gQa6gEKFWNvb2xpbmdfZGV2aWNlX2JvdW5kcxI+bWF4X2Nvb2xpbmdfcG93ZXJfcGVyY2VudCBtdXN0IGJlID49IG1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQakAEhaGFzKHRoaXMubWF4X2Nvb2xpbmdfcG93ZXJfcGVyY2VudCkgfHwgIWhhcyh0aGlzLm1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQpIHx8IHRoaXMubWF4X2Nvb2xpbmdfcG93ZXJfcGVyY2VudCA+PSB0aGlzLm1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQa9gIKIWNvb2xpbmdfZGV2aWNlX3Bvd2VyX3dpdGhpbl9yYW5nZRJcY29vbGluZ19wb3dlcl9wZXJjZW50IG11c3QgYmUgd2l0aGluIG1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQgYW5kIG1heF9jb29saW5nX3Bvd2VyX3BlcmNlbnQa8gEhaGFzKHRoaXMuY29vbGluZ19wb3dlcl9wZXJjZW50KSB8fCAhaGFzKHRoaXMubWluX2Nvb2xpbmdfcG93ZXJfcGVyY2VudCkgfHwgIWhhcyh0aGlzLm1heF9jb29saW5nX3Bvd2VyX3BlcmNlbnQpIHx8ICh0aGlzLmNvb2xpbmdfcG93ZXJfcGVyY2VudCA+PSB0aGlzLm1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQgJiYgdGhpcy5jb29saW5nX3Bvd2VyX3BlcmNlbnQgPD0gdGhpcy5tYXhfY29vbGluZ19wb3dlcl9wZXJjZW50KUIHCgVfdHlwZUIYChZfY29vbGluZ19wb3dlcl9wZXJjZW50QhwKGl9taW5fY29vbGluZ19wb3dlcl9wZXJjZW50QhwKGl9tYXhfY29vbGluZ19wb3dlcl9wZXJjZW50QgkKB19zdGF0dXNCDwoNX2NvbnRyb2xfbW9kZUILCglfbG9jYXRpb25CDwoNX2xhc3RfdXBkYXRlZCLbAgoOVGhlcm1hbFByb2ZpbGUSQQoEdHlwZRgBIAEoDjIpLnNjaGVtYS52MWFscGhhMS5Db29saW5nRGV2aWNlUHJvZmlsZVR5cGVCCLpIBYIBAhABEjoKD2N1c3RvbV9zZXR0aW5ncxgCIAEoCzIcLnNjaGVtYS52MWFscGhhMS5QSURTZXR0aW5nc0gAiAEBEhgKC2Rlc2NyaXB0aW9uGAMgASgJSAGIAQE6iwG6SIcBGoQBCh90aGVybWFsX3Byb2ZpbGVfY3VzdG9tX3NldHRpbmdzEjRjdXN0b21fc2V0dGluZ3MgbXVzdCBiZSBwcm92aWRlZCB3aGVuIHR5cGUgaXMgQ1VTVE9NGit0aGlzLnR5cGUgIT0gNCB8fCBoYXModGhpcy5jdXN0b21fc2V0dGluZ3MpQhIKEF9jdXN0b21fc2V0dGluZ3NCDgoMX2Rlc2NyaXB0aW9uIusCCgtQSURTZXR0aW5ncxIaCgJrcBgBIAEoAUIOukgLEgkpAAAAAAAAAAASGgoCa2kYAiABKAFCDrpICxIJKQAAAAAAAAAAEhoKAmtkGAMgASgBQg66SAsSCSkAAAAAAAAAABIjCgtzYW1wbGVfdGltZRgEIAEoAUIOukgLEgkhAAAAAAAAAAASFwoKb3V0cHV0X21pbhgFIAEoAUgAiAEBEhcKCm91dHB1dF9tYXgYBiABKAFIAYgBATqSAbpIjgEaiwEKEXBpZF9vdXRwdXRfYm91bmRzEiBvdXRwdXRfbWluIG11c3QgYmUgPD0gb3V0cHV0X21heBpUIWhhcyh0aGlzLm91dHB1dF9taW4pIHx8ICFoYXModGhpcy5vdXRwdXRfbWF4KSB8fCB0aGlzLm91dHB1dF9taW4gPD0gdGhpcy5vdXRwdXRfbWF4Qg0KC19vdXRwdXRfbWluQg0KC19vdXRwdXRfbWF4ItEBChVHZXRUaGVybWFsWm9uZVJlcXVlc3QSDgoEbmFtZRgBIAEoCUgAEjQKBnN0YXR1cxgCIAEoDjIiLnNjaGVtYS52MWFscGhhMS5UaGVybWFsWm9uZVN0YXR1c0gAEi0KCGxvY2F0aW9uGAMgASgLMhkuc2NoZW1hLnYxYWxwaGExLkxvY2F0aW9uSAASLgoKZmllbGRfbWFzaxgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2tCEwoKaWRlbnRpZmllchIFukgCCAEiTQoWR2V0VGhlcm1hbFpvbmVSZXNwb25zZRIzCg10aGVybWFsX3pvbmVzGAEgAygLMhwuc2NoZW1hLnYxYWxwaGExLlRoZXJtYWxab25lIq4CChVTZXRUaGVybWFsWm9uZVJlcXVlc3QSFQoEbmFtZRgBIAEoCUIHukgEcgIQARIfChJ0YXJnZXRfdGVtcGVyYXR1cmUYAiABKAFIAIgBARI3CgxwaWRfc2V0dGluZ3MYAyABKAsyHC5zY2hlbWEudjFhbHBoYTEuUElEU2V0dGluZ3NIAYgBARJBCgZzdGF0dXMYBCABKA4yIi5zY2hlbWEudjFhbHBoYTEuVGhlcm1hbFpvbmVTdGF0dXNCCLpIBYIBAhABSAKIAQESLgoKZmllbGRfbWFzaxgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2tCFQoTX3RhcmdldF90ZW1wZXJhdHVyZUIPCg1fcGlkX3NldHRpbmdzQgkKB19zdGF0dXMiTAoWU2V0VGhlcm1hbFpvbmVSZXNwb25zZRIyCgx0aGVybWFsX3pvbmUYASABKAsyHC5zY2hlbWEudjFhbHBoYTEuVGhlcm1hbFpvbmUiSQoXTGlzdFRoZXJtYWxab25lc1JlcXVlc3QSLgoKZmllbGRfbWFzaxgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2siTwoYTGlzdFRoZXJtYWxab25lc1Jlc3BvbnNlEjMKDXRoZXJtYWxfem9uZXMYASADKAsyHC5zY2hlbWEudjFhbHBoYTEuVGhlcm1hbFpvbmUqugEKEVRoZXJtYWxab25lU3RhdHVzEiMKH1RIRVJNQUxfWk9ORV9TVEFUVVNfVU5TUEVDSUZJRUQQABIeChpUSEVSTUFMX1pPTkVfU1RBVFVTX05PUk1BTBABEh8KG1RIRVJNQUxfWk9ORV9TVEFUVVNfV0FSTklORxACEiAKHFRIRVJNQUxfWk9ORV9TVEFUVVNfQ1JJVElDQUwQAxIdChlUSEVSTUFMX1pPTkVfU1RBVFVTX0VSUk9SEAQq6AEKEUNvb2xpbmdEZXZpY2VUeXBlEiMKH0NPT0xJTkdfREVWSUNFX1RZUEVfVU5TUEVDSUZJRUQQABIbChdDT09MSU5HX0RFVklDRV9UWVBFX0ZBThABEiIKHkNPT0xJTkdfREVWSUNFX1RZUEVfV0FURVJfUFVNUBACEiYKIkNPT0xJTkdfREVWSUNFX1RZUEVfSEVBVF9FWENIQU5HRVIQAxIlCiFDT09MSU5HX0RFVklDRV9UWVBFX0xJUVVJRF9DT09MRVIQBBIeChpDT09MSU5HX0RFVklDRV9UWVBFX0JMT1dFUhAFKu4BChNDb29saW5nRGV2aWNlU3RhdHVzEiUKIUNPT0xJTkdfREVWSUNFX1NUQVRVU19VTlNQRUNJRklFRBAAEiEKHUNPT0xJTkdfREVWSUNFX1NUQVRVU19FTkFCTEVEEAESIgoeQ09PTElOR19ERVZJQ0VfU1RBVFVTX0RJU0FCTEVEEAISJQohQ09PTElOR19ERVZJQ0VfU1RBVFVTX05PVF9QUkVTRU5UEAMSHwobQ09PTElOR19ERVZJQ0VfU1RBVFVTX0VSUk9SEAQSIQodQ09PTElOR19ERVZJQ0VfU1RBVFVTX1VOS05PV04QBSq/AQoYQ29vbGluZ0RldmljZUNvbnRyb2xNb2RlEisKJ0NPT0xJTkdfREVWSUNFX0NPTlRST0xfTU9ERV9VTlNQRUNJRklFRBAAEikKJUNPT0xJTkdfREVWSUNFX0NPTlRST0xfTU9ERV9BVVRPTUFUSUMQARImCiJDT09MSU5HX0RFVklDRV9DT05UUk9MX01PREVfTUFOVUFMEAISIwofQ09PTElOR19ERVZJQ0VfQ09OVFJPTF9NT0RFX1BJRBADKuwBChhDb29saW5nRGV2aWNlUHJvZmlsZVR5cGUSKwonQ09PTElOR19ERVZJQ0VfUFJPRklMRV9UWVBFX1VOU1BFQ0lGSUVEEAASJQohQ09PTElOR19ERVZJQ0VfUFJPRklMRV9UWVBFX1FVSUVUEAESKAokQ09PTElOR19ERVZJQ0VfUFJPRklMRV9UWVBFX0JBTEFOQ0VEEAISKgomQ09PTElOR19ERVZJQ0VfUFJPRklMRV9UWVBFX0FHR1JFU1NJVkUQAxImCiJDT09MSU5HX0RFVklDRV9QUk9GSUxFX1RZUEVfQ1VTVE9NEARCvwEKE2NvbS5zY2hlbWEudjFhbHBoYTFCDFRoZXJtYWxQcm90b1ABWj1naXRodWIuY29tL3UtYm1jL3UtYm1jL2FwaS9nZW4vc2NoZW1hL3YxYWxwaGExO3NjaGVtYXYxYWxwaGExogIDU1hYqgIPU2NoZW1hLlYxYWxwaGExygIPU2NoZW1hXFYxYWxwaGEx4gIbU2NoZW1hXFYxYWxwaGExXEdQQk1ldGFkYXRh6gIQU2NoZW1hOjpWMWFscGhhMWIGcHJvdG8z", [file_buf_validate_validate, file_google_protobuf_field_mask, file_google_protobuf_timestamp, file_schema_v1alpha1_location, file_schema_v1alpha1_sensor]);
+  fileDesc("Ch1zY2hlbWEvdjFhbHBoYTEvdGhlcm1hbC5wcm90bxIPc2NoZW1hLnYxYWxwaGExIs4ECgtUaGVybWFsWm9uZRIVCgRuYW1lGAEgASgJQge6SARyAhABEh4KDHNlbnNvcl9uYW1lcxgCIAMoCUIIukgFkgECCAESHAoUY29vbGluZ19kZXZpY2VfbmFtZXMYAyADKAkSGwoTY3VycmVudF90ZW1wZXJhdHVyZRgEIAEoARIfChJ0YXJnZXRfdGVtcGVyYXR1cmUYBSABKAFIAIgBARI3CgxwaWRfc2V0dGluZ3MYBiABKAsyHC5zY2hlbWEudjFhbHBoYTEuUElEU2V0dGluZ3NIAYgBARI8CgZzdGF0dXMYByABKA4yIi5zY2hlbWEudjFhbHBoYTEuVGhlcm1hbFpvbmVTdGF0dXNCCLpIBYIBAhABEjAKCGxvY2F0aW9uGAggASgLMhkuc2NoZW1hLnYxYWxwaGExLkxvY2F0aW9uSAKIAQESNQoMbGFzdF91cGRhdGVkGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgDiAEBEk0KEWN1c3RvbV9hdHRyaWJ1dGVzGAogAygLMjIuc2NoZW1hLnYxYWxwaGExLlRoZXJtYWxab25lLkN1c3RvbUF0dHJpYnV0ZXNFbnRyeRo3ChVDdXN0b21BdHRyaWJ1dGVzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIVChNfdGFyZ2V0X3RlbXBlcmF0dXJlQg8KDV9waWRfc2V0dGluZ3NCCwoJX2xvY2F0aW9uQg8KDV9sYXN0X3VwZGF0ZWQi3gsKDUNvb2xpbmdEZXZpY2USFQoEbmFtZRgBIAEoCUIHukgEcgIQARI/CgR0eXBlGAIgASgOMiIuc2NoZW1hLnYxYWxwaGExLkNvb2xpbmdEZXZpY2VUeXBlQgi6SAWCAQIQAUgAiAEBEjsKFWNvb2xpbmdfcG93ZXJfcGVyY2VudBgDIAEoAUIXukgUEhIZAAAAAAAAWUApAAAAAAAAAABIAYgBARI/ChltaW5fY29vbGluZ19wb3dlcl9wZXJjZW50GAQgASgBQhe6SBQSEhkAAAAAAABZQCkAAAAAAAAAAEgCiAEBEj8KGW1heF9jb29saW5nX3Bvd2VyX3BlcmNlbnQYBSABKAFCF7pIFBISGQAAAAAAAFlAKQAAAAAAAAAASAOIAQESKAoHc2Vuc29ycxgGIAMoCzIXLnNjaGVtYS52MWFscGhhMS5TZW5zb3ISQwoGc3RhdHVzGAcgASgOMiQuc2NoZW1hLnYxYWxwaGExLkNvb2xpbmdEZXZpY2VTdGF0dXNCCLpIBYIBAhABSASIAQESTgoMY29udHJvbF9tb2RlGAggASgOMikuc2NoZW1hLnYxYWxwaGExLkNvb2xpbmdEZXZpY2VDb250cm9sTW9kZUIIukgFggECEAFIBYgBARIwCghsb2NhdGlvbhgJIAEoCzIZLnNjaGVtYS52MWFscGhhMS5Mb2NhdGlvbkgGiAEBEjUKDGxhc3RfdXBkYXRlZBgKIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIB4gBARJPChFjdXN0b21fYXR0cmlidXRlcxgLIAMoCzI0LnNjaGVtYS52MWFscGhhMS5Db29saW5nRGV2aWNlLkN1c3RvbUF0dHJpYnV0ZXNFbnRyeRo3ChVDdXN0b21BdHRyaWJ1dGVzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ATrqBLpI5gQa6gEKFWNvb2xpbmdfZGV2aWNlX2JvdW5kcxI+bWF4X2Nvb2xpbmdfcG93ZXJfcGVyY2VudCBtdXN0IGJlID49IG1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQakAEhaGFzKHRoaXMubWF4X2Nvb2xpbmdfcG93ZXJfcGVyY2VudCkgfHwgIWhhcyh0aGlzLm1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQpIHx8IHRoaXMubWF4X2Nvb2xpbmdfcG93ZXJfcGVyY2VudCA+PSB0aGlzLm1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQa9gIKIWNvb2xpbmdfZGV2aWNlX3Bvd2VyX3dpdGhpbl9yYW5nZRJcY29vbGluZ19wb3dlcl9wZXJjZW50IG11c3QgYmUgd2l0aGluIG1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQgYW5kIG1heF9jb29saW5nX3Bvd2VyX3BlcmNlbnQa8gEhaGFzKHRoaXMuY29vbGluZ19wb3dlcl9wZXJjZW50KSB8fCAhaGFzKHRoaXMubWluX2Nvb2xpbmdfcG93ZXJfcGVyY2VudCkgfHwgIWhhcyh0aGlzLm1heF9jb29saW5nX3Bvd2VyX3BlcmNlbnQpIHx8ICh0aGlzLmNvb2xpbmdfcG93ZXJfcGVyY2VudCA+PSB0aGlzLm1pbl9jb29saW5nX3Bvd2VyX3BlcmNlbnQgJiYgdGhpcy5jb29saW5nX3Bvd2VyX3BlcmNlbnQgPD0gdGhpcy5tYXhfY29vbGluZ19wb3dlcl9wZXJjZW50KUIHCgVfdHlwZUIYChZfY29vbGluZ19wb3dlcl9wZXJjZW50QhwKGl9taW5fY29vbGluZ19wb3dlcl9wZXJjZW50QhwKGl9tYXhfY29vbGluZ19wb3dlcl9wZXJjZW50QgkKB19zdGF0dXNCDwoNX2NvbnRyb2xfbW9kZUILCglfbG9jYXRpb25CDwoNX2xhc3RfdXBkYXRlZCLbAgoOVGhlcm1hbFByb2ZpbGUSQQoEdHlwZRgBIAEoDjIpLnNjaGVtYS52MWFscGhhMS5Db29saW5nRGV2aWNlUHJvZmlsZVR5cGVCCLpIBYIBAhABEjoKD2N1c3RvbV9zZXR0aW5ncxgCIAEoCzIcLnNjaGVtYS52MWFscGhhMS5QSURTZXR0aW5nc0gAiAEBEhgKC2Rlc2NyaXB0aW9uGAMgASgJSAGIAQE6iwG6SIcBGoQBCh90aGVybWFsX3Byb2ZpbGVfY3VzdG9tX3NldHRpbmdzEjRjdXN0b21fc2V0dGluZ3MgbXVzdCBiZSBwcm92aWRlZCB3aGVuIHR5cGUgaXMgQ1VTVE9NGit0aGlzLnR5cGUgIT0gNCB8fCBoYXModGhpcy5jdXN0b21fc2V0dGluZ3MpQhIKEF9jdXN0b21fc2V0dGluZ3NCDgoMX2Rlc2NyaXB0aW9uIusCCgtQSURTZXR0aW5ncxIaCgJrcBgBIAEoAUIOukgLEgkpAAAAAAAAAAASGgoCa2kYAiABKAFCDrpICxIJKQAAAAAAAAAAEhoKAmtkGAMgASgBQg66SAsSCSkAAAAAAAAAABIjCgtzYW1wbGVfdGltZRgEIAEoAUIOukgLEgkhAAAAAAAAAAASFwoKb3V0cHV0X21pbhgFIAEoAUgAiAEBEhcKCm91dHB1dF9tYXgYBiABKAFIAYgBATqSAbpIjgEaiwEKEXBpZF9vdXRwdXRfYm91bmRzEiBvdXRwdXRfbWluIG11c3QgYmUgPD0gb3V0cHV0X21heBpUIWhhcyh0aGlzLm91dHB1dF9taW4pIHx8ICFoYXModGhpcy5vdXRwdXRfbWF4KSB8fCB0aGlzLm91dHB1dF9taW4gPD0gdGhpcy5vdXRwdXRfbWF4Qg0KC19vdXRwdXRfbWluQg0KC19vdXRwdXRfbWF4ItEBChVHZXRUaGVybWFsWm9uZVJlcXVlc3QSDgoEbmFtZRgBIAEoCUgAEjQKBnN0YXR1cxgCIAEoDjIiLnNjaGVtYS52MWFscGhhMS5UaGVybWFsWm9uZVN0YXR1c0gAEi0KCGxvY2F0aW9uGAMgASgLMhkuc2NoZW1hLnYxYWxwaGExLkxvY2F0aW9uSAASLgoKZmllbGRfbWFzaxgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2tCEwoKaWRlbnRpZmllchIFukgCCAEiTQoWR2V0VGhlcm1hbFpvbmVSZXNwb25zZRIzCg10aGVybWFsX3pvbmVzGAEgAygLMhwuc2NoZW1hLnYxYWxwaGExLlRoZXJtYWxab25lIq4CChVTZXRUaGVybWFsWm9uZVJlcXVlc3QSFQoEbmFtZRgBIAEoCUIHukgEcgIQARIfChJ0YXJnZXRfdGVtcGVyYXR1cmUYAiABKAFIAIgBARI3CgxwaWRfc2V0dGluZ3MYAyABKAsyHC5zY2hlbWEudjFhbHBoYTEuUElEU2V0dGluZ3NIAYgBARJBCgZzdGF0dXMYBCABKA4yIi5zY2hlbWEudjFhbHBoYTEuVGhlcm1hbFpvbmVTdGF0dXNCCLpIBYIBAhABSAKIAQESLgoKZmllbGRfbWFzaxgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2tCFQoTX3RhcmdldF90ZW1wZXJhdHVyZUIPCg1fcGlkX3NldHRpbmdzQgkKB19zdGF0dXMiTAoWU2V0VGhlcm1hbFpvbmVSZXNwb25zZRIyCgx0aGVybWFsX3pvbmUYASABKAsyHC5zY2hlbWEudjFhbHBoYTEuVGhlcm1hbFpvbmUiSQoXTGlzdFRoZXJtYWxab25lc1JlcXVlc3QSLgoKZmllbGRfbWFzaxgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2siTwoYTGlzdFRoZXJtYWxab25lc1Jlc3BvbnNlEjMKDXRoZXJtYWxfem9uZXMYASADKAsyHC5zY2hlbWEudjFhbHBoYTEuVGhlcm1hbFpvbmUi4wIKFVRoZXJtYWxFbWVyZ2VuY3lBbGVydBIVCgR0eXBlGAEgASgJQge6SARyAhABEhYKCXNlbnNvcl9pZBgCIAEoCUgAiAEBEhgKC3NlbnNvcl9uYW1lGAMgASgJSAGIAQESFgoJem9uZV9uYW1lGAQgASgJSAKIAQESEwoLdGVtcGVyYXR1cmUYBSABKAESFgoJdGhyZXNob2xkGAYgASgBSAOIAQESGQoIc2V2ZXJpdHkYByABKAlCB7pIBHICEAESEwoGYWN0aW9uGAggASgJSASIAQESLQoJdGltZXN0YW1wGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIYCgdtZXNzYWdlGAogASgJQge6SARyAhABQgwKCl9zZW5zb3JfaWRCDgoMX3NlbnNvcl9uYW1lQgwKCl96b25lX25hbWVCDAoKX3RocmVzaG9sZEIJCgdfYWN0aW9uInMKHVRoZXJtYWxab25lVGVtcGVyYXR1cmVSZXF1ZXN0EhIKCnpvbmVfbmFtZXMYASADKAkSIwoWaW5jbHVkZV9zZW5zb3JfZGV0YWlscxgCIAEoCEgAiAEBQhkKF19pbmNsdWRlX3NlbnNvcl9kZXRhaWxzImQKHlRoZXJtYWxab25lVGVtcGVyYXR1cmVSZXNwb25zZRJCChF6b25lX3RlbXBlcmF0dXJlcxgBIAMoCzInLnNjaGVtYS52MWFscGhhMS5UaGVybWFsWm9uZVRlbXBlcmF0dXJlItwBChZUaGVybWFsWm9uZVRlbXBlcmF0dXJlEhoKCXpvbmVfbmFtZRgBIAEoCUIHukgEcgIQARIbChNjdXJyZW50X3RlbXBlcmF0dXJlGAIgASgBEh8KEnRhcmdldF90ZW1wZXJhdHVyZRgDIAEoAUgAiAEBEh8KF2NvbnRyaWJ1dGluZ19zZW5zb3JfaWRzGAQgAygJEjAKDGxhc3RfdXBkYXRlZBgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBCFQoTX3RhcmdldF90ZW1wZXJhdHVyZSIwChdHZXRDb29saW5nRGV2aWNlUmVxdWVzdBIVCgRuYW1lGAEgASgJQge6SARyAhABIlIKGEdldENvb2xpbmdEZXZpY2VSZXNwb25zZRI2Cg5jb29saW5nX2RldmljZRgBIAEoCzIeLnNjaGVtYS52MWFscGhhMS5Db29saW5nRGV2aWNlIncKF1NldENvb2xpbmdEZXZpY2VSZXF1ZXN0EhUKBG5hbWUYASABKAlCB7pIBHICEAESMwoNcG93ZXJfcGVyY2VudBgCIAEoAUIXukgUEhIZAAAAAAAAWUApAAAAAAAAAABIAIgBAUIQCg5fcG93ZXJfcGVyY2VudCJSChhTZXRDb29saW5nRGV2aWNlUmVzcG9uc2USNgoOY29vbGluZ19kZXZpY2UYASABKAsyHi5zY2hlbWEudjFhbHBoYTEuQ29vbGluZ0RldmljZSJLChlMaXN0Q29vbGluZ0RldmljZXNSZXF1ZXN0Ei4KCmZpZWxkX21hc2sYASABKAsyGi5nb29nbGUucHJvdG9idWYuRmllbGRNYXNrIlUKGkxpc3RDb29saW5nRGV2aWNlc1Jlc3BvbnNlEjcKD2Nvb2xpbmdfZGV2aWNlcxgBIAMoCzIeLnNjaGVtYS52MWFscGhhMS5Db29saW5nRGV2aWNlIoADChRUaGVybWFsRXZlbnRSZXNwb25zZRIbCgpldmVudF90eXBlGAEgASgJQge6SARyAhABEh8KDmNvbXBvbmVudF9uYW1lGAIgASgJQge6SARyAhABEhcKBmFjdGlvbhgDIAEoCUIHukgEcgIQARIPCgdzdWNjZXNzGAQgASgIEhoKDWVycm9yX21lc3NhZ2UYBSABKAlIAIgBARIYCgdtZXNzYWdlGAYgASgJQge6SARyAhABEi0KCXRpbWVzdGFtcBgHIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASUgoPYWRkaXRpb25hbF9kYXRhGAggAygLMjkuc2NoZW1hLnYxYWxwaGExLlRoZXJtYWxFdmVudFJlc3BvbnNlLkFkZGl0aW9uYWxEYXRhRW50cnkaNQoTQWRkaXRpb25hbERhdGFFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBQhAKDl9lcnJvcl9tZXNzYWdlKroBChFUaGVybWFsWm9uZVN0YXR1cxIjCh9USEVSTUFMX1pPTkVfU1RBVFVTX1VOU1BFQ0lGSUVEEAASHgoaVEhFUk1BTF9aT05FX1NUQVRVU19OT1JNQUwQARIfChtUSEVSTUFMX1pPTkVfU1RBVFVTX1dBUk5JTkcQAhIgChxUSEVSTUFMX1pPTkVfU1RBVFVTX0NSSVRJQ0FMEAMSHQoZVEhFUk1BTF9aT05FX1NUQVRVU19FUlJPUhAEKugBChFDb29saW5nRGV2aWNlVHlwZRIjCh9DT09MSU5HX0RFVklDRV9UWVBFX1VOU1BFQ0lGSUVEEAASGwoXQ09PTElOR19ERVZJQ0VfVFlQRV9GQU4QARIiCh5DT09MSU5HX0RFVklDRV9UWVBFX1dBVEVSX1BVTVAQAhImCiJDT09MSU5HX0RFVklDRV9UWVBFX0hFQVRfRVhDSEFOR0VSEAMSJQohQ09PTElOR19ERVZJQ0VfVFlQRV9MSVFVSURfQ09PTEVSEAQSHgoaQ09PTElOR19ERVZJQ0VfVFlQRV9CTE9XRVIQBSruAQoTQ29vbGluZ0RldmljZVN0YXR1cxIlCiFDT09MSU5HX0RFVklDRV9TVEFUVVNfVU5TUEVDSUZJRUQQABIhCh1DT09MSU5HX0RFVklDRV9TVEFUVVNfRU5BQkxFRBABEiIKHkNPT0xJTkdfREVWSUNFX1NUQVRVU19ESVNBQkxFRBACEiUKIUNPT0xJTkdfREVWSUNFX1NUQVRVU19OT1RfUFJFU0VOVBADEh8KG0NPT0xJTkdfREVWSUNFX1NUQVRVU19FUlJPUhAEEiEKHUNPT0xJTkdfREVWSUNFX1NUQVRVU19VTktOT1dOEAUqvwEKGENvb2xpbmdEZXZpY2VDb250cm9sTW9kZRIrCidDT09MSU5HX0RFVklDRV9DT05UUk9MX01PREVfVU5TUEVDSUZJRUQQABIpCiVDT09MSU5HX0RFVklDRV9DT05UUk9MX01PREVfQVVUT01BVElDEAESJgoiQ09PTElOR19ERVZJQ0VfQ09OVFJPTF9NT0RFX01BTlVBTBACEiMKH0NPT0xJTkdfREVWSUNFX0NPTlRST0xfTU9ERV9QSUQQAyrsAQoYQ29vbGluZ0RldmljZVByb2ZpbGVUeXBlEisKJ0NPT0xJTkdfREVWSUNFX1BST0ZJTEVfVFlQRV9VTlNQRUNJRklFRBAAEiUKIUNPT0xJTkdfREVWSUNFX1BST0ZJTEVfVFlQRV9RVUlFVBABEigKJENPT0xJTkdfREVWSUNFX1BST0ZJTEVfVFlQRV9CQUxBTkNFRBACEioKJkNPT0xJTkdfREVWSUNFX1BST0ZJTEVfVFlQRV9BR0dSRVNTSVZFEAMSJgoiQ09PTElOR19ERVZJQ0VfUFJPRklMRV9UWVBFX0NVU1RPTRAEQr8BChNjb20uc2NoZW1hLnYxYWxwaGExQgxUaGVybWFsUHJvdG9QAVo9Z2l0aHViLmNvbS91LWJtYy91LWJtYy9hcGkvZ2VuL3NjaGVtYS92MWFscGhhMTtzY2hlbWF2MWFscGhhMaICA1NYWKoCD1NjaGVtYS5WMWFscGhhMcoCD1NjaGVtYVxWMWFscGhhMeICG1NjaGVtYVxWMWFscGhhMVxHUEJNZXRhZGF0YeoCEFNjaGVtYTo6VjFhbHBoYTFiBnByb3RvMw", [file_buf_validate_validate, file_google_protobuf_field_mask, file_google_protobuf_timestamp, file_schema_v1alpha1_location, file_schema_v1alpha1_sensor]);
 
 /**
  * @generated from message schema.v1alpha1.ThermalZone
@@ -363,6 +363,303 @@ export type ListThermalZonesResponse = Message<"schema.v1alpha1.ListThermalZones
  */
 export const ListThermalZonesResponseSchema: GenMessage<ListThermalZonesResponse> = /*@__PURE__*/
   messageDesc(file_schema_v1alpha1_thermal, 9);
+
+/**
+ * @generated from message schema.v1alpha1.ThermalEmergencyAlert
+ */
+export type ThermalEmergencyAlert = Message<"schema.v1alpha1.ThermalEmergencyAlert"> & {
+  /**
+   * @generated from field: string type = 1;
+   */
+  type: string;
+
+  /**
+   * @generated from field: optional string sensor_id = 2;
+   */
+  sensorId?: string;
+
+  /**
+   * @generated from field: optional string sensor_name = 3;
+   */
+  sensorName?: string;
+
+  /**
+   * @generated from field: optional string zone_name = 4;
+   */
+  zoneName?: string;
+
+  /**
+   * @generated from field: double temperature = 5;
+   */
+  temperature: number;
+
+  /**
+   * @generated from field: optional double threshold = 6;
+   */
+  threshold?: number;
+
+  /**
+   * @generated from field: string severity = 7;
+   */
+  severity: string;
+
+  /**
+   * @generated from field: optional string action = 8;
+   */
+  action?: string;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp timestamp = 9;
+   */
+  timestamp?: Timestamp;
+
+  /**
+   * @generated from field: string message = 10;
+   */
+  message: string;
+};
+
+/**
+ * Describes the message schema.v1alpha1.ThermalEmergencyAlert.
+ * Use `create(ThermalEmergencyAlertSchema)` to create a new message.
+ */
+export const ThermalEmergencyAlertSchema: GenMessage<ThermalEmergencyAlert> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_thermal, 10);
+
+/**
+ * @generated from message schema.v1alpha1.ThermalZoneTemperatureRequest
+ */
+export type ThermalZoneTemperatureRequest = Message<"schema.v1alpha1.ThermalZoneTemperatureRequest"> & {
+  /**
+   * @generated from field: repeated string zone_names = 1;
+   */
+  zoneNames: string[];
+
+  /**
+   * @generated from field: optional bool include_sensor_details = 2;
+   */
+  includeSensorDetails?: boolean;
+};
+
+/**
+ * Describes the message schema.v1alpha1.ThermalZoneTemperatureRequest.
+ * Use `create(ThermalZoneTemperatureRequestSchema)` to create a new message.
+ */
+export const ThermalZoneTemperatureRequestSchema: GenMessage<ThermalZoneTemperatureRequest> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_thermal, 11);
+
+/**
+ * @generated from message schema.v1alpha1.ThermalZoneTemperatureResponse
+ */
+export type ThermalZoneTemperatureResponse = Message<"schema.v1alpha1.ThermalZoneTemperatureResponse"> & {
+  /**
+   * @generated from field: repeated schema.v1alpha1.ThermalZoneTemperature zone_temperatures = 1;
+   */
+  zoneTemperatures: ThermalZoneTemperature[];
+};
+
+/**
+ * Describes the message schema.v1alpha1.ThermalZoneTemperatureResponse.
+ * Use `create(ThermalZoneTemperatureResponseSchema)` to create a new message.
+ */
+export const ThermalZoneTemperatureResponseSchema: GenMessage<ThermalZoneTemperatureResponse> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_thermal, 12);
+
+/**
+ * @generated from message schema.v1alpha1.ThermalZoneTemperature
+ */
+export type ThermalZoneTemperature = Message<"schema.v1alpha1.ThermalZoneTemperature"> & {
+  /**
+   * @generated from field: string zone_name = 1;
+   */
+  zoneName: string;
+
+  /**
+   * @generated from field: double current_temperature = 2;
+   */
+  currentTemperature: number;
+
+  /**
+   * @generated from field: optional double target_temperature = 3;
+   */
+  targetTemperature?: number;
+
+  /**
+   * @generated from field: repeated string contributing_sensor_ids = 4;
+   */
+  contributingSensorIds: string[];
+
+  /**
+   * @generated from field: google.protobuf.Timestamp last_updated = 5;
+   */
+  lastUpdated?: Timestamp;
+};
+
+/**
+ * Describes the message schema.v1alpha1.ThermalZoneTemperature.
+ * Use `create(ThermalZoneTemperatureSchema)` to create a new message.
+ */
+export const ThermalZoneTemperatureSchema: GenMessage<ThermalZoneTemperature> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_thermal, 13);
+
+/**
+ * @generated from message schema.v1alpha1.GetCoolingDeviceRequest
+ */
+export type GetCoolingDeviceRequest = Message<"schema.v1alpha1.GetCoolingDeviceRequest"> & {
+  /**
+   * @generated from field: string name = 1;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message schema.v1alpha1.GetCoolingDeviceRequest.
+ * Use `create(GetCoolingDeviceRequestSchema)` to create a new message.
+ */
+export const GetCoolingDeviceRequestSchema: GenMessage<GetCoolingDeviceRequest> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_thermal, 14);
+
+/**
+ * @generated from message schema.v1alpha1.GetCoolingDeviceResponse
+ */
+export type GetCoolingDeviceResponse = Message<"schema.v1alpha1.GetCoolingDeviceResponse"> & {
+  /**
+   * @generated from field: schema.v1alpha1.CoolingDevice cooling_device = 1;
+   */
+  coolingDevice?: CoolingDevice;
+};
+
+/**
+ * Describes the message schema.v1alpha1.GetCoolingDeviceResponse.
+ * Use `create(GetCoolingDeviceResponseSchema)` to create a new message.
+ */
+export const GetCoolingDeviceResponseSchema: GenMessage<GetCoolingDeviceResponse> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_thermal, 15);
+
+/**
+ * @generated from message schema.v1alpha1.SetCoolingDeviceRequest
+ */
+export type SetCoolingDeviceRequest = Message<"schema.v1alpha1.SetCoolingDeviceRequest"> & {
+  /**
+   * @generated from field: string name = 1;
+   */
+  name: string;
+
+  /**
+   * @generated from field: optional double power_percent = 2;
+   */
+  powerPercent?: number;
+};
+
+/**
+ * Describes the message schema.v1alpha1.SetCoolingDeviceRequest.
+ * Use `create(SetCoolingDeviceRequestSchema)` to create a new message.
+ */
+export const SetCoolingDeviceRequestSchema: GenMessage<SetCoolingDeviceRequest> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_thermal, 16);
+
+/**
+ * @generated from message schema.v1alpha1.SetCoolingDeviceResponse
+ */
+export type SetCoolingDeviceResponse = Message<"schema.v1alpha1.SetCoolingDeviceResponse"> & {
+  /**
+   * @generated from field: schema.v1alpha1.CoolingDevice cooling_device = 1;
+   */
+  coolingDevice?: CoolingDevice;
+};
+
+/**
+ * Describes the message schema.v1alpha1.SetCoolingDeviceResponse.
+ * Use `create(SetCoolingDeviceResponseSchema)` to create a new message.
+ */
+export const SetCoolingDeviceResponseSchema: GenMessage<SetCoolingDeviceResponse> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_thermal, 17);
+
+/**
+ * @generated from message schema.v1alpha1.ListCoolingDevicesRequest
+ */
+export type ListCoolingDevicesRequest = Message<"schema.v1alpha1.ListCoolingDevicesRequest"> & {
+  /**
+   * @generated from field: google.protobuf.FieldMask field_mask = 1;
+   */
+  fieldMask?: FieldMask;
+};
+
+/**
+ * Describes the message schema.v1alpha1.ListCoolingDevicesRequest.
+ * Use `create(ListCoolingDevicesRequestSchema)` to create a new message.
+ */
+export const ListCoolingDevicesRequestSchema: GenMessage<ListCoolingDevicesRequest> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_thermal, 18);
+
+/**
+ * @generated from message schema.v1alpha1.ListCoolingDevicesResponse
+ */
+export type ListCoolingDevicesResponse = Message<"schema.v1alpha1.ListCoolingDevicesResponse"> & {
+  /**
+   * @generated from field: repeated schema.v1alpha1.CoolingDevice cooling_devices = 1;
+   */
+  coolingDevices: CoolingDevice[];
+};
+
+/**
+ * Describes the message schema.v1alpha1.ListCoolingDevicesResponse.
+ * Use `create(ListCoolingDevicesResponseSchema)` to create a new message.
+ */
+export const ListCoolingDevicesResponseSchema: GenMessage<ListCoolingDevicesResponse> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_thermal, 19);
+
+/**
+ * @generated from message schema.v1alpha1.ThermalEventResponse
+ */
+export type ThermalEventResponse = Message<"schema.v1alpha1.ThermalEventResponse"> & {
+  /**
+   * @generated from field: string event_type = 1;
+   */
+  eventType: string;
+
+  /**
+   * @generated from field: string component_name = 2;
+   */
+  componentName: string;
+
+  /**
+   * @generated from field: string action = 3;
+   */
+  action: string;
+
+  /**
+   * @generated from field: bool success = 4;
+   */
+  success: boolean;
+
+  /**
+   * @generated from field: optional string error_message = 5;
+   */
+  errorMessage?: string;
+
+  /**
+   * @generated from field: string message = 6;
+   */
+  message: string;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp timestamp = 7;
+   */
+  timestamp?: Timestamp;
+
+  /**
+   * @generated from field: map<string, string> additional_data = 8;
+   */
+  additionalData: { [key: string]: string };
+};
+
+/**
+ * Describes the message schema.v1alpha1.ThermalEventResponse.
+ * Use `create(ThermalEventResponseSchema)` to create a new message.
+ */
+export const ThermalEventResponseSchema: GenMessage<ThermalEventResponse> = /*@__PURE__*/
+  messageDesc(file_schema_v1alpha1_thermal, 20);
 
 /**
  * @generated from enum schema.v1alpha1.ThermalZoneStatus
