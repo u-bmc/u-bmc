@@ -4,26 +4,16 @@ package powermgr
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/nats-io/nats.go"
+	v1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// ThermalEmergencyAlert represents a thermal emergency alert from sensormon or thermalmgr.
-type ThermalEmergencyAlert struct {
-	Type        string    `json:"type"`
-	SensorID    string    `json:"sensor_id,omitempty"`
-	SensorName  string    `json:"sensor_name,omitempty"`
-	ZoneName    string    `json:"zone_name,omitempty"`
-	Temperature float64   `json:"temperature"`
-	Threshold   float64   `json:"threshold,omitempty"`
-	Severity    string    `json:"severity"`
-	Action      string    `json:"action,omitempty"`
-	Timestamp   time.Time `json:"timestamp"`
-	Message     string    `json:"message"`
-}
+// ThermalEmergencyAlert is an alias for the protobuf message.
+type ThermalEmergencyAlert = v1alpha1.ThermalEmergencyAlert
 
 // ThermalEmergencyConfig holds thermal emergency response configuration.
 type ThermalEmergencyConfig struct {
@@ -88,20 +78,20 @@ func (p *PowerMgr) handleThermalEmergencyAlert(msg *nats.Msg) {
 	ctx := context.Background()
 
 	var alert ThermalEmergencyAlert
-	if err := json.Unmarshal(msg.Data, &alert); err != nil {
+	if err := alert.UnmarshalVT(msg.Data); err != nil {
 		p.logger.WarnContext(ctx, "Invalid thermal emergency alert",
 			"subject", msg.Subject,
 			"error", err)
 		return
 	}
 
-	p.logger.ErrorContext(ctx, "Thermal emergency alert received",
+	p.logger.InfoContext(ctx, "Thermal emergency alert received",
 		"type", alert.Type,
-		"sensor_id", alert.SensorID,
-		"sensor_name", alert.SensorName,
-		"zone_name", alert.ZoneName,
+		"sensor_id", alert.GetSensorId(),
+		"sensor_name", alert.GetSensorName(),
+		"zone_name", alert.GetZoneName(),
 		"temperature", alert.Temperature,
-		"threshold", alert.Threshold,
+		"threshold", alert.GetThreshold(),
 		"severity", alert.Severity,
 		"message", alert.Message)
 
@@ -118,7 +108,7 @@ func (p *PowerMgr) handleThermalEmergencyRequest(msg *nats.Msg) {
 	ctx := context.Background()
 
 	var request ThermalEmergencyAlert
-	if err := json.Unmarshal(msg.Data, &request); err != nil {
+	if err := request.UnmarshalVT(msg.Data); err != nil {
 		p.logger.WarnContext(ctx, "Invalid thermal emergency request",
 			"subject", msg.Subject,
 			"error", err)
@@ -169,7 +159,7 @@ func (p *PowerMgr) processThermalEmergency(ctx context.Context, alert *ThermalEm
 
 // processThermalEmergencyRequest processes a direct thermal emergency request.
 func (p *PowerMgr) processThermalEmergencyRequest(ctx context.Context, request *ThermalEmergencyAlert) error {
-	switch request.Action {
+	switch *request.Action {
 	case "emergency_shutdown":
 		p.logger.ErrorContext(ctx, "Emergency shutdown requested by thermal manager",
 			"zone_name", request.ZoneName,
@@ -230,15 +220,21 @@ func (p *PowerMgr) performEmergencyShutdown(ctx context.Context, alert *ThermalE
 	}
 
 	// Send confirmation message
-	response := map[string]interface{}{
-		"action":              "emergency_shutdown_completed",
-		"components_shutdown": shutdownCount,
-		"total_components":    len(p.config.shutdownComponents),
-		"temperature":         alert.Temperature,
-		"timestamp":           time.Now().Format(time.RFC3339),
+	response := &v1alpha1.ThermalEventResponse{
+		EventType:     "emergency_shutdown_completed",
+		ComponentName: fmt.Sprintf("%d_components", shutdownCount),
+		Action:        "emergency_shutdown",
+		Success:       true,
+		Message:       fmt.Sprintf("Emergency shutdown completed for %d/%d components", shutdownCount, len(p.config.shutdownComponents)),
+		Timestamp:     timestamppb.Now(),
+		AdditionalData: map[string]string{
+			"components_shutdown": fmt.Sprintf("%d", shutdownCount),
+			"total_components":    fmt.Sprintf("%d", len(p.config.shutdownComponents)),
+			"temperature":         fmt.Sprintf("%.2f", alert.Temperature),
+		},
 	}
 
-	if responseData, err := json.Marshal(response); err == nil {
+	if responseData, err := response.MarshalVT(); err == nil {
 		if err := p.nc.Publish("powermgr.events.thermal_shutdown", responseData); err != nil {
 			p.logger.WarnContext(ctx, "Failed to publish thermal shutdown event",
 				"error", err)
@@ -264,15 +260,21 @@ func (p *PowerMgr) performPowerThrottling(ctx context.Context, request *ThermalE
 	// This is a placeholder for such functionality.
 
 	// Send response indicating throttling action
-	response := map[string]interface{}{
-		"action":      "power_throttle_applied",
-		"zone_name":   request.ZoneName,
-		"temperature": request.Temperature,
-		"timestamp":   time.Now().Format(time.RFC3339),
-		"message":     "Power throttling applied for thermal management",
+	// Send throttling notification
+	response := &v1alpha1.ThermalEventResponse{
+		EventType:     "power_throttling_applied",
+		ComponentName: request.GetZoneName(),
+		Action:        "power_throttling",
+		Success:       true,
+		Message:       "Power throttling applied for thermal management",
+		Timestamp:     timestamppb.Now(),
+		AdditionalData: map[string]string{
+			"zone_name":   request.GetZoneName(),
+			"temperature": fmt.Sprintf("%.2f", request.Temperature),
+		},
 	}
 
-	if responseData, err := json.Marshal(response); err == nil {
+	if responseData, err := response.MarshalVT(); err == nil {
 		if err := p.nc.Publish("powermgr.events.thermal_throttle", responseData); err != nil {
 			p.logger.WarnContext(ctx, "Failed to publish thermal throttle event",
 				"error", err)
@@ -312,16 +314,22 @@ func (p *PowerMgr) performImmediateShutdown(ctx context.Context, request *Therma
 	}
 
 	// Send confirmation message
-	response := map[string]interface{}{
-		"action":              "immediate_shutdown_completed",
-		"components_shutdown": shutdownCount,
-		"total_components":    len(p.config.shutdownComponents),
-		"zone_name":           request.ZoneName,
-		"temperature":         request.Temperature,
-		"timestamp":           time.Now().Format(time.RFC3339),
+	// Send immediate shutdown notification
+	response := &v1alpha1.ThermalEventResponse{
+		EventType:     "immediate_shutdown_completed",
+		ComponentName: fmt.Sprintf("%d_components", shutdownCount),
+		Action:        "immediate_shutdown",
+		Success:       true,
+		Message:       fmt.Sprintf("Immediate shutdown completed for %d/%d components", shutdownCount, len(p.config.shutdownComponents)),
+		Timestamp:     timestamppb.Now(),
+		AdditionalData: map[string]string{
+			"components_shutdown": fmt.Sprintf("%d", shutdownCount),
+			"total_components":    fmt.Sprintf("%d", len(p.config.shutdownComponents)),
+			"temperature":         fmt.Sprintf("%.2f", request.Temperature),
+		},
 	}
 
-	if responseData, err := json.Marshal(response); err == nil {
+	if responseData, err := response.MarshalVT(); err == nil {
 		if err := p.nc.Publish("powermgr.events.immediate_shutdown", responseData); err != nil {
 			p.logger.WarnContext(ctx, "Failed to publish immediate shutdown event",
 				"error", err)

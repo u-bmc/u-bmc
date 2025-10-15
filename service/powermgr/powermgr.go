@@ -709,6 +709,11 @@ func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 		return err
 	}
 
+	if err := p.subscribeInternalSubjects(ctx); err != nil {
+		span.RecordError(err)
+		return err
+	}
+
 	p.logger.InfoContext(ctx, "Power manager service started successfully",
 		"endpoints_registered", true,
 		"backends_initialized", len(p.backends))
@@ -829,6 +834,87 @@ func (p *PowerMgr) registerEndpoints(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// subscribeInternalSubjects subscribes to internal coordination subjects.
+func (p *PowerMgr) subscribeInternalSubjects(ctx context.Context) error {
+	// Subscribe to internal power action requests from statemgr
+	if _, err := p.nc.Subscribe(ipc.InternalPowerAction, p.handleInternalPowerAction); err != nil {
+		return fmt.Errorf("failed to subscribe to internal power action: %w", err)
+	}
+
+	p.logger.InfoContext(ctx, "Subscribed to internal coordination subjects",
+		"power_actions", ipc.InternalPowerAction)
+
+	return nil
+}
+
+// handleInternalPowerAction handles internal power action requests from statemgr.
+func (p *PowerMgr) handleInternalPowerAction(msg *nats.Msg) {
+	ctx := context.Background()
+
+	var request v1alpha1.PowerControlRequest
+	if err := proto.Unmarshal(msg.Data, &request); err != nil {
+		p.logger.WarnContext(ctx, "Invalid internal power control request", "error", err)
+		return
+	}
+
+	componentName := request.ComponentName
+	action := request.Action
+
+	p.logger.InfoContext(ctx, "Received internal power action request",
+		"component", componentName,
+		"action", action)
+
+	var err error
+	switch action {
+	case "power_on":
+		err = p.performPowerAction(ctx, componentName, "on", false)
+	case "power_off":
+		err = p.performPowerAction(ctx, componentName, "off", false)
+	case "force_off":
+		err = p.performPowerAction(ctx, componentName, "off", true)
+	case "reset":
+		err = p.performPowerAction(ctx, componentName, "reset", false)
+	default:
+		p.logger.WarnContext(ctx, "Unknown power action",
+			"component", componentName,
+			"action", action)
+		return
+	}
+
+	// Report the result back to statemgr
+	p.reportStateChange(ctx, componentName, action, err == nil)
+
+	if err != nil {
+		p.logger.ErrorContext(ctx, "Internal power action failed",
+			"component", componentName,
+			"action", action,
+			"error", err)
+	} else {
+		p.logger.InfoContext(ctx, "Internal power action completed",
+			"component", componentName,
+			"action", action)
+	}
+}
+
+// performPowerAction performs a power action on a component using the appropriate backend.
+func (p *PowerMgr) performPowerAction(ctx context.Context, componentName, action string, force bool) error {
+	backend, err := p.getBackendForComponent(componentName)
+	if err != nil {
+		return fmt.Errorf("backend not configured for component %s: %w", componentName, err)
+	}
+
+	switch action {
+	case "on", "power_on":
+		return backend.PowerOn(ctx, componentName)
+	case "off", "power_off":
+		return backend.PowerOff(ctx, componentName, force)
+	case "reset", "reboot":
+		return backend.Reset(ctx, componentName)
+	default:
+		return fmt.Errorf("unsupported power action: %s", action)
+	}
 }
 
 // handleGeneralPowerAction is a general handler that dispatches to specific component handlers
@@ -996,8 +1082,8 @@ func (p *PowerMgr) reportStateChange(ctx context.Context, componentName, operati
 		return
 	}
 
-	// Send power operation result to statemgr via NATS
-	subject := fmt.Sprintf("%s.%s.power.result", p.config.stateReportingSubjectPrefix, componentName)
+	// Send power operation result to statemgr via NATS using internal coordination subject
+	subject := ipc.InternalPowerResult
 
 	// Create protobuf message for power operation results
 	result := &v1alpha1.PowerOperationResult{
