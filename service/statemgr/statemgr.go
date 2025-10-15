@@ -679,9 +679,9 @@ func (s *StateMgr) handlePowerOperationResult(ctx context.Context, msg *nats.Msg
 
 	var trigger string
 	if result.Success {
-		trigger = fmt.Sprintf("%s_completed", result.Operation)
+		trigger = s.mapOperationToSuccessTrigger(result.ComponentName, result.Operation)
 	} else {
-		trigger = fmt.Sprintf("%s_failed", result.Operation)
+		trigger = s.mapOperationToFailureTrigger(result.ComponentName, result.Operation)
 	}
 
 	if err := sm.Fire(ctx, trigger); err != nil {
@@ -693,6 +693,58 @@ func (s *StateMgr) handlePowerOperationResult(ctx context.Context, msg *nats.Msg
 	}
 
 	s.sendStateTransitionNotification(ctx, result.ComponentName, result.Operation, result.Success)
+}
+
+// mapOperationToSuccessTrigger maps a power operation to the correct success trigger for the component type.
+func (s *StateMgr) mapOperationToSuccessTrigger(componentName, operation string) string {
+	if s.isHostComponent(componentName) {
+		switch operation {
+		case "power_on":
+			return hostTriggerTransitionCompleteOn
+		case "power_off", "force_off":
+			return hostTriggerTransitionCompleteOff
+		case "reboot", "reset", "force_restart":
+			return hostTriggerTransitionCompleteOn
+		default:
+			return hostTriggerTransitionCompleteOn
+		}
+	}
+	if s.isChassisComponent(componentName) {
+		switch operation {
+		case "power_on":
+			return chassisTriggerTransitionCompleteOn
+		case "power_off", "force_off":
+			return chassisTriggerTransitionCompleteOff
+		case "reboot", "reset", "force_restart":
+			return chassisTriggerTransitionCompleteOn
+		default:
+			return chassisTriggerTransitionCompleteOn
+		}
+	}
+	// For other components, use generic triggers
+	return fmt.Sprintf("%s_completed", operation)
+}
+
+// mapOperationToFailureTrigger maps a power operation to the correct failure trigger for the component type.
+func (s *StateMgr) mapOperationToFailureTrigger(componentName, operation string) string {
+	if s.isHostComponent(componentName) {
+		return hostTriggerTransitionError
+	}
+	if s.isChassisComponent(componentName) {
+		return chassisTriggerTransitionFailed
+	}
+	// For other components, use generic triggers
+	return fmt.Sprintf("%s_failed", operation)
+}
+
+// isHostComponent checks if a component is a host component based on its name.
+func (s *StateMgr) isHostComponent(componentName string) bool {
+	return strings.HasPrefix(componentName, "host.")
+}
+
+// isChassisComponent checks if a component is a chassis component based on its name.
+func (s *StateMgr) isChassisComponent(componentName string) bool {
+	return strings.HasPrefix(componentName, "chassis.")
 }
 
 func (s *StateMgr) sendStateTransitionNotification(ctx context.Context, componentName, operation string, success bool) {
