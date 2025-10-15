@@ -901,6 +901,430 @@ func (x *GetSensorResponse) GetSensors() []*Sensor {
 	return nil
 }
 
+type SensorAlert struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
+	SensorId      string                 `protobuf:"bytes,2,opt,name=sensor_id,json=sensorId,proto3" json:"sensor_id,omitempty"`
+	SensorName    string                 `protobuf:"bytes,3,opt,name=sensor_name,json=sensorName,proto3" json:"sensor_name,omitempty"`
+	Value         float64                `protobuf:"fixed64,4,opt,name=value,proto3" json:"value,omitempty"`
+	Threshold     *float64               `protobuf:"fixed64,5,opt,name=threshold,proto3,oneof" json:"threshold,omitempty"`
+	Severity      string                 `protobuf:"bytes,6,opt,name=severity,proto3" json:"severity,omitempty"`
+	ZoneName      *string                `protobuf:"bytes,7,opt,name=zone_name,json=zoneName,proto3,oneof" json:"zone_name,omitempty"`
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Message       string                 `protobuf:"bytes,9,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SensorAlert) Reset() {
+	*x = SensorAlert{}
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SensorAlert) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SensorAlert) ProtoMessage() {}
+
+func (x *SensorAlert) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SensorAlert.ProtoReflect.Descriptor instead.
+func (*SensorAlert) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *SensorAlert) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *SensorAlert) GetSensorId() string {
+	if x != nil {
+		return x.SensorId
+	}
+	return ""
+}
+
+func (x *SensorAlert) GetSensorName() string {
+	if x != nil {
+		return x.SensorName
+	}
+	return ""
+}
+
+func (x *SensorAlert) GetValue() float64 {
+	if x != nil {
+		return x.Value
+	}
+	return 0
+}
+
+func (x *SensorAlert) GetThreshold() float64 {
+	if x != nil && x.Threshold != nil {
+		return *x.Threshold
+	}
+	return 0
+}
+
+func (x *SensorAlert) GetSeverity() string {
+	if x != nil {
+		return x.Severity
+	}
+	return ""
+}
+
+func (x *SensorAlert) GetZoneName() string {
+	if x != nil && x.ZoneName != nil {
+		return *x.ZoneName
+	}
+	return ""
+}
+
+func (x *SensorAlert) GetTimestamp() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Timestamp
+	}
+	return nil
+}
+
+func (x *SensorAlert) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+type SensorReading struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SensorId      string                 `protobuf:"bytes,1,opt,name=sensor_id,json=sensorId,proto3" json:"sensor_id,omitempty"`
+	SensorName    string                 `protobuf:"bytes,2,opt,name=sensor_name,json=sensorName,proto3" json:"sensor_name,omitempty"`
+	Value         float64                `protobuf:"fixed64,3,opt,name=value,proto3" json:"value,omitempty"`
+	Unit          string                 `protobuf:"bytes,4,opt,name=unit,proto3" json:"unit,omitempty"`
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Location      *string                `protobuf:"bytes,6,opt,name=location,proto3,oneof" json:"location,omitempty"`
+	ZoneName      *string                `protobuf:"bytes,7,opt,name=zone_name,json=zoneName,proto3,oneof" json:"zone_name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SensorReading) Reset() {
+	*x = SensorReading{}
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SensorReading) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SensorReading) ProtoMessage() {}
+
+func (x *SensorReading) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SensorReading.ProtoReflect.Descriptor instead.
+func (*SensorReading) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *SensorReading) GetSensorId() string {
+	if x != nil {
+		return x.SensorId
+	}
+	return ""
+}
+
+func (x *SensorReading) GetSensorName() string {
+	if x != nil {
+		return x.SensorName
+	}
+	return ""
+}
+
+func (x *SensorReading) GetValue() float64 {
+	if x != nil {
+		return x.Value
+	}
+	return 0
+}
+
+func (x *SensorReading) GetUnit() string {
+	if x != nil {
+		return x.Unit
+	}
+	return ""
+}
+
+func (x *SensorReading) GetTimestamp() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Timestamp
+	}
+	return nil
+}
+
+func (x *SensorReading) GetLocation() string {
+	if x != nil && x.Location != nil {
+		return *x.Location
+	}
+	return ""
+}
+
+func (x *SensorReading) GetZoneName() string {
+	if x != nil && x.ZoneName != nil {
+		return *x.ZoneName
+	}
+	return ""
+}
+
+type SensorDataRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SensorIds     []string               `protobuf:"bytes,1,rep,name=sensor_ids,json=sensorIds,proto3" json:"sensor_ids,omitempty"`
+	ZoneName      *string                `protobuf:"bytes,2,opt,name=zone_name,json=zoneName,proto3,oneof" json:"zone_name,omitempty"`
+	ContextFilter *SensorContext         `protobuf:"varint,3,opt,name=context_filter,json=contextFilter,proto3,enum=schema.v1alpha1.SensorContext,oneof" json:"context_filter,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SensorDataRequest) Reset() {
+	*x = SensorDataRequest{}
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SensorDataRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SensorDataRequest) ProtoMessage() {}
+
+func (x *SensorDataRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SensorDataRequest.ProtoReflect.Descriptor instead.
+func (*SensorDataRequest) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *SensorDataRequest) GetSensorIds() []string {
+	if x != nil {
+		return x.SensorIds
+	}
+	return nil
+}
+
+func (x *SensorDataRequest) GetZoneName() string {
+	if x != nil && x.ZoneName != nil {
+		return *x.ZoneName
+	}
+	return ""
+}
+
+func (x *SensorDataRequest) GetContextFilter() SensorContext {
+	if x != nil && x.ContextFilter != nil {
+		return *x.ContextFilter
+	}
+	return SensorContext_SENSOR_CONTEXT_UNSPECIFIED
+}
+
+type SensorDataResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Readings      []*SensorReading       `protobuf:"bytes,1,rep,name=readings,proto3" json:"readings,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SensorDataResponse) Reset() {
+	*x = SensorDataResponse{}
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SensorDataResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SensorDataResponse) ProtoMessage() {}
+
+func (x *SensorDataResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SensorDataResponse.ProtoReflect.Descriptor instead.
+func (*SensorDataResponse) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *SensorDataResponse) GetReadings() []*SensorReading {
+	if x != nil {
+		return x.Readings
+	}
+	return nil
+}
+
+type SensorConfigRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Action        string                 `protobuf:"bytes,1,opt,name=action,proto3" json:"action,omitempty"`
+	SensorId      string                 `protobuf:"bytes,2,opt,name=sensor_id,json=sensorId,proto3" json:"sensor_id,omitempty"`
+	ZoneName      *string                `protobuf:"bytes,3,opt,name=zone_name,json=zoneName,proto3,oneof" json:"zone_name,omitempty"`
+	Attributes    map[string]string      `protobuf:"bytes,4,rep,name=attributes,proto3" json:"attributes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SensorConfigRequest) Reset() {
+	*x = SensorConfigRequest{}
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SensorConfigRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SensorConfigRequest) ProtoMessage() {}
+
+func (x *SensorConfigRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SensorConfigRequest.ProtoReflect.Descriptor instead.
+func (*SensorConfigRequest) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *SensorConfigRequest) GetAction() string {
+	if x != nil {
+		return x.Action
+	}
+	return ""
+}
+
+func (x *SensorConfigRequest) GetSensorId() string {
+	if x != nil {
+		return x.SensorId
+	}
+	return ""
+}
+
+func (x *SensorConfigRequest) GetZoneName() string {
+	if x != nil && x.ZoneName != nil {
+		return *x.ZoneName
+	}
+	return ""
+}
+
+func (x *SensorConfigRequest) GetAttributes() map[string]string {
+	if x != nil {
+		return x.Attributes
+	}
+	return nil
+}
+
+type SensorConfigResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	ErrorMessage  *string                `protobuf:"bytes,2,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SensorConfigResponse) Reset() {
+	*x = SensorConfigResponse{}
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SensorConfigResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SensorConfigResponse) ProtoMessage() {}
+
+func (x *SensorConfigResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1alpha1_sensor_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SensorConfigResponse.ProtoReflect.Descriptor instead.
+func (*SensorConfigResponse) Descriptor() ([]byte, []int) {
+	return file_schema_v1alpha1_sensor_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *SensorConfigResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *SensorConfigResponse) GetErrorMessage() string {
+	if x != nil && x.ErrorMessage != nil {
+		return *x.ErrorMessage
+	}
+	return ""
+}
+
 var File_schema_v1alpha1_sensor_proto protoreflect.FileDescriptor
 
 const file_schema_v1alpha1_sensor_proto_rawDesc = "" +
@@ -978,7 +1402,60 @@ const file_schema_v1alpha1_sensor_proto_rawDesc = "" +
 	"\n" +
 	"identifier\x12\x05\xbaH\x02\b\x01\"F\n" +
 	"\x11GetSensorResponse\x121\n" +
-	"\asensors\x18\x01 \x03(\v2\x17.schema.v1alpha1.SensorR\asensors*\xca\x02\n" +
+	"\asensors\x18\x01 \x03(\v2\x17.schema.v1alpha1.SensorR\asensors\"\xf3\x02\n" +
+	"\vSensorAlert\x12\x1b\n" +
+	"\x04type\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04type\x12$\n" +
+	"\tsensor_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bsensorId\x12(\n" +
+	"\vsensor_name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\n" +
+	"sensorName\x12\x14\n" +
+	"\x05value\x18\x04 \x01(\x01R\x05value\x12!\n" +
+	"\tthreshold\x18\x05 \x01(\x01H\x00R\tthreshold\x88\x01\x01\x12#\n" +
+	"\bseverity\x18\x06 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bseverity\x12 \n" +
+	"\tzone_name\x18\a \x01(\tH\x01R\bzoneName\x88\x01\x01\x128\n" +
+	"\ttimestamp\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12!\n" +
+	"\amessage\x18\t \x01(\tB\a\xbaH\x04r\x02\x10\x01R\amessageB\f\n" +
+	"\n" +
+	"_thresholdB\f\n" +
+	"\n" +
+	"_zone_name\"\xaa\x02\n" +
+	"\rSensorReading\x12$\n" +
+	"\tsensor_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bsensorId\x12(\n" +
+	"\vsensor_name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\n" +
+	"sensorName\x12\x14\n" +
+	"\x05value\x18\x03 \x01(\x01R\x05value\x12\x1b\n" +
+	"\x04unit\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04unit\x128\n" +
+	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x1f\n" +
+	"\blocation\x18\x06 \x01(\tH\x00R\blocation\x88\x01\x01\x12 \n" +
+	"\tzone_name\x18\a \x01(\tH\x01R\bzoneName\x88\x01\x01B\v\n" +
+	"\t_locationB\f\n" +
+	"\n" +
+	"_zone_name\"\xcb\x01\n" +
+	"\x11SensorDataRequest\x12\x1d\n" +
+	"\n" +
+	"sensor_ids\x18\x01 \x03(\tR\tsensorIds\x12 \n" +
+	"\tzone_name\x18\x02 \x01(\tH\x00R\bzoneName\x88\x01\x01\x12T\n" +
+	"\x0econtext_filter\x18\x03 \x01(\x0e2\x1e.schema.v1alpha1.SensorContextB\b\xbaH\x05\x82\x01\x02\x10\x01H\x01R\rcontextFilter\x88\x01\x01B\f\n" +
+	"\n" +
+	"_zone_nameB\x11\n" +
+	"\x0f_context_filter\"P\n" +
+	"\x12SensorDataResponse\x12:\n" +
+	"\breadings\x18\x01 \x03(\v2\x1e.schema.v1alpha1.SensorReadingR\breadings\"\xa1\x02\n" +
+	"\x13SensorConfigRequest\x12\x1f\n" +
+	"\x06action\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06action\x12$\n" +
+	"\tsensor_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bsensorId\x12 \n" +
+	"\tzone_name\x18\x03 \x01(\tH\x00R\bzoneName\x88\x01\x01\x12T\n" +
+	"\n" +
+	"attributes\x18\x04 \x03(\v24.schema.v1alpha1.SensorConfigRequest.AttributesEntryR\n" +
+	"attributes\x1a=\n" +
+	"\x0fAttributesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\f\n" +
+	"\n" +
+	"_zone_name\"l\n" +
+	"\x14SensorConfigResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12(\n" +
+	"\rerror_message\x18\x02 \x01(\tH\x00R\ferrorMessage\x88\x01\x01B\x10\n" +
+	"\x0e_error_message*\xca\x02\n" +
 	"\rSensorContext\x12\x1e\n" +
 	"\x1aSENSOR_CONTEXT_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aSENSOR_CONTEXT_TEMPERATURE\x10\x01\x12\x1a\n" +
@@ -1033,7 +1510,7 @@ func file_schema_v1alpha1_sensor_proto_rawDescGZIP() []byte {
 }
 
 var file_schema_v1alpha1_sensor_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_schema_v1alpha1_sensor_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_schema_v1alpha1_sensor_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_schema_v1alpha1_sensor_proto_goTypes = []any{
 	(SensorContext)(0),            // 0: schema.v1alpha1.SensorContext
 	(SensorStatus)(0),             // 1: schema.v1alpha1.SensorStatus
@@ -1047,10 +1524,17 @@ var file_schema_v1alpha1_sensor_proto_goTypes = []any{
 	(*ListSensorsResponse)(nil),   // 9: schema.v1alpha1.ListSensorsResponse
 	(*GetSensorRequest)(nil),      // 10: schema.v1alpha1.GetSensorRequest
 	(*GetSensorResponse)(nil),     // 11: schema.v1alpha1.GetSensorResponse
-	nil,                           // 12: schema.v1alpha1.Sensor.CustomAttributesEntry
-	(*Location)(nil),              // 13: schema.v1alpha1.Location
-	(*timestamppb.Timestamp)(nil), // 14: google.protobuf.Timestamp
-	(*fieldmaskpb.FieldMask)(nil), // 15: google.protobuf.FieldMask
+	(*SensorAlert)(nil),           // 12: schema.v1alpha1.SensorAlert
+	(*SensorReading)(nil),         // 13: schema.v1alpha1.SensorReading
+	(*SensorDataRequest)(nil),     // 14: schema.v1alpha1.SensorDataRequest
+	(*SensorDataResponse)(nil),    // 15: schema.v1alpha1.SensorDataResponse
+	(*SensorConfigRequest)(nil),   // 16: schema.v1alpha1.SensorConfigRequest
+	(*SensorConfigResponse)(nil),  // 17: schema.v1alpha1.SensorConfigResponse
+	nil,                           // 18: schema.v1alpha1.Sensor.CustomAttributesEntry
+	nil,                           // 19: schema.v1alpha1.SensorConfigRequest.AttributesEntry
+	(*Location)(nil),              // 20: schema.v1alpha1.Location
+	(*timestamppb.Timestamp)(nil), // 21: google.protobuf.Timestamp
+	(*fieldmaskpb.FieldMask)(nil), // 22: google.protobuf.FieldMask
 }
 var file_schema_v1alpha1_sensor_proto_depIdxs = []int32{
 	0,  // 0: schema.v1alpha1.Sensor.context:type_name -> schema.v1alpha1.SensorContext
@@ -1058,26 +1542,31 @@ var file_schema_v1alpha1_sensor_proto_depIdxs = []int32{
 	2,  // 2: schema.v1alpha1.Sensor.unit:type_name -> schema.v1alpha1.SensorUnit
 	4,  // 3: schema.v1alpha1.Sensor.analog_reading:type_name -> schema.v1alpha1.AnalogSensorReading
 	5,  // 4: schema.v1alpha1.Sensor.discrete_reading:type_name -> schema.v1alpha1.DiscreteSensorReading
-	13, // 5: schema.v1alpha1.Sensor.location:type_name -> schema.v1alpha1.Location
-	14, // 6: schema.v1alpha1.Sensor.last_reading_timestamp:type_name -> google.protobuf.Timestamp
-	12, // 7: schema.v1alpha1.Sensor.custom_attributes:type_name -> schema.v1alpha1.Sensor.CustomAttributesEntry
+	20, // 5: schema.v1alpha1.Sensor.location:type_name -> schema.v1alpha1.Location
+	21, // 6: schema.v1alpha1.Sensor.last_reading_timestamp:type_name -> google.protobuf.Timestamp
+	18, // 7: schema.v1alpha1.Sensor.custom_attributes:type_name -> schema.v1alpha1.Sensor.CustomAttributesEntry
 	6,  // 8: schema.v1alpha1.AnalogSensorReading.upper_thresholds:type_name -> schema.v1alpha1.Threshold
 	6,  // 9: schema.v1alpha1.AnalogSensorReading.lower_thresholds:type_name -> schema.v1alpha1.Threshold
 	7,  // 10: schema.v1alpha1.AnalogSensorReading.min_max_recorded:type_name -> schema.v1alpha1.MinMaxRecorded
-	14, // 11: schema.v1alpha1.MinMaxRecorded.min_timestamp:type_name -> google.protobuf.Timestamp
-	14, // 12: schema.v1alpha1.MinMaxRecorded.max_timestamp:type_name -> google.protobuf.Timestamp
-	15, // 13: schema.v1alpha1.ListSensorsRequest.field_mask:type_name -> google.protobuf.FieldMask
+	21, // 11: schema.v1alpha1.MinMaxRecorded.min_timestamp:type_name -> google.protobuf.Timestamp
+	21, // 12: schema.v1alpha1.MinMaxRecorded.max_timestamp:type_name -> google.protobuf.Timestamp
+	22, // 13: schema.v1alpha1.ListSensorsRequest.field_mask:type_name -> google.protobuf.FieldMask
 	3,  // 14: schema.v1alpha1.ListSensorsResponse.sensor:type_name -> schema.v1alpha1.Sensor
 	0,  // 15: schema.v1alpha1.GetSensorRequest.context:type_name -> schema.v1alpha1.SensorContext
 	1,  // 16: schema.v1alpha1.GetSensorRequest.status:type_name -> schema.v1alpha1.SensorStatus
-	13, // 17: schema.v1alpha1.GetSensorRequest.location:type_name -> schema.v1alpha1.Location
-	15, // 18: schema.v1alpha1.GetSensorRequest.field_mask:type_name -> google.protobuf.FieldMask
+	20, // 17: schema.v1alpha1.GetSensorRequest.location:type_name -> schema.v1alpha1.Location
+	22, // 18: schema.v1alpha1.GetSensorRequest.field_mask:type_name -> google.protobuf.FieldMask
 	3,  // 19: schema.v1alpha1.GetSensorResponse.sensors:type_name -> schema.v1alpha1.Sensor
-	20, // [20:20] is the sub-list for method output_type
-	20, // [20:20] is the sub-list for method input_type
-	20, // [20:20] is the sub-list for extension type_name
-	20, // [20:20] is the sub-list for extension extendee
-	0,  // [0:20] is the sub-list for field type_name
+	21, // 20: schema.v1alpha1.SensorAlert.timestamp:type_name -> google.protobuf.Timestamp
+	21, // 21: schema.v1alpha1.SensorReading.timestamp:type_name -> google.protobuf.Timestamp
+	0,  // 22: schema.v1alpha1.SensorDataRequest.context_filter:type_name -> schema.v1alpha1.SensorContext
+	13, // 23: schema.v1alpha1.SensorDataResponse.readings:type_name -> schema.v1alpha1.SensorReading
+	19, // 24: schema.v1alpha1.SensorConfigRequest.attributes:type_name -> schema.v1alpha1.SensorConfigRequest.AttributesEntry
+	25, // [25:25] is the sub-list for method output_type
+	25, // [25:25] is the sub-list for method input_type
+	25, // [25:25] is the sub-list for extension type_name
+	25, // [25:25] is the sub-list for extension extendee
+	0,  // [0:25] is the sub-list for field type_name
 }
 
 func init() { file_schema_v1alpha1_sensor_proto_init() }
@@ -1101,13 +1590,18 @@ func file_schema_v1alpha1_sensor_proto_init() {
 		(*GetSensorRequest_Status)(nil),
 		(*GetSensorRequest_Location)(nil),
 	}
+	file_schema_v1alpha1_sensor_proto_msgTypes[9].OneofWrappers = []any{}
+	file_schema_v1alpha1_sensor_proto_msgTypes[10].OneofWrappers = []any{}
+	file_schema_v1alpha1_sensor_proto_msgTypes[11].OneofWrappers = []any{}
+	file_schema_v1alpha1_sensor_proto_msgTypes[13].OneofWrappers = []any{}
+	file_schema_v1alpha1_sensor_proto_msgTypes[14].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_schema_v1alpha1_sensor_proto_rawDesc), len(file_schema_v1alpha1_sensor_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   10,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

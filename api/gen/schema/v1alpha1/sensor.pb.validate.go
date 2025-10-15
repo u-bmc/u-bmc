@@ -1517,3 +1517,762 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetSensorResponseValidationError{}
+
+// Validate checks the field values on SensorAlert with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *SensorAlert) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SensorAlert with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in SensorAlertMultiError, or
+// nil if none found.
+func (m *SensorAlert) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SensorAlert) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Type
+
+	// no validation rules for SensorId
+
+	// no validation rules for SensorName
+
+	// no validation rules for Value
+
+	// no validation rules for Severity
+
+	if all {
+		switch v := interface{}(m.GetTimestamp()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, SensorAlertValidationError{
+					field:  "Timestamp",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, SensorAlertValidationError{
+					field:  "Timestamp",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTimestamp()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return SensorAlertValidationError{
+				field:  "Timestamp",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Message
+
+	if m.Threshold != nil {
+		// no validation rules for Threshold
+	}
+
+	if m.ZoneName != nil {
+		// no validation rules for ZoneName
+	}
+
+	if len(errors) > 0 {
+		return SensorAlertMultiError(errors)
+	}
+
+	return nil
+}
+
+// SensorAlertMultiError is an error wrapping multiple validation errors
+// returned by SensorAlert.ValidateAll() if the designated constraints aren't met.
+type SensorAlertMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SensorAlertMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SensorAlertMultiError) AllErrors() []error { return m }
+
+// SensorAlertValidationError is the validation error returned by
+// SensorAlert.Validate if the designated constraints aren't met.
+type SensorAlertValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SensorAlertValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SensorAlertValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SensorAlertValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SensorAlertValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SensorAlertValidationError) ErrorName() string { return "SensorAlertValidationError" }
+
+// Error satisfies the builtin error interface
+func (e SensorAlertValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSensorAlert.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SensorAlertValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SensorAlertValidationError{}
+
+// Validate checks the field values on SensorReading with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *SensorReading) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SensorReading with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in SensorReadingMultiError, or
+// nil if none found.
+func (m *SensorReading) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SensorReading) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for SensorId
+
+	// no validation rules for SensorName
+
+	// no validation rules for Value
+
+	// no validation rules for Unit
+
+	if all {
+		switch v := interface{}(m.GetTimestamp()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, SensorReadingValidationError{
+					field:  "Timestamp",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, SensorReadingValidationError{
+					field:  "Timestamp",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTimestamp()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return SensorReadingValidationError{
+				field:  "Timestamp",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if m.Location != nil {
+		// no validation rules for Location
+	}
+
+	if m.ZoneName != nil {
+		// no validation rules for ZoneName
+	}
+
+	if len(errors) > 0 {
+		return SensorReadingMultiError(errors)
+	}
+
+	return nil
+}
+
+// SensorReadingMultiError is an error wrapping multiple validation errors
+// returned by SensorReading.ValidateAll() if the designated constraints
+// aren't met.
+type SensorReadingMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SensorReadingMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SensorReadingMultiError) AllErrors() []error { return m }
+
+// SensorReadingValidationError is the validation error returned by
+// SensorReading.Validate if the designated constraints aren't met.
+type SensorReadingValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SensorReadingValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SensorReadingValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SensorReadingValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SensorReadingValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SensorReadingValidationError) ErrorName() string { return "SensorReadingValidationError" }
+
+// Error satisfies the builtin error interface
+func (e SensorReadingValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSensorReading.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SensorReadingValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SensorReadingValidationError{}
+
+// Validate checks the field values on SensorDataRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *SensorDataRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SensorDataRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// SensorDataRequestMultiError, or nil if none found.
+func (m *SensorDataRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SensorDataRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.ZoneName != nil {
+		// no validation rules for ZoneName
+	}
+
+	if m.ContextFilter != nil {
+		// no validation rules for ContextFilter
+	}
+
+	if len(errors) > 0 {
+		return SensorDataRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// SensorDataRequestMultiError is an error wrapping multiple validation errors
+// returned by SensorDataRequest.ValidateAll() if the designated constraints
+// aren't met.
+type SensorDataRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SensorDataRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SensorDataRequestMultiError) AllErrors() []error { return m }
+
+// SensorDataRequestValidationError is the validation error returned by
+// SensorDataRequest.Validate if the designated constraints aren't met.
+type SensorDataRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SensorDataRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SensorDataRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SensorDataRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SensorDataRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SensorDataRequestValidationError) ErrorName() string {
+	return "SensorDataRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SensorDataRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSensorDataRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SensorDataRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SensorDataRequestValidationError{}
+
+// Validate checks the field values on SensorDataResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *SensorDataResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SensorDataResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// SensorDataResponseMultiError, or nil if none found.
+func (m *SensorDataResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SensorDataResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetReadings() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, SensorDataResponseValidationError{
+						field:  fmt.Sprintf("Readings[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, SensorDataResponseValidationError{
+						field:  fmt.Sprintf("Readings[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return SensorDataResponseValidationError{
+					field:  fmt.Sprintf("Readings[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return SensorDataResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// SensorDataResponseMultiError is an error wrapping multiple validation errors
+// returned by SensorDataResponse.ValidateAll() if the designated constraints
+// aren't met.
+type SensorDataResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SensorDataResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SensorDataResponseMultiError) AllErrors() []error { return m }
+
+// SensorDataResponseValidationError is the validation error returned by
+// SensorDataResponse.Validate if the designated constraints aren't met.
+type SensorDataResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SensorDataResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SensorDataResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SensorDataResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SensorDataResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SensorDataResponseValidationError) ErrorName() string {
+	return "SensorDataResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SensorDataResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSensorDataResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SensorDataResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SensorDataResponseValidationError{}
+
+// Validate checks the field values on SensorConfigRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *SensorConfigRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SensorConfigRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// SensorConfigRequestMultiError, or nil if none found.
+func (m *SensorConfigRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SensorConfigRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Action
+
+	// no validation rules for SensorId
+
+	// no validation rules for Attributes
+
+	if m.ZoneName != nil {
+		// no validation rules for ZoneName
+	}
+
+	if len(errors) > 0 {
+		return SensorConfigRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// SensorConfigRequestMultiError is an error wrapping multiple validation
+// errors returned by SensorConfigRequest.ValidateAll() if the designated
+// constraints aren't met.
+type SensorConfigRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SensorConfigRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SensorConfigRequestMultiError) AllErrors() []error { return m }
+
+// SensorConfigRequestValidationError is the validation error returned by
+// SensorConfigRequest.Validate if the designated constraints aren't met.
+type SensorConfigRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SensorConfigRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SensorConfigRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SensorConfigRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SensorConfigRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SensorConfigRequestValidationError) ErrorName() string {
+	return "SensorConfigRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SensorConfigRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSensorConfigRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SensorConfigRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SensorConfigRequestValidationError{}
+
+// Validate checks the field values on SensorConfigResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *SensorConfigResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SensorConfigResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// SensorConfigResponseMultiError, or nil if none found.
+func (m *SensorConfigResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SensorConfigResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Success
+
+	if m.ErrorMessage != nil {
+		// no validation rules for ErrorMessage
+	}
+
+	if len(errors) > 0 {
+		return SensorConfigResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// SensorConfigResponseMultiError is an error wrapping multiple validation
+// errors returned by SensorConfigResponse.ValidateAll() if the designated
+// constraints aren't met.
+type SensorConfigResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SensorConfigResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SensorConfigResponseMultiError) AllErrors() []error { return m }
+
+// SensorConfigResponseValidationError is the validation error returned by
+// SensorConfigResponse.Validate if the designated constraints aren't met.
+type SensorConfigResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SensorConfigResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SensorConfigResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SensorConfigResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SensorConfigResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SensorConfigResponseValidationError) ErrorName() string {
+	return "SensorConfigResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SensorConfigResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSensorConfigResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SensorConfigResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SensorConfigResponseValidationError{}
