@@ -27,14 +27,14 @@ type PowerEventCallback func(componentName string, event PowerEvent, data interf
 
 // PowerCallbacks holds callback functions for power management events.
 type PowerCallbacks struct {
-	OnPowerOn           PowerEventCallback `json:"-"` // called when component powers on
-	OnPowerOff          PowerEventCallback `json:"-"` // called when component powers off
-	OnReset             PowerEventCallback `json:"-"` // called when component resets
-	OnForceOff          PowerEventCallback `json:"-"` // called when component force powers off
-	OnPowerStateChanged PowerEventCallback `json:"-"` // called when power state changes
-	OnOperationFailed   PowerEventCallback `json:"-"` // called when power operation fails
-	OnEmergencyShutdown PowerEventCallback `json:"-"` // called during emergency shutdown
-	OnThermalThrottling PowerEventCallback `json:"-"` // called during thermal throttling
+	OnPowerOn           PowerEventCallback // called when component powers on
+	OnPowerOff          PowerEventCallback // called when component powers off
+	OnReset             PowerEventCallback // called when component resets
+	OnForceOff          PowerEventCallback // called when component force powers off
+	OnPowerStateChanged PowerEventCallback // called when power state changes
+	OnOperationFailed   PowerEventCallback // called when power operation fails
+	OnEmergencyShutdown PowerEventCallback // called during emergency shutdown
+	OnThermalThrottling PowerEventCallback // called during thermal throttling
 }
 
 const (
@@ -108,11 +108,11 @@ type I2CConfig struct {
 
 // MockConfig represents mock backend configuration for testing.
 type MockConfig struct {
-	AlwaysSucceed     bool          `json:"always_succeed"`              // whether operations always succeed
-	OperationDelay    time.Duration `json:"operation_delay,omitempty"`   // delay before completing operations
-	FailureRate       float64       `json:"failure_rate,omitempty"`      // probability of operation failure (0.0-1.0)
-	PowerStateDelay   time.Duration `json:"power_state_delay,omitempty"` // delay before power state changes
-	InitialPowerState bool          `json:"initial_power_state"`         // initial power state (on/off)
+	AlwaysSucceed     bool          // whether operations always succeed
+	OperationDelay    time.Duration // delay before completing operations
+	FailureRate       float64       // probability of operation failure (0.0-1.0)
+	PowerStateDelay   time.Duration // delay before power state changes
+	InitialPowerState bool          // initial power state (on/off)
 }
 
 type ComponentConfig struct {
@@ -603,20 +603,20 @@ func (c *config) validateComponentConfig(name string, component ComponentConfig)
 		return fmt.Errorf("%w: operation timeout must be positive for component '%s'", ErrInvalidConfiguration, name)
 	}
 
-	if component.PowerOnDelay <= 0 {
-		return fmt.Errorf("%w: power on delay must be positive for component '%s'", ErrInvalidConfiguration, name)
+	if component.PowerOnDelay < 0 {
+		return fmt.Errorf("%w: power on delay cannot be negative for component '%s'", ErrInvalidConfiguration, name)
 	}
 
-	if component.PowerOffDelay <= 0 {
-		return fmt.Errorf("%w: power off delay must be positive for component '%s'", ErrInvalidConfiguration, name)
+	if component.PowerOffDelay < 0 {
+		return fmt.Errorf("%w: power off delay cannot be negative for component '%s'", ErrInvalidConfiguration, name)
 	}
 
-	if component.ResetDelay <= 0 {
-		return fmt.Errorf("%w: reset delay must be positive for component '%s'", ErrInvalidConfiguration, name)
+	if component.ResetDelay < 0 {
+		return fmt.Errorf("%w: reset delay cannot be negative for component '%s'", ErrInvalidConfiguration, name)
 	}
 
-	if component.ForceOffDelay <= 0 {
-		return fmt.Errorf("%w: force off delay must be positive for component '%s'", ErrInvalidConfiguration, name)
+	if component.ForceOffDelay < 0 {
+		return fmt.Errorf("%w: force off delay cannot be negative for component '%s'", ErrInvalidConfiguration, name)
 	}
 
 	if component.Backend == BackendTypeGPIO {
