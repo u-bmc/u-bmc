@@ -43,12 +43,13 @@ The first version of the Web UI should cover daily operator tasks through the ex
 - Delivery: the web UI talks only to websrv; no direct access to other services.
 - Packaging: development build for local testing; production build served by websrv.
 
-Sensor monitoring (sensormon)
-We need reliable, low-overhead monitoring that surfaces actionable signals and integrates with telemetry.
+Service documentation completion
+Comprehensive service documentation has been completed for all major implemented services.
 
-- Sources: hwmon, I2C/PMBus devices, and platform-specific sensors.
-- Features: threshold evaluation, debouncing, and state change events.
-- Outputs: periodic samples to telemetry and actionable transitions to statemgr.
+- Core services documented: operator, ipc, websrv, statemgr, powermgr, thermalmgr, sensormon, ledmgr
+- API documentation: complete ConnectRPC and REST API reference with integration examples
+- Documentation standards: centralized in docs/ directory with consistent formatting and cross-references
+- Package documentation: available on pkg.go.dev for detailed implementation guidance
 
 Web API hardening
 Strengthen the default posture of websrv.
@@ -61,7 +62,7 @@ Platform enablement
 Bring up initial targets in targets/, following the porting guidance in docs/porting.md.
 
 - Deliverables: GPIO line mapping for power and LEDs, I2C bus and device discovery, thermal zones, and inventory basics.
-- Non-userspace items are tracked in this roadmap’s platform section (see Later → Rootfs builder, kernel and device tree notes).
+- Non-userspace items are tracked in this roadmap's platform section (see Later → Rootfs builder, kernel and device tree notes).
 
 ## Next
 
@@ -141,8 +142,9 @@ Ship artifacts that are trustworthy and easy to consume.
 - GPIO: power/reset/identify lines mapped with clear active states and debounce characteristics.
 - LEDs: power, status, and identify mapping with supported patterns (on/off/blink).
 - I2C: bus topology, device addresses, and muxes; PMBus devices and scaling coefficients.
-- Thermal: zones, sensors, and PID defaults per platform.
+- Thermal: zones, sensors, and PID defaults per platform (see docs/thermalmgr.md for configuration).
 - Inventory: asset information available via schema/v1alpha1.
+- Sensors: hwmon device mapping and threshold configuration (see docs/sensormon.md for setup).
 - Non-userspace: kernel, device tree, udev, hwmon, pinmux, watchdog (tracked until the rootfs builder is in place).
 
 ## API direction
@@ -164,7 +166,14 @@ The ConnectRPC API is the primary entry point and is available now. It supports 
 - docs/gpio.md — GPIO abstractions and usage
 - docs/api.md — API usage and request examples
 - docs/porting.md — how to configure and port a new platform
-- docs/integration_example.md — power and state integration flow
-- docs/integration_complete.md — power/LED integration details
+- docs/operator.md — service supervision and lifecycle management
+- docs/ipc.md — embedded NATS messaging and service communication
+- docs/websrv.md — web server and API gateway service
+- docs/statemgr.md — system state machines and coordination
+- docs/powermgr.md — power management and sequencing service
+- docs/ledmgr.md — LED control and visual indication service
+- docs/api.md — comprehensive API reference and integration guide
+- docs/sensormon.md — sensor monitoring service documentation
+- docs/thermalmgr.md — thermal management service documentation
 
 Status and priorities evolve as we integrate more platforms and validate the runtime. This roadmap keeps us aligned on the next most valuable increments while protecting the system’s reliability.

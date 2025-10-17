@@ -13,10 +13,12 @@ import (
 // Compile-time assertion that IPMISrv implements service.Service.
 var _ service.Service = (*IPMISrv)(nil)
 
+// IPMISrv provides IPMI server functionality for BMC management.
 type IPMISrv struct {
-	config
+	config config
 }
 
+// New creates a new IPMISrv instance with the provided options.
 func New(opts ...Option) *IPMISrv {
 	cfg := &config{
 		name: "ipmisrv",
@@ -30,16 +32,16 @@ func New(opts ...Option) *IPMISrv {
 }
 
 func (s *IPMISrv) Name() string {
-	return s.name
+	return s.config.name
 }
 
 func (s *IPMISrv) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) error {
 	l := log.GetGlobalLogger()
 
-	l.InfoContext(ctx, "Starting IPMI server", "service", s.name)
+	l.InfoContext(ctx, "Starting IPMI server", "service", s.config.name)
 
 	<-ctx.Done()
-	l.InfoContext(ctx, "Stopping IPMI server", "service", s.name, "reason", ctx.Err())
+	l.InfoContext(ctx, "Stopping IPMI server", "service", s.config.name, "reason", ctx.Err())
 
 	return ctx.Err()
 }

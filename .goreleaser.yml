@@ -1,80 +1,94 @@
-# Make sure to check the documentation at https://goreleaser.com
-before:
-  hooks:
-    - go mod tidy
+# See also: .github/workflows/release.yml
+version: 2
+
+project_name: u-bmc
+
+# proxies from the go mod proxy before building
+# https://goreleaser.com/customization/gomod
 gomod:
-  # Proxy a module from proxy.golang.org, making the builds verifiable.
-  # This will only be effective if running against a tag. Snapshots will ignore
-  # this setting.
-  # Notice: for this to work your `build.main` must be a package, not a `.go` file.
   proxy: true
-  # If proxy is true, use these environment variables when running `go mod`
-  # commands (namely, `go mod tidy`).
-  #
-  # Default: `os.Environ()` merged with what you set the root `env` section.
-  env:
-    - GOPROXY=https://proxy.golang.org,direct
-    - GOSUMDB=sum.golang.org
-  # Sets the `-mod` flag value.
-  #
-  # Since: v1.7
-  mod: mod
-# Build for all first-class targets
+
+# setups builds for linux and darwin on amd64 and arm64
+# https://goreleaser.com/customization/build
 builds:
-  - main: ./cmd/example
-    binary: example
-    env: ["CGO_ENABLED=0"]
-    goos: ["linux", "windows", "darwin"]
-    flags: ["-trimpath"]
-    ldflags: ["-s -w"]
-    targets: ["go_first_class"]
-    mod_timestamp: '{{ .CommitTimestamp }}'
-# Non-Linux OS like Windows prefer a file extension
-checksum:
-  name_template: 'checksums.txt'
-# Split formats for different OS requirements
-archives:
-  - format: tar.gz
-    # This name template makes the OS and Arch compatible with the results of uname.
-    name_template: >-
-      {{ .ProjectName }}_
-      {{- title .Os }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else if eq .Arch "386" }}i386
-      {{- else }}{{ .Arch }}{{ end }}
-      {{- if .Arm }}v{{ .Arm }}{{ end }}
-    # Use zip for Windows archives
-    format_overrides:
-    - goos: windows
-      format: zip
-# Also bundle sources
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - arm
+      - arm64
+    goarm:
+      - 6,softfloat
+      - 7,softfloat
+    # ensures mod timestamp to be the commit timestamp
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    flags:
+      - -trimpath
+    ldflags:
+      # use commit date instead of current date as main.date
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{ .CommitDate }}
+
+# create a source tarball
+# https://goreleaser.com/customization/source/
 source:
   enabled: true
-# Creates SBOMs of all archives and the source tarball using syft
+  name_template: "{{ .ProjectName }}.src"
+
+# config the archives filenames, format, and other options.
+# https://goreleaser.com/customization/archive
+archives:
+  - format: tar.gz
+    wrap_in_directory: true
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    builds_info:
+      mtime: "{{ .CommitTimestamp }}"
+
+# creates SBOMs of all archives and the source tarball using syft
 # https://goreleaser.com/customization/sbom
 sboms:
   - artifacts: archive
   - id: source # Two different sbom configurations need two different IDs
     artifacts: source
-# Name snapshot version 'next'
-snapshot:
-  name_template: "{{ incpatch .Version }}-next"
-# Generate changelog from conventional commits
+
+# config the checksum filename
+# https://goreleaser.com/customization/checksum
+checksum:
+  name_template: "checksums.txt"
+
+# signs the checksum file
+# all files (including the sboms) are included in the checksum, so we don't need to sign each one if we don't want to
+# https://goreleaser.com/customization/sign
+signs:
+  - cmd: cosign
+    certificate: "${artifact}.pem"
+    args:
+      - sign-blob
+      - "--output-certificate=${certificate}"
+      - "--output-signature=${signature}"
+      - "${artifact}"
+      - "--yes"
+    artifacts: checksum
+    output: true
+
+# generate changelog from conventional commits
+# https://goreleaser.com/customization/changelog
 changelog:
+  use: github
   sort: asc
   filters:
     exclude:
-      - '^chore:'
-      - '^test:'
+      - "^chore:"
+      - "^test:"
   groups:
-    - title: 'New Features'
+    - title: "New Features"
       regexp: "^.*feat[(\\w)]*:+.*$"
       order: 100
-    - title: 'Bug fixes'
+    - title: "Bug fixes"
       regexp: "^.*fix[(\\w)]*:+.*$"
       order: 200
     - title: "Documentation updates"
       regexp: "^.*docs[(\\w)]*:+.*$"
       order: 400
-    - title: 'Other work'
+    - title: "Other work"
       order: 999

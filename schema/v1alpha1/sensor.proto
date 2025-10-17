@@ -196,3 +196,46 @@ message GetSensorRequest {
 }
 
 message GetSensorResponse { repeated Sensor sensors = 1; }
+
+message SensorAlert {
+  string type = 1 [ (buf.validate.field).string.min_len = 1 ];
+  string sensor_id = 2 [ (buf.validate.field).string.min_len = 1 ];
+  string sensor_name = 3 [ (buf.validate.field).string.min_len = 1 ];
+  double value = 4;
+  optional double threshold = 5;
+  string severity = 6 [ (buf.validate.field).string.min_len = 1 ];
+  optional string zone_name = 7;
+  google.protobuf.Timestamp timestamp = 8;
+  string message = 9 [ (buf.validate.field).string.min_len = 1 ];
+}
+
+message SensorReading {
+  string sensor_id = 1 [ (buf.validate.field).string.min_len = 1 ];
+  string sensor_name = 2 [ (buf.validate.field).string.min_len = 1 ];
+  double value = 3;
+  string unit = 4 [ (buf.validate.field).string.min_len = 1 ];
+  google.protobuf.Timestamp timestamp = 5;
+  optional string location = 6;
+  optional string zone_name = 7;
+}
+
+message SensorDataRequest {
+  repeated string sensor_ids = 1;
+  optional string zone_name = 2;
+  optional SensorContext context_filter = 3
+      [ (buf.validate.field).enum.defined_only = true ];
+}
+
+message SensorDataResponse { repeated SensorReading readings = 1; }
+
+message SensorConfigRequest {
+  string action = 1 [ (buf.validate.field).string.min_len = 1 ];
+  string sensor_id = 2 [ (buf.validate.field).string.min_len = 1 ];
+  optional string zone_name = 3;
+  map<string, string> attributes = 4;
+}
+
+message SensorConfigResponse {
+  bool success = 1;
+  optional string error_message = 2;
+}

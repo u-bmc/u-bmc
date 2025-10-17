@@ -4,7 +4,6 @@ package ledmgr
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log/slog"
 	"strings"
@@ -16,6 +15,7 @@ import (
 	v1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
 	"github.com/u-bmc/u-bmc/pkg/gpio"
 	"github.com/u-bmc/u-bmc/pkg/i2c"
+	"github.com/u-bmc/u-bmc/pkg/ipc"
 	"github.com/u-bmc/u-bmc/pkg/log"
 	"github.com/u-bmc/u-bmc/pkg/telemetry"
 	"github.com/u-bmc/u-bmc/service"
@@ -414,8 +414,6 @@ func New(opts ...Option) *LEDMgr {
 		numChassis:              1,
 		defaultOperationTimeout: DefaultOperationTimeout,
 		defaultBlinkInterval:    DefaultBlinkInterval,
-		enableMetrics:           true,
-		enableTracing:           true,
 	}
 
 	for _, opt := range opts {
@@ -520,10 +518,6 @@ func (s *LEDMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) er
 }
 
 func (s *LEDMgr) initializeMetrics() error {
-	if !s.config.enableMetrics {
-		return nil
-	}
-
 	var err error
 
 	s.ledOperationsTotal, err = s.meter.Int64Counter(
@@ -605,54 +599,35 @@ func (s *LEDMgr) closeBackends() {
 }
 
 func (s *LEDMgr) registerEndpoints(ctx context.Context) error {
-	if s.config.enableHostManagement {
-		hostGroup := s.microService.AddGroup("host")
-		for i := 0; i < s.config.numHosts; i++ {
-			controlEndpoint := fmt.Sprintf("%d.control", i)
-			statusEndpoint := fmt.Sprintf("%d.status", i)
+	groups := make(map[string]micro.Group)
 
-			if err := hostGroup.AddEndpoint(controlEndpoint,
-				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleLEDRequest))); err != nil {
-				return fmt.Errorf("failed to register host control endpoint %s: %w", controlEndpoint, err)
-			}
-			if err := hostGroup.AddEndpoint(statusEndpoint,
-				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleLEDRequest))); err != nil {
-				return fmt.Errorf("failed to register host status endpoint %s: %w", statusEndpoint, err)
-			}
-		}
+	// Register general LED endpoints that handle all instances
+	if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectLEDControl,
+		micro.HandlerFunc(s.createRequestHandler(ctx, s.handleGeneralLEDControl)), groups); err != nil {
+		return fmt.Errorf("failed to register LED control endpoint: %w", err)
 	}
-
-	if s.config.enableChassisManagement {
-		chassisGroup := s.microService.AddGroup("chassis")
-		for i := 0; i < s.config.numChassis; i++ {
-			controlEndpoint := fmt.Sprintf("%d.control", i)
-			statusEndpoint := fmt.Sprintf("%d.status", i)
-
-			if err := chassisGroup.AddEndpoint(controlEndpoint,
-				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleLEDRequest))); err != nil {
-				return fmt.Errorf("failed to register chassis control endpoint %s: %w", controlEndpoint, err)
-			}
-			if err := chassisGroup.AddEndpoint(statusEndpoint,
-				micro.HandlerFunc(s.createRequestHandler(ctx, s.handleLEDRequest))); err != nil {
-				return fmt.Errorf("failed to register chassis status endpoint %s: %w", statusEndpoint, err)
-			}
-		}
-	}
-
-	if s.config.enableBMCManagement {
-		bmcGroup := s.microService.AddGroup("bmc")
-
-		if err := bmcGroup.AddEndpoint("0.control",
-			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleLEDRequest))); err != nil {
-			return fmt.Errorf("failed to register BMC control endpoint: %w", err)
-		}
-		if err := bmcGroup.AddEndpoint("0.status",
-			micro.HandlerFunc(s.createRequestHandler(ctx, s.handleLEDRequest))); err != nil {
-			return fmt.Errorf("failed to register BMC status endpoint: %w", err)
-		}
+	if err := ipc.RegisterEndpointWithGroupCache(s.microService, ipc.SubjectLEDStatus,
+		micro.HandlerFunc(s.createRequestHandler(ctx, s.handleGeneralLEDStatus)), groups); err != nil {
+		return fmt.Errorf("failed to register LED status endpoint: %w", err)
 	}
 
 	return nil
+}
+
+// handleGeneralLEDControl is a general handler that processes LED control requests
+// for any component type based on the message content instead of the subject
+func (s *LEDMgr) handleGeneralLEDControl(ctx context.Context, req micro.Request) {
+	// Try to parse the LED control request and determine component type from content
+	// For now, dispatch to the existing LED request handler
+	s.handleLEDRequest(ctx, req)
+}
+
+// handleGeneralLEDStatus is a general handler that processes LED status requests
+// for any component type based on the message content instead of the subject
+func (s *LEDMgr) handleGeneralLEDStatus(ctx context.Context, req micro.Request) {
+	// Try to parse the LED status request and determine component type from content
+	// For now, dispatch to the existing LED request handler
+	s.handleLEDRequest(ctx, req)
 }
 
 func (s *LEDMgr) createRequestHandler(parentCtx context.Context, handler func(context.Context, micro.Request)) micro.HandlerFunc {
@@ -733,7 +708,7 @@ func (s *LEDMgr) handleLEDControl(ctx context.Context, req micro.Request, compon
 	err := s.setLEDState(ctx, componentName, ledType, ledState)
 
 	s.recordOperation(ctx, "control", componentName, string(ledType), string(ledState), err)
-	if s.config.enableMetrics && s.ledOperationDuration != nil {
+	if s.ledOperationDuration != nil {
 		duration := time.Since(start).Seconds()
 		s.ledOperationDuration.Record(ctx, duration, metric.WithAttributes(
 			attribute.String("operation", "control"),
@@ -792,7 +767,7 @@ func (s *LEDMgr) handleLEDStatus(ctx context.Context, req micro.Request, compone
 	state, err := s.getLEDState(ctx, componentName, ledType)
 
 	s.recordOperation(ctx, "status", componentName, string(ledType), string(state), err)
-	if s.config.enableMetrics && s.ledOperationDuration != nil {
+	if s.ledOperationDuration != nil {
 		duration := time.Since(start).Seconds()
 		s.ledOperationDuration.Record(ctx, duration, metric.WithAttributes(
 			attribute.String("operation", "status"),
@@ -877,10 +852,6 @@ func (s *LEDMgr) getLEDState(ctx context.Context, componentName string, ledType 
 }
 
 func (s *LEDMgr) recordOperation(ctx context.Context, operation, component, ledType, ledState string, err error) {
-	if !s.config.enableMetrics {
-		return
-	}
-
 	attrs := []attribute.KeyValue{
 		attribute.String("operation", operation),
 		attribute.String("component", component),
@@ -946,9 +917,6 @@ func (s *LEDMgr) shutdown(ctx context.Context) {
 func WithName(name string) Option {
 	return WithServiceName(name)
 }
-
-// ErrLEDNotConfigured indicates LED is not configured for the component.
-var ErrLEDNotConfigured = errors.New("LED not configured for component")
 
 func (s *LEDMgr) convertProtoLEDType(protoType v1alpha1.LEDType) LEDType {
 	switch protoType {

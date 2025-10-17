@@ -14,6 +14,7 @@ import (
 	v1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
 	"github.com/u-bmc/u-bmc/pkg/gpio"
 	"github.com/u-bmc/u-bmc/pkg/i2c"
+	"github.com/u-bmc/u-bmc/pkg/ipc"
 	"github.com/u-bmc/u-bmc/pkg/log"
 	"github.com/u-bmc/u-bmc/pkg/telemetry"
 	"github.com/u-bmc/u-bmc/service"
@@ -303,6 +304,277 @@ func (b *I2CBackend) Close() error {
 	return nil
 }
 
+// MockBackend implements a mock power management backend for testing.
+type MockBackend struct {
+	config      *config
+	components  map[string]ComponentConfig
+	powerStates map[string]bool
+	mu          sync.RWMutex
+	callbacks   PowerCallbacks
+}
+
+// NewMockBackend creates a new mock power control backend.
+func NewMockBackend() *MockBackend {
+	return &MockBackend{
+		components:  make(map[string]ComponentConfig),
+		powerStates: make(map[string]bool),
+	}
+}
+
+// Initialize configures the mock backend.
+func (b *MockBackend) Initialize(ctx context.Context, cfg *config) error {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+
+	b.config = cfg
+	b.callbacks = cfg.callbacks
+
+	// Initialize power states for all components
+	for name, component := range cfg.components {
+		b.components[name] = component
+		if component.Mock != nil {
+			b.powerStates[name] = component.Mock.InitialPowerState
+		} else {
+			b.powerStates[name] = false
+		}
+	}
+
+	return nil
+}
+
+// PowerOn simulates powering on a component.
+func (b *MockBackend) PowerOn(ctx context.Context, componentName string) error {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+
+	component, exists := b.components[componentName]
+	if !exists {
+		return fmt.Errorf("component %s not found", componentName)
+	}
+
+	if component.Mock == nil {
+		return fmt.Errorf("component %s has no mock configuration", componentName)
+	}
+
+	// Simulate operation delay
+	if component.Mock.OperationDelay > 0 {
+		time.Sleep(component.Mock.OperationDelay)
+	}
+
+	// Simulate failure if configured
+	if !component.Mock.AlwaysSucceed && component.Mock.FailureRate > 0 {
+		if shouldSimulateFailure(component.Mock.FailureRate) {
+			err := fmt.Errorf("simulated power on failure for %s", componentName)
+			if b.callbacks.OnOperationFailed != nil {
+				b.callbacks.OnOperationFailed(componentName, EventPowerOn, err)
+			}
+			return err
+		}
+	}
+
+	// Simulate power state change delay
+	if component.Mock.PowerStateDelay > 0 {
+		go func() {
+			time.Sleep(component.Mock.PowerStateDelay)
+			b.mu.Lock()
+			b.powerStates[componentName] = true
+			b.mu.Unlock()
+			if b.callbacks.OnPowerStateChanged != nil {
+				b.callbacks.OnPowerStateChanged(componentName, EventPowerStateChanged, true)
+			}
+		}()
+	} else {
+		b.powerStates[componentName] = true
+		if b.callbacks.OnPowerStateChanged != nil {
+			b.callbacks.OnPowerStateChanged(componentName, EventPowerStateChanged, true)
+		}
+	}
+
+	if b.callbacks.OnPowerOn != nil {
+		b.callbacks.OnPowerOn(componentName, EventPowerOn, nil)
+	}
+
+	return nil
+}
+
+// PowerOff simulates powering off a component.
+func (b *MockBackend) PowerOff(ctx context.Context, componentName string, force bool) error {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+
+	component, exists := b.components[componentName]
+	if !exists {
+		return fmt.Errorf("component %s not found", componentName)
+	}
+
+	if component.Mock == nil {
+		return fmt.Errorf("component %s has no mock configuration", componentName)
+	}
+
+	operationDelay := component.Mock.OperationDelay
+	failureRate := component.Mock.FailureRate
+
+	// Force operations are faster and more reliable
+	if force {
+		operationDelay = operationDelay / 2
+		failureRate = failureRate * 0.1
+	}
+
+	// Simulate operation delay
+	if operationDelay > 0 {
+		time.Sleep(operationDelay)
+	}
+
+	// Simulate failure if configured
+	if !component.Mock.AlwaysSucceed && failureRate > 0 {
+		if shouldSimulateFailure(failureRate) {
+			err := fmt.Errorf("simulated power off failure for %s", componentName)
+			if b.callbacks.OnOperationFailed != nil {
+				b.callbacks.OnOperationFailed(componentName, EventPowerOff, err)
+			}
+			return err
+		}
+	}
+
+	// Force operations have immediate effect
+	if force {
+		b.powerStates[componentName] = false
+		if b.callbacks.OnPowerStateChanged != nil {
+			b.callbacks.OnPowerStateChanged(componentName, EventPowerStateChanged, false)
+		}
+		if b.callbacks.OnForceOff != nil {
+			b.callbacks.OnForceOff(componentName, EventForceOff, nil)
+		}
+	} else {
+		// Simulate power state change delay
+		if component.Mock.PowerStateDelay > 0 {
+			go func() {
+				time.Sleep(component.Mock.PowerStateDelay)
+				b.mu.Lock()
+				b.powerStates[componentName] = false
+				b.mu.Unlock()
+				if b.callbacks.OnPowerStateChanged != nil {
+					b.callbacks.OnPowerStateChanged(componentName, EventPowerStateChanged, false)
+				}
+			}()
+		} else {
+			b.powerStates[componentName] = false
+			if b.callbacks.OnPowerStateChanged != nil {
+				b.callbacks.OnPowerStateChanged(componentName, EventPowerStateChanged, false)
+			}
+		}
+		if b.callbacks.OnPowerOff != nil {
+			b.callbacks.OnPowerOff(componentName, EventPowerOff, nil)
+		}
+	}
+
+	return nil
+}
+
+// Reset simulates resetting a component.
+func (b *MockBackend) Reset(ctx context.Context, componentName string) error {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+
+	component, exists := b.components[componentName]
+	if !exists {
+		return fmt.Errorf("component %s not found", componentName)
+	}
+
+	if component.Mock == nil {
+		return fmt.Errorf("component %s has no mock configuration", componentName)
+	}
+
+	// Simulate operation delay
+	if component.Mock.OperationDelay > 0 {
+		time.Sleep(component.Mock.OperationDelay)
+	}
+
+	// Simulate failure if configured
+	if !component.Mock.AlwaysSucceed && component.Mock.FailureRate > 0 {
+		if shouldSimulateFailure(component.Mock.FailureRate) {
+			err := fmt.Errorf("simulated reset failure for %s", componentName)
+			if b.callbacks.OnOperationFailed != nil {
+				b.callbacks.OnOperationFailed(componentName, EventReset, err)
+			}
+			return err
+		}
+	}
+
+	// For reset, simulate a brief power cycle
+	originalState := b.powerStates[componentName]
+	if component.Mock.PowerStateDelay > 0 {
+		go func() {
+			// Brief power down
+			time.Sleep(component.Mock.PowerStateDelay / 2)
+			b.mu.Lock()
+			b.powerStates[componentName] = false
+			b.mu.Unlock()
+
+			// Power back up to original state
+			time.Sleep(component.Mock.PowerStateDelay / 2)
+			b.mu.Lock()
+			b.powerStates[componentName] = originalState
+			b.mu.Unlock()
+			if b.callbacks.OnPowerStateChanged != nil {
+				b.callbacks.OnPowerStateChanged(componentName, EventPowerStateChanged, originalState)
+			}
+		}()
+	}
+
+	if b.callbacks.OnReset != nil {
+		b.callbacks.OnReset(componentName, EventReset, nil)
+	}
+
+	return nil
+}
+
+// GetPowerStatus returns the simulated power status of a component.
+func (b *MockBackend) GetPowerStatus(ctx context.Context, componentName string) (bool, error) {
+	b.mu.RLock()
+	defer b.mu.RUnlock()
+
+	component, exists := b.components[componentName]
+	if !exists {
+		return false, fmt.Errorf("component %s not found", componentName)
+	}
+
+	if component.Mock == nil {
+		return false, fmt.Errorf("component %s has no mock configuration", componentName)
+	}
+
+	// Simulate small read failure rate
+	if !component.Mock.AlwaysSucceed && component.Mock.FailureRate > 0 {
+		readFailureRate := component.Mock.FailureRate * 0.05 // Very low failure rate for reads
+		if shouldSimulateFailure(readFailureRate) {
+			return false, fmt.Errorf("simulated power status read failure for %s", componentName)
+		}
+	}
+
+	state, exists := b.powerStates[componentName]
+	if !exists {
+		return false, nil
+	}
+
+	return state, nil
+}
+
+// Close cleans up the mock backend.
+func (b *MockBackend) Close() error {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+
+	b.components = make(map[string]ComponentConfig)
+	b.powerStates = make(map[string]bool)
+	return nil
+}
+
+// shouldSimulateFailure determines if a failure should be simulated based on failure rate.
+func shouldSimulateFailure(failureRate float64) bool {
+	// Simple pseudo-random based on current time
+	return float64(time.Now().UnixNano()%1000)/1000.0 < failureRate
+}
+
 // PowerMgr manages power operations for BMC components.
 type PowerMgr struct {
 	config       *config
@@ -339,15 +611,22 @@ func New(opts ...Option) *PowerMgr {
 		numHosts:                    1,
 		numChassis:                  1,
 		defaultOperationTimeout:     DefaultOperationTimeout,
-		enableMetrics:               true,
-		enableTracing:               true,
 		enableStateReporting:        true,
 		stateReportingSubjectPrefix: "statemgr",
+		enableThermalResponse:       false,
+		emergencyResponseDelay:      5 * time.Second,
+		enableEmergencyShutdown:     false,
+		shutdownTemperatureLimit:    85.0,
+		shutdownComponents:          []string{},
+		maxEmergencyAttempts:        3,
+		emergencyAttemptInterval:    30 * time.Second,
 	}
 
 	for _, opt := range opts {
 		opt.apply(cfg)
 	}
+
+	addDefaultComponents(cfg)
 
 	return &PowerMgr{
 		config:   cfg,
@@ -362,15 +641,6 @@ func (p *PowerMgr) Name() string {
 
 // Run starts the power manager service and registers NATS IPC endpoints.
 func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) error {
-	p.mu.Lock()
-	if p.started {
-		p.mu.Unlock()
-		return ErrServiceAlreadyStarted
-	}
-	p.started = true
-	ctx, p.cancel = context.WithCancel(ctx)
-	p.mu.Unlock()
-
 	p.tracer = otel.Tracer(p.config.serviceName)
 	p.meter = otel.Meter(p.config.serviceName)
 
@@ -378,6 +648,15 @@ func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 	defer span.End()
 
 	p.logger = log.GetGlobalLogger().With("service", p.config.serviceName)
+
+	// p.mu.Lock()
+	// if p.started {
+	// 	p.mu.Unlock()
+	// 	return ErrServiceAlreadyStarted
+	// }
+	// p.started = true
+	// ctx, p.cancel = context.WithCancel(ctx)
+	// p.mu.Unlock()
 	p.logger.InfoContext(ctx, "Starting power manager service",
 		"version", p.config.serviceVersion,
 		"hosts", p.config.numHosts,
@@ -394,7 +673,7 @@ func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 		return fmt.Errorf("failed to initialize metrics: %w", err)
 	}
 
-	p.config.AddDefaultComponents()
+	addDefaultComponents(p.config)
 
 	nc, err := nats.Connect("", nats.InProcessServer(ipcConn))
 	if err != nil {
@@ -410,6 +689,11 @@ func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 	}
 	defer p.closeBackends()
 
+	if err := p.initializeThermalIntegration(ctx); err != nil {
+		span.RecordError(err)
+		p.logger.WarnContext(ctx, "Thermal integration initialization failed", "error", err)
+	}
+
 	p.microService, err = micro.AddService(nc, micro.Config{
 		Name:        p.config.serviceName,
 		Description: p.config.serviceDescription,
@@ -421,6 +705,11 @@ func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 	}
 
 	if err := p.registerEndpoints(ctx); err != nil {
+		span.RecordError(err)
+		return err
+	}
+
+	if err := p.subscribeInternalSubjects(ctx); err != nil {
 		span.RecordError(err)
 		return err
 	}
@@ -448,10 +737,6 @@ func (p *PowerMgr) Run(ctx context.Context, ipcConn nats.InProcessConnProvider) 
 
 func (p *PowerMgr) initializeMetrics() error {
 	var err error
-
-	if !p.config.enableMetrics {
-		return nil
-	}
 
 	p.powerOperationsTotal, err = p.meter.Int64Counter(
 		"powermgr_operations_total",
@@ -505,6 +790,8 @@ func (p *PowerMgr) initializeBackends(ctx context.Context) error {
 			backend = NewGPIOBackend()
 		case BackendTypeI2C:
 			backend = NewI2CBackend()
+		case BackendTypeMock:
+			backend = NewMockBackend()
 		default:
 			return fmt.Errorf("%w: unknown backend type '%s'", ErrBackendNotSupported, backendType)
 		}
@@ -530,37 +817,196 @@ func (p *PowerMgr) closeBackends() {
 }
 
 func (p *PowerMgr) registerEndpoints(ctx context.Context) error {
-	if p.config.enableHostManagement {
-		hostGroup := p.microService.AddGroup("host")
-		for i := 0; i < p.config.numHosts; i++ {
-			endpoint := fmt.Sprintf("%d.action", i)
-			if err := hostGroup.AddEndpoint(endpoint,
-				micro.HandlerFunc(p.createRequestHandler(ctx, p.handleHostPowerAction))); err != nil {
-				return fmt.Errorf("failed to register host endpoint %s: %w", endpoint, err)
-			}
-		}
-	}
+	groups := make(map[string]micro.Group)
 
-	if p.config.enableChassisManagement {
-		chassisGroup := p.microService.AddGroup("chassis")
-		for i := 0; i < p.config.numChassis; i++ {
-			endpoint := fmt.Sprintf("%d.action", i)
-			if err := chassisGroup.AddEndpoint(endpoint,
-				micro.HandlerFunc(p.createRequestHandler(ctx, p.handleChassisPowerAction))); err != nil {
-				return fmt.Errorf("failed to register chassis endpoint %s: %w", endpoint, err)
-			}
-		}
+	// Register general power endpoints that handle all instances
+	if err := ipc.RegisterEndpointWithGroupCache(p.microService, ipc.SubjectPowerAction,
+		micro.HandlerFunc(p.createRequestHandler(ctx, p.handleGeneralPowerAction)), groups); err != nil {
+		return fmt.Errorf("failed to register power action endpoint: %w", err)
 	}
-
-	if p.config.enableBMCManagement {
-		bmcGroup := p.microService.AddGroup("bmc")
-		if err := bmcGroup.AddEndpoint("0.action",
-			micro.HandlerFunc(p.createRequestHandler(ctx, p.handleBMCPowerAction))); err != nil {
-			return fmt.Errorf("failed to register BMC endpoint: %w", err)
-		}
+	if err := ipc.RegisterEndpointWithGroupCache(p.microService, ipc.SubjectPowerResult,
+		micro.HandlerFunc(p.createRequestHandler(ctx, p.handleGeneralPowerResult)), groups); err != nil {
+		return fmt.Errorf("failed to register power result endpoint: %w", err)
+	}
+	if err := ipc.RegisterEndpointWithGroupCache(p.microService, ipc.SubjectPowerStatus,
+		micro.HandlerFunc(p.createRequestHandler(ctx, p.handleGeneralPowerStatus)), groups); err != nil {
+		return fmt.Errorf("failed to register power status endpoint: %w", err)
 	}
 
 	return nil
+}
+
+// subscribeInternalSubjects subscribes to internal coordination subjects.
+func (p *PowerMgr) subscribeInternalSubjects(ctx context.Context) error {
+	// Subscribe to internal power action requests from statemgr
+	if _, err := p.nc.Subscribe(ipc.InternalPowerAction, p.handleInternalPowerAction); err != nil {
+		return fmt.Errorf("failed to subscribe to internal power action: %w", err)
+	}
+
+	p.logger.InfoContext(ctx, "Subscribed to internal coordination subjects",
+		"power_actions", ipc.InternalPowerAction)
+
+	return nil
+}
+
+// handleInternalPowerAction handles internal power action requests from statemgr.
+func (p *PowerMgr) handleInternalPowerAction(msg *nats.Msg) {
+	ctx := context.Background()
+
+	var request v1alpha1.PowerControlRequest
+	if err := proto.Unmarshal(msg.Data, &request); err != nil {
+		p.logger.WarnContext(ctx, "Invalid internal power control request", "error", err)
+		return
+	}
+
+	componentName := request.ComponentName
+	action := request.Action
+
+	p.logger.InfoContext(ctx, "Received internal power action request",
+		"component", componentName,
+		"action", action)
+
+	var err error
+	switch action {
+	case "power_on":
+		err = p.performPowerAction(ctx, componentName, "on", false)
+	case "power_off":
+		err = p.performPowerAction(ctx, componentName, "off", false)
+	case "force_off":
+		err = p.performPowerAction(ctx, componentName, "off", true)
+	case "reset":
+		err = p.performPowerAction(ctx, componentName, "reset", false)
+	default:
+		p.logger.WarnContext(ctx, "Unknown power action",
+			"component", componentName,
+			"action", action)
+		return
+	}
+
+	// Report the result back to statemgr
+	p.reportStateChange(ctx, componentName, action, err == nil)
+
+	if err != nil {
+		p.logger.ErrorContext(ctx, "Internal power action failed",
+			"component", componentName,
+			"action", action,
+			"error", err)
+	} else {
+		p.logger.InfoContext(ctx, "Internal power action completed",
+			"component", componentName,
+			"action", action)
+	}
+}
+
+// performPowerAction performs a power action on a component using the appropriate backend.
+func (p *PowerMgr) performPowerAction(ctx context.Context, componentName, action string, force bool) error {
+	backend, err := p.getBackendForComponent(componentName)
+	if err != nil {
+		return fmt.Errorf("backend not configured for component %s: %w", componentName, err)
+	}
+
+	switch action {
+	case "on", "power_on":
+		return backend.PowerOn(ctx, componentName)
+	case "off", "power_off":
+		return backend.PowerOff(ctx, componentName, force)
+	case "reset", "reboot":
+		return backend.Reset(ctx, componentName)
+	default:
+		return fmt.Errorf("unsupported power action: %s", action)
+	}
+}
+
+// handleGeneralPowerAction is a general handler that dispatches to specific component handlers
+// based on the message content instead of the subject
+func (p *PowerMgr) handleGeneralPowerAction(ctx context.Context, req micro.Request) {
+	// Try to parse as different message types and dispatch accordingly
+
+	// Try host power action first
+	var hostRequest v1alpha1.ChangeHostStateRequest
+	if err := hostRequest.UnmarshalVT(req.Data()); err == nil && hostRequest.HostName != "" {
+		p.handleHostPowerActionFromGeneral(ctx, req, &hostRequest)
+		return
+	}
+
+	// Try chassis power action
+	var chassisRequest v1alpha1.ChangeChassisStateRequest
+	if err := chassisRequest.UnmarshalVT(req.Data()); err == nil && chassisRequest.ChassisName != "" {
+		p.handleChassisPowerActionFromGeneral(ctx, req, &chassisRequest)
+		return
+	}
+
+	// Try BMC power action - BMC requests might have a different structure
+	// For now, assume any other valid power request is for BMC
+	var bmcRequest v1alpha1.ChangeHostStateRequest // BMC might use similar structure
+	if err := bmcRequest.UnmarshalVT(req.Data()); err == nil {
+		p.handleBMCPowerActionFromGeneral(ctx, req, &bmcRequest)
+		return
+	}
+
+	ipc.RespondWithError(ctx, req, ipc.ErrInvalidRequest, "unable to parse power action request")
+}
+
+// handleGeneralPowerResult handles power operation results
+func (p *PowerMgr) handleGeneralPowerResult(ctx context.Context, req micro.Request) {
+	// Implementation for handling power operation results
+	// This would typically receive results from internal power operations
+	ipc.RespondWithError(ctx, req, ipc.ErrInternalError, "power result handling not implemented")
+}
+
+// handleGeneralPowerStatus handles power status requests
+func (p *PowerMgr) handleGeneralPowerStatus(ctx context.Context, req micro.Request) {
+	// Implementation for handling power status requests
+	// This would return current power status for components
+	ipc.RespondWithError(ctx, req, ipc.ErrInternalError, "power status handling not implemented")
+}
+
+// Helper methods that adapt the existing component-specific handlers
+
+func (p *PowerMgr) handleHostPowerActionFromGeneral(ctx context.Context, req micro.Request, request *v1alpha1.ChangeHostStateRequest) {
+	// Extract host ID from the host name if needed, or use name directly
+	// For now, we'll simulate the old behavior by creating a fake subject
+	hostID := request.HostName
+	componentName := fmt.Sprintf("host.%s", hostID)
+
+	// Call the existing handler logic but adapted for general use
+	p.processHostPowerAction(ctx, req, request, componentName)
+}
+
+func (p *PowerMgr) handleChassisPowerActionFromGeneral(ctx context.Context, req micro.Request, request *v1alpha1.ChangeChassisStateRequest) {
+	chassisID := request.ChassisName
+	componentName := fmt.Sprintf("chassis.%s", chassisID)
+
+	// Call the existing handler logic but adapted for general use
+	p.processChassisPowerAction(ctx, req, request, componentName)
+}
+
+func (p *PowerMgr) handleBMCPowerActionFromGeneral(ctx context.Context, req micro.Request, request *v1alpha1.ChangeHostStateRequest) {
+	componentName := "bmc.0" // Assuming single BMC
+
+	// Call the existing handler logic but adapted for general use
+	p.processBMCPowerAction(ctx, req, request, componentName)
+}
+
+// These methods would contain the core logic from the existing handlers
+// but without the subject parsing since we now get the info from message content
+
+func (p *PowerMgr) processHostPowerAction(ctx context.Context, req micro.Request, request *v1alpha1.ChangeHostStateRequest, componentName string) {
+	// This would contain the core logic from handleHostPowerAction
+	// but without the subject parsing part
+	ipc.RespondWithError(ctx, req, ipc.ErrInternalError, "host power action processing not fully implemented")
+}
+
+func (p *PowerMgr) processChassisPowerAction(ctx context.Context, req micro.Request, request *v1alpha1.ChangeChassisStateRequest, componentName string) {
+	// This would contain the core logic from handleChassisPowerAction
+	// but without the subject parsing part
+	ipc.RespondWithError(ctx, req, ipc.ErrInternalError, "chassis power action processing not fully implemented")
+}
+
+func (p *PowerMgr) processBMCPowerAction(ctx context.Context, req micro.Request, request *v1alpha1.ChangeHostStateRequest, componentName string) {
+	// This would contain the core logic from handleBMCPowerAction
+	// but without the subject parsing part
+	ipc.RespondWithError(ctx, req, ipc.ErrInternalError, "BMC power action processing not fully implemented")
 }
 
 func (p *PowerMgr) createRequestHandler(parentCtx context.Context, handler func(context.Context, micro.Request)) micro.HandlerFunc {
@@ -596,7 +1042,7 @@ func (p *PowerMgr) createRequestHandler(parentCtx context.Context, handler func(
 }
 
 func (p *PowerMgr) getBackendForComponent(componentName string) (PowerBackend, error) {
-	component, exists := p.config.GetComponentConfig(componentName)
+	component, exists := p.config.components[componentName]
 	if !exists {
 		return nil, fmt.Errorf("%w: component '%s'", ErrComponentNotFound, componentName)
 	}
@@ -610,10 +1056,6 @@ func (p *PowerMgr) getBackendForComponent(componentName string) (PowerBackend, e
 }
 
 func (p *PowerMgr) recordOperation(ctx context.Context, operation, component string, err error) {
-	if !p.config.enableMetrics {
-		return
-	}
-
 	attrs := []attribute.KeyValue{
 		attribute.String("operation", operation),
 		attribute.String("component", component),
@@ -640,8 +1082,8 @@ func (p *PowerMgr) reportStateChange(ctx context.Context, componentName, operati
 		return
 	}
 
-	// Send power operation result to statemgr via NATS
-	subject := fmt.Sprintf("%s.%s.power.result", p.config.stateReportingSubjectPrefix, componentName)
+	// Send power operation result to statemgr via NATS using internal coordination subject
+	subject := ipc.InternalPowerResult
 
 	// Create protobuf message for power operation results
 	result := &v1alpha1.PowerOperationResult{

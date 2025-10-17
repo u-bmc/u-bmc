@@ -106,8 +106,8 @@ func (o *nameOption) apply(c *config) {
 	c.name = o.name
 }
 
-// WithName sets the name for the operator configuration.
-func WithName(name string) Option {
+// WithServiceName sets the name for the operator configuration.
+func WithServiceName(name string) Option {
 	return &nameOption{
 		name: name,
 	}

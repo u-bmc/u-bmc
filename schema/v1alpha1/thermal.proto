@@ -166,3 +166,66 @@ message SetThermalZoneResponse { ThermalZone thermal_zone = 1; }
 message ListThermalZonesRequest { google.protobuf.FieldMask field_mask = 1; }
 
 message ListThermalZonesResponse { repeated ThermalZone thermal_zones = 1; }
+
+message ThermalEmergencyAlert {
+  string type = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional string sensor_id = 2;
+  optional string sensor_name = 3;
+  optional string zone_name = 4;
+  double temperature = 5;
+  optional double threshold = 6;
+  string severity = 7 [ (buf.validate.field).string.min_len = 1 ];
+  optional string action = 8;
+  google.protobuf.Timestamp timestamp = 9;
+  string message = 10 [ (buf.validate.field).string.min_len = 1 ];
+}
+
+message ThermalZoneTemperatureRequest {
+  repeated string zone_names = 1;
+  optional bool include_sensor_details = 2;
+}
+
+message ThermalZoneTemperatureResponse {
+  repeated ThermalZoneTemperature zone_temperatures = 1;
+}
+
+message ThermalZoneTemperature {
+  string zone_name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  double current_temperature = 2;
+  optional double target_temperature = 3;
+  repeated string contributing_sensor_ids = 4;
+  google.protobuf.Timestamp last_updated = 5;
+}
+
+message GetCoolingDeviceRequest {
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+}
+
+message GetCoolingDeviceResponse { CoolingDevice cooling_device = 1; }
+
+message SetCoolingDeviceRequest {
+  string name = 1 [ (buf.validate.field).string.min_len = 1 ];
+  optional double power_percent = 2 [
+    (buf.validate.field).double.gte = 0,
+    (buf.validate.field).double.lte = 100
+  ];
+}
+
+message SetCoolingDeviceResponse { CoolingDevice cooling_device = 1; }
+
+message ListCoolingDevicesRequest { google.protobuf.FieldMask field_mask = 1; }
+
+message ListCoolingDevicesResponse {
+  repeated CoolingDevice cooling_devices = 1;
+}
+
+message ThermalEventResponse {
+  string event_type = 1 [ (buf.validate.field).string.min_len = 1 ];
+  string component_name = 2 [ (buf.validate.field).string.min_len = 1 ];
+  string action = 3 [ (buf.validate.field).string.min_len = 1 ];
+  bool success = 4;
+  optional string error_message = 5;
+  string message = 6 [ (buf.validate.field).string.min_len = 1 ];
+  google.protobuf.Timestamp timestamp = 7;
+  map<string, string> additional_data = 8;
+}

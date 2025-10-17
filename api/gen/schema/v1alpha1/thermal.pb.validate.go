@@ -1635,3 +1635,1433 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListThermalZonesResponseValidationError{}
+
+// Validate checks the field values on ThermalEmergencyAlert with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ThermalEmergencyAlert) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ThermalEmergencyAlert with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ThermalEmergencyAlertMultiError, or nil if none found.
+func (m *ThermalEmergencyAlert) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ThermalEmergencyAlert) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Type
+
+	// no validation rules for Temperature
+
+	// no validation rules for Severity
+
+	if all {
+		switch v := interface{}(m.GetTimestamp()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ThermalEmergencyAlertValidationError{
+					field:  "Timestamp",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ThermalEmergencyAlertValidationError{
+					field:  "Timestamp",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTimestamp()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ThermalEmergencyAlertValidationError{
+				field:  "Timestamp",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Message
+
+	if m.SensorId != nil {
+		// no validation rules for SensorId
+	}
+
+	if m.SensorName != nil {
+		// no validation rules for SensorName
+	}
+
+	if m.ZoneName != nil {
+		// no validation rules for ZoneName
+	}
+
+	if m.Threshold != nil {
+		// no validation rules for Threshold
+	}
+
+	if m.Action != nil {
+		// no validation rules for Action
+	}
+
+	if len(errors) > 0 {
+		return ThermalEmergencyAlertMultiError(errors)
+	}
+
+	return nil
+}
+
+// ThermalEmergencyAlertMultiError is an error wrapping multiple validation
+// errors returned by ThermalEmergencyAlert.ValidateAll() if the designated
+// constraints aren't met.
+type ThermalEmergencyAlertMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ThermalEmergencyAlertMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ThermalEmergencyAlertMultiError) AllErrors() []error { return m }
+
+// ThermalEmergencyAlertValidationError is the validation error returned by
+// ThermalEmergencyAlert.Validate if the designated constraints aren't met.
+type ThermalEmergencyAlertValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ThermalEmergencyAlertValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ThermalEmergencyAlertValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ThermalEmergencyAlertValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ThermalEmergencyAlertValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ThermalEmergencyAlertValidationError) ErrorName() string {
+	return "ThermalEmergencyAlertValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ThermalEmergencyAlertValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sThermalEmergencyAlert.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ThermalEmergencyAlertValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ThermalEmergencyAlertValidationError{}
+
+// Validate checks the field values on ThermalZoneTemperatureRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ThermalZoneTemperatureRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ThermalZoneTemperatureRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// ThermalZoneTemperatureRequestMultiError, or nil if none found.
+func (m *ThermalZoneTemperatureRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ThermalZoneTemperatureRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.IncludeSensorDetails != nil {
+		// no validation rules for IncludeSensorDetails
+	}
+
+	if len(errors) > 0 {
+		return ThermalZoneTemperatureRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ThermalZoneTemperatureRequestMultiError is an error wrapping multiple
+// validation errors returned by ThermalZoneTemperatureRequest.ValidateAll()
+// if the designated constraints aren't met.
+type ThermalZoneTemperatureRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ThermalZoneTemperatureRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ThermalZoneTemperatureRequestMultiError) AllErrors() []error { return m }
+
+// ThermalZoneTemperatureRequestValidationError is the validation error
+// returned by ThermalZoneTemperatureRequest.Validate if the designated
+// constraints aren't met.
+type ThermalZoneTemperatureRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ThermalZoneTemperatureRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ThermalZoneTemperatureRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ThermalZoneTemperatureRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ThermalZoneTemperatureRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ThermalZoneTemperatureRequestValidationError) ErrorName() string {
+	return "ThermalZoneTemperatureRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ThermalZoneTemperatureRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sThermalZoneTemperatureRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ThermalZoneTemperatureRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ThermalZoneTemperatureRequestValidationError{}
+
+// Validate checks the field values on ThermalZoneTemperatureResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ThermalZoneTemperatureResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ThermalZoneTemperatureResponse with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// ThermalZoneTemperatureResponseMultiError, or nil if none found.
+func (m *ThermalZoneTemperatureResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ThermalZoneTemperatureResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetZoneTemperatures() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ThermalZoneTemperatureResponseValidationError{
+						field:  fmt.Sprintf("ZoneTemperatures[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ThermalZoneTemperatureResponseValidationError{
+						field:  fmt.Sprintf("ZoneTemperatures[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ThermalZoneTemperatureResponseValidationError{
+					field:  fmt.Sprintf("ZoneTemperatures[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ThermalZoneTemperatureResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ThermalZoneTemperatureResponseMultiError is an error wrapping multiple
+// validation errors returned by ThermalZoneTemperatureResponse.ValidateAll()
+// if the designated constraints aren't met.
+type ThermalZoneTemperatureResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ThermalZoneTemperatureResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ThermalZoneTemperatureResponseMultiError) AllErrors() []error { return m }
+
+// ThermalZoneTemperatureResponseValidationError is the validation error
+// returned by ThermalZoneTemperatureResponse.Validate if the designated
+// constraints aren't met.
+type ThermalZoneTemperatureResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ThermalZoneTemperatureResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ThermalZoneTemperatureResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ThermalZoneTemperatureResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ThermalZoneTemperatureResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ThermalZoneTemperatureResponseValidationError) ErrorName() string {
+	return "ThermalZoneTemperatureResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ThermalZoneTemperatureResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sThermalZoneTemperatureResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ThermalZoneTemperatureResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ThermalZoneTemperatureResponseValidationError{}
+
+// Validate checks the field values on ThermalZoneTemperature with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ThermalZoneTemperature) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ThermalZoneTemperature with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ThermalZoneTemperatureMultiError, or nil if none found.
+func (m *ThermalZoneTemperature) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ThermalZoneTemperature) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for ZoneName
+
+	// no validation rules for CurrentTemperature
+
+	if all {
+		switch v := interface{}(m.GetLastUpdated()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ThermalZoneTemperatureValidationError{
+					field:  "LastUpdated",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ThermalZoneTemperatureValidationError{
+					field:  "LastUpdated",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetLastUpdated()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ThermalZoneTemperatureValidationError{
+				field:  "LastUpdated",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if m.TargetTemperature != nil {
+		// no validation rules for TargetTemperature
+	}
+
+	if len(errors) > 0 {
+		return ThermalZoneTemperatureMultiError(errors)
+	}
+
+	return nil
+}
+
+// ThermalZoneTemperatureMultiError is an error wrapping multiple validation
+// errors returned by ThermalZoneTemperature.ValidateAll() if the designated
+// constraints aren't met.
+type ThermalZoneTemperatureMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ThermalZoneTemperatureMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ThermalZoneTemperatureMultiError) AllErrors() []error { return m }
+
+// ThermalZoneTemperatureValidationError is the validation error returned by
+// ThermalZoneTemperature.Validate if the designated constraints aren't met.
+type ThermalZoneTemperatureValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ThermalZoneTemperatureValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ThermalZoneTemperatureValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ThermalZoneTemperatureValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ThermalZoneTemperatureValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ThermalZoneTemperatureValidationError) ErrorName() string {
+	return "ThermalZoneTemperatureValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ThermalZoneTemperatureValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sThermalZoneTemperature.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ThermalZoneTemperatureValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ThermalZoneTemperatureValidationError{}
+
+// Validate checks the field values on GetCoolingDeviceRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetCoolingDeviceRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetCoolingDeviceRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetCoolingDeviceRequestMultiError, or nil if none found.
+func (m *GetCoolingDeviceRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetCoolingDeviceRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Name
+
+	if len(errors) > 0 {
+		return GetCoolingDeviceRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetCoolingDeviceRequestMultiError is an error wrapping multiple validation
+// errors returned by GetCoolingDeviceRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetCoolingDeviceRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetCoolingDeviceRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetCoolingDeviceRequestMultiError) AllErrors() []error { return m }
+
+// GetCoolingDeviceRequestValidationError is the validation error returned by
+// GetCoolingDeviceRequest.Validate if the designated constraints aren't met.
+type GetCoolingDeviceRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetCoolingDeviceRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetCoolingDeviceRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetCoolingDeviceRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetCoolingDeviceRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetCoolingDeviceRequestValidationError) ErrorName() string {
+	return "GetCoolingDeviceRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetCoolingDeviceRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetCoolingDeviceRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetCoolingDeviceRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetCoolingDeviceRequestValidationError{}
+
+// Validate checks the field values on GetCoolingDeviceResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetCoolingDeviceResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetCoolingDeviceResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetCoolingDeviceResponseMultiError, or nil if none found.
+func (m *GetCoolingDeviceResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetCoolingDeviceResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetCoolingDevice()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetCoolingDeviceResponseValidationError{
+					field:  "CoolingDevice",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetCoolingDeviceResponseValidationError{
+					field:  "CoolingDevice",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetCoolingDevice()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetCoolingDeviceResponseValidationError{
+				field:  "CoolingDevice",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return GetCoolingDeviceResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetCoolingDeviceResponseMultiError is an error wrapping multiple validation
+// errors returned by GetCoolingDeviceResponse.ValidateAll() if the designated
+// constraints aren't met.
+type GetCoolingDeviceResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetCoolingDeviceResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetCoolingDeviceResponseMultiError) AllErrors() []error { return m }
+
+// GetCoolingDeviceResponseValidationError is the validation error returned by
+// GetCoolingDeviceResponse.Validate if the designated constraints aren't met.
+type GetCoolingDeviceResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetCoolingDeviceResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetCoolingDeviceResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetCoolingDeviceResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetCoolingDeviceResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetCoolingDeviceResponseValidationError) ErrorName() string {
+	return "GetCoolingDeviceResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetCoolingDeviceResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetCoolingDeviceResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetCoolingDeviceResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetCoolingDeviceResponseValidationError{}
+
+// Validate checks the field values on SetCoolingDeviceRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *SetCoolingDeviceRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SetCoolingDeviceRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// SetCoolingDeviceRequestMultiError, or nil if none found.
+func (m *SetCoolingDeviceRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SetCoolingDeviceRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Name
+
+	if m.PowerPercent != nil {
+		// no validation rules for PowerPercent
+	}
+
+	if len(errors) > 0 {
+		return SetCoolingDeviceRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// SetCoolingDeviceRequestMultiError is an error wrapping multiple validation
+// errors returned by SetCoolingDeviceRequest.ValidateAll() if the designated
+// constraints aren't met.
+type SetCoolingDeviceRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SetCoolingDeviceRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SetCoolingDeviceRequestMultiError) AllErrors() []error { return m }
+
+// SetCoolingDeviceRequestValidationError is the validation error returned by
+// SetCoolingDeviceRequest.Validate if the designated constraints aren't met.
+type SetCoolingDeviceRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SetCoolingDeviceRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SetCoolingDeviceRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SetCoolingDeviceRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SetCoolingDeviceRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SetCoolingDeviceRequestValidationError) ErrorName() string {
+	return "SetCoolingDeviceRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SetCoolingDeviceRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSetCoolingDeviceRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SetCoolingDeviceRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SetCoolingDeviceRequestValidationError{}
+
+// Validate checks the field values on SetCoolingDeviceResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *SetCoolingDeviceResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SetCoolingDeviceResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// SetCoolingDeviceResponseMultiError, or nil if none found.
+func (m *SetCoolingDeviceResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SetCoolingDeviceResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetCoolingDevice()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, SetCoolingDeviceResponseValidationError{
+					field:  "CoolingDevice",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, SetCoolingDeviceResponseValidationError{
+					field:  "CoolingDevice",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetCoolingDevice()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return SetCoolingDeviceResponseValidationError{
+				field:  "CoolingDevice",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return SetCoolingDeviceResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// SetCoolingDeviceResponseMultiError is an error wrapping multiple validation
+// errors returned by SetCoolingDeviceResponse.ValidateAll() if the designated
+// constraints aren't met.
+type SetCoolingDeviceResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SetCoolingDeviceResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SetCoolingDeviceResponseMultiError) AllErrors() []error { return m }
+
+// SetCoolingDeviceResponseValidationError is the validation error returned by
+// SetCoolingDeviceResponse.Validate if the designated constraints aren't met.
+type SetCoolingDeviceResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SetCoolingDeviceResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SetCoolingDeviceResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SetCoolingDeviceResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SetCoolingDeviceResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SetCoolingDeviceResponseValidationError) ErrorName() string {
+	return "SetCoolingDeviceResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SetCoolingDeviceResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSetCoolingDeviceResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SetCoolingDeviceResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SetCoolingDeviceResponseValidationError{}
+
+// Validate checks the field values on ListCoolingDevicesRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListCoolingDevicesRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListCoolingDevicesRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListCoolingDevicesRequestMultiError, or nil if none found.
+func (m *ListCoolingDevicesRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListCoolingDevicesRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetFieldMask()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ListCoolingDevicesRequestValidationError{
+					field:  "FieldMask",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ListCoolingDevicesRequestValidationError{
+					field:  "FieldMask",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetFieldMask()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ListCoolingDevicesRequestValidationError{
+				field:  "FieldMask",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return ListCoolingDevicesRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListCoolingDevicesRequestMultiError is an error wrapping multiple validation
+// errors returned by ListCoolingDevicesRequest.ValidateAll() if the
+// designated constraints aren't met.
+type ListCoolingDevicesRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListCoolingDevicesRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListCoolingDevicesRequestMultiError) AllErrors() []error { return m }
+
+// ListCoolingDevicesRequestValidationError is the validation error returned by
+// ListCoolingDevicesRequest.Validate if the designated constraints aren't met.
+type ListCoolingDevicesRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListCoolingDevicesRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListCoolingDevicesRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListCoolingDevicesRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListCoolingDevicesRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListCoolingDevicesRequestValidationError) ErrorName() string {
+	return "ListCoolingDevicesRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListCoolingDevicesRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListCoolingDevicesRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListCoolingDevicesRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListCoolingDevicesRequestValidationError{}
+
+// Validate checks the field values on ListCoolingDevicesResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListCoolingDevicesResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListCoolingDevicesResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListCoolingDevicesResponseMultiError, or nil if none found.
+func (m *ListCoolingDevicesResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListCoolingDevicesResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetCoolingDevices() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListCoolingDevicesResponseValidationError{
+						field:  fmt.Sprintf("CoolingDevices[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListCoolingDevicesResponseValidationError{
+						field:  fmt.Sprintf("CoolingDevices[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListCoolingDevicesResponseValidationError{
+					field:  fmt.Sprintf("CoolingDevices[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListCoolingDevicesResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListCoolingDevicesResponseMultiError is an error wrapping multiple
+// validation errors returned by ListCoolingDevicesResponse.ValidateAll() if
+// the designated constraints aren't met.
+type ListCoolingDevicesResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListCoolingDevicesResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListCoolingDevicesResponseMultiError) AllErrors() []error { return m }
+
+// ListCoolingDevicesResponseValidationError is the validation error returned
+// by ListCoolingDevicesResponse.Validate if the designated constraints aren't met.
+type ListCoolingDevicesResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListCoolingDevicesResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListCoolingDevicesResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListCoolingDevicesResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListCoolingDevicesResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListCoolingDevicesResponseValidationError) ErrorName() string {
+	return "ListCoolingDevicesResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListCoolingDevicesResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListCoolingDevicesResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListCoolingDevicesResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListCoolingDevicesResponseValidationError{}
+
+// Validate checks the field values on ThermalEventResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ThermalEventResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ThermalEventResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ThermalEventResponseMultiError, or nil if none found.
+func (m *ThermalEventResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ThermalEventResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for EventType
+
+	// no validation rules for ComponentName
+
+	// no validation rules for Action
+
+	// no validation rules for Success
+
+	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetTimestamp()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ThermalEventResponseValidationError{
+					field:  "Timestamp",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ThermalEventResponseValidationError{
+					field:  "Timestamp",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTimestamp()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ThermalEventResponseValidationError{
+				field:  "Timestamp",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for AdditionalData
+
+	if m.ErrorMessage != nil {
+		// no validation rules for ErrorMessage
+	}
+
+	if len(errors) > 0 {
+		return ThermalEventResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ThermalEventResponseMultiError is an error wrapping multiple validation
+// errors returned by ThermalEventResponse.ValidateAll() if the designated
+// constraints aren't met.
+type ThermalEventResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ThermalEventResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ThermalEventResponseMultiError) AllErrors() []error { return m }
+
+// ThermalEventResponseValidationError is the validation error returned by
+// ThermalEventResponse.Validate if the designated constraints aren't met.
+type ThermalEventResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ThermalEventResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ThermalEventResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ThermalEventResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ThermalEventResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ThermalEventResponseValidationError) ErrorName() string {
+	return "ThermalEventResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ThermalEventResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sThermalEventResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ThermalEventResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ThermalEventResponseValidationError{}

@@ -5,11 +5,11 @@ package statemgr
 import (
 	"context"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/nats-io/nats.go/micro"
 	schemav1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
+	v1alpha1 "github.com/u-bmc/u-bmc/api/gen/schema/v1alpha1"
 	"github.com/u-bmc/u-bmc/pkg/ipc"
 	"github.com/u-bmc/u-bmc/pkg/state"
 	"go.opentelemetry.io/otel/attribute"
@@ -303,36 +303,82 @@ func (s *StateMgr) createChassisBroadcastCallback(_ context.Context, componentNa
 	}
 }
 
-func (s *StateMgr) handleChassisStateRequest(ctx context.Context, req micro.Request) {
-	start := time.Now()
-
+func (s *StateMgr) handleChassisState(ctx context.Context, req micro.Request) {
 	if s.tracer != nil {
 		var span trace.Span
-		ctx, span = s.tracer.Start(ctx, "statemgr.handleChassisStateRequest")
+		ctx, span = s.tracer.Start(ctx, "statemgr.handleChassisState")
 		defer span.End()
 		span.SetAttributes(attribute.String("subject", req.Subject()))
 	}
 
-	parts := strings.Split(req.Subject(), ".")
-	if len(parts) < 4 {
-		ipc.RespondWithError(ctx, req, ErrInvalidRequest, "invalid subject format")
+	var request v1alpha1.GetChassisRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
+		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
 		return
 	}
 
-	chassisID := parts[2]
-	chassisName := fmt.Sprintf("chassis.%s", chassisID)
-	operation := parts[3]
-
-	switch operation {
-	case operationState:
-		s.handleGetChassisState(ctx, req, chassisName)
-	case operationControl:
-		s.handleChassisControl(ctx, req, chassisName, start)
-	case operationInfo:
-		s.handleGetChassisInfo(ctx, req, chassisName)
+	// Extract chassis name from the oneof identifier
+	var chassisName string
+	switch id := request.Identifier.(type) {
+	case *v1alpha1.GetChassisRequest_Name:
+		chassisName = id.Name
 	default:
-		ipc.RespondWithError(ctx, req, ErrInvalidRequest, fmt.Sprintf("unknown operation: %s", operation))
+		ipc.RespondWithError(ctx, req, ErrMissingRequiredField, "chassis name is required")
+		return
 	}
+
+	s.handleGetChassisState(ctx, req, chassisName)
+}
+
+func (s *StateMgr) handleChassisControl(ctx context.Context, req micro.Request) {
+	start := time.Now()
+
+	if s.tracer != nil {
+		var span trace.Span
+		ctx, span = s.tracer.Start(ctx, "statemgr.handleChassisControl")
+		defer span.End()
+		span.SetAttributes(attribute.String("subject", req.Subject()))
+	}
+
+	var request schemav1alpha1.ChangeChassisStateRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
+		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
+		return
+	}
+
+	if request.ChassisName == "" {
+		ipc.RespondWithError(ctx, req, ErrMissingRequiredField, "chassis name is required")
+		return
+	}
+
+	s.handleChassisControlRequest(ctx, req, request.ChassisName, start, &request)
+}
+
+func (s *StateMgr) handleChassisInfo(ctx context.Context, req micro.Request) {
+	if s.tracer != nil {
+		var span trace.Span
+		ctx, span = s.tracer.Start(ctx, "statemgr.handleChassisInfo")
+		defer span.End()
+		span.SetAttributes(attribute.String("subject", req.Subject()))
+	}
+
+	var request v1alpha1.GetChassisRequest
+	if err := request.UnmarshalVT(req.Data()); err != nil {
+		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
+		return
+	}
+
+	// Extract chassis name from the oneof identifier
+	var chassisName string
+	switch id := request.Identifier.(type) {
+	case *v1alpha1.GetChassisRequest_Name:
+		chassisName = id.Name
+	default:
+		ipc.RespondWithError(ctx, req, ErrMissingRequiredField, "chassis name is required")
+		return
+	}
+
+	s.handleGetChassisInfo(ctx, req, chassisName)
 }
 
 func (s *StateMgr) handleGetChassisState(ctx context.Context, req micro.Request, chassisName string) {
@@ -365,13 +411,7 @@ func (s *StateMgr) handleGetChassisState(ctx context.Context, req micro.Request,
 	}
 }
 
-func (s *StateMgr) handleChassisControl(ctx context.Context, req micro.Request, chassisName string, start time.Time) {
-	var request schemav1alpha1.ChangeChassisStateRequest
-	if err := request.UnmarshalVT(req.Data()); err != nil {
-		ipc.RespondWithError(ctx, req, ErrUnmarshalingFailed, err.Error())
-		return
-	}
-
+func (s *StateMgr) handleChassisControlRequest(ctx context.Context, req micro.Request, chassisName string, start time.Time, request *schemav1alpha1.ChangeChassisStateRequest) {
 	sm, exists := s.getStateMachine(chassisName)
 	if !exists {
 		ipc.RespondWithError(ctx, req, ErrComponentNotFound, fmt.Sprintf("chassis %s not found", chassisName))
@@ -394,7 +434,7 @@ func (s *StateMgr) handleChassisControl(ctx context.Context, req micro.Request, 
 		duration := time.Since(start)
 		s.recordTransition(ctx, chassisName, previousState, sm.State(ctx), trigger, duration, err)
 
-		if s.config.enableMetrics && s.stateTransitionDuration != nil {
+		if s.stateTransitionDuration != nil {
 			s.stateTransitionDuration.Record(ctx, duration.Seconds(), metric.WithAttributes(
 				attribute.String("component", chassisName),
 				attribute.String("operation", "control"),
@@ -410,7 +450,7 @@ func (s *StateMgr) handleChassisControl(ctx context.Context, req micro.Request, 
 	currentState := sm.State(ctx)
 	s.recordTransition(ctx, chassisName, previousState, currentState, trigger, duration, nil)
 
-	if s.config.enableMetrics && s.stateTransitionDuration != nil {
+	if s.stateTransitionDuration != nil {
 		s.stateTransitionDuration.Record(ctx, duration.Seconds(), metric.WithAttributes(
 			attribute.String("component", chassisName),
 			attribute.String("operation", "control"),
