@@ -86,7 +86,7 @@ graph TB
 - Primary: ConnectRPC over HTTPS with JSON or protobuf payloads.
 - REST: exposed from protobuf annotations (paths under `/api/v1alpha1/...`).
 - Compatibility: Redfish is planned; IPMI is present as a compatibility service and will route into the same managers.
-- See docs/api.md for concrete request examples and endpoints.
+- See [docs/api.md](api.md) for concrete request examples and endpoints.
 
 ## Hardware integration
 
@@ -104,13 +104,13 @@ graph TB
 ## What to read next
 ## References
 
-- docs/architecture.md — deeper service graph and ordering
-- docs/api.md — how to access and query the API (ConnectRPC, REST, future Redfish/IPMI)
-- docs/state.md — state machine wrapper and patterns
-- docs/gpio.md — GPIO usage and conventions
-- docs/sensormon.md — sensor monitoring service configuration and usage
-- docs/thermalmgr.md — thermal management and PID control setup
-- docs/integration_example.md — power/state orchestration flow
-- docs/integration_complete.md — power/LED integration details
-- docs/porting.md — how to configure and port a new platform
-- docs/roadmap.md — current open items and planned features
+- [docs/architecture.md](architecture.md) — deeper service graph and ordering
+- [docs/api.md](api.md) — how to access and query the API (ConnectRPC, REST, future Redfish/IPMI)
+- [docs/state.md](state.md) — state machine wrapper and patterns
+- [docs/gpio.md](gpio.md) — GPIO usage and conventions
+- [docs/sensormon.md](sensormon.md) — sensor monitoring service configuration and usage
+- [docs/thermalmgr.md](thermalmgr.md) — thermal management and PID control setup
+- [docs/integration_example.md](integration_example.md) — power/state orchestration flow
+- [docs/integration_complete.md](integration_complete.md) — power/LED integration details
+- [docs/porting.md](porting.md) — how to configure and port a new platform
+- [docs/roadmap.md](roadmap.md) — current open items and planned features

@@ -343,6 +343,6 @@ API documentation and client libraries are maintained consistently across versio
 
 ## References
 
-Additional information about API usage and integration is available in related documentation including system architecture details in `docs/architecture.md`, service-specific documentation for backend service integration, security framework information in `docs/websrv.md` and security service documentation, and platform-specific deployment guidance in `docs/porting.md`.
+Additional information about API usage and integration is available in related documentation including system architecture details in [docs/architecture.md](architecture.md), service-specific documentation for backend service integration, security framework information in [docs/websrv.md](websrv.md) and security service documentation, and platform-specific deployment guidance in [docs/porting.md](porting.md).
 
 The authoritative API schema is maintained in protobuf files under `schema/v1alpha1/` with comprehensive annotations for endpoint generation and client library support. Generated documentation and client libraries are available through standard distribution channels with version-specific compatibility information and migration guidance.

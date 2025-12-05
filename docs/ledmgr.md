@@ -406,6 +406,6 @@ The modular design of the ledmgr service and its standardized integration patter
 
 ## References
 
-Additional information about the ledmgr service and its integration with the broader u-bmc system is available in related documentation including system architecture details in `docs/architecture.md`, state management coordination in `docs/statemgr.md`, power management integration in `docs/powermgr.md`, and platform-specific configuration guidance in `docs/porting.md`.
+Additional information about the ledmgr service and its integration with the broader u-bmc system is available in related documentation including system architecture details in [docs/architecture.md](architecture.md), state management coordination in [docs/statemgr.md](statemgr.md), power management integration in [docs/powermgr.md](powermgr.md), and platform-specific configuration guidance in [docs/porting.md](porting.md).
 
 Package-level documentation and detailed API references are maintained on pkg.go.dev for comprehensive development and integration guidance. The pkg/gpio package provides foundational GPIO control mechanisms used by the service with detailed documentation of GPIO usage patterns and best practices for LED control applications.

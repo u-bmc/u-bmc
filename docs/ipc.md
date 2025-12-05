@@ -269,6 +269,6 @@ The modular design of the IPC service and its standardized interfaces provide a 
 
 ## References
 
-Additional information about the IPC service and its role in the broader u-bmc architecture is available in related documentation including system architecture details in `docs/architecture.md`, service development guidance in individual service documentation, and platform-specific integration information in `docs/porting.md`.
+Additional information about the IPC service and its role in the broader u-bmc architecture is available in related documentation including system architecture details in [docs/architecture.md](architecture.md), service development guidance in individual service documentation, and platform-specific integration information in [docs/porting.md](porting.md).
 
 Package-level documentation and detailed API references are maintained on pkg.go.dev for comprehensive development and integration guidance.

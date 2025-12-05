@@ -106,13 +106,13 @@ High‑level porting steps
 
 9) Documentation
 - Keep platform‑specific notes in the target’s README (allowed for hardware targets). Avoid TODOs in code; instead:
-  - Add open items to `docs/roadmap.md` under the platform enablement and non‑userspace sections.
-  - Link back to `docs/api.md`, `docs/overview.md`, and this file for shared guidance.
+  - Add open items to [docs/roadmap.md](roadmap.md) under the platform enablement and non‑userspace sections.
+  - Link back to [docs/api.md](api.md), [docs/overview.md](overview.md), and this file for shared guidance.
 
 Service‑specific guidance (brief)
 - powermgr: uses `pkg/gpio` for line control; prefer the convenience toggles for momentary presses. Confirm active‑low vs active‑high and debounce.
-- sensormon: combine HWMON polling with I2C/PMBus reads; map sensor readings to the correct schema units; record `last_reading_timestamp`. See docs/sensormon.md for detailed configuration.
-- thermalmgr: keep PID bounds realistic for your fan hardware; avoid oscillation by tuning sample time and constraints. See docs/thermalmgr.md for PID tuning examples and thermal zone setup.
+- sensormon: combine HWMON polling with I2C/PMBus reads; map sensor readings to the correct schema units; record `last_reading_timestamp`. See [docs/sensormon.md](sensormon.md) for detailed configuration.
+- thermalmgr: keep PID bounds realistic for your fan hardware; avoid oscillation by tuning sample time and constraints. See [docs/thermalmgr.md](thermalmgr.md) for PID tuning examples and thermal zone setup.
 - websrv: stick to TLS 1.3; use QUIC if supported; set reasonable read/write/idle timeouts; prefer serving the Web UI from the same process for simplicity.
 - statemgr: ensure action mappings for power and LEDs are complete; verify that chassis, host, and BMC actions drive the expected transitions.
 
@@ -128,7 +128,7 @@ API and validation notes
 - Validation uses `buf/validate`; when adding platform‑specific rules in services, match the semantics of the schema and prefer explicit error details.
 
 Non‑userspace and rootfs builder TODOs
-Track these centrally in `docs/roadmap.md`. The items below are common across platforms and should not be duplicated as inline code TODOs.
+Track these centrally in [docs/roadmap.md](roadmap.md). The items below are common across platforms and should not be duplicated as inline code TODOs.
 
 Kernel and device tree (platform bring‑up)
 - Enable gpio‑cdev, I2C, PMBus, HWMON, watchdog, and sensor drivers for your platform.
@@ -174,12 +174,12 @@ Bring‑up checklist (summary)
 - Web API reachable with TLS; auth mode is set; CORS and limits applied.
 - Operator boots all required services; clean shutdown and restart verified.
 - Platform README exists under the target directory with wiring and notes.
-- All open items recorded in `docs/roadmap.md` (non‑userspace and builder tasks included).
+- All open items recorded in [docs/roadmap.md](roadmap.md) (non‑userspace and builder tasks included).
 
 See also
-- docs/overview.md for the system overview.
-- docs/architecture.md for the service graph and sequencing model.
-- docs/api.md for API access patterns and examples.
-- docs/sensormon.md for sensor monitoring configuration and usage.
-- docs/thermalmgr.md for thermal management and PID control setup.
-- docs/roadmap.md for central TODOs and planned compatibility layers.
+- [docs/overview.md](overview.md) for the system overview.
+- [docs/architecture.md](architecture.md) for the service graph and sequencing model.
+- [docs/api.md](api.md) for API access patterns and examples.
+- [docs/sensormon.md](sensormon.md) for sensor monitoring configuration and usage.
+- [docs/thermalmgr.md](thermalmgr.md) for thermal management and PID control setup.
+- [docs/roadmap.md](roadmap.md) for central TODOs and planned compatibility layers.

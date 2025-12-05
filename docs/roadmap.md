@@ -59,7 +59,7 @@ Strengthen the default posture of websrv.
 - Cross-cutting: CORS policy, request limits, structured errors, and tracing.
 
 Platform enablement
-Bring up initial targets in targets/, following the porting guidance in docs/porting.md.
+Bring up initial targets in targets/, following the porting guidance in [docs/porting.md](porting.md).
 
 - Deliverables: GPIO line mapping for power and LEDs, I2C bus and device discovery, thermal zones, and inventory basics.
 - Non-userspace items are tracked in this roadmap's platform section (see Later → Rootfs builder, kernel and device tree notes).
@@ -142,9 +142,9 @@ Ship artifacts that are trustworthy and easy to consume.
 - GPIO: power/reset/identify lines mapped with clear active states and debounce characteristics.
 - LEDs: power, status, and identify mapping with supported patterns (on/off/blink).
 - I2C: bus topology, device addresses, and muxes; PMBus devices and scaling coefficients.
-- Thermal: zones, sensors, and PID defaults per platform (see docs/thermalmgr.md for configuration).
+- Thermal: zones, sensors, and PID defaults per platform (see [docs/thermalmgr.md](thermalmgr.md) for configuration).
 - Inventory: asset information available via schema/v1alpha1.
-- Sensors: hwmon device mapping and threshold configuration (see docs/sensormon.md for setup).
+- Sensors: hwmon device mapping and threshold configuration (see [docs/sensormon.md](sensormon.md) for setup).
 - Non-userspace: kernel, device tree, udev, hwmon, pinmux, watchdog (tracked until the rootfs builder is in place).
 
 ## API direction
@@ -160,20 +160,20 @@ The ConnectRPC API is the primary entry point and is available now. It supports 
 
 ## Related documents
 
-- docs/overview.md — high-level system overview
-- docs/architecture.md — service graph and operator model
-- docs/state.md — state machine wrapper and patterns
-- docs/gpio.md — GPIO abstractions and usage
-- docs/api.md — API usage and request examples
-- docs/porting.md — how to configure and port a new platform
-- docs/operator.md — service supervision and lifecycle management
-- docs/ipc.md — embedded NATS messaging and service communication
-- docs/websrv.md — web server and API gateway service
-- docs/statemgr.md — system state machines and coordination
-- docs/powermgr.md — power management and sequencing service
-- docs/ledmgr.md — LED control and visual indication service
-- docs/api.md — comprehensive API reference and integration guide
-- docs/sensormon.md — sensor monitoring service documentation
-- docs/thermalmgr.md — thermal management service documentation
+- [docs/overview.md](overview.md) — high-level system overview
+- [docs/architecture.md](architecture.md) — service graph and operator model
+- [docs/state.md](state.md) — state machine wrapper and patterns
+- [docs/gpio.md](gpio.md) — GPIO abstractions and usage
+- [docs/api.md](api.md) — API usage and request examples
+- [docs/porting.md](porting.md) — how to configure and port a new platform
+- [docs/operator.md](operator.md) — service supervision and lifecycle management
+- [docs/ipc.md](ipc.md) — embedded NATS messaging and service communication
+- [docs/websrv.md](websrv.md) — web server and API gateway service
+- [docs/statemgr.md](statemgr.md) — system state machines and coordination
+- [docs/powermgr.md](powermgr.md) — power management and sequencing service
+- [docs/ledmgr.md](ledmgr.md) — LED control and visual indication service
+- [docs/api.md](api.md) — comprehensive API reference and integration guide
+- [docs/sensormon.md](sensormon.md) — sensor monitoring service documentation
+- [docs/thermalmgr.md](thermalmgr.md) — thermal management service documentation
 
 Status and priorities evolve as we integrate more platforms and validate the runtime. This roadmap keeps us aligned on the next most valuable increments while protecting the system’s reliability.
