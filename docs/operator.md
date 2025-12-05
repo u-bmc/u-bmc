@@ -249,6 +249,6 @@ The operator service's modular design and standardized interfaces provide a soli
 
 ## References
 
-For additional information about the operator service and its integration with other u-bmc components, see the related documentation including the system architecture overview in `docs/architecture.md`, platform porting guidance in `docs/porting.md`, and individual service documentation for integration details.
+For additional information about the operator service and its integration with other u-bmc components, see the related documentation including the system architecture overview in [docs/architecture.md](architecture.md), platform porting guidance in [docs/porting.md](porting.md), and individual service documentation for integration details.
 
 Package-level documentation and API references are available on pkg.go.dev for detailed implementation information and development guidance.

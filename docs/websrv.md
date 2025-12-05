@@ -320,6 +320,6 @@ The modular design of the websrv service and its standardized integration patter
 
 ## References
 
-Additional information about the websrv service and its integration with the broader u-bmc system is available in related documentation including system architecture details in `docs/architecture.md`, API usage examples and patterns in `docs/api.md`, and security framework information in individual service documentation for `usermgr` and `securitymgr`.
+Additional information about the websrv service and its integration with the broader u-bmc system is available in related documentation including system architecture details in [docs/architecture.md](architecture.md), API usage examples and patterns in [docs/api.md](api.md), and security framework information in individual service documentation for `usermgr` and `securitymgr`.
 
 Package-level documentation and detailed API references are maintained on pkg.go.dev for comprehensive development and integration guidance. The authoritative API schema is defined in the protobuf files under `schema/v1alpha1/` with comprehensive annotations for both ConnectRPC and REST endpoint generation.

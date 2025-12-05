@@ -388,6 +388,6 @@ The modular design of the powermgr service and its standardized integration patt
 
 ## References
 
-Additional information about the powermgr service and its integration with the broader u-bmc system is available in related documentation including system architecture details in `docs/architecture.md`, state management coordination in `docs/statemgr.md`, thermal management integration in `docs/thermalmgr.md`, and platform-specific configuration guidance in `docs/porting.md`.
+Additional information about the powermgr service and its integration with the broader u-bmc system is available in related documentation including system architecture details in [docs/architecture.md](architecture.md), state management coordination in [docs/statemgr.md](statemgr.md), thermal management integration in [docs/thermalmgr.md](thermalmgr.md), and platform-specific configuration guidance in [docs/porting.md](porting.md).
 
 Package-level documentation and detailed API references are maintained on pkg.go.dev for comprehensive development and integration guidance. The pkg/gpio package provides the foundational GPIO control mechanisms used by the service with detailed documentation of GPIO usage patterns and best practices for BMC applications.

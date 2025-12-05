@@ -52,7 +52,7 @@ A dedicated README in `webui/` is allowed and should contain developer-focused d
 
 ## API and authentication
 
-All UI interactions use the same endpoints documented in docs/api.md. Authentication and authorization are enforced by `websrv`:
+All UI interactions use the same endpoints documented in [docs/api.md](api.md). Authentication and authorization are enforced by `websrv`:
 - TLS is always on. Development builds use a self-signed certificate.
 - The server may use session cookies or bearer tokens depending on deployment.
 - Role-aware handlers govern what the UI can read and change.
@@ -72,7 +72,7 @@ Planned UI surfaces include:
 - Updates: A/B flows, progress, and rollback (`updatemgr`)
 - Redfish/IPMI: compatibility layers presented consistently with existing UI flows
 
-The central roadmap in docs/roadmap.md tracks delivery sequencing and priorities.
+The central roadmap in [docs/roadmap.md](roadmap.md) tracks delivery sequencing and priorities.
 
 ## Documentation policy and ownership
 
@@ -82,8 +82,8 @@ The central roadmap in docs/roadmap.md tracks delivery sequencing and priorities
 
 ## References
 
-- docs/api.md — how to access and query the API
-- docs/overview.md — system overview
-- docs/architecture.md — service graph and operator model
-- docs/roadmap.md — current backlog and planned features
-- webui/README.md — developer guide for the Web UI
+- [docs/api.md](api.md) — how to access and query the API
+- [docs/overview.md](overview.md) — system overview
+- [docs/architecture.md](architecture.md) — service graph and operator model
+- [docs/roadmap.md](roadmap.md) — current backlog and planned features
+- [webui/README.md](../webui/README.md) — developer guide for the Web UI

@@ -116,14 +116,14 @@ Supporting packages (selection)
 
 API surface
 - Schema: schema/v1alpha1/*.proto (authoritative request/response types and REST annotations).
-- Access: see docs/api.md for ConnectRPC and REST examples, authentication, and content types.
+- Access: see [docs/api.md](api.md) for ConnectRPC and REST examples, authentication, and content types.
 
 Lifecycle and ordering
 - The operator starts IPC first, then core managers in parallel (power, sensors, thermal, state), followed by management and protocol services, and finally the web server. Shutdown proceeds in reverse while preserving dependencies.
 ## References
 
-- docs/overview.md — higher-level narrative and context
-- docs/api.md — how to query the API
-- docs/sensormon.md — sensor monitoring service configuration and usage
-- docs/thermalmgr.md — thermal management and PID control setup
+- [docs/overview.md](overview.md) — higher-level narrative and context
+- [docs/api.md](api.md) — how to query the API
+- [docs/sensormon.md](sensormon.md) — sensor monitoring service configuration and usage
+- [docs/thermalmgr.md](thermalmgr.md) — thermal management and PID control setup
 - pkg/* and service/* doc.go — package-level details on pkg.go.dev

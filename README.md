@@ -12,17 +12,17 @@ This repository contains the services, packages, protobuf API, and documentation
 ## Quick orientation
 
 - System overview and architecture
-  - docs/overview.md
-  - docs/architecture.md
+  - [System Overview](docs/overview.md)
+  - [Architecture](docs/architecture.md)
 - Services and state machines
-  - docs/state.md
+  - [State Management](docs/state.md)
 - Hardware integration
-  - docs/gpio.md
+  - [GPIO Integration](docs/gpio.md)
 - Power/LED orchestration examples
-  - docs/integration_example.md
-  - docs/integration_complete.md
+  - [Integration Example](docs/integration_example.md)
+  - [Complete Integration](docs/integration_complete.md)
 - Roadmap
-  - docs/roadmap.md
+  - [Project Roadmap](docs/roadmap.md)
 
 ## Architecture in brief
 
@@ -32,7 +32,7 @@ This repository contains the services, packages, protobuf API, and documentation
 - Managers handle domains: power, thermal, sensors, inventory, users, security, updates
 - Telemetry integrates tracing and metrics across services
 
-For a deeper dive, see docs/overview.md and docs/architecture.md. Those documents include mermaid diagrams of service relationships and message flow.
+For a deeper dive, see [System Overview](docs/overview.md) and [Architecture](docs/architecture.md). Those documents include mermaid diagrams of service relationships and message flow.
 
 ## API
 
@@ -46,14 +46,14 @@ For a deeper dive, see docs/overview.md and docs/architecture.md. Those document
   - Redfish (planned)
   - IPMI (legacy compatibility; in progress)
 
-A dedicated guide with request examples and schema pointers is available in docs/api.md.
+A dedicated guide with request examples and schema pointers is available in [API Guide](docs/api.md).
 
 ## Platforms and targets
 
 - Hardware targets live under targets/
   - Each real hardware target may include its own README (allowed)
 - To port a new platform:
-  - Follow the step-by-step guide in docs/porting.md
+  - Follow the step-by-step guide in [Porting Guide](docs/porting.md)
   - Provide platform wiring and capabilities (GPIO/I2C sensors, power rails)
   - Implement target bootstrap and service configuration
   - Add non-userspace and rootfs builder items to the TODOs as noted in the guide
@@ -63,7 +63,7 @@ Future work: a rootfs builder under dagger/ (this directory may contain its own 
 ## Web UI
 
 - A modern Web UI communicates via the same public API
-- Development and packaging are tracked in docs/webui.md (with a short README allowed in webui/)
+- Development and packaging are tracked in [Web UI Guide](docs/webui.md) (with a short README allowed in webui/)
 
 ## Documentation policy
 
@@ -78,24 +78,24 @@ Future work: a rootfs builder under dagger/ (this directory may contain its own 
 
 ## Contributing and licensing
 
-- Contribution guide: CONTRIBUTING.md
-- Releasing/versioning: RELEASING.md and VERSIONING.md
-- License: BSD-3-Clause (see LICENSE)
+- Contribution guide: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Releasing/versioning: [RELEASING.md](RELEASING.md) and [VERSIONING.md](VERSIONING.md)
+- License: BSD-3-Clause (see [LICENSE](LICENSE))
 
 ## Getting started
 
-- Read docs/overview.md to understand the components
-- Pick a target under targets/ or follow docs/porting.md to add your own
-- Use docs/api.md to explore and test the API
-- Track upcoming features in docs/roadmap.md
+- Read [System Overview](docs/overview.md) to understand the components
+- Pick a target under targets/ or follow [Porting Guide](docs/porting.md) to add your own
+- Use [API Guide](docs/api.md) to explore and test the API
+- Track upcoming features in [Project Roadmap](docs/roadmap.md)
 
 Links to additional documents:
-- docs/overview.md
-- docs/architecture.md
-- docs/state.md
-- docs/gpio.md
-- docs/integration_example.md
-- docs/integration_complete.md
-- docs/api.md
-- docs/porting.md
-- docs/roadmap.md
+- [System Overview](docs/overview.md)
+- [Architecture](docs/architecture.md)
+- [State Management](docs/state.md)
+- [GPIO Integration](docs/gpio.md)
+- [Integration Example](docs/integration_example.md)
+- [Complete Integration](docs/integration_complete.md)
+- [API Guide](docs/api.md)
+- [Porting Guide](docs/porting.md)
+- [Project Roadmap](docs/roadmap.md)
