@@ -16,7 +16,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/lorenzosaino/go-sysctl v0.3.1
 	github.com/nats-io/nats-server/v2 v2.12.0
-	github.com/nats-io/nats.go v1.46.0
+	github.com/nats-io/nats.go v1.48.0
 	github.com/planetscale/vtprotobuf v0.6.1-0.20250313105119-ba97887b0a25
 	github.com/qmuntal/stateless v1.7.2
 	github.com/quic-go/quic-go v0.54.1
