@@ -36,7 +36,7 @@ jobs:
         working-directory: targets/mainboards/asus/iec
         run: GOOS=linux GOARCH=arm GOARM=7,softfloat go build -ldflags="-s -w"
       - name: Upload Artifact
-        uses: actions/upload-artifact@2848b2cda0e5190984587ec6bb1f36730ca78d50 # v4.6.2
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: asus-iec
           path: targets/mainboards/asus/iec/iec
