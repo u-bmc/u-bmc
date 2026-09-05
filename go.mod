@@ -1,6 +1,6 @@
 module github.com/u-bmc/u-bmc
 
-go 1.24.0
+go 1.25.0
 
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.9-20250912141014-52f32327d4b0.1
@@ -28,24 +28,25 @@ require (
 	go.einride.tech/pid v0.1.3
 	go.opentelemetry.io/contrib/bridges/otelslog v0.13.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.63.0
-	go.opentelemetry.io/otel v1.38.0
+	go.opentelemetry.io/otel v1.44.0
 	go.opentelemetry.io/otel/log v0.14.0
-	go.opentelemetry.io/otel/metric v1.38.0
-	go.opentelemetry.io/otel/trace v1.38.0
-	golang.org/x/crypto v0.42.0
-	golang.org/x/sys v0.36.0
-	google.golang.org/genproto v0.0.0-20251014184007-4626949a642f
-	google.golang.org/genproto/googleapis/api v0.0.0-20251014184007-4626949a642f
-	google.golang.org/grpc v1.75.1
-	google.golang.org/protobuf v1.36.10
+	go.opentelemetry.io/otel/metric v1.44.0
+	go.opentelemetry.io/otel/trace v1.44.0
+	golang.org/x/crypto v0.54.0
+	golang.org/x/sys v0.47.0
+	google.golang.org/genproto v0.0.0-20260904194346-d0f1323225a4
+	google.golang.org/genproto/googleapis/api v0.0.0-20260825221802-da73d73af1c5
+	google.golang.org/grpc v1.83.1
+	google.golang.org/protobuf v1.36.12
 )
 
 require (
 	buf.build/go/protovalidate v0.14.0 // indirect
-	cel.dev/expr v0.24.0 // indirect
+	cel.dev/expr v0.25.2 // indirect
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/antithesishq/antithesis-sdk-go v0.4.3-default-no-op // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
+	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/francoispqt/gojay v1.2.13 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
@@ -63,17 +64,17 @@ require (
 	github.com/samber/lo v1.51.0 // indirect
 	github.com/samber/slog-common v0.19.0 // indirect
 	github.com/stoewer/go-strcase v1.3.1 // indirect
-	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
+	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.uber.org/mock v0.5.0 // indirect
 	golang.org/x/exp v0.0.0-20250718183923-645b1fa84792 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20220613132600-b0d781184e0d // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
-	golang.org/x/mod v0.27.0 // indirect
-	golang.org/x/net v0.44.0 // indirect
-	golang.org/x/sync v0.17.0 // indirect
-	golang.org/x/text v0.29.0 // indirect
+	golang.org/x/mod v0.37.0 // indirect
+	golang.org/x/net v0.57.0 // indirect
+	golang.org/x/sync v0.22.0 // indirect
+	golang.org/x/text v0.40.0 // indirect
 	golang.org/x/time v0.13.0 // indirect
-	golang.org/x/tools v0.36.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20251007200510-49b9836ed3ff // indirect
+	golang.org/x/tools v0.47.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260825221802-da73d73af1c5 // indirect
 	honnef.co/go/tools v0.3.2 // indirect
 )
